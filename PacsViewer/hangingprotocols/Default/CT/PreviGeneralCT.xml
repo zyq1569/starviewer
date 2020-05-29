@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hangingProtocol name="PreviGeneral" version="2">
+    <hangingProtocolName>Previous</hangingProtocolName>
+    <numberScreens>1</numberScreens>
+    <allDifferent>yes</allDifferent>
+    <strictness>yes</strictness>
+    <protocol>CT</protocol>
+    <numberOfPriors>1</numberOfPriors>
+    <restriction identifier="1">
+        <selectorAttribute>ImageType</selectorAttribute>
+        <selectorValue>LOCALIZER</selectorValue>
+    </restriction>
+    <imageSet identifier="1">
+        <type>image</type>
+        <restrictionExpression>not 1</restrictionExpression>
+    </imageSet>
+    <imageSet identifier="2">
+        <type>image</type>
+        <abstractPriorValue>1</abstractPriorValue>
+        <restrictionExpression>not 1</restrictionExpression>
+    </imageSet>
+    <displaySet identifier="1">
+        <imageSetNumber>1</imageSetNumber>
+        <position>0.0\1.0\0.5\0.0</position>
+        <reconstruction>AXIAL</reconstruction>
+    </displaySet>
+    <displaySet identifier="2">
+        <imageSetNumber>2</imageSetNumber>
+        <position>0.5\1.0\1.0\0.0</position>
+        <reconstruction>AXIAL</reconstruction>
+    </displaySet>
+</hangingProtocol>

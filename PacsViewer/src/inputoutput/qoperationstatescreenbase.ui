@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>udg::QOperationStateScreenBase</class>
+ <widget class="QDialog" name="udg::QOperationStateScreenBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>934</width>
+    <height>359</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Queue Operation List</string>
+  </property>
+  <layout class="QGridLayout">
+   <property name="margin">
+    <number>9</number>
+   </property>
+   <property name="spacing">
+    <number>6</number>
+   </property>
+   <item row="0" column="0" colspan="9">
+    <widget class="QTreeWidget" name="m_treeRetrieveStudy">
+     <property name="contextMenuPolicy">
+      <enum>Qt::NoContextMenu</enum>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::ExtendedSelection</enum>
+     </property>
+     <property name="rootIsDecorated">
+      <bool>false</bool>
+     </property>
+     <property name="itemsExpandable">
+      <bool>false</bool>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <column>
+      <property name="text">
+       <string>Status</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Direction</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>From/To</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Patient ID</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Patient Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Request Date</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Started</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Series</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Files</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>PACSJobID</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string/>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <spacer>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Expanding</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="3" column="5">
+    <widget class="QPushButton" name="m_cancelSelectedRequestsButton">
+     <property name="text">
+      <string>Cancel Selected</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QPushButton" name="m_cancellAllRequestsButton">
+     <property name="text">
+      <string>Cancel All</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../main/main.qrc">
+       <normaloff>:/images/cancel.png</normaloff>:/images/cancel.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="4">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="3" column="6">
+    <spacer>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Expanding</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>31</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="3" column="7">
+    <widget class="QPushButton" name="m_buttonClear">
+     <property name="maximumSize">
+      <size>
+       <width>200</width>
+       <height>32767</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Clear</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../main/main.qrc">
+       <normaloff>:/images/eraser2.png</normaloff>:/images/eraser2.png</iconset>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>m_treeRetrieveStudy</tabstop>
+  <tabstop>m_cancellAllRequestsButton</tabstop>
+  <tabstop>m_cancelSelectedRequestsButton</tabstop>
+  <tabstop>m_buttonClear</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../main/main.qrc"/>
+ </resources>
+ <connections/>
+</ui>

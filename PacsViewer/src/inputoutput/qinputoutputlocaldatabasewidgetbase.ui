@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>udg::QInputOutputLocalDatabaseWidgetBase</class>
+ <widget class="QWidget" name="udg::QInputOutputLocalDatabaseWidgetBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>819</width>
+    <height>399</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <item row="0" column="0">
+    <widget class="QSplitter" name="m_StudyTreeSeriesListQSplitter">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="childrenCollapsible">
+      <bool>false</bool>
+     </property>
+     <widget class="udg::QStudyTreeWidget" name="m_studyTreeWidget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>120</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="udg::QSeriesThumbnailPreviewWidget" name="m_seriesThumbnailPreviewWidget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <layout class="QHBoxLayout">
+     <property name="topMargin">
+      <number>6</number>
+     </property>
+     <item>
+      <widget class="QToolButton" name="m_viewButton">
+       <property name="text">
+        <string>View</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../main/main.qrc">
+         <normaloff>:/images/view.png</normaloff>:/images/view.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextBesideIcon</enum>
+       </property>
+       <property name="autoRaise">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>udg::QStudyTreeWidget</class>
+   <extends>QWidget</extends>
+   <header>qstudytreewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>udg::QSeriesThumbnailPreviewWidget</class>
+   <extends>QWidget</extends>
+   <header>qseriesthumbnailpreviewwidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../main/main.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QDicomPrinterBasicSettingsWidgetBase</class>
+ <widget class="QWidget" name="QDicomPrinterBasicSettingsWidgetBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>545</width>
+    <height>106</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <property name="horizontalSpacing">
+    <number>6</number>
+   </property>
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="m_printSettingsGroupBox">
+     <property name="title">
+      <string>Print Settings</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_2">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="m_priorityLabel">
+        <property name="text">
+         <string>Print priority:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="m_priorityComboBox"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="m_mediumTypeLabel">
+        <property name="text">
+         <string>Medium:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="m_mediumTypeComboBox"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="m_filmDestinationLabel">
+        <property name="text">
+         <string>Film Destination:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="m_filmDestinationComboBox"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QGroupBox" name="m_filmSettingsGroupBox">
+     <property name="title">
+      <string>Film Settings</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="m_layoutLabel">
+        <property name="text">
+         <string>Layout:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="m_layoutComboBox"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="m_filmOrientationLabel">
+        <property name="text">
+         <string>Film Orientation:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="m_filmOrientationComboBox"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="m_filmSizeLabel">
+        <property name="text">
+         <string>Film Size:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="m_filmSizeComboBox"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

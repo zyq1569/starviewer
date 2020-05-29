@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<upgradeDatabase minimumDatabaseRevisionRequired="6516">
+    <upgradeDatabaseToRevision updateToRevision="7661">
+        <upgradeCommand>ALTER TABLE IMAGE ADD COLUMN NumberOfOverlays INTEGER</upgradeCommand>
+    </upgradeDatabaseToRevision>
+    <upgradeDatabaseToRevision updateToRevision="7735">
+        <upgradeCommand>
+            CREATE TABLE DisplayShutter
+            (
+            ID                            INTEGER PRIMARY KEY AUTOINCREMENT,
+            Shape                         TEXT,
+            ShutterValue                  INTEGER,
+            PointsList                    TEXT,
+            ImageInstanceUID              TEXT,
+            ImageFrameNumber              INTEGER,
+            FOREIGN KEY (ImageInstanceUID, ImageFrameNumber) REFERENCES Image (SOPInstanceUID, FrameNumber)
+            );
+        </upgradeCommand>
+    </upgradeDatabaseToRevision>
+    <upgradeDatabaseToRevision updateToRevision="7794">
+        <upgradeCommand>
+            CREATE TABLE PACSRetrievedImages
+            (
+                ID                          INTEGER PRIMARY KEY AUTOINCREMENT,
+                AETitle                     TEXT,
+                Address                     TEXT,
+                QueryPort                   INTEGER
+            )
+        </upgradeCommand>
+        <upgradeCommand>CREATE UNIQUE INDEX IndexPacsDevice_AETitleAddressQueryPort ON PacsRetrievedImages(AETitle, Address, QueryPort)</upgradeCommand>
+        <upgradeCommand>ALTER TABLE IMAGE ADD COLUMN RetrievedPACSID INTEGER</upgradeCommand>
+    </upgradeDatabaseToRevision>
+    <upgradeDatabaseToRevision updateToRevision="9008">
+        <upgradeCommand>ALTER TABLE IMAGE ADD COLUMN ImagerPixelSpacing TEXT</upgradeCommand>
+        <upgradeCommand>ALTER TABLE IMAGE ADD COLUMN EstimatedRadiographicMagnificationFactor TEXT</upgradeCommand>
+    </upgradeDatabaseToRevision>
+    <upgradeDatabaseToRevision updateToRevision="9591">
+      <upgradeCommand>ALTER TABLE IMAGE ADD COLUMN TransferSyntaxUID TEXT</upgradeCommand>
+    </upgradeDatabaseToRevision>
+    <upgradeDatabaseToRevision updateToRevision="9592">
+        <upgradeCommand>
+            CREATE TABLE VoiLut
+            (
+                ID                  INTEGER PRIMARY KEY AUTOINCREMENT,
+                Lut                 BLOB,
+                ImageInstanceUID    TEXT,
+                ImageFrameNumber    INTEGER,
+                FOREIGN KEY (ImageInstanceUID, ImageFrameNumber) REFERENCES Image (SOPInstanceUID, FrameNumber)
+            );
+        </upgradeCommand>
+    </upgradeDatabaseToRevision>
+</upgradeDatabase>

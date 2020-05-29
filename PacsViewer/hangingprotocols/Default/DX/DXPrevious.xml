@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hangingProtocol version="2" name="DXPrevious">
+    <hangingProtocolName>DX Prev</hangingProtocolName>
+    <numberScreens>1</numberScreens>
+    <allDifferent>yes</allDifferent>
+    <protocol>DX</protocol>
+    <numberOfPriors>1</numberOfPriors>
+    <iconType>CR</iconType>
+    <restriction identifier="1">
+        <selectorAttribute>Anterior</selectorAttribute>
+        <selectorValue>1</selectorValue>
+    </restriction>
+    <imageSet identifier="1"/>
+    <imageSet identifier="2"/>
+    <imageSet identifier="3">
+        <abstractPriorValue>1</abstractPriorValue>
+        <restrictionExpression>1</restrictionExpression>
+    </imageSet>
+    <imageSet identifier="4">
+        <abstractPriorValue>1</abstractPriorValue>
+        <restrictionExpression>1</restrictionExpression>
+    </imageSet>
+    <displaySet identifier="1">
+        <imageSetNumber>1</imageSetNumber>
+        <position>0.0\1.0\0.5\0.5</position>
+    </displaySet>
+    <displaySet identifier="2">
+        <imageSetNumber>2</imageSetNumber>
+        <position>0.5\1.0\1.0\0.5</position>
+    </displaySet>
+    <displaySet identifier="3">
+        <imageSetNumber>3</imageSetNumber>
+        <position>0.0\0.5\0.5\0.0</position>
+    </displaySet>
+    <displaySet identifier="4">
+        <imageSetNumber>4</imageSetNumber>
+        <position>0.5\0.5\1.0\0.0</position>
+    </displaySet>
+</hangingProtocol>

@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>udg::QueryScreenBase</class>
+ <widget class="QDialog" name="udg::QueryScreenBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>685</width>
+    <height>813</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Query Studies</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../main/main.qrc">
+    <normaloff>:/images/pacsQuery.png</normaloff>:/images/pacsQuery.png</iconset>
+  </property>
+  <layout class="QVBoxLayout">
+   <property name="spacing">
+    <number>6</number>
+   </property>
+   <property name="leftMargin">
+    <number>9</number>
+   </property>
+   <property name="topMargin">
+    <number>9</number>
+   </property>
+   <property name="rightMargin">
+    <number>9</number>
+   </property>
+   <property name="bottomMargin">
+    <number>9</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout">
+     <property name="spacing">
+      <number>6</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <layout class="QVBoxLayout">
+       <property name="spacing">
+        <number>6</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="udg::QBasicSearchWidget" name="m_qbasicSearchWidget" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="udg::QPacsList" name="m_PACSNodes" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="udg::QAdvancedSearchWidget" name="m_qadvancedSearchWidget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <property name="spacing">
+      <number>6</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QToolButton" name="m_advancedSearchToolButton">
+       <property name="text">
+        <string>Advanced Search &gt;&gt;</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../main/main.qrc">
+         <normaloff>:/images/search.png</normaloff>:/images/search.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>22</width>
+         <height>22</height>
+        </size>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextBesideIcon</enum>
+       </property>
+       <property name="autoRaise">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>211</width>
+         <height>30</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QToolButton" name="m_clearToolButton">
+       <property name="text">
+        <string>Clear Search Fields</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../main/main.qrc">
+         <normaloff>:/images/clear.png</normaloff>:/images/clear.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>22</width>
+         <height>22</height>
+        </size>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextBesideIcon</enum>
+       </property>
+       <property name="autoRaise">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="m_searchButton">
+       <property name="text">
+        <string>Search</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../main/main.qrc">
+         <normaloff>:/images/advancedSearch.png</normaloff>:/images/advancedSearch.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="default">
+        <bool>true</bool>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="m_tab">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="tabPosition">
+      <enum>QTabWidget::North</enum>
+     </property>
+     <property name="tabShape">
+      <enum>QTabWidget::Rounded</enum>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+     <widget class="QWidget" name="m_tabCache">
+      <attribute name="icon">
+       <iconset resource="../main/main.qrc">
+        <normaloff>:/images/database.png</normaloff>:/images/database.png</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>Local Database</string>
+      </attribute>
+      <layout class="QGridLayout">
+       <item row="0" column="0">
+        <widget class="udg::QInputOutputLocalDatabaseWidget" name="m_qInputOutputLocalDatabaseWidget" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="m_tabPacs">
+      <attribute name="icon">
+       <iconset resource="../main/main.qrc">
+        <normaloff>:/images/pacsServer.png</normaloff>:/images/pacsServer.png</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>PACS Server</string>
+      </attribute>
+      <layout class="QGridLayout">
+       <item row="0" column="0">
+        <widget class="udg::QInputOutputPacsWidget" name="m_qInputOutputPacsWidget" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="m_tabDicomdir">
+      <attribute name="icon">
+       <iconset resource="../main/main.qrc">
+        <normaloff>:/images/openDICOMDIR.png</normaloff>:/images/openDICOMDIR.png</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>DICOMDIR</string>
+      </attribute>
+      <layout class="QGridLayout">
+       <item row="0" column="0">
+        <widget class="udg::QInputOutputDicomdirWidget" name="m_qInputOutputDicomdirWidget" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <property name="spacing">
+      <number>6</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QToolButton" name="m_operationListToolButton">
+       <property name="text">
+        <string>Operation List</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../main/main.qrc">
+         <normaloff>:/images/operationList.png</normaloff>:/images/operationList.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextBesideIcon</enum>
+       </property>
+       <property name="autoRaise">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout">
+       <property name="spacing">
+        <number>6</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="m_labelOperation">
+         <property name="text">
+          <string>Operation in progress</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="m_operationAnimation">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>27</width>
+         <height>42</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QToolButton" name="m_showPACSNodesToolButton">
+       <property name="text">
+        <string>PACS Nodes</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../main/main.qrc">
+         <normaloff>:/images/pacsNodes.png</normaloff>:/images/pacsNodes.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextBesideIcon</enum>
+       </property>
+       <property name="autoRaise">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="m_createDICOMDIRToolButton">
+       <property name="text">
+        <string>Create DICOMDIR</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../main/main.qrc">
+         <normaloff>:/images/createDICOMDIR.png</normaloff>:/images/createDICOMDIR.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextBesideIcon</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>udg::QAdvancedSearchWidget</class>
+   <extends>QWidget</extends>
+   <header>qadvancedsearchwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>udg::QBasicSearchWidget</class>
+   <extends>QWidget</extends>
+   <header>qbasicsearchwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>udg::QPacsList</class>
+   <extends>QWidget</extends>
+   <header>qpacslist.h</header>
+  </customwidget>
+  <customwidget>
+   <class>udg::QInputOutputDicomdirWidget</class>
+   <extends>QWidget</extends>
+   <header>qinputoutputdicomdirwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>udg::QInputOutputLocalDatabaseWidget</class>
+   <extends>QWidget</extends>
+   <header>qinputoutputlocaldatabasewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>udg::QInputOutputPacsWidget</class>
+   <extends>QWidget</extends>
+   <header>qinputoutputpacswidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../main/main.qrc"/>
+ </resources>
+ <connections/>
+</ui>

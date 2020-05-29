@@ -1,0 +1,4751 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QExperimental3DExtensionBase</class>
+ <widget class="QWidget" name="QExperimental3DExtensionBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>653</width>
+    <height>888</height>
+   </rect>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_41">
+   <item>
+    <widget class="QTabWidget" name="m_controlsTabWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="tabPosition">
+      <enum>QTabWidget::West</enum>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="m_renderingTab">
+      <attribute name="title">
+       <string>Rendering</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QPushButton" name="m_backgroundColorPushButton">
+         <property name="text">
+          <string>Background color...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="m_interpolationLabel">
+           <property name="text">
+            <string>Interpolation</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="m_interpolationComboBox">
+           <item>
+            <property name="text">
+             <string>Nearest neighbour</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Linear (interpolate &amp; classify)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Linear (classify &amp; interpolate)</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="m_gradientEstimatorLabel">
+           <property name="text">
+            <string>Gradient estimator</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="m_gradientEstimatorComboBox">
+           <item>
+            <property name="text">
+             <string>Finite difference</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>4D linear regression (1)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>4D linear regression (2)</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="m_baseShadingGroupBox">
+         <property name="title">
+          <string>Base shading</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_12">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QRadioButton" name="m_baseAmbientLightingRadioButton">
+                <property name="text">
+                 <string>Ambient lighting</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="m_baseFullLightingRadioButton">
+                <property name="text">
+                 <string>Full lighting</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="m_cpuRenderingCheckBox">
+                <property name="text">
+                 <string>CPU render</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="m_cpuShaderRenderingCheckBox">
+                <property name="text">
+                 <string>CPU shader render</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_79">
+              <item>
+               <widget class="QLabel" name="m_baseAmbientLabel">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>Ambient</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="m_baseAmbientDoubleSpinBox">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="maximum">
+                 <double>1.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.100000000000000</double>
+                </property>
+                <property name="value">
+                 <double>0.100000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="m_baseDiffuseLabel">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>Diffuse</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="m_baseDiffuseDoubleSpinBox">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="maximum">
+                 <double>1.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.100000000000000</double>
+                </property>
+                <property name="value">
+                 <double>0.700000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="m_baseSpecularLabel">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>Specular</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="m_baseSpecularDoubleSpinBox">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="maximum">
+                 <double>1.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.100000000000000</double>
+                </property>
+                <property name="value">
+                 <double>0.200000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="m_baseSpecularPowerLabel">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>Power</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="m_baseSpecularPowerDoubleSpinBox">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="decimals">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <double>128.000000000000000</double>
+                </property>
+                <property name="value">
+                 <double>10.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QRadioButton" name="m_baseCoolWarmRadioButton">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Cool-warm</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_baseCoolWarmBLabel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>b</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="m_baseCoolWarmBDoubleSpinBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="maximum">
+               <double>1.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_baseCoolWarmYLabel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>y</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="m_baseCoolWarmYDoubleSpinBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="maximum">
+               <double>1.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_baseCoolWarmAlphaLabel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>alpha</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="m_baseCoolWarmAlphaDoubleSpinBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="maximum">
+               <double>1.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_baseCoolWarmBetaLabel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>beta</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="m_baseCoolWarmBetaDoubleSpinBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="maximum">
+               <double>1.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="m_baseWhiteRadioButton">
+            <property name="text">
+             <string>White</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QRadioButton" name="m_baseVomiRadioButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>VoMI I(z;V)</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="m_baseVomi1RadioButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>I₁</string>
+              </property>
+              <attribute name="buttonGroup">
+               <string>buttonGroup_4</string>
+              </attribute>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="m_baseVomi2RadioButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>I₂</string>
+              </property>
+              <attribute name="buttonGroup">
+               <string>buttonGroup_4</string>
+              </attribute>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="m_baseVomi3RadioButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>I₃</string>
+              </property>
+              <attribute name="buttonGroup">
+               <string>buttonGroup_4</string>
+              </attribute>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_baseVomiFactorLabel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Factor</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="m_baseVomiFactorDoubleSpinBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_68">
+            <item>
+             <widget class="QRadioButton" name="m_baseImiRadioButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>IMI</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_baseImiFactorLabel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Factor</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="m_baseImiFactorDoubleSpinBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <widget class="QRadioButton" name="m_baseVoxelSalienciesRadioButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Voxel saliencies</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_baseVoxelSalienciesFactorLabel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Factor</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="m_baseVoxelSalienciesFactorDoubleSpinBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_52">
+            <item>
+             <widget class="QRadioButton" name="m_baseFilteringAmbientOcclusionRadioButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Filtering AO</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="m_baseFilteringAmbientOcclusionTypeComboBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <item>
+               <property name="text">
+                <string>Direct</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Absolute value</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Only negatives</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_baseFilteringAmbientOcclusionFactorLabel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Factor</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="m_baseFilteringAmbientOcclusionFactorDoubleSpinBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_69">
+            <item>
+             <widget class="QRadioButton" name="m_baseFilteringAmbientOcclusionStipplingRadioButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Filtering AO stippling</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_baseFilteringAmbientOcclusionStipplingThresholdLabel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Threshold</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="m_baseFilteringAmbientOcclusionStipplingThresholdDoubleSpinBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="maximum">
+               <double>1.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="m_baseFilteringAmbientOcclusionStipplingFactorLabel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Factor</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="m_baseFilteringAmbientOcclusionStipplingFactorDoubleSpinBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_49">
+         <item>
+          <widget class="QCheckBox" name="m_additiveObscuranceVomiCheckBox">
+           <property name="text">
+            <string>Additive obscurance/VoMI</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="m_additiveObscuranceVomiWeightLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Weight</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="m_additiveObscuranceVomiWeightDoubleSpinBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.500000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_9">
+         <item>
+          <widget class="QCheckBox" name="m_contourCheckBox">
+           <property name="text">
+            <string>Contour</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="m_contourDoubleSpinBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_10">
+           <item>
+            <widget class="QCheckBox" name="m_obscuranceCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Obscurance</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="m_obscuranceFactorLabel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Factor</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="m_obscuranceFactorDoubleSpinBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <double>3.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.270000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_11">
+           <property name="leftMargin">
+            <number>20</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="m_obscuranceFiltersLabel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Filters</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="m_obscuranceLowFilterLabel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Low</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="m_obscuranceLowFilterDoubleSpinBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="m_obscuranceHighFilterLabel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>High</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="m_obscuranceHighFilterDoubleSpinBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_12">
+         <item>
+          <widget class="QCheckBox" name="m_vomiCheckBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>VoMI I(z;V)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="m_vomi1RadioButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>I₁</string>
+           </property>
+           <attribute name="buttonGroup">
+            <string>buttonGroup_5</string>
+           </attribute>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="m_vomi2RadioButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>I₂</string>
+           </property>
+           <attribute name="buttonGroup">
+            <string>buttonGroup_5</string>
+           </attribute>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="m_vomi3RadioButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>I₃</string>
+           </property>
+           <attribute name="buttonGroup">
+            <string>buttonGroup_5</string>
+           </attribute>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="m_vomiFactorLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Factor</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="m_vomiFactorDoubleSpinBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_13">
+         <item>
+          <widget class="QCheckBox" name="m_vomiCoolWarmCheckBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>VoMI cool-warm</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="m_vomiCoolWarmYLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>y</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="m_vomiCoolWarmYDoubleSpinBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="m_vomiCoolWarmBLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>b</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="m_vomiCoolWarmBDoubleSpinBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="m_vomiCoolWarmFactorLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Factor</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="m_vomiCoolWarmFactorDoubleSpinBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_14">
+         <item>
+          <widget class="QCheckBox" name="m_colorVomiCheckBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Color VoMI</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="m_colorVomiFactorLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Factor</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="m_colorVomiFactorDoubleSpinBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_15">
+           <item>
+            <widget class="QLabel" name="m_opacityLabel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Opacity</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="m_opacityVomiCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>VoMI</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="m_opacitySaliencyCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Saliency</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="m_opacityFilteringCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Filtering</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="m_opacityProbabilisticAmbientOcclusionCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>PAO</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_16">
+           <property name="leftMargin">
+            <number>20</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="m_opacityLowLabel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Low</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="m_opacityLowThresholdLabel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Threshold</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="m_opacityLowThresholdDoubleSpinBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Low threshold</string>
+             </property>
+             <property name="decimals">
+              <number>6</number>
+             </property>
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="m_opacityLowFactorLabel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Factor</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="m_opacityLowFactorDoubleSpinBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Low factor</string>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_17">
+           <property name="leftMargin">
+            <number>20</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="m_opacityHighLabel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>High</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="m_opacityHighThresholdLabel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Threshold</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="m_opacityHighThresholdDoubleSpinBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>High threshold</string>
+             </property>
+             <property name="decimals">
+              <number>6</number>
+             </property>
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="m_opacityHighFactorLabel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Factor</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="m_opacityHighFactorDoubleSpinBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>High factor</string>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_51">
+         <item>
+          <widget class="QCheckBox" name="m_filteringAmbientOcclusionCheckBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Filtering AO</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="m_filteringAmbientOcclusionTypeComboBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string>Direct</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Absolute value</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Only negatives</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="m_filteringAmbientOcclusionLambdaLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>λ</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="m_filteringAmbientOcclusionLambdaDoubleSpinBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="minimum">
+            <double>-100.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_55">
+         <item>
+          <widget class="QCheckBox" name="m_probabilisticAmbientOcclusionCheckBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Probabilistic AO (PAO)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="m_probabilisticAmbientOcclusionGammaLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>γ</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="m_probabilisticAmbientOcclusionGammaDoubleSpinBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="m_probabilisticAmbientOcclusionFactorLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Factor</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="m_probabilisticAmbientOcclusionFactorDoubleSpinBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_59">
+         <item>
+          <widget class="QCheckBox" name="m_opacityVarianceCheckBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Opacity (variance)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="m_opacityVarianceMaxLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Max variance</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="m_opacityVarianceMaxDoubleSpinBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="minimum">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_18">
+         <item>
+          <widget class="QCheckBox" name="m_celShadingCheckBox">
+           <property name="text">
+            <string>Cel-shading</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="m_celShadingQuantumsLabel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Quantums</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="m_celShadingQuantumsSpinBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="minimum">
+            <number>2</number>
+           </property>
+           <property name="maximum">
+            <number>10</number>
+           </property>
+           <property name="value">
+            <number>4</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QPushButton" name="m_renderingOkPushButton">
+         <property name="text">
+          <string>OK</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>2</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="m_transferFunctionTab">
+      <attribute name="title">
+       <string>Transfer function</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QLabel" name="m_recentTransferFunctionsLabel">
+         <property name="text">
+          <string>Recent transfer functions</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QListView" name="m_recentTransferFunctionsListView">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_19">
+         <item>
+          <widget class="QPushButton" name="m_loadTransferFunctionPushButton">
+           <property name="text">
+            <string>Load...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_loadColorTransferFunctionPushButton">
+           <property name="text">
+            <string>Load color...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_addRecentTransferFunctionPushButton">
+           <property name="text">
+            <string>Add to recent</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_saveTransferFunctionPushButton">
+           <property name="text">
+            <string>Save...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QPushButton" name="m_innernessProportionalOpacityPushButton">
+         <property name="text">
+          <string>Innerness-proportional opacity</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="udg::QGraphicTransferFunctionEditor" name="m_transferFunctionEditor" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+           <horstretch>0</horstretch>
+           <verstretch>2</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>256</width>
+           <height>256</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="m_useGradientOpacityTransferFunctionCheckBox">
+         <property name="text">
+          <string>Use gradient opacity transfer function</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="udg::QGraphicTransferFunctionEditor" name="m_gradientOpacityTransferFunctionEditor" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>1</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="m_transferFunctionOkPushButton">
+         <property name="text">
+          <string>OK</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="m_cameraTab">
+      <attribute name="title">
+       <string>Camera</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="1">
+          <widget class="QLabel" name="m_cameraXLabel">
+           <property name="text">
+            <string>X</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="m_cameraYLabel">
+           <property name="text">
+            <string>Y</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLabel" name="m_cameraZLabel">
+           <property name="text">
+            <string>Z</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="m_cameraPositionLabel">
+           <property name="text">
+            <string>Position</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QDoubleSpinBox" name="m_cameraPositionXDoubleSpinBox">
+           <property name="minimum">
+            <double>-1000000.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>1000000.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QDoubleSpinBox" name="m_cameraPositionYDoubleSpinBox">
+           <property name="minimum">
+            <double>-1000000.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>1000000.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QDoubleSpinBox" name="m_cameraPositionZDoubleSpinBox">
+           <property name="minimum">
+            <double>-1000000.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>1000000.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="m_cameraFocusLabel">
+           <property name="text">
+            <string>Focus</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QDoubleSpinBox" name="m_cameraFocusXDoubleSpinBox">
+           <property name="minimum">
+            <double>-1000000.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>1000000.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QDoubleSpinBox" name="m_cameraFocusYDoubleSpinBox">
+           <property name="minimum">
+            <double>-1000000.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>1000000.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QDoubleSpinBox" name="m_cameraFocusZDoubleSpinBox">
+           <property name="minimum">
+            <double>-1000000.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>1000000.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="m_cameraUpLabel">
+           <property name="text">
+            <string>Up</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QDoubleSpinBox" name="m_cameraUpXDoubleSpinBox">
+           <property name="minimum">
+            <double>-1000000.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>1000000.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QDoubleSpinBox" name="m_cameraUpYDoubleSpinBox">
+           <property name="minimum">
+            <double>-1000000.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>1000000.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="3">
+          <widget class="QDoubleSpinBox" name="m_cameraUpZDoubleSpinBox">
+           <property name="minimum">
+            <double>-1000000.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>1000000.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="0">
+          <widget class="QPushButton" name="m_cameraGetPushButton">
+           <property name="text">
+            <string>Get</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="m_cameraSetPushButton">
+           <property name="text">
+            <string>Set</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QPushButton" name="m_cameraLoadPushButton">
+           <property name="text">
+            <string>Load...</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QPushButton" name="m_cameraSavePushButton">
+           <property name="text">
+            <string>Save...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="Line" name="m_cameraLine">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="udg::QViewpointDistributionWidget" name="m_cameraViewpointDistributionWidget" native="true"/>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_20">
+         <item>
+          <widget class="QLabel" name="m_viewpointLabel">
+           <property name="text">
+            <string>Viewpoint</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="m_viewpointSpinBox">
+           <property name="wrapping">
+            <bool>true</bool>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>4</number>
+           </property>
+           <property name="value">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_viewpointPushButton">
+           <property name="text">
+            <string>View</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_21">
+         <item>
+          <widget class="QLineEdit" name="m_tourLineEdit"/>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="m_tourSpeedDoubleSpinBox">
+           <property name="toolTip">
+            <string>Speed</string>
+           </property>
+           <property name="suffix">
+            <string>x</string>
+           </property>
+           <property name="decimals">
+            <number>1</number>
+           </property>
+           <property name="minimum">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>10.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_tourPushButton">
+           <property name="text">
+            <string>Tour</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_44">
+         <item>
+          <widget class="QCheckBox" name="m_saveNextTourCheckBox">
+           <property name="text">
+            <string>Save next tour</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="m_saveNextTourLineEdit">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_saveNextTourPushButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Browse...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>391</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="m_obscuranceTab">
+      <attribute name="title">
+       <string>Obscurance</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="udg::QViewpointDistributionWidget" name="m_obscuranceViewpointDistributionWidget" native="true"/>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_22">
+         <item>
+          <widget class="QLabel" name="m_obscuranceMaximumDistanceLabel">
+           <property name="text">
+            <string>Maximum distance</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="m_obscuranceMaximumDistanceDoubleSpinBox">
+           <property name="maximum">
+            <double>512.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>64.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_23">
+         <item>
+          <widget class="QLabel" name="m_obscuranceFunctionLabel">
+           <property name="text">
+            <string>Function</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="m_obscuranceFunctionComboBox">
+           <item>
+            <property name="text">
+             <string>Constant 0</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Distance</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Square root</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Exponential</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Exponential (normalized)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Cube root</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_24">
+         <item>
+          <widget class="QLabel" name="m_obscuranceVariantLabel">
+           <property name="text">
+            <string>Variant</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="m_obscuranceVariantComboBox">
+           <item>
+            <property name="text">
+             <string>Density</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Density smooth</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Opacity</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Opacity smooth</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Opacity saliency</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Opacity smooth saliency</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Opacity color bleeding</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Opacity smooth color bleeding</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QWidget" name="m_obscurancePrecisionWidget" native="true">
+         <layout class="QHBoxLayout" name="horizontalLayout_25">
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QRadioButton" name="m_obscuranceSinglePrecisionRadioButton">
+            <property name="text">
+             <string>Single precision</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="m_obscuranceDoublePrecisionRadioButton">
+            <property name="text">
+             <string>Double precision</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="m_obscurancePushButton">
+         <property name="text">
+          <string>Compute obscurance</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QProgressBar" name="m_obscuranceProgressBar">
+         <property name="value">
+          <number>0</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_26">
+         <item>
+          <widget class="QPushButton" name="m_obscuranceLoadPushButton">
+           <property name="text">
+            <string>Load obscurance...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_obscuranceSavePushButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Save obscurance...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>425</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="m_smiTab">
+      <attribute name="title">
+       <string>SMI</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <widget class="udg::QViewpointDistributionWidget" name="m_smiViewpointDistributionWidget" native="true"/>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_27">
+         <item>
+          <widget class="QLabel" name="m_smiViewpointLabel">
+           <property name="text">
+            <string>Viewpoint</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="m_smiViewpointSpinBox">
+           <property name="wrapping">
+            <bool>true</bool>
+           </property>
+           <property name="specialValueText">
+            <string>All</string>
+           </property>
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <number>4</number>
+           </property>
+           <property name="value">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="m_smiDefaultAxisCheckBox">
+         <property name="text">
+          <string>Default axis</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="m_smiPushButton">
+         <property name="text">
+          <string>Compute SMI</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="m_sliceUnstabilitiesPushButton">
+         <property name="text">
+          <string>Compute slice unstabilities</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="m_pmiPushButton">
+         <property name="text">
+          <string>Compute PMI</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="m_propertySalienciesPushButton">
+         <property name="text">
+          <string>Compute property saliencies</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>443</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="m_vmiTab">
+      <attribute name="title">
+       <string>VMI etc.</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_10">
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QScrollArea" name="m_vmiScrollArea">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>448</width>
+            <height>874</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_17">
+           <item>
+            <widget class="udg::QViewpointDistributionWidget" name="m_vmiViewpointDistributionWidget" native="true"/>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_42">
+             <item>
+              <widget class="QCheckBox" name="m_vmiOneViewpointCheckBox">
+               <property name="text">
+                <string>Only one viewpoint and neighbours</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="m_vmiOneViewpointSpinBox">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="wrapping">
+                <bool>true</bool>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>4</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="m_vmiDisplayCheckBox">
+             <property name="text">
+              <string>Display views</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="line">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_46">
+             <item>
+              <widget class="QLabel" name="m_viewedVolumeLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Viewed volume</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveViewedVolumePushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_47">
+             <item>
+              <widget class="QCheckBox" name="m_computeHVCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Viewpoints entropy H(V)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadHVPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveHVPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_48">
+             <item>
+              <widget class="QCheckBox" name="m_computeHVzCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>H(V|z)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadHVzPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveHVzPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_29">
+             <item>
+              <widget class="QCheckBox" name="m_computeHZCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Voxels entropy H(Z)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadHZPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveHZPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_28">
+             <item>
+              <widget class="QCheckBox" name="m_computeHZvCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>H(Z|v)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadHZvPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveHZvPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_54">
+             <item>
+              <widget class="QCheckBox" name="m_computeHZVCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>H(Z|V)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadHZVPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveHZVPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_30">
+             <item>
+              <widget class="QCheckBox" name="m_computeVmiCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>VMI I₁(v;Z)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadVmiPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveVmiPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_76">
+             <item>
+              <widget class="QCheckBox" name="m_computeVmi2CheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>VMI2 I₂(v;Z)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadVmi2PushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveVmi2PushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_77">
+             <item>
+              <widget class="QCheckBox" name="m_computeVmi3CheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>VMI3 I₃(v;Z)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadVmi3PushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveVmi3PushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_31">
+             <item>
+              <widget class="QCheckBox" name="m_computeMiCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>MI</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadMiPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveMiPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_35">
+             <item>
+              <widget class="QCheckBox" name="m_computeViewpointUnstabilitiesCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Viewpoint unstabilities</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadViewpointUnstabilitiesPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveViewpointUnstabilitiesPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_32">
+             <item>
+              <widget class="QCheckBox" name="m_computeVomiCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>VoMI I₁(z;V)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadVomiPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveVomiPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_70">
+             <item>
+              <widget class="QCheckBox" name="m_computeVomi2CheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>VoMI2 I₂(z;V)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadVomi2PushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveVomi2PushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_75">
+             <item>
+              <widget class="QCheckBox" name="m_computeVomi3CheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>VoMI3 I₃(z;V)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadVomi3PushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveVomi3PushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_33">
+             <item>
+              <widget class="QCheckBox" name="m_computeViewpointVomiCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Viewpoint VoMI (INF)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadViewpointVomiPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveViewpointVomiPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_78">
+             <item>
+              <widget class="QCheckBox" name="m_computeViewpointVomi2CheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Viewpoint VoMI2 (INF2)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadViewpointVomi2PushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveViewpointVomi2PushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_34">
+             <item>
+              <widget class="QCheckBox" name="m_computeColorVomiCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Color VoMI</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadColorVomiPalettePushButton">
+               <property name="text">
+                <string>Load palette...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadColorVomiPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveColorVomiPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_39">
+             <item>
+              <widget class="QCheckBox" name="m_computeEvmiOpacityCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>EVMI with opacity</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_computeEvmiOpacityUseOtherPushButton">
+               <property name="text">
+                <string>Use another opacity...</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadEvmiOpacityPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveEvmiOpacityPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_45">
+             <item>
+              <widget class="QCheckBox" name="m_computeEvmiVomiCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>EVMI with VoMI</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadEvmiVomiPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveEvmiVomiPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_9">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_36">
+               <item>
+                <widget class="QCheckBox" name="m_computeBestViewsCheckBox">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                   <horstretch>1</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Best views</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="m_loadBestViewsPushButton">
+                 <property name="text">
+                  <string>Load...</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="m_saveBestViewsPushButton">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="text">
+                  <string>Save...</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_37">
+               <property name="leftMargin">
+                <number>20</number>
+               </property>
+               <item>
+                <widget class="QRadioButton" name="m_computeBestViewsNRadioButton">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="text">
+                  <string>N</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="m_computeBestViewsNSpinBox">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>100</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="m_computeBestViewsThresholdRadioButton">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="text">
+                  <string>Threshold</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QDoubleSpinBox" name="m_computeBestViewsThresholdDoubleSpinBox">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="maximum">
+                  <double>1.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>0.010000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.100000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_38">
+             <item>
+              <widget class="QCheckBox" name="m_computeGuidedTourCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Guided tour</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadGuidedTourPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveGuidedTourPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_43">
+             <item>
+              <widget class="QCheckBox" name="m_computeExploratoryTourCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Exploratory tour</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="m_computeExploratoryTourThresholdLabel">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Threshold</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="m_computeExploratoryTourThresholdDoubleSpinBox">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="maximum">
+                <double>1.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.100000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadExploratoryTourPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveExploratoryTourPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QPushButton" name="m_computeVmiPushButton">
+             <property name="text">
+              <string>Compute selected</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QProgressBar" name="m_vmiProgressBar">
+             <property name="value">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QProgressBar" name="m_vmiTotalProgressBar">
+             <property name="maximum">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>0</number>
+             </property>
+             <property name="format">
+              <string>%v/%m</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_7">
+             <item>
+              <widget class="QPushButton" name="m_vomiGradientPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>VoMI gradient</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_vomi2GradientPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>VoMI2 gradient</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_40">
+             <item>
+              <widget class="QPushButton" name="m_tourBestViewsPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Tour best views</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_guidedTourPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Guided tour</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_exploratoryTourPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Exploratory tour</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="m_vmiiTab">
+      <attribute name="title">
+       <string>VMIi etc.</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_15">
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QScrollArea" name="m_vmiiScrollArea">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>481</width>
+            <height>1286</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_18">
+           <item>
+            <widget class="udg::QViewpointDistributionWidget" name="m_vmiiViewpointDistributionWidget" native="true"/>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_60">
+             <item>
+              <widget class="QCheckBox" name="m_vmiiOneViewpointCheckBox">
+               <property name="text">
+                <string>Only one viewpoint and neighbours</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="m_vmiiOneViewpointSpinBox">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="wrapping">
+                <bool>true</bool>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>4</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="m_vmiiDisplayCheckBox">
+             <property name="text">
+              <string>Display views</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="line_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_61">
+             <item>
+              <widget class="QLabel" name="m_viewedVolumeILabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Viewed volume</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveViewedVolumeIPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_85">
+             <item>
+              <widget class="QCheckBox" name="m_computeHICheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Intensities entropy H(I)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadHIPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveHIPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_62">
+             <item>
+              <widget class="QCheckBox" name="m_computeHIvCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>H(I|v)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadHIvPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveHIvPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_63">
+             <item>
+              <widget class="QCheckBox" name="m_computeHIVCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>H(I|V)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadHIVPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveHIVPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_64">
+             <item>
+              <widget class="QCheckBox" name="m_computeVmiiCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>VMIi</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadVmiiPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveVmiiPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_65">
+             <item>
+              <widget class="QCheckBox" name="m_computeMiiCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>MIi</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadMiiPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveMiiPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_66">
+             <item>
+              <widget class="QCheckBox" name="m_computeViewpointUnstabilitiesICheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Viewpoint unstabilities</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadViewpointUnstabilitiesIPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveViewpointUnstabilitiesIPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_67">
+             <item>
+              <widget class="QCheckBox" name="m_computeImiCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>IMI</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadImiPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveImiPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_80">
+             <item>
+              <widget class="QCheckBox" name="m_computeIntensityClusteringCheckBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Intensity clustering</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="m_computeIntensityClusteringNumberOfClustersSpinBox">
+               <property name="suffix">
+                <string> clusters</string>
+               </property>
+               <property name="minimum">
+                <number>2</number>
+               </property>
+               <property name="maximum">
+                <number>5000</number>
+               </property>
+               <property name="value">
+                <number>10</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_loadIntensityClusteringPushButton">
+               <property name="text">
+                <string>Load...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_saveIntensityClusteringPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Save...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QPushButton" name="m_computeVmiiPushButton">
+             <property name="text">
+              <string>Compute selected</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QProgressBar" name="m_vmiiProgressBar">
+             <property name="value">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QProgressBar" name="m_vmiiTotalProgressBar">
+             <property name="maximum">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>0</number>
+             </property>
+             <property name="format">
+              <string>%v/%m</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_73">
+             <item>
+              <widget class="QLabel" name="m_intensityGradientClusteringIntensitiesLabel">
+               <property name="text">
+                <string>Intensities</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="m_intensityGradientClusteringIntensitiesSpinBox">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>1024</number>
+               </property>
+               <property name="value">
+                <number>256</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="m_intensityGradientClusteringGradientsLabel">
+               <property name="text">
+                <string>Gradients</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="m_intensityGradientClusteringGradientsSpinBox">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>256</number>
+               </property>
+               <property name="value">
+                <number>16</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="m_intensityGradientClusteringTotalLabel">
+               <property name="text">
+                <string>Total 4096</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_intensityGradientClusteringPushButton">
+               <property name="text">
+                <string>Intensity/gradient clustering</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_89">
+             <item>
+              <widget class="QPushButton" name="m_importanceClusteringPushButton">
+               <property name="text">
+                <string>Importance clustering</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="m_importanceClusteringClustersLabel"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <item>
+              <widget class="QPushButton" name="m_colorTransferFunctionFromImiPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Color TF from IMI</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_opacityTransferFunctionFromImiPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Opacity TF from IMI</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_transferFunctionFromImiPushButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>TF from IMI</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_72">
+             <item>
+              <widget class="QLabel" name="m_viewVolumeLabel">
+               <property name="text">
+                <string>View</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="m_viewNormalVolumeRadioButton">
+               <property name="text">
+                <string>Normal</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroup_6</string>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="m_viewClusterizedVolumeRadioButton">
+               <property name="text">
+                <string>Clusterized</string>
+               </property>
+               <attribute name="buttonGroup">
+                <string>buttonGroup_6</string>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="m_transferFunctionFromIntensityClusteringGroupBox">
+             <property name="title">
+              <string>Transfer function from intensity clustering</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_16">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_81">
+                <item>
+                 <widget class="QLabel" name="m_transferFunctionFromIntensityClusteringRandomSeedLabel">
+                  <property name="text">
+                   <string>Random seed</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="m_randomSeedSpinBox">
+                  <property name="maximum">
+                   <number>2147483647</number>
+                  </property>
+                  <property name="value">
+                   <number>42</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_83">
+                <item>
+                 <widget class="QLabel" name="m_transferFunctionFromIntensityClusteringOpacityLabel">
+                  <property name="text">
+                   <string>Opacity</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="m_transferFunctionFromIntensityClusteringOpacityDefaultMinimumRadioButton">
+                  <property name="text">
+                   <string>Default minimum</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string>buttonGroup_2</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="m_transferFunctionFromIntensityClusteringOpacityCurrentMinimumRadioButton">
+                  <property name="text">
+                   <string>Current minimum</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string>buttonGroup_2</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="m_transferFunctionFromIntensityClusteringOpacityCurrentMeanRadioButton">
+                  <property name="text">
+                   <string>Current mean</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string>buttonGroup_2</string>
+                  </attribute>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_82">
+                <item>
+                 <widget class="QLabel" name="m_transferFunctionFromIntensityClusteringTransferFunctionTypeLabel">
+                  <property name="text">
+                   <string>Transfer function type</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="m_transferFunctionFromIntensityClusteringTransferFunctionTypeCenterPointRadioButton">
+                  <property name="text">
+                   <string>Center point</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string>buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="m_transferFunctionFromIntensityClusteringTransferFunctionTypeRangeRadioButton">
+                  <property name="text">
+                   <string>Range</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string>buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QPushButton" name="m_transferFunctionFromIntensityClusteringPushButton">
+                <property name="text">
+                 <string>Generate</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_84">
+                <item>
+                 <widget class="QPushButton" name="m_geneticTransferFunctionFromIntensityClusteringPushButton">
+                  <property name="text">
+                   <string>Evolve</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="m_geneticTransferFunctionFromIntensityClusteringIterationsSpinBox">
+                  <property name="suffix">
+                   <string> iteration/s</string>
+                  </property>
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>1000000</number>
+                  </property>
+                  <property name="value">
+                   <number>100</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="m_geneticTransferFunctionFromIntensityClusteringDelta1Label">
+                  <property name="text">
+                   <string>Δ1</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="m_geneticTransferFunctionFromIntensityClusteringDelta1DoubleSpinBox">
+                  <property name="decimals">
+                   <number>3</number>
+                  </property>
+                  <property name="maximum">
+                   <double>1.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.010000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="m_geneticTransferFunctionFromIntensityClusteringDelta2Label">
+                  <property name="text">
+                   <string>Δ2</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="m_geneticTransferFunctionFromIntensityClusteringDelta2DoubleSpinBox">
+                  <property name="decimals">
+                   <number>3</number>
+                  </property>
+                  <property name="maximum">
+                   <double>1.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.100000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QProgressBar" name="m_geneticTransferFunctionFromIntensityClusteringProgressBar">
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_87">
+                <item>
+                 <widget class="QPushButton" name="m_fineTuneGeneticTransferFunctionFromIntensityClusteringPushButton">
+                  <property name="text">
+                   <string>Fine-tune</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="m_fineTuneGeneticTransferFunctionFromIntensityClusteringIterationsSpinBox">
+                  <property name="suffix">
+                   <string> iteration/s</string>
+                  </property>
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>1000</number>
+                  </property>
+                  <property name="value">
+                   <number>10</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="m_fineTuneGeneticTransferFunctionFromIntensityClusteringLevelComboBox">
+                  <item>
+                   <property name="text">
+                    <string>Level 1</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Level 2</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Level 3</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QProgressBar" name="m_fineTuneGeneticTransferFunctionFromIntensityClusteringProgressBar">
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_71">
+                <item>
+                 <widget class="QLabel" name="m_transferFunctionOptimizationTypeLabel">
+                  <property name="text">
+                   <string>1D</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="m_optimizeByDerivativeTransferFunctionFromIntensityClusteringPushButton">
+                  <property name="text">
+                   <string>Derivative</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="m_transferFunctionOptimizationOneViewpointAutomaticPushButton">
+                  <property name="toolTip">
+                   <string>Optimize for current viewpoint (auto-updates itself)</string>
+                  </property>
+                  <property name="text">
+                   <string>1 viewpoint (auto)</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="m_optimizeByDerivativeTransferFunctionFromIntensityClusteringDkl_I_WRadioButton">
+                  <property name="text">
+                   <string>I</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string>buttonGroup_7</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="m_optimizeByDerivativeTransferFunctionFromIntensityClusteringDkl_IV_WRadioButton">
+                  <property name="text">
+                   <string>I|V</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string>buttonGroup_7</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="m_transferFunctionOptimizationBetaLabel">
+                  <property name="text">
+                   <string>beta</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="m_transferFunctionOptimizationBetaDoubleSpinBox">
+                  <property name="decimals">
+                   <number>8</number>
+                  </property>
+                  <property name="maximum">
+                   <double>1000000000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.000010000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_88">
+                <item>
+                 <widget class="QLabel" name="m_transferFunctionOptimizationLimitsLabel">
+                  <property name="text">
+                   <string>Limits</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="m_optimizeByDerivativeTransferFunctionFromIntensityClusteringMaximumIterationsSpinBox">
+                  <property name="suffix">
+                   <string> it.</string>
+                  </property>
+                  <property name="prefix">
+                   <string>Max. </string>
+                  </property>
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>1000000</number>
+                  </property>
+                  <property name="value">
+                   <number>1000</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="m_optimizeByDerivativeTransferFunctionFromIntensityClusteringThresholdLabel">
+                  <property name="text">
+                   <string>Distance &lt;</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="m_optimizeByDerivativeTransferFunctionFromIntensityClusteringThresholdDoubleSpinBox">
+                  <property name="decimals">
+                   <number>4</number>
+                  </property>
+                  <property name="minimum">
+                   <double>-1000.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>1000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.010000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="m_optimizeByDerivativeTransferFunctionFromIntensityClusteringDistanceLabel"/>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_86">
+                <item>
+                 <widget class="QLabel" name="m_geneticTransferFunctionFromIntensityClusteringWeightsLabel">
+                  <property name="text">
+                   <string>Weights</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="m_geneticTransferFunctionFromIntensityClusteringWeightsUniformRadioButton">
+                  <property name="text">
+                   <string>Uniform</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string>buttonGroup_3</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="m_geneticTransferFunctionFromIntensityClusteringWeightsIntensityProbabilitiesRadioButton">
+                  <property name="text">
+                   <string>p(I)</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string>buttonGroup_3</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="m_geneticTransferFunctionFromIntensityClusteringWeightsInnernessRadioButton">
+                  <property name="text">
+                   <string>Innerness</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string>buttonGroup_3</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="m_transferFunctionOptimizationWeightsManualCheckBox">
+                  <property name="text">
+                   <string>* Manual</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="m_geneticTransferFunctionFromIntensityClusteringWeightsVolumeDistributionCheckBox">
+                  <property name="text">
+                   <string>* Volume</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_74">
+                <item>
+                 <widget class="QLabel" name="m_transferFunctionOptimizationWeightsZeroUpToIntensityLabel">
+                  <property name="text">
+                   <string>ZUTI</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="m_transferFunctionOptimizationWeightsZeroUpToIntensitySpinBox">
+                  <property name="toolTip">
+                   <string>Zero up to intensity</string>
+                  </property>
+                  <property name="minimum">
+                   <number>-1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>5000</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="m_transferFunctionOptimizationWeightsZeroUpToGradientLabel">
+                  <property name="text">
+                   <string>ZUTG</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="m_transferFunctionOptimizationWeightsZeroUpToGradientSpinBox">
+                  <property name="toolTip">
+                   <string>Zero up to gradient</string>
+                  </property>
+                  <property name="minimum">
+                   <number>-1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>5000</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_5">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="m_transferFunctionOptimizationWeights2DIntensityVolumeCheckBox">
+                  <property name="text">
+                   <string>* Intensity volume</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="m_transferFunctionOptimizationWeights2DGradientCheckBox">
+                  <property name="text">
+                   <string>* Gradient</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="udg::QGraphicTransferFunctionEditor" name="m_geneticTransferFunctionFromIntensityClusteringWeightsEditor" native="true">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>200</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="udg::QGraphicTransferFunctionEditor" name="m_transferFunctionOptimizationManualWeightsEditor" native="true">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>200</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_90">
+                <item>
+                 <widget class="QPushButton" name="m_transferFunctionOptimizationLoadImportancePushButton">
+                  <property name="text">
+                   <string>Load importance...</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="m_transferFunctionOptimizationSaveImportancePushButton">
+                  <property name="text">
+                   <string>Save importance...</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="m_filteringTab">
+      <attribute name="title">
+       <string>Filtering</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_13">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_50">
+         <item>
+          <widget class="QLabel" name="m_filteringRadiusLabel">
+           <property name="text">
+            <string>Radius</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="m_filteringRadiusSpinBox">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>10</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_filteringGaussianPushButton">
+           <property name="text">
+            <string>Gaussian filter</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_filteringBoxMeanPushButton">
+           <property name="text">
+            <string>Box mean filter</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="m_probabilisticAmbientOcclusionGroupBox">
+         <property name="title">
+          <string>Probabilistic Ambient Occlusion (PAO)</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_14">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_53">
+            <item>
+             <widget class="QLabel" name="m_probabilisticAmbientOcclusionRadiusLabel">
+              <property name="text">
+               <string>Radius</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="m_probabilisticAmbientOcclusionRadiusSpinBox">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>10</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="m_probabilisticAmbientOcclusionGaussianChebychevPushButton">
+              <property name="text">
+               <string>PAO Gaussian Chebychev</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="m_probabilisticAmbientOcclusionBoxMeanChebychevPushButton">
+              <property name="text">
+               <string>PAO Box mean Chebychev</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_56">
+            <item>
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="m_probabilisticAmbientOcclusionGaussianPushButton">
+              <property name="text">
+               <string>PAO Gaussian</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="m_probabilisticAmbientOcclusionCubePushButton">
+              <property name="text">
+               <string>PAO cube</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="m_probabilisticAmbientOcclusionSpherePushButton">
+              <property name="text">
+               <string>PAO sphere</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_57">
+            <item>
+             <spacer name="horizontalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="m_probabilisticAmbientOcclusionTangentSphereVariancePushButton">
+              <property name="text">
+               <string>PAOTS variance</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="m_probabilisticAmbientOcclusionTangentSphereCdfPushButton">
+              <property name="text">
+               <string>PAOTS cdf</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="m_probabilisticAmbientOcclusionTangentSphereGaussianPushButton">
+              <property name="text">
+               <string>PAOTS Gaussian</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="line_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_58">
+            <item>
+             <spacer name="horizontalSpacer_4">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="m_probabilisticAmbientOcclusionGradientPushButton">
+              <property name="text">
+               <string>PAO gradient</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="m_volumeVariancePushButton">
+              <property name="text">
+               <string>Volume variance</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>688</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="m_programTab">
+      <attribute name="title">
+       <string>Program</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_11">
+       <item>
+        <widget class="QPushButton" name="m_loadAndRunProgramPushButton">
+         <property name="text">
+          <string>Load and run...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>603</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Page</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_19">
+       <item>
+        <widget class="udg::QTransferFunctionEditor2" name="m_transferFunctionEditor2" native="true"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="m_transferFunctionEditor2OkPushButton">
+         <property name="text">
+          <string>OK</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="udg::QExperimental3DViewer" name="m_viewer" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>udg::QExperimental3DViewer</class>
+   <extends>QWidget</extends>
+   <header>qexperimental3dviewer.h</header>
+  </customwidget>
+  <customwidget>
+   <class>udg::QViewpointDistributionWidget</class>
+   <extends>QWidget</extends>
+   <header>qviewpointdistributionwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>udg::QGraphicTransferFunctionEditor</class>
+   <extends>QWidget</extends>
+   <header>qgraphictransferfunctioneditor.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>udg::QTransferFunctionEditor2</class>
+   <extends>QWidget</extends>
+   <header>qtransferfunctioneditor2.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup_3"/>
+  <buttongroup name="buttonGroup_4"/>
+  <buttongroup name="buttonGroup_5"/>
+  <buttongroup name="buttonGroup_6"/>
+  <buttongroup name="buttonGroup_7"/>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
+</ui>

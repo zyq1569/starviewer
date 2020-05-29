@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hangingProtocol name="CR_3" version="2">
+    <hangingProtocolName>CR 3</hangingProtocolName>
+    <priority>0</priority>
+    <protocol>CR</protocol>
+    <iconType>CR</iconType>
+    <imageSet identifier="1">
+        <type>image</type>
+        <imageNumberInStudyModality>0</imageNumberInStudyModality>
+    </imageSet>
+    <imageSet identifier="2">
+        <type>image</type>
+        <imageNumberInStudyModality>1</imageNumberInStudyModality>
+    </imageSet>
+    <imageSet identifier="3">
+        <type>image</type>
+        <imageNumberInStudyModality>2</imageNumberInStudyModality>
+    </imageSet>
+    <displaySet identifier="1">
+        <imageSetNumber>1</imageSetNumber>
+        <position>0.0\1.0\0.25\0.0</position>
+    </displaySet>
+    <displaySet identifier="2">
+        <imageSetNumber>2</imageSetNumber>
+        <position>0.25\1.0\0.5\0.0</position>
+    </displaySet>
+    <displaySet identifier="3">
+        <imageSetNumber>3</imageSetNumber>
+        <position>0.5\1.0\1.0\0.0</position>
+    </displaySet>
+</hangingProtocol>

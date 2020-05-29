@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>udg::QAdvancedSearchWidgetBase</class>
+ <widget class="QWidget" name="udg::QAdvancedSearchWidgetBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>771</width>
+    <height>154</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Advanced search</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>6</number>
+   </property>
+   <property name="margin">
+    <number>9</number>
+   </property>
+   <item>
+    <widget class="QTabWidget" name="m_qwidgetAdvancedSearch">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="m_advancedSearchPatient">
+      <attribute name="title">
+       <string>Patient</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_14">
+           <property name="text">
+            <string>Birth Date:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QCheckBox" name="m_fromPatientBirthCheckBox">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="text">
+              <string>From</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDateEdit" name="m_fromPatientBirth">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="wrapping">
+              <bool>false</bool>
+             </property>
+             <property name="buttonSymbols">
+              <enum>QAbstractSpinBox::UpDownArrows</enum>
+             </property>
+             <property name="maximumDate">
+              <date>
+               <year>2100</year>
+               <month>12</month>
+               <day>31</day>
+              </date>
+             </property>
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="0">
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>18</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QCheckBox" name="m_toPatientBirthCheckBox">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="text">
+              <string>To</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDateEdit" name="m_toPatientBirth">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="maximumDate">
+              <date>
+               <year>2100</year>
+               <month>12</month>
+               <day>31</day>
+              </date>
+             </property>
+             <property name="currentSection">
+              <enum>QDateTimeEdit::DaySection</enum>
+             </property>
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_15">
+           <property name="text">
+            <string>Age:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="m_patientAge">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="maxLength">
+            <number>3</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="0" column="1">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>511</width>
+           <height>75</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="m_advancedSearchStudy">
+      <attribute name="title">
+       <string>Study</string>
+      </attribute>
+      <layout class="QGridLayout">
+       <property name="margin">
+        <number>9</number>
+       </property>
+       <property name="spacing">
+        <number>6</number>
+       </property>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="m_studyModalityText"/>
+       </item>
+       <item row="0" column="4">
+        <widget class="QLineEdit" name="m_studyUIDText"/>
+       </item>
+       <item row="0" column="3">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Study UID</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_studyUIDText</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_13">
+         <property name="text">
+          <string>Time</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_studyTimeText</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="1" column="5">
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="1" column="4">
+        <widget class="QLineEdit" name="m_accessionNumberText"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string>Study Modalities</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_studyModalityText</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QLabel" name="label_11">
+         <property name="text">
+          <string>Referring Physician's Name</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_referringPhysiciansNameText</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="m_studyIDText"/>
+       </item>
+       <item row="2" column="4">
+        <widget class="QLineEdit" name="m_referringPhysiciansNameText"/>
+       </item>
+       <item row="1" column="3">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Accession Number</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_accessionNumberText</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="textLabel5_3">
+         <property name="text">
+          <string>Study ID</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_studyIDText</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="m_studyTimeText">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="m_advancedSearchSeries">
+      <attribute name="title">
+       <string>Series</string>
+      </attribute>
+      <layout class="QGridLayout">
+       <property name="margin">
+        <number>9</number>
+       </property>
+       <property name="spacing">
+        <number>6</number>
+       </property>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="m_PPStartTimeText"/>
+       </item>
+       <item row="2" column="4">
+        <widget class="QLineEdit" name="m_PPStartDateText"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Series Number</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_seriesNumberText</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Requested Procedure ID</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_requestedProcedureIDText</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <widget class="QLineEdit" name="m_scheduledProcedureStepIDText"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="m_seriesNumberText"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="m_seriesUIDText"/>
+       </item>
+       <item row="0" column="4">
+        <widget class="QLineEdit" name="m_requestedProcedureIDText"/>
+       </item>
+       <item row="1" column="3">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Scheduled Procedure Step ID</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_scheduledProcedureStepIDText</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Series UID</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_seriesUIDText</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>Time</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_PPStartTimeText</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Performed Procedure Step Start Date</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_PPStartDateText</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="5">
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="m_advancedSearchImage">
+      <attribute name="title">
+       <string>Image</string>
+      </attribute>
+      <layout class="QGridLayout">
+       <property name="margin">
+        <number>9</number>
+       </property>
+       <property name="spacing">
+        <number>6</number>
+       </property>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>Instance Number</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_instanceNumberText</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>SOP Instance UID</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_SOPInstanceUIDText</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="m_SOPInstanceUIDText"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="m_instanceNumberText"/>
+       </item>
+       <item row="1" column="2">
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>m_studyTimeText</tabstop>
+  <tabstop>m_studyUIDText</tabstop>
+  <tabstop>m_studyIDText</tabstop>
+  <tabstop>m_accessionNumberText</tabstop>
+  <tabstop>m_studyModalityText</tabstop>
+  <tabstop>m_referringPhysiciansNameText</tabstop>
+  <tabstop>m_seriesUIDText</tabstop>
+  <tabstop>m_requestedProcedureIDText</tabstop>
+  <tabstop>m_seriesNumberText</tabstop>
+  <tabstop>m_scheduledProcedureStepIDText</tabstop>
+  <tabstop>m_PPStartTimeText</tabstop>
+  <tabstop>m_PPStartDateText</tabstop>
+  <tabstop>m_SOPInstanceUIDText</tabstop>
+  <tabstop>m_instanceNumberText</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

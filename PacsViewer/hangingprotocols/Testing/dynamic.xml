@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hangingProtocol name="Dynamic" version="2">
+    <hangingProtocolName>Dynamic</hangingProtocolName>
+    <numberScreens>1</numberScreens>
+    <protocol>MR</protocol>
+    <restriction identifier="1">
+        <selectorAttribute>PatientName</selectorAttribute>
+        <selectorValue>DYNAMIC</selectorValue>
+    </restriction>
+    <restriction identifier="2">
+        <selectorAttribute>SeriesNumber</selectorAttribute>
+        <selectorValue>901</selectorValue>
+    </restriction>
+    <imageSet identifier="1">
+        <restrictionExpression>1 and 2</restrictionExpression>
+    </imageSet>
+    <displaySet identifier="1">
+        <imageSetNumber>1</imageSetNumber>
+        <position>0.0\1.0\0.5\0.5</position>
+        <phase>0</phase>
+    </displaySet>
+    <displaySet identifier="2">
+        <imageSetNumber>1</imageSetNumber>
+        <position>0.5\1.0\1.0\0.5</position>
+        <phase>1</phase>
+    </displaySet>
+    <displaySet identifier="3">
+        <imageSetNumber>1</imageSetNumber>
+        <position>0.0\0.5\0.5\0.0</position>
+        <phase>2</phase>
+    </displaySet>
+    <displaySet identifier="4">
+        <imageSetNumber>1</imageSetNumber>
+        <position>0.5\0.5\1.0\0.0</position>
+        <phase>3</phase>
+    </displaySet>
+</hangingProtocol>
