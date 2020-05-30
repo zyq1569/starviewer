@@ -17,7 +17,7 @@
 
 #include "logging.h"
 #include "mathtools.h"
-
+#include <QDataStream>
 #include <QMap>
 #include <QString>
 
