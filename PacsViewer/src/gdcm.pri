@@ -1,6 +1,13 @@
 include(defaultdirectories.pri)
 
-INCLUDEPATH += $${GDCMINCLUDEDIR}
+INCLUDEPATH += $${GDCMINCLUDEDIR} \
+               $${GDCMINCLUDEDIR}/../ \
+               $${GDCMINCLUDEDIR}/Source/Common/ \
+               $${GDCMINCLUDEDIR}/Source/DataDictionary \
+               $${GDCMINCLUDEDIR}/Source/InformationObjectDefinition \
+               $${GDCMINCLUDEDIR}/Source/MediaStorageAndFileFormat/ \
+               $${GDCMINCLUDEDIR}/Source/DataStructureAndEncodingDefinition/ \
+               $${GDCMINCLUDEDIR}/Utilities/VTK/
 
 LIBS += -L$${GDCMLIBDIR} \
         -lgdcmcharls \
@@ -8,14 +15,17 @@ LIBS += -L$${GDCMLIBDIR} \
         -lgdcmDICT \
         -lgdcmDSED \
         -lgdcmexpat \
+        -lgdcmMEXD \
         -lgdcmIOD \
         -lgdcmjpeg8 \
         -lgdcmjpeg12 \
         -lgdcmjpeg16 \
+        -lgdcmopenjp2 \
         -lgdcmMSFF \
         -lgdcmopenjpeg \
         -lgdcmzlib \
-        -lvtkgdcm
+        -lvtkgdcm \
+        -gdcmgetopt
 
 win32 {
     LIBS += -lgdcmgetopt

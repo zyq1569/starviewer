@@ -12,7 +12,7 @@ win32 {
     DEFINES += GLEW_STATIC
     # Avoid definition of min and max macros by windows.h
     DEFINES += NOMINMAX
-    
+
     # Volem veure missatges a std::cout en debug
     CONFIG(debug, debug|release) {
         CONFIG += console
@@ -34,10 +34,16 @@ macx {
 win32-msvc2013:QMAKE_CXXFLAGS += /MP
 
 # Indiquem que per compil·lacions en debug, Runtime Library sigui Multi-threaded DLL (com en release) i no Multi-threaded Debug DLL
-win32-msvc2013:QMAKE_CXXFLAGS_DEBUG -= -MDd
-win32-msvc2013:QMAKE_CXXFLAGS_DEBUG += -MD
-
+win32-msvc2013:QMAKE_CXXFLAGS_DEBUG   -= -MDd
+win32-msvc2013:QMAKE_CXXFLAGS_DEBUG   += -MD
 win32-msvc2013:QMAKE_CXXFLAGS_RELEASE -= -Zc:strictStrings
 
+
+#win32-msvc2013:QMAKE_CXXFLAGS_DEBUG   -= -MDd
+#win32-msvc2013:QMAKE_CXXFLAGS_DEBUG   -= -Zc:strictStrings
+#win32-msvc2013:QMAKE_CXXFLAGS_DEBUG   += -MTd
+#win32-msvc2013:QMAKE_CXXFLAGS_RELEASE -= -MD
+#win32-msvc2013:QMAKE_CXXFLAGS_RELEASE -= -Zc:strictStrings
+#win32-msvc2013:QMAKE_CXXFLAGS_RELEASE += -MT
 # Definim variable per construir versió lite en temps de compilació
 lite_version:DEFINES += STARVIEWER_LITE
