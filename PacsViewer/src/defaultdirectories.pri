@@ -26,7 +26,7 @@ isEmpty(VTKLIBDIR){
     unix:VTKLIBDIR = $$(SDK_INSTALL_PREFIX)/lib
     macx:VTKLIBDIR = /usr/local/lib
     win32:VTKLIBDIR = D:/SDK/VTK/6.1.0-64/lib
-    win32:contains(QMAKE_TARGET.arch, x86_64):VTKLIBDIR =D:/SDK/VTK/6.1.0-64/slibX64
+    win32:contains(QMAKE_TARGET.arch, x86_64):VTKLIBDIR =D:/SDK/VTK/6.1.0-64/libX64
 }
 VTKINCLUDEDIR = $$(VTKINCLUDEDIR)
 isEmpty(VTKINCLUDEDIR){
@@ -44,7 +44,7 @@ isEmpty(ITKLIBDIR){
     unix:ITKLIBDIR = $$(SDK_INSTALL_PREFIX)/lib
     macx:ITKLIBDIR = /usr/local/lib
     win32:ITKLIBDIR =  D:/SDK/InsightToolkit-4.7.1/lib
-    win32:contains(QMAKE_TARGET.arch, x86_64):ITKLIBDIR = D:/SDK/InsightToolkit-4.7.1/slibX64
+    win32:contains(QMAKE_TARGET.arch, x86_64):ITKLIBDIR = D:/SDK/InsightToolkit-4.7.1/libX64
 }
 ITKINCLUDEDIR = $$(ITKINCLUDEDIR)
 isEmpty(ITKINCLUDEDIR){
@@ -61,7 +61,7 @@ isEmpty(GDCMLIBDIR){
     unix:GDCMLIBDIR = $$(SDK_INSTALL_PREFIX)/lib
     macx:GDCMLIBDIR = /usr/local/lib
     win32:GDCMLIBDIR = D:/SDK/gdcm/2.4.4/lib
-    win32:contains(QMAKE_TARGET.arch, x86_64):GDCMLIBDIR = D:/SDK/gdcm/2.4.4/slibX64
+    win32:contains(QMAKE_TARGET.arch, x86_64):GDCMLIBDIR = D:/SDK/gdcm/2.4.4/libX64
 }
 GDCMINCLUDEDIR = $$(GDCMINCLUDEDIR)
 isEmpty(GDCMINCLUDEDIR){
