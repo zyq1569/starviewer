@@ -55,7 +55,6 @@ isEmpty(ITKINCLUDEDIR){
 }
 
 # GDCM Libraries
-
 GDCMLIBDIR = $$(GDCMLIBDIR)
 isEmpty(GDCMLIBDIR){
     unix:GDCMLIBDIR = $$(SDK_INSTALL_PREFIX)/lib
@@ -71,8 +70,8 @@ isEmpty(GDCMINCLUDEDIR){
     win32:contains(QMAKE_TARGET.arch, x86_64):GDCMINCLUDEDIR = D:/SDK/gdcm/2.4.4/include
 }
 
-# Log4cxx Libraries
 
+# Log4cxx Libraries
 LOG4CXXLIBDIR = $$(LOG4CXXLIBDIR)
 isEmpty(LOG4CXXLIBDIR){
     unix:LOG4CXXLIBDIR = /usr/lib
@@ -88,8 +87,8 @@ isEmpty(LOG4CXXINCLUDEDIR){
     win32:contains(QMAKE_TARGET.arch, x86_64):LOG4CXXINCLUDEDIR =D:/SDK/log4cxx-64/0.10.0/include
 }
 
-# Threadweaver libraries
 
+# Threadweaver libraries
 THREADWEAVERLIBDIR = $$(THREADWEAVERLIBDIR)
 isEmpty(THREADWEAVERLIBDIR){
     # This unix default is for 64-bit Debian-based systems. It will be different for others.
