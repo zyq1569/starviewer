@@ -21,8 +21,10 @@
 #include "diagnosistests.h"
 #include "syncactionsregister.h"
 // Definicions globals d'aplicació
+//全局应用程序定义
 #include "starviewerapplication.h"
 // Necessaris per suportar la decodificació de jpeg i RLE
+//全局应用程序定义
 #include <djdecode.h>
 #include <dcrledrg.h>
 #include "applicationtranslationsloader.h"
@@ -60,14 +62,18 @@ typedef udg::SingletonPointer<udg::StarviewerApplicationCommandLine> StarviewerS
 void configureLogging()
 {
     // Primer comprovem que existeixi el direcotori ~/.starviewer/log/ on guradarem els logs
+    //首先，我们检查目录/ .starviewer / log /是否存在，我们将在其中查找日志...
     QDir logDir = udg::UserLogsPath;
     if (!logDir.exists())
     {
         // Creem el directori
+        //creat dir
         logDir.mkpath(udg::UserLogsPath);
     }
     // TODO donem per fet que l'arxiu es diu així i es troba a la localització que indiquem. S'hauria de fer una mica més flexible o genèric;
+    //todo 我们假定该文件已被调用并且位于我们指定的位置。 应该使其更加灵活或通用
     // està així perquè de moment volem anar per feina i no entretenir-nos però s'ha de fer bé.
+    //正确配置路径
     QString configurationFile = "/etc/starviewer/log.conf";
     if (!QFile::exists(configurationFile))
     {
