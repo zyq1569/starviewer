@@ -256,6 +256,7 @@ int main(int argc, char *argv[])
     if (app.isRunning())
     {
         // Hi ha una altra instància del Starviewer executant-se
+        //starviewer已经正在运行
         INFO_LOG("Hi ha una altra instancia de l'starviewer executant-se. S'enviaran els arguments de la linia de comandes a la instancia principal.");
 
         sendToFirstStarviewerInstanceCommandLineOptions(app);
@@ -273,8 +274,7 @@ int main(int argc, char *argv[])
 
         mainWin->show();
 
-        QObject::connect(&app, SIGNAL(lastWindowClosed()),
-                         &app, SLOT(quit()));
+        QObject::connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
         splash.close();
 
         // S'ha esperat a tenir-ho tot carregat per processar els aguments rebuts per línia de comandes, d'aquesta manera per exemoke si en llança algun

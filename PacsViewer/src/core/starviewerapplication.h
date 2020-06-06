@@ -39,6 +39,8 @@ const QString OrganizationWebURL("http://starviewer.udg.edu");
 
 // Paths per defecte on es guarden configuracions i arxius d'usuari
 /// Path base per a dades d'usuari
+///保存用户配置和文件的默认路径
+///用户数据的路径库
 const QString UserDataRootPath(QDir::homePath() + "/.starviewer/");
 /// Path del log
 const QString UserLogsPath(UserDataRootPath + "log/");
