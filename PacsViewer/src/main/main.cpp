@@ -141,7 +141,7 @@ void sendToFirstStarviewerInstanceCommandLineOptions(QtSingleApplication &app)
     {
         ERROR_LOG("The argument list could not be sent to the main instance, the primary instance does not appear to respond.");
         QMessageBox::critical(NULL, udg::ApplicationNameString, QObject::tr("%1 is already running, but is not responding. "
-            "To open %1, you must first close the existing %1 process, or restart your system.").arg(udg::ApplicationNameString));
+                                                                            "To open %1, you must first close the existing %1 process, or restart your system.").arg(udg::ApplicationNameString));
     }
     else
     {
@@ -159,11 +159,11 @@ int main(int argc, char *argv[])
     QtSingleApplication app(argc, argv);
 
     QPixmap splashPixmap;
-    #ifdef STARVIEWER_LITE
+#ifdef STARVIEWER_LITE
     splashPixmap.load(":/images/splashLite.png");
-    #else
+#else
     splashPixmap.load(":/images/splash.png");
-    #endif
+#endif
     QLabel splash(0, Qt::SplashScreen|Qt::FramelessWindowHint);
     splash.setAttribute(Qt::WA_TranslucentBackground);
     splash.setPixmap(splashPixmap);
@@ -179,11 +179,9 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain(udg::OrganizationDomainString);
     app.setApplicationName(udg::ApplicationNameString);
 
-#ifndef NO_CRASH_REPORTER
     // We initialize the crash handler in case we support it.
     // You only need to create the object for it to self-register automatically, so we mark it as unused to avoid a warning.
-    //如果支持的话，会初始化崩溃处理程序。
-    //只需要创建一个对象即可使其自动进行自注册，因此将其标记为未使用以避免警告。
+#ifndef NO_CRASH_REPORTER
     CrashHandler *crashHandler = new CrashHandler();
     Q_UNUSED(crashHandler);
 #endif
@@ -234,17 +232,17 @@ int main(int argc, char *argv[])
     QString commandLineCall = commandLineArgumentsList.join(" ");
     INFO_LOG("Started Starviewer instance with the following command line arguments: " + commandLineCall);
 
+    // We just parse the command line arguments to see if they are correct, we'll wait until everything is loaded by
+    // process them, if the arguments are not correct show QMessagebox if there is another instance of Starviewer we end here.
+    // 我们只是解析命令行参数以查看它们是否正确，我们将等到所有内容加载完毕后，
+    // 处理它们，如果参数不正确，则显示QMessagebox（如果还有另一个Starviewer实例），我们在这里结束。
     if (commandLineArgumentsList.count() > 1)
     {
-        // We just parse the command line arguments to see if they are correct, we'll wait until everything is loaded by
-        // process them, if the arguments are not correct show QMessagebox if there is another instance of Starviewer we end here.
-        //我们只是解析命令行参数以查看它们是否正确，我们将等到所有内容加载完毕后，
-        //处理它们，如果参数不正确，则显示QMessagebox（如果还有另一个Starviewer实例），我们在这里结束。
         QString errorInvalidCommanLineArguments;
         if (!StarviewerSingleApplicationCommandLineSingleton::instance()->parse(commandLineArgumentsList, errorInvalidCommanLineArguments))
         {
             QString invalidCommandLine = QObject::tr("There were errors invoking %1 from the command line with the following call:\n\n%2")
-                                                     .arg(udg::ApplicationNameString).arg(commandLineCall) + "\n\n";
+                    .arg(udg::ApplicationNameString).arg(commandLineCall) + "\n\n";
             invalidCommandLine += QObject::tr("Detected errors: ") + errorInvalidCommanLineArguments + "\n";
             invalidCommandLine += StarviewerSingleApplicationCommandLineSingleton::instance()->getStarviewerApplicationCommandLineOptions().getSynopsis();
             QMessageBox::warning(NULL, udg::ApplicationNameString, invalidCommandLine);
@@ -296,8 +294,8 @@ int main(int argc, char *argv[])
     }
 
     // We mark the end of the application in the log
-    INFO_LOG(QString("%1 Version %2 BuildID %3, returnValue %4").arg(udg::ApplicationNameString).arg(udg::StarviewerVersionString)
-             .arg(udg::StarviewerBuildID).arg(returnValue));
+    INFO_LOG(QString("%1 Version %2 BuildID %3, returnValue %4").arg(udg::ApplicationNameString).
+             arg(udg::StarviewerVersionString).arg(udg::StarviewerBuildID).arg(returnValue));
     INFO_LOG("===================================================== END =====================================================");
 
     return returnValue;
