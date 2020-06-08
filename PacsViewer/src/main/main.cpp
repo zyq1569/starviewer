@@ -20,10 +20,8 @@
 #include "extensionmediatorfactory.h"
 #include "diagnosistests.h"
 #include "syncactionsregister.h"
-// Definicions globals d'aplicació
 //全局应用程序定义
 #include "starviewerapplication.h"
-// Necessaris per suportar la decodificació de jpeg i RLE
 //全局应用程序定义
 #include <djdecode.h>
 #include <dcrledrg.h>
@@ -61,7 +59,6 @@ typedef udg::SingletonPointer<udg::StarviewerApplicationCommandLine> StarviewerS
 
 void configureLogging()
 {
-    // Primer comprovem que existeixi el direcotori ~/.starviewer/log/ on guradarem els logs
     //首先，我们检查目录/ .starviewer / log /是否存在，我们将在其中查找日志...
     QDir logDir = udg::UserLogsPath;
     if (!logDir.exists())
@@ -70,25 +67,23 @@ void configureLogging()
         //creat dir
         logDir.mkpath(udg::UserLogsPath);
     }
-    // TODO donem per fet que l'arxiu es diu així i es troba a la localització que indiquem. S'hauria de fer una mica més flexible o genèric;
     //todo 我们假定该文件已被调用并且位于我们指定的位置。 应该使其更加灵活或通用
-    // està així perquè de moment volem anar per feina i no entretenir-nos però s'ha de fer bé.
     //正确配置路径
     QString configurationFile = "/etc/starviewer/log.conf";
     if (!QFile::exists(configurationFile))
     {
         configurationFile = qApp->applicationDirPath() + "/log.conf";
     }
-    // Afegim localització per Mac OS X en desenvolupament
+    // Mac OS X 开发的本地化
     if (!QFile::exists(configurationFile))
     {
         configurationFile = qApp->applicationDirPath() + "/../../../log.conf";
     }
 
     LOGGER_INIT(configurationFile.toStdString());
-    DEBUG_LOG("Arxiu de configuració del log: " + configurationFile);
+    DEBUG_LOG("Log configuration file: " + configurationFile);
 
-    // Redirigim els missatges de VTK cap al log.
+    // We redirect VTK messages to the log.
     udg::LoggingOutputWindow *loggingOutputWindow = udg::LoggingOutputWindow::New();
     vtkOutputWindow::SetInstance(loggingOutputWindow);
     loggingOutputWindow->Delete();
@@ -97,7 +92,7 @@ void configureLogging()
 void initializeTranslations(QApplication &app)
 {
     udg::ApplicationTranslationsLoader translationsLoader(&app);
-    // Li indiquem la locale corresponent
+    // We indicate the corresponding premises
     QLocale defaultLocale = translationsLoader.getDefaultLocale();
     QLocale::setDefault(defaultLocale);
 
@@ -119,18 +114,18 @@ void initializeTranslations(QApplication &app)
             QString translationFilePath = ":/extensions/" + mediator->getExtensionID().getID() + "/translations_" + defaultLocale.name();
             if (!translationsLoader.loadTranslation(translationFilePath))
             {
-                ERROR_LOG("No s'ha pogut carregar el translator " + translationFilePath);
+                ERROR_LOG("The translator could not be loaded: " + translationFilePath);
             }
             delete mediator;
         }
         else
         {
-            ERROR_LOG("Error carregant el mediator de " + mediatorName);
+            ERROR_LOG("Error loading mediator from: " + mediatorName);
         }
     }
 }
 
-/// Afegeix els directoris on s'han de buscar els plugins de Qt. Útil a windows.
+/// Add the directories where to look for Qt plugins. Useful in windows.
 void initQtPluginsDirectory()
 {
 #ifdef Q_OS_WIN32
@@ -144,20 +139,22 @@ void sendToFirstStarviewerInstanceCommandLineOptions(QtSingleApplication &app)
 
     if (!app.sendMessage(app.arguments().join(";"), 10000))
     {
-        ERROR_LOG("No s'ha pogut enviar a la instancia principal la llista d'arguments, sembla que l'instancia principal no respon.");
+        ERROR_LOG("The argument list could not be sent to the main instance, the primary instance does not appear to respond.");
         QMessageBox::critical(NULL, udg::ApplicationNameString, QObject::tr("%1 is already running, but is not responding. "
             "To open %1, you must first close the existing %1 process, or restart your system.").arg(udg::ApplicationNameString));
     }
     else
     {
-        INFO_LOG("S'ha enviat correctament a la instancia principal els arguments de la línia de comandes.");
+        INFO_LOG("The command line arguments were successfully sent to the main instance.");
     }
 }
 
 int main(int argc, char *argv[])
 {
-    // Utilitzem QtSingleApplication en lloc de QtApplication, ja que ens permet tenir executant sempre una sola instància d'Starviewer, si l'usuari executa
-    // una nova instància d'Starviewer aquesta ho detecta i envia la línia de comandes amb que l'usuari ha executat la nova instància principal.
+    // We use QtSingleApplication instead of QtApplication, as it allows us to always have a single instance of Starviewer running, if the user runs
+    // a new instance of Starviewer detects this and sends the command line with which the user has executed the new main instance.
+    //使用QtSingleApplication而不是QtApplication，因为如果用户运行，始终可以运行单个Starviewer实例
+    // Starviewer的新实例检测到此情况，并发送用户执行新主实例的命令行。
 
     QtSingleApplication app(argc, argv);
 
@@ -183,22 +180,25 @@ int main(int argc, char *argv[])
     app.setApplicationName(udg::ApplicationNameString);
 
 #ifndef NO_CRASH_REPORTER
-    // Inicialitzem el crash handler en el cas que ho suportem.
-    // Només cal crear l'objecte per què s'autoregistri automàticament, per això el marquem com no utilitzat per evitar un warning.
+    // We initialize the crash handler in case we support it.
+    // You only need to create the object for it to self-register automatically, so we mark it as unused to avoid a warning.
+    //如果支持的话，会初始化崩溃处理程序。
+    //只需要创建一个对象即可使其自动进行自注册，因此将其标记为未使用以避免警告。
     CrashHandler *crashHandler = new CrashHandler();
     Q_UNUSED(crashHandler);
 #endif
 
-    // TODO tot aquest proces inicial de "setups" hauria d'anar encapsulat en
-    // una classe dedicada a tal efecte
-
+    // ALL of this initial setup process should be encapsulated in
+    // a class dedicated to that purpose
+    //所有此初始设置过程都应封装在
+    //专门用于此目的的类
     configureLogging();
 
-    // Marquem l'inici de l'aplicació al log
+    // Mark the start of the application in the log
     INFO_LOG("==================================================== BEGIN ====================================================");
     INFO_LOG(QString("%1 Version %2 BuildID %3").arg(udg::ApplicationNameString).arg(udg::StarviewerVersionString).arg(udg::StarviewerBuildID));
 
-    // Inicialitzem els settings
+    // We initialize the settings
     udg::CoreSettings coreSettings;
     udg::InputOutputSettings inputoutputSettings;
     udg::InterfaceSettings interfaceSettings;
@@ -215,24 +215,31 @@ int main(int argc, char *argv[])
     // Registering the available sync actions
     udg::SyncActionsRegister::registerSyncActions();
 
-    // TODO aixo es necessari per, entre d'altres coses, poder crear thumbnails,
-    // dicomdirs, etc de dicoms comprimits i tractar-los correctament amb dcmtk
-    // aixo esta temporalment aqui, a la llarga anira a una classe de setup
-    // registrem els codecs decompressors JPEG i RLE
+    // ALL this is necessary to, among other things, be able to create thumbnails,
+    // dicomdirs, etc. of compressed dicoms and treat them correctly with dcmtk
+    // this is temporarily here, in the long run I will go to a setup class
+    // register the JPEG and RLE decompressor codecs
+    //所有这些都是创建缩略图的必要条件，
+    //压缩的dicom的dicomdirs等，并使用dcmtk正确对待它们
+    //这是暂时的，从长远来看，我将进入设置类
+    //注册JPEG和RLE解压缩器编解码器
     DJDecoderRegistration::registerCodecs();
     DcmRLEDecoderRegistration::registerCodecs();
 
-    // Seguint les recomanacions de la documentació de Qt, guardem la llista d'arguments en una variable, ja que aquesta operació és costosa
+    // Following the recommendations of the Qt documentation, we save the list of arguments in a variable, as this operation is expensive
     // http://doc.trolltech.com/4.7/qcoreapplication.html#arguments
+    //根据Qt文档的建议，我们将参数列表保存在变量中，因为此操作很昂贵
     QStringList commandLineArgumentsList = app.arguments();
 
     QString commandLineCall = commandLineArgumentsList.join(" ");
-    INFO_LOG("Iniciada nova instancia Starviewer amb el seguents arguments de linia de comandes " + commandLineCall);
+    INFO_LOG("Started Starviewer instance with the following command line arguments: " + commandLineCall);
 
     if (commandLineArgumentsList.count() > 1)
     {
-        // Només parsegem els arguments de línia de comandes per saber si són correctes, ens esperem més endavant a que tot estigui carregat per
-        // processar-los, si els arguments no són correctes mostre QMessagebox si hi ha una altra instància d'Starviewer finalitzem aquí.
+        // We just parse the command line arguments to see if they are correct, we'll wait until everything is loaded by
+        // process them, if the arguments are not correct show QMessagebox if there is another instance of Starviewer we end here.
+        //我们只是解析命令行参数以查看它们是否正确，我们将等到所有内容加载完毕后，
+        //处理它们，如果参数不正确，则显示QMessagebox（如果还有另一个Starviewer实例），我们在这里结束。
         QString errorInvalidCommanLineArguments;
         if (!StarviewerSingleApplicationCommandLineSingleton::instance()->parse(commandLineArgumentsList, errorInvalidCommanLineArguments))
         {
@@ -242,9 +249,9 @@ int main(int argc, char *argv[])
             invalidCommandLine += StarviewerSingleApplicationCommandLineSingleton::instance()->getStarviewerApplicationCommandLineOptions().getSynopsis();
             QMessageBox::warning(NULL, udg::ApplicationNameString, invalidCommandLine);
 
-            ERROR_LOG("Arguments de linia de comandes invalids, error : " + errorInvalidCommanLineArguments);
+            ERROR_LOG("Invalid command line arguments, error : " + errorInvalidCommanLineArguments);
 
-            // Si ja hi ha una altra instància execuntat-se donem el missatge d'error i tanquem Starviewer
+            // If there is already another instance running we give the error message and close Starviewer
             if (app.isRunning())
             {
                 return 0;
@@ -255,9 +262,9 @@ int main(int argc, char *argv[])
     int returnValue;
     if (app.isRunning())
     {
-        // Hi ha una altra instància del Starviewer executant-se
+        // There is another instance of Starviewer running
         //starviewer已经正在运行
-        INFO_LOG("Hi ha una altra instancia de l'starviewer executant-se. S'enviaran els arguments de la linia de comandes a la instancia principal.");
+        INFO_LOG("Another instance of starviewer is running. Command line arguments will be sent to the main instance.");
 
         sendToFirstStarviewerInstanceCommandLineOptions(app);
 
@@ -265,20 +272,20 @@ int main(int argc, char *argv[])
     }
     else
     {
-        // Instància principal, no n'hi ha cap més executant-se
+        // Main instance, no more running
         udg::QApplicationMainWindow *mainWin = new udg::QApplicationMainWindow;
-        // Fem el connect per rebre els arguments de les altres instàncies
+        // We connect to receive arguments from other instances
         QObject::connect(&app, SIGNAL(messageReceived(QString)), StarviewerSingleApplicationCommandLineSingleton::instance(), SLOT(parseAndRun(QString)));
 
-        INFO_LOG("Creada finestra principal");
+        INFO_LOG("Created main window");
 
         mainWin->show();
 
         QObject::connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
         splash.close();
 
-        // S'ha esperat a tenir-ho tot carregat per processar els aguments rebuts per línia de comandes, d'aquesta manera per exemoke si en llança algun
-        // QMessageBox, ja es llança mostrant-se la MainWindow.
+        // It is expected to have everything loaded to process the arguments received by command line, this way by exemoke if it throws any
+        // QMessageBox, already launched showing the MainWindow.
         if (commandLineArgumentsList.count() > 1)
         {
             QString errorInvalidCommanLineArguments;
@@ -288,7 +295,7 @@ int main(int argc, char *argv[])
         returnValue = app.exec();
     }
 
-    // Marquem el final de l'aplicació al log
+    // We mark the end of the application in the log
     INFO_LOG(QString("%1 Version %2 BuildID %3, returnValue %4").arg(udg::ApplicationNameString).arg(udg::StarviewerVersionString)
              .arg(udg::StarviewerBuildID).arg(returnValue));
     INFO_LOG("===================================================== END =====================================================");
