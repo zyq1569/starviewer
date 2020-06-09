@@ -217,16 +217,11 @@ int main(int argc, char *argv[])
     // dicomdirs, etc. of compressed dicoms and treat them correctly with dcmtk
     // this is temporarily here, in the long run I will go to a setup class
     // register the JPEG and RLE decompressor codecs
-    //所有这些都是创建缩略图的必要条件，
-    //压缩的dicom的dicomdirs等，并使用dcmtk正确对待它们
-    //这是暂时的，从长远来看，我将进入设置类
-    //注册JPEG和RLE解压缩器编解码器
     DJDecoderRegistration::registerCodecs();
     DcmRLEDecoderRegistration::registerCodecs();
 
     // Following the recommendations of the Qt documentation, we save the list of arguments in a variable, as this operation is expensive
     // http://doc.trolltech.com/4.7/qcoreapplication.html#arguments
-    //根据Qt文档的建议，我们将参数列表保存在变量中，因为此操作很昂贵
     QStringList commandLineArgumentsList = app.arguments();
 
     QString commandLineCall = commandLineArgumentsList.join(" ");
