@@ -27,9 +27,9 @@
 #include <log4cxx/propertyconfigurator.h>
 #include <log4cxx/helpers/exception.h>
 
-/// Macro per a inicialitzar els logger
-/// Definim la variable d'entorn que indica la localització
-/// dels fitxers de log i llavors llegim la configuració dels logs
+/// Macro to initialize loggers
+/// We define the environment variable that indicates the location
+/// of the log files and then we read the configuration of the logs
 #define LOGGER_INIT(file) \
     if (true) \
     { \
@@ -38,8 +38,9 @@
         log4cxx::PropertyConfigurator::configure(file); \
     } else (void)0
 
-/// Macro per a missatges de debug. \TODO de moment fem servir aquesta variable de qmake i funciona bé, però podria ser més adequat troba la forma d'afegir
-/// una variable pròpia, com per exemple DEBUG
+/// Macro for debug messages. \
+/// TODO at the moment we use this variable from qmake and it works fine, but it might be more appropriate to find a way to add
+/// a variable of its own, such as DEBUG
 #ifdef QT_NO_DEBUG
 #define DEBUG_LOG(msg) (void)0
 #else
@@ -51,28 +52,28 @@
 
 #endif
 
-/// Macro per a missatges d'informació general
+/// Macro for general information messages
 #define INFO_LOG(msg) \
     if (true) \
     { \
         LOG4CXX_INFO(log4cxx::Logger::getLogger("info.release"), QString(msg).toUtf8().constData()) \
     } else (void)0
 
-/// Macro per a missatges de warning
+/// Macro for warning messages
 #define WARN_LOG(msg) \
     if (true) \
     { \
         LOG4CXX_WARN(log4cxx::Logger::getLogger("info.release"), QString(msg).toUtf8().constData()) \
     } else (void)0
 
-/// Macro per a missatges d'error
+/// Macro for error messages
 #define ERROR_LOG(msg) \
     if (true) \
     { \
         LOG4CXX_ERROR(log4cxx::Logger::getLogger("errors.release"), QString(msg).toUtf8().constData()) \
     } else (void)0
 
-/// Macro per a missatges d'error fatals/crítics
+/// Macro for fatal / critical error messages
 #define FATAL_LOG(msg) \
     if (true) \
     { \

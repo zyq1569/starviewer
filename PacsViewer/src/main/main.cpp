@@ -63,8 +63,8 @@ void configureLogging()
     QDir logDir = udg::UserLogsPath;
     if (!logDir.exists())
     {
-        // Creem el directori
-        //creat dir
+        // We create the directory
+        // created dir
         logDir.mkpath(udg::UserLogsPath);
     }
     //todo 我们假定该文件已被调用并且位于我们指定的位置。 应该使其更加灵活或通用
@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
 {
     // We use QtSingleApplication instead of QtApplication, as it allows us to always have a single instance of Starviewer running, if the user runs
     // a new instance of Starviewer detects this and sends the command line with which the user has executed the new main instance.
-    //使用QtSingleApplication而不是QtApplication，因为如果用户运行，始终可以运行单个Starviewer实例
+    // 使用QtSingleApplication而不是QtApplication，因为如果用户运行，始终可以运行单个Starviewer实例
     // Starviewer的新实例检测到此情况，并发送用户执行新主实例的命令行。
 
     QtSingleApplication app(argc, argv);
@@ -188,8 +188,8 @@ int main(int argc, char *argv[])
 
     // ALL of this initial setup process should be encapsulated in
     // a class dedicated to that purpose
-    //所有此初始设置过程都应封装在
-    //专门用于此目的的类
+    // 所有此初始设置过程都应封装在
+    // 专门用于此目的的类
     configureLogging();
 
     // Mark the start of the application in the log
