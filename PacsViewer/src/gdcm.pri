@@ -24,8 +24,7 @@ LIBS += -L$${GDCMLIBDIR} \
         -lgdcmMSFF \
         -lgdcmopenjpeg \
         -lgdcmzlib \
-        -lvtkgdcm \
-        -gdcmgetopt
+        -lvtkgdcm
 
 win32 {
     LIBS += -lgdcmgetopt

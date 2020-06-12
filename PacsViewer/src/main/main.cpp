@@ -65,7 +65,11 @@ void configureLogging()
     {
         // We create the directory
         // created dir
-        logDir.mkpath(udg::UserLogsPath);
+        //logDir.mkpath(udg::UserLogsPath);
+        if (logDir.mkpath(udg::UserLogsPath))
+            QMessageBox::information(NULL, udg::UserLogsPath, "logDir.mkpath OK");
+        else
+            QMessageBox::information(NULL, udg::UserLogsPath, "logDir.mkpath fail");
     }
     //todo 我们假定该文件已被调用并且位于我们指定的位置。 应该使其更加灵活或通用
     //正确配置路径
