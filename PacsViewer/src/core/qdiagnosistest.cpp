@@ -48,7 +48,7 @@ QDiagnosisTest::QDiagnosisTest(QWidget *parent)
     m_animationInProgressLabel->setMovie(operationAnimation);
     operationAnimation->start();
 
-    //Treiem icona amb ? que apareix al costat del botó de tancar
+    // Do we choose icon with? which appears next to the close button
     this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     
     m_diagnosisTestsResults->setContextMenuPolicy(Qt::NoContextMenu);
