@@ -6,6 +6,7 @@
 #include "../core/logging.h"
 #include <QProcess>
 
+INITIALIZE_EASYLOGGINGPP
 /// Configurem el logging
 // \TODO Còpia exacta del main.cpp de l'starviewer. Caldria refactoritzar-ho.
 void configureLogging()
@@ -24,8 +25,8 @@ void configureLogging()
     {
         configurationFile = QCoreApplication::applicationDirPath() + "/log.conf";
     }
-    LOGGER_INIT(configurationFile.toStdString());
-    DEBUG_LOG("Arxiu de configuració del log: " + configurationFile);
+    //LOGGER_INIT(configurationFile.toStdString());
+    //DEBUG_LOG("Arxiu de configuració del log: " + configurationFile);
 }
 
 /// Imprimim l'ajuda del programa
@@ -57,7 +58,7 @@ void retrieveStudy(QString accessionNumber)
 
     // Executem una instància del Starviewer utiltizant la opció de línia de comandes -accessionnumber "valor del accessio number"
 
-    INFO_LOG("Starviewer_sapwrapper::S'iniciara nova instancia del Starviewer per demanar descarrega de l'estudi amb accession number" + accessionNumber);
+    //INFO_LOG("Starviewer_sapwrapper::S'iniciara nova instancia del Starviewer per demanar descarrega de l'estudi amb accession number" + accessionNumber);
     process.startDetached(getStarviewerExecutableFilePath() + starviewerCommandLine);
 }
 
@@ -79,7 +80,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        INFO_LOG(QString("StarviewerSAPWrapper::Número de parametres incorrecte, s'han passat %1 parametres").arg(QString().setNum(argc - 1)));
+        //INFO_LOG(QString("StarviewerSAPWrapper::Número de parametres incorrecte, s'han passat %1 parametres").arg(QString().setNum(argc - 1)));
         printHelp();
     }
 }
