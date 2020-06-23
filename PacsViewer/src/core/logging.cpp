@@ -46,15 +46,6 @@ namespace udg {
     }
     void beginLogging()
     {
-        // Primer comprovem que existeixi el direcotori ~/.starviewer/log/ on guradarem els logs
-//        QDir logDir = udg::UserLogsPath;
-//        if (!logDir.exists())
-//        {
-//            // Creem el directori
-//            logDir.mkpath(udg::UserLogsPath);
-//        }
-
-        //
         QString Dir     = QDir::currentPath();
         QString logDir = Dir+"/log";
         if (!isDirExist(logDir))
@@ -67,50 +58,12 @@ namespace udg {
         QString logDirFilename = logDir+"/PacsViewer.log";
         defaultConf.set(el::Level::Info,el::ConfigurationType::Filename, logDirFilename.toStdString());
         el::Loggers::reconfigureLogger("default", defaultConf);
-        //
-        //el::Configurations logConfig(getLogConfFilePath().toStdString());
-        //logConfig.setGlobally(el::ConfigurationType::Filename, getLogFilePath().toStdString());
-
-        //Disable logging to the standard output when compiled on release
-//#ifdef QT_NO_DEBUG
-//        logConfig.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
-//#endif
-
-//        el::Loggers::reconfigureAllLoggers(logConfig);
     }
 
     QString getLogFilePath()
     {
         return QDir::toNativeSeparators(udg::UserLogsFile);
     }
-
-//    QString getLogConfFilePath()
-//    {
-//        // TODO donem per fet que l'arxiu es diu així i es troba a la localització que indiquem. S'hauria de fer una mica més flexible o genèric;
-//        // està així perquè de moment volem anar per feina i no entretenir-nos però s'ha de fer bé.
-
-//        QString configurationFile;
-
-//        if (qApp->applicationFilePath().contains("autotests"))
-//        {
-//            configurationFile = sourcePath() + "/tests/auto/log.conf";
-//        }
-//        else
-//        {
-//            configurationFile = "/etc/starviewer/log.conf";
-
-//            if (!QFile::exists(configurationFile))
-//            {
-//                configurationFile = installationPath() + "/log.conf";
-//            }
-//            if (!QFile::exists(configurationFile))
-//            {
-//                configurationFile = sourcePath() + "/bin/log.conf";
-//            }
-//        }
-
-//        return configurationFile;
-//    }
 
     void debugLog(const QString &msg, const QString &file, int line, const QString &function)
     {

@@ -59,59 +59,22 @@ typedef udg::SingletonPointer<udg::StarviewerApplicationCommandLine> StarviewerS
 
 void configureLogging()
 {
-//    //首先，我们检查目录/ .starviewer / log /是否存在，我们将在其中查找日志...
-//    QDir logDir = udg::UserLogsPath;
-//    if (!logDir.exists())
-//    {
-//        // We create the directory
-//        // created dir
-//        //logDir.mkpath(udg::UserLogsPath);
-//        if (!logDir.mkpath(udg::UserLogsPath))
-//        {
-//            QMessageBox::information(NULL, "create dir", udg::UserLogsPath+":mkpath fail");
-//        }
-//    }
-//    //todo 我们假定该文件已被调用并且位于我们指定的位置。 应该使其更加灵活或通用
-//    //正确配置路径
-//    QString configurationFile = "/etc/starviewer/log.conf";
-//    if (!QFile::exists(configurationFile))
-//    {
-//        configurationFile = qApp->applicationDirPath() + "/log.conf";
-//    }
-//    // Mac OS X 开发的本地化
-//    //    if (!QFile::exists(configurationFile))
-//    //    {
-//    //        configurationFile = qApp->applicationDirPath() + "/../../../log.conf";
-//    //    }
-//    QString appName = qApp->applicationName();
-//    QString logFileName = qApp->applicationDirPath() + "/log/";
-//    logFileName += appName;
-//    logFileName += ".log";    //LOGGER_INIT(configurationFile.toStdString());
+    //const QString dir =  QDir::currentPath()+"/log";
+    QDir logDir = udg::UserLogsPath;
+    if (!logDir.exists())
+    {
+        logDir.mkpath(udg::UserLogsPath);
+    }
+    el::Configurations defaultConf;
+    defaultConf.setToDefault();
+    QString logDirFilename = udg::UserLogsPath+"/starviewer.log";
+    defaultConf.set(el::Level::Info,el::ConfigurationType::Filename, logDirFilename.toStdString());
+    el::Loggers::reconfigureLogger("default", defaultConf);
 
-//    PatternLayoutPtr layout = new PatternLayout();
-//    string conversionPattern = "[%p] %d %c %M - %m%n";
-//    layout->setConversionPattern(conversionPattern);
-//    // creates daily rolling file appender
-//    DailyRollingFileAppenderPtr rollingAppenderptr = new DailyRollingFileAppender();
-//    rollingAppenderptr->setFile(logFileName);
-//    rollingAppenderptr->setDatePattern("'.'yyyy-MM-dd");
-//    rollingAppenderptr->setLayout(layout);
-//    log4cxx::helpers::Pool p;
-//    rollingAppenderptr->activateOptions(p);
-
-//    // configures the root logger
-//    log4cxx::LoggerPtr logger = log4cxx::Logger::getRootLogger();
-//    logger->setLevel(log4cxx::Level::getDebug());
-//    logger->addAppender(rollingAppenderptr);
-
-//    LOG4CXX_INFO(logger,"Created FileAppender appender");
-//    //--------------------
-//    DEBUG_LOG("Log configuration file: " + configurationFile);
-
-//    // We redirect VTK messages to the log.
-//    udg::LoggingOutputWindow *loggingOutputWindow = udg::LoggingOutputWindow::New();
-//    vtkOutputWindow::SetInstance(loggingOutputWindow);
-//    loggingOutputWindow->Delete();
+    //    // We redirect VTK messages to the log.
+    udg::LoggingOutputWindow *loggingOutputWindow = udg::LoggingOutputWindow::New();
+    vtkOutputWindow::SetInstance(loggingOutputWindow);
+    loggingOutputWindow->Delete();
 }
 
 void initializeTranslations(QApplication &app)
