@@ -9,9 +9,11 @@ macx {
     DESTDIR = $${DESTDIR}/$${TARGET_STARVIEWER}.app/Contents/MacOS
 }
 
-HEADERS = ../core/starviewerapplication.h
+HEADERS = ../core/starviewerapplication.h \
+    ../thirdparty/easylogging++/easylogging++.h
 
-SOURCES = starviewersapwrapper.cpp 
+SOURCES = starviewersapwrapper.cpp \ 
+    ../thirdparty/easylogging++/easylogging++.cc
 
 INCLUDEPATH += ../core
 

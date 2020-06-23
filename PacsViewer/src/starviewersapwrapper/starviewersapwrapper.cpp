@@ -9,24 +9,65 @@
 INITIALIZE_EASYLOGGINGPP
 /// Configurem el logging
 // \TODO Còpia exacta del main.cpp de l'starviewer. Caldria refactoritzar-ho.
+
+bool isDirExist(QString fullPath)
+{
+    QDir dir(fullPath);
+    if(dir.exists())
+    {
+        return true;
+    }
+    return false;
+}
+
+bool CreatDir(QString fullPath)
+{
+    QDir dir(fullPath); // 注意
+    if(dir.exists())
+    {
+        return true;
+    }
+    else
+    {
+        dir.setPath("");
+        bool ok = dir.mkpath(fullPath);
+        return ok;
+    }
+}
 void configureLogging()
 {
     // Primer comprovem que existeixi el direcotori ~/.starviewer/log/ on guradarem els logs
-    QDir logDir = udg::UserLogsPath;
-    if (!logDir.exists())
-    {
-        // Creem el directori
-        logDir.mkpath(udg::UserLogsPath);
-    }
-    // TODO donem per fet que l'arxiu es diu així i es troba a la localització que indiquem. S'hauria de fer una mica més flexible o genèric;
-    // està així perquè de moment volem anar per feina i no entretenir-nos però s'ha de fer bé.
-    QString configurationFile = "/etc/starviewer/log.conf";
-    if (!QFile::exists(configurationFile))
-    {
-        configurationFile = QCoreApplication::applicationDirPath() + "/log.conf";
-    }
+    //    QDir logDir = udg::UserLogsPath;
+    //    if (!logDir.exists())
+    //    {
+    //        // Creem el directori
+    //        logDir.mkpath(udg::UserLogsPath);
+    //    }
+    //    // TODO donem per fet que l'arxiu es diu així i es troba a la localització que indiquem. S'hauria de fer una mica més flexible o genèric;
+    //    // està així perquè de moment volem anar per feina i no entretenir-nos però s'ha de fer bé.
+    //    QString configurationFile = "/etc/starviewer/log.conf";
+    //    if (!QFile::exists(configurationFile))
+    //    {
+    //        configurationFile = QCoreApplication::applicationDirPath() + "/log.conf";
+    //    }
     //LOGGER_INIT(configurationFile.toStdString());
     //DEBUG_LOG("Arxiu de configuració del log: " + configurationFile);
+    QString Dir     = QDir::currentPath();
+    QString logDir = Dir+"/log";
+#if defined(Q_OS_LINUX)
+    logDir = iniDir+"/linux/log";
+#endif
+    if (!isDirExist(logDir))
+    {
+        CreatDir(logDir);
+    }
+    el::Configurations defaultConf;
+    defaultConf.setToDefault();
+    QString logDirFilename = logDir+"/starviewer_sapwrapper.log";
+    defaultConf.set(el::Level::Info,el::ConfigurationType::Filename, logDirFilename.toStdString());
+    el::Loggers::reconfigureLogger("default", defaultConf);
+    LOG(INFO) << "First log test";
+    LOG(INFO) << "First log test";
 }
 
 /// Imprimim l'ajuda del programa
@@ -38,16 +79,16 @@ void printHelp()
 
 QString getStarviewerExecutableFilePath()
 {
-    #ifdef _WIN32
-        // En windows per poder executar l'starviewer hem de tenir en compte que si està en algun directori que conte espais
-        // com el directori C:\Program Files\Starviewer\starviewer.exe, hem de posar el path entre cometes
-        // per a que no ho interpreti com a paràmetres, per exemple "C:\Program Files\Starviewer\starviewer.exe"
+#ifdef _WIN32
+    // En windows per poder executar l'starviewer hem de tenir en compte que si està en algun directori que conte espais
+    // com el directori C:\Program Files\Starviewer\starviewer.exe, hem de posar el path entre cometes
+    // per a que no ho interpreti com a paràmetres, per exemple "C:\Program Files\Starviewer\starviewer.exe"
 
-        // Afegim les cometes per si algun dels directori conté espai
-        return "\"" + QCoreApplication::applicationDirPath() + "/starviewer.exe" + "\"";
-    #else
-        return QCoreApplication::applicationDirPath() + "/starviewer";
-    #endif
+    // Afegim les cometes per si algun dels directori conté espai
+    return "\"" + QCoreApplication::applicationDirPath() + "/starviewer.exe" + "\"";
+#else
+    return QCoreApplication::applicationDirPath() + "/starviewer";
+#endif
 }
 
 /// Engega un starviewer passant-li per comandes de línia el accessionNumber del estudi a descarragar
