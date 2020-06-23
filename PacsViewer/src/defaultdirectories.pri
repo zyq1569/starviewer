@@ -72,20 +72,20 @@ isEmpty(GDCMINCLUDEDIR){
 
 
 # Log4cxx Libraries
-LOG4CXXLIBDIR = $$(LOG4CXXLIBDIR)
-isEmpty(LOG4CXXLIBDIR){
-    unix:LOG4CXXLIBDIR = /usr/lib
-    macx:LOG4CXXLIBDIR = /usr/local/lib/
-    win32:LOG4CXXLIBDIR = D:/SDK/log4cxx-64/0.10.0/libX64
-    win32:contains(QMAKE_TARGET.arch, x86_64):LOG4CXXLIBDIR = D:/SDK/log4cxx-64/0.10.0/libX64
-}
-LOG4CXXINCLUDEDIR = $$(LOG4CXXINCLUDEDIR)
-isEmpty(LOG4CXXINCLUDEDIR){
-    unix:LOG4CXXINCLUDEDIR = /usr/include/log4cxx
-    macx:LOG4CXXINCLUDEDIR = /usr/local/include
-    win32:LOG4CXXINCLUDEDIR =D:/SDK/log4cxx-64/0.10.0/include
-    win32:contains(QMAKE_TARGET.arch, x86_64):LOG4CXXINCLUDEDIR =D:/SDK/log4cxx-64/0.10.0/include
-}
+#LOG4CXXLIBDIR = $$(LOG4CXXLIBDIR)
+#isEmpty(LOG4CXXLIBDIR){
+#    unix:LOG4CXXLIBDIR = /usr/lib
+#    macx:LOG4CXXLIBDIR = /usr/local/lib/
+#    win32:LOG4CXXLIBDIR = D:/SDK/log4cxx-64/0.10.0/libX64
+#    win32:contains(QMAKE_TARGET.arch, x86_64):LOG4CXXLIBDIR = D:/SDK/log4cxx-64/0.10.0/libX64
+#}
+#LOG4CXXINCLUDEDIR = $$(LOG4CXXINCLUDEDIR)
+#isEmpty(LOG4CXXINCLUDEDIR){
+#    unix:LOG4CXXINCLUDEDIR = /usr/include/log4cxx
+#    macx:LOG4CXXINCLUDEDIR = /usr/local/include
+#    win32:LOG4CXXINCLUDEDIR =D:/SDK/log4cxx-64/0.10.0/include
+#    win32:contains(QMAKE_TARGET.arch, x86_64):LOG4CXXINCLUDEDIR =D:/SDK/log4cxx-64/0.10.0/include
+#}
 
 
 # Threadweaver libraries

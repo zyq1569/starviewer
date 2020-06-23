@@ -20,7 +20,8 @@ HEADERS = qcrashreporter.h \
           ../core/coresettings.h \
           ../core/settingsaccesslevelfilereader.h \
           ../main/applicationtranslationsloader.h \
-          ../core/starviewerapplication.h
+          ../core/starviewerapplication.h \
+    ../thirdparty/easylogging++/easylogging++.h
           
 SOURCES = crashreporter.cpp \
           qcrashreporter.cpp \
@@ -31,6 +32,7 @@ SOURCES = crashreporter.cpp \
           ../core/coresettings.cpp \
           ../core/settingsaccesslevelfilereader.cpp \
           ../main/applicationtranslationsloader.cpp \
+    ../thirdparty/easylogging++/easylogging++.cc
 
 TRANSLATIONS += crashreporter_ca_ES.ts \
                 crashreporter_es_ES.ts \
@@ -61,6 +63,6 @@ RESOURCES = crashreporter.qrc ../main/main.qrc
 
 include(../corelibsconfiguration.pri)
 include(../compilationtype.pri)
-include(../log4cxx.pri)
+#include(../log4cxx.pri)
 
 QT += network widgets

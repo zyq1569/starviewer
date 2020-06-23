@@ -19,6 +19,6 @@ INCLUDEPATH += ../core
 
 include(../corelibsconfiguration.pri)
 include(../compilationtype.pri)
-include(../log4cxx.pri)
+#include(../log4cxx.pri)
 
 QT += widgets
