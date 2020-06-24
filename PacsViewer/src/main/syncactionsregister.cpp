@@ -1,6 +1,5 @@
 /*************************************************************************************
-  Copyright (C) 2014 Laboratori de Gràfics i Imatge, Universitat de Girona &
-  Institut de Diagnòstic per la Imatge.
+  Copyright (C) 2014 Graphics and Image Laboratory, University of Girona & Institute of Diagnostic Imaging.
   Girona 2014. All rights reserved.
   http://starviewer.udg.edu
 

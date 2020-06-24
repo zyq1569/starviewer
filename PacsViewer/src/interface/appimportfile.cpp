@@ -76,18 +76,18 @@ void AppImportFile::openDirectory(bool recursively)
     QString directoryName = QFileDialog::getExistingDirectory(0, tr("Choose a directory to scan"), m_workingDicomDirectory, QFileDialog::ShowDirsOnly);
     if (!directoryName.isEmpty())
     {
-        INFO_LOG("S'escaneja el directori: " + directoryName + " per obrir els estudis que hi contingui");
+        INFO_LOG("Scanning directory: " + directoryName + " to open the studies it contains");
         m_workingDicomDirectory = directoryName;
         writeSettings();
 
-        // Llista on guardarem tots els arxius compatibles que hi ha als directoris
+        // List where we will save all the compatible files in the directories
         QStringList filenames;
         if (recursively)
         {
-            // Explorem recursivament tots els directoris
+            //  Let's recursively explore all directories
             QStringList dirList;
             scanDirectories(directoryName, dirList);
-            // Per cada directori, obtenim els arxius que podem tractar
+            // For each directory, we get the files we can handle
             foreach (const QString &dirName, dirList)
             {
                 filenames << generateFilenames(dirName);
@@ -95,7 +95,7 @@ void AppImportFile::openDirectory(bool recursively)
         }
         else
         {
-            // Tindrem en compte únicament els arxius que hi hagi en el directori arrel sense explorar recursivament
+           // We will only consider files in the root directory without recursively scanning
             filenames << generateFilenames(directoryName);
         }
 
@@ -113,11 +113,11 @@ void AppImportFile::openDirectory(bool recursively)
 QStringList AppImportFile::generateFilenames(const QString &dirPath)
 {
     QStringList list;
-    // Comprovem que el directori tingui arxius
+    // We check that the directory has files
     QDir dir(dirPath);
     QFileInfoList fileInfoList = dir.entryInfoList(QDir::Files);
 
-    // Afegim a la llista cadascun dels paths absoluts dels arxius que contingui el directori
+    // We add to the list each of the absolute paths of the files contained in the directory
     foreach (const QFileInfo &fileInfo, fileInfoList)
     {
         list << fileInfo.absoluteFilePath();
@@ -131,13 +131,13 @@ void AppImportFile::scanDirectories(const QString &rootPath, QStringList &dirsLi
     QDir rootDir(rootPath);
     if (rootDir.exists())
     {
-        // Afegim el directori actual a la llista
+        //  Add the current directory to the list
         dirsList << rootPath;
-        // Busquem si tenim més directoris
+        //  Let's look if we have more directories
         QStringList subdirs = rootDir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
         if (!subdirs.isEmpty())
         {
-            // Per cada subdirectori escanejem recursivament
+            //  For each subdirectory we scan recursively
             foreach (const QString &subDir, subdirs)
             {
                 scanDirectories(rootPath + "/" + subDir, dirsList);

@@ -28,9 +28,9 @@ macx {
     ICON = images/starviewer.icns
 }
 
-# Definim que per sistemes de compilació windows basats en visual studio 
-# s'activi el flag /LARGEADDRESSAWARE, que permet que es puguin fer servir
-# més de 2Gb de memòria per procés. Això serà efectiu en sistemes de 64 bits
+# We define that for visual studio-based windows compilation systems
+# activate the flag / LARGEADDRESSAWARE, which allows them to be used
+# more than 2Gb of memory per process. This will be effective on 64-bit systems
 win32-msvc2013:QMAKE_LFLAGS += /LARGEADDRESSAWARE
 
 include(../../sourcelibsdependencies.pri)
