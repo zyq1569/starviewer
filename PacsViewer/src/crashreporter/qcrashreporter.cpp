@@ -153,11 +153,11 @@ void QCrashReporter::sendReport()
 
     if (success)
     {
-        INFO_LOG(QString("Crash report enviat: %1").arg(m_minidumpPath));
+        //INFO_LOG(QString("Crash report enviat: %1").arg(m_minidumpPath));
     }
     else
     {
-        ERROR_LOG(QString("Error al enviar el crash report: %1").arg(m_minidumpPath));
+        //ERROR_LOG(QString("Error al enviar el crash report: %1").arg(m_minidumpPath));
     }
 #endif
 
