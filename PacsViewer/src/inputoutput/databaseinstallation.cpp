@@ -83,8 +83,8 @@ bool DatabaseInstallation::checkStarviewerDatabase()
         return false;
     }
 
-    INFO_LOG("Estat de la base de dades correcte ");
-    INFO_LOG("Base de dades utilitzada : " + LocalDatabaseManager::getDatabaseFilePath() + " revisio " +
+    INFO_LOG("Correct database status ");
+    INFO_LOG("Database used: " + LocalDatabaseManager::getDatabaseFilePath() + " revisio " +
              QString().setNum(localDatabaseManager.getDatabaseRevision()));
     return true;
 }
@@ -95,7 +95,7 @@ bool DatabaseInstallation::checkLocalImagePath()
     {
         if (!createLocalImageDir())
         {
-            ERROR_LOG("Error el path de la cache d'imatges no s'ha pogut crear " + LocalDatabaseManager::getCachePath());
+            ERROR_LOG("Error image cache path could not be created " + LocalDatabaseManager::getCachePath());
             m_errorMessage += "\n";
             m_errorMessage += tr("Unable to create the cache image directory. Please check user permissions.");
             return false;
@@ -103,19 +103,19 @@ bool DatabaseInstallation::checkLocalImagePath()
     }
     else
     {
-        // Comprovar que tenim permisos d'escriptura al directori local d'imatges
+        // Check that we have write permissions to the local image directory
         QFileInfo imagePathInfo(LocalDatabaseManager::getCachePath());
         if (!imagePathInfo.isWritable())
         {
-            ERROR_LOG("El directori de la cache d'imatges no te permisos d'escriptura: " + LocalDatabaseManager::getCachePath());
+            ERROR_LOG("The image cache directory does not have write permissions: " + LocalDatabaseManager::getCachePath());
             m_errorMessage += "\n";
             m_errorMessage += tr("You don't have write permission on cache image directory. Retrieval or importing of new studies will fail.");
             return false;
         }
     }
 
-    INFO_LOG("Estat de la cache d'imatges correcte ");
-    INFO_LOG("Cache d'imatges utilitzada : " + LocalDatabaseManager::getCachePath());
+    INFO_LOG("Correct image cache status ");
+    INFO_LOG("Image cache used : " + LocalDatabaseManager::getCachePath());
 
     return true;
 }
@@ -126,7 +126,7 @@ bool DatabaseInstallation::checkDatabasePath()
     {
         if (!createDatabaseDirectory())
         {
-            ERROR_LOG("Error el path de la base de dades no s'ha pogut crear " + LocalDatabaseManager::getDatabaseFilePath());
+            ERROR_LOG("Error database path could not be created " + LocalDatabaseManager::getDatabaseFilePath());
             return false;
         }
     }
@@ -144,26 +144,25 @@ bool DatabaseInstallation::checkDatabaseRevision()
     }
     else if (StarviewerDatabaseRevisionRequired  <localDatabaseManager.getDatabaseRevision())
     {
-        INFO_LOG(QString("La base de dades es de la versio %1 una versio mes nova que la necessaria la %2, aquesta versio es incomptabile"
-                         " amb la versio d'%3 que s'esta executant, es demanara a l'usuari si vol abandonar %3, o reinstal.lar la base de dades.")
+        INFO_LOG(QString("Database% 1 is a newer version than% 2 required, this version is unaccounted for "
+                         "with the version of% 3 running, the user will be prompted to leave% 3, or reinstall the database.")
                  .arg(QString::number(localDatabaseManager.getDatabaseRevision()), QString::number(StarviewerDatabaseRevisionRequired), ApplicationNameString));
 
         if (askToUserIfDowngradeDatabase())
         {
-            INFO_LOG("L'usuari ha indicat que vol reinstal.lar la base de dades");
+            INFO_LOG("User has indicated that he wants to reinstall the database");
             recreateDatabase();
         }
         else
         {
-            INFO_LOG(QString("L'usuari ha indicat que no vol reinstal.lar la base de dades per tant es tancara %1").arg(ApplicationNameString));
+            INFO_LOG(QString("User has indicated that he does not want to reinstall the database so% 1 will close").arg(ApplicationNameString));
             exit(0);
         }
     }
     else if (localDatabaseManager.getDatabaseRevision() < StarviewerDatabaseRevisionRequired)
     {
-        INFO_LOG("La revisio actual de la base de dades es " + QString().setNum(localDatabaseManager.getDatabaseRevision()) + " per aquesta versio d'" +
-                 ApplicationNameString + " es necessaria la " + QString().setNum(StarviewerDatabaseRevisionRequired) +
-                 ", es procedira a actualitzar la base de dades");
+        INFO_LOG("The current revision of the database is " + QString().setNum(localDatabaseManager.getDatabaseRevision()) + " for this version of " +
+                 ApplicationNameString + " the " + QString().setNum(StarviewerDatabaseRevisionRequired) + ",the database will be updated");
 
         return tryToUpgradeDatabaseIfNotRecreateDatabase();
     }
@@ -180,12 +179,12 @@ bool DatabaseInstallation::isDatabaseFileWritable()
 
 bool DatabaseInstallation::reinstallDatabase()
 {
-    // Si existeix l'esborrem la base de dades
+    // If it exists we delete the database
     if (existsDatabaseFile())
     {
         if (!QFile().remove(LocalDatabaseManager::getDatabaseFilePath()))
         {
-            ERROR_LOG("Reinstal.lant la base de dades no s'ha pogut esborrar el fitxer de la base de dades " + LocalDatabaseManager::getDatabaseFilePath());
+            ERROR_LOG("Reinstalling the database could not delete the database file " + LocalDatabaseManager::getDatabaseFilePath());
             return false;
         }
     }

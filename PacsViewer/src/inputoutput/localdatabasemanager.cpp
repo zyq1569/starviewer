@@ -450,7 +450,7 @@ void LocalDatabaseManager::deleteOldStudies()
         DatabaseConnection dbConnect;
         LocalDatabaseStudyDAL studyDAL(&dbConnect);
 
-        INFO_LOG("S'esborraran els estudis vells no visualitzats des del dia " + LocalDatabaseManager::LastAccessDateSelectedStudies.addDays(-1)
+        INFO_LOG("Old studies not viewed from the day will be deleted " + LocalDatabaseManager::LastAccessDateSelectedStudies.addDays(-1)
                  .toString("dd/MM/yyyy"));
 
         QList<Study*> studyListToDelete = studyDAL.query(DicomMask(), LocalDatabaseManager::LastAccessDateSelectedStudies);
@@ -464,7 +464,7 @@ void LocalDatabaseManager::deleteOldStudies()
 
         if (studyListToDelete.count() == 0)
         {
-            INFO_LOG("No hi ha estudis vells per esborrar");
+            INFO_LOG("There are no old studies to erase");
         }
 
         foreach (Study *study, studyListToDelete)

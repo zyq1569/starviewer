@@ -59,7 +59,6 @@ typedef udg::SingletonPointer<udg::StarviewerApplicationCommandLine> StarviewerS
 
 void configureLogging()
 {
-    //const QString dir =  QDir::currentPath()+"/log";
     QDir logDir = udg::UserLogsPath;
     if (!logDir.exists())
     {
@@ -68,10 +67,10 @@ void configureLogging()
     el::Configurations defaultConf;
     defaultConf.setToDefault();
     QString logDirFilename = udg::UserLogsPath+"/starviewer.log";
-    defaultConf.set(el::Level::Info,el::ConfigurationType::Filename, logDirFilename.toStdString());
+    defaultConf.set(el::Level::Global,el::ConfigurationType::Filename, logDirFilename.toStdString());
     el::Loggers::reconfigureLogger("default", defaultConf);
 
-    //    // We redirect VTK messages to the log.
+    // We redirect VTK messages to the log.
     udg::LoggingOutputWindow *loggingOutputWindow = udg::LoggingOutputWindow::New();
     vtkOutputWindow::SetInstance(loggingOutputWindow);
     loggingOutputWindow->Delete();
@@ -139,6 +138,10 @@ void sendToFirstStarviewerInstanceCommandLineOptions(QtSingleApplication &app)
 
 int main(int argc, char *argv[])
 {
+    // ALL of this initial setup process should be encapsulated in
+    // a class dedicated to that purpose
+    configureLogging();
+
     // We use QtSingleApplication instead of QtApplication, as it allows us to always have a single instance of Starviewer running, if the user runs
     // a new instance of Starviewer detects this and sends the command line with which the user has executed the new main instance.
     // 使用QtSingleApplication而不是QtApplication，因为如果用户运行，始终可以运行单个Starviewer实例
@@ -174,9 +177,6 @@ int main(int argc, char *argv[])
     Q_UNUSED(crashHandler);
 #endif
 
-    // ALL of this initial setup process should be encapsulated in
-    // a class dedicated to that purpose
-    configureLogging();
 
     // Mark the start of the application in the log
     INFO_LOG("==================================================== BEGIN ====================================================");

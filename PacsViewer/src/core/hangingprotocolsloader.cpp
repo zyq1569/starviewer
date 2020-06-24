@@ -71,7 +71,7 @@ void HangingProtocolsLoader::loadDefaults()
     }
     else
     {
-        INFO_LOG(QString("El directori per defecte dels hanging protocols (%1) no existeix. No es carregaran.").arg(defaultPath));
+        INFO_LOG(QString("The default directory for hanging protocols (% 1) does not exist. They will not be charged.").arg(defaultPath));
     }
 
     /// Hanging protocols definits per l'usuari
