@@ -449,12 +449,12 @@ const QString& Image::getTransferSyntaxUID() const
 
 double Image::distance(Image *image)
 {
-    // Càlcul de la distància (basat en l'algorisme de Jolinda Smith)
+    // Distance calculation (based on Jolinda Smith's algorithm)
     double distance = 0.0;
     
-    // Origen del pla
+    // Origin of the plan
     const double *imagePosition = image->getImagePositionPatient();
-    // Normal del pla sobre la qual projectarem l'origen
+    // Normal of the plane on which we will project the origin
     QVector3D normalVector = image->getImageOrientationPatient().getNormalVector();
     distance = normalVector.x() * imagePosition[0] + normalVector.y() * imagePosition[1] + normalVector.z() * imagePosition[2];
 
@@ -480,8 +480,8 @@ QList<ImageOverlay> Image::getOverlays()
 {
     if (hasOverlays())
     {
-        // Si el número d'overlays que tenim assignats no coincideix amb el número d'elements de la llista
-        // significa que encara no els hem carregat
+        // If the number of overlays we have assigned does not match the number of items in the list
+        // means we haven't loaded them yet
         if (getNumberOfOverlays() != m_overlaysList.count())
         {
             readOverlays(false);
@@ -537,11 +537,10 @@ DisplayShutter Image::getDisplayShutterForDisplay()
     {
         return m_displayShutterForDisplay;
     }
- 
-    // Si arribem fins aquí, llavors significa que hem de construir el DisplayShutter per display
-    
-    // Primer eliminem els shutters que no tingui sentit aplicar
-    // com serien els shutters rectangulars que tinguin una mida igual o major a la imatge i els que no tenen cap forma definida
+
+    // If we get this far, then it means we need to build the DisplayShutter for display
+    // First we remove the shutters that don't make sense to apply
+    // what would be the rectangular shutters that have a size equal to or larger than the image and those that have no defined shape
     QList<DisplayShutter> shutterList = this->getDisplayShutters();
     QRect imageRect(1, 1, this->getColumns(), this->getRows());
     for (int i = 0; i < shutterList.count(); ++i)
@@ -550,7 +549,7 @@ DisplayShutter Image::getDisplayShutterForDisplay()
         if (shutter.getShape() == DisplayShutter::RectangularShape)
         {
             QPolygon points = shutter.getAsQPolygon();
-            QRect shutterRect(points.at(0), points.at(2));       
+            QRect shutterRect(points.at(0), points.at(2));
             if (imageRect.intersected(shutterRect).contains(imageRect, false))
             {
                 shutterList.removeAt(i);
@@ -562,7 +561,7 @@ DisplayShutter Image::getDisplayShutterForDisplay()
         }
     }
 
-    // Un cop feta la criba, retornem la intersecció dels shutters resultants
+    // Once the sieve is done, we return the intersection of the resulting shutters
     m_displayShutterForDisplay = DisplayShutter::intersection(shutterList);
     m_haveToBuildDisplayShutterForDisplay = false;
     
@@ -589,8 +588,7 @@ vtkImageData* Image::getDisplayShutterForDisplayAsVtkImageData(int zSlice)
             }
         }
     }
-    // TODO Assuming that all calls to this method on the same Image object have all the same zSlice. What should we do otherwise?
-
+// TODO Assuming that all calls to this method on the same Image object have all the same zSlice. What should we do otherwise?
     return m_displayShutterForDisplayVtkImageData;
 }
 
@@ -639,12 +637,11 @@ QPixmap Image::getThumbnail(bool getFromCache, int resolution)
     {
         if (getFromCache)
         {
-            // Primer provem de trobar el thumbnail amb número de volum i després sense número de volum
-            // Si no trobem cap fitxer, l'haurem de crear de nou
-
-            // Obtenim el directori base on es pot trobar el thumbnail
+            // First we try to find the thumbnail with volume number and then without volume number
+            // If we can't find any files, we'll have to re-create them
+            // We get the base directory where the thumbnail can be found
             QString thumbnailPath = QFileInfo(getPath()).absolutePath();
-            // Path absolut de l'arxiu de thumbnail
+            // Absolute path of thumbnail file
             QString thumbnailFilePath = QString("%1/thumbnail%2.png").arg(thumbnailPath).arg(getVolumeNumberInSeries());
 
             QFileInfo thumbnailFile(thumbnailFilePath);
@@ -677,14 +674,14 @@ QStringList Image::getSupportedModalities()
 {
     // Modalitats extretes de DICOM PS 3.3 C.7.3.1.1.1
     QStringList supportedModalities;
-    // Modalitats que sabem que són d'imatge i que en principi hem de poder suportar
+    // Modalities that we know are image and that in principle we must be able to support
     supportedModalities << "CR" << "CT" << "MR" << "US" << "BI" << "DD" << "ES" << "PT" << "ST" << "XA" << "RTIMAGE" << "DX" << "IO" << "GM" << "XC" << "OP"
                         << "NM" << "OT" << "CD" << "DG" << "LS" << "RG" << "TG" << "RF" << "MG" << "PX" << "SM" << "ECG" << "IVUS";
-    // Modalitats "no estàndars" però que es correspondrien amb imatges que podem suportar
+    // "Non-standard" modes but that would correspond to images we can support
     supportedModalities << "SC";
 
-    // Aquestes modalitats en principi no són d'imatge. Les mantenim documentades per si calgués incloure-les a la llista
-    // TODO Cal comprovar si són modalitats d'imatge i eliminar-les segons el cas
+    // These modalities are in principle not image. We keep them documented in case they need to be included in the list
+    // EVERYTHING You need to check if they are image modes and delete them as appropriate
     // "RTSTRUCT" << "RTRECORD" << "EPS" << "RTDOSE" << "RTPLAN" << "HD" << "SMR" << "AU"
 
     return supportedModalities;
