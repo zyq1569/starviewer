@@ -29,7 +29,8 @@
 
 namespace {
 
-/// Returns true if the given tag contains text that is encoded with the Specific Character Set (0008,0005). See http://www.dabsoft.ch/dicom/3/C.12.1.1.2/.
+/// Returns true if the given tag contains text that is encoded with the Specific Character Set (0008,0005).
+/// See http://www.dabsoft.ch/dicom/3/C.12.1.1.2/.
 bool isEncodedText(const DcmTag &tag)
 {
     DcmEVR vr = tag.getVR().getEVR();
