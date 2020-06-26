@@ -95,7 +95,7 @@ QList<Image*> ImageFillerStep::processDICOMFile(DICOMTagReader *dicomReader)
     bool ok = dicomReader->tagExists(DICOMPixelData);
     if (ok)
     {
-        // Comprovem si la imatge és enhanced o no per tal de cridar el mètode específic més adient
+        // We check if the image is enhanced or not in order to call the most appropriate specific method
         if (isEnhancedImageSOPClass(dicomReader->getValueAttributeAsQString(DICOMSOPClassUID)))
         {
             generatedImages = processEnhancedDICOMFile(dicomReader);
@@ -107,7 +107,7 @@ QList<Image*> ImageFillerStep::processDICOMFile(DICOMTagReader *dicomReader)
             if (dicomReader->tagExists(DICOMNumberOfFrames))
             {
                 numberOfFrames = dicomReader->getValueAttributeAsQString(DICOMNumberOfFrames).toInt();
-                // Si és la segona imatge multiframe que ens trobem, augmentarem el número que identifica l'actual volum
+                // If it is the second multiframe image we find, we will increase the number that identifies the current volume
                 if (m_input->currentSeriesContainsAMultiframeVolume())
                 {
                     m_input->increaseCurrentMultiframeVolumeNumber();

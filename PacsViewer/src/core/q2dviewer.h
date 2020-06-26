@@ -51,36 +51,36 @@ class TransferFunctionModel;
 /**
     Classe base per als visualitzadors 2D.
 
-    El mode d'operació habitual serà el de visualitar un sol volum.
-    Normalment per poder visualitzar un volum farem el següent
-    \code
-    Q2DViewer* visor = new Q2DViewer();
-    visor->setInput(volum);
+    The usual mode of operation will be to view a single volume.
+    Usually to be able to view a volume we will do the following
+    \ code
+    Q2DViewer * visor = new Q2DViewer ();
+    visor->setInput (volume);
 
-    En el cas que desitjem solapar dos volums haurem d'indicar el volum solapat amb el mètode setOverlayInput().
-    Quan solapem volums tenim 1 manera de solapar aquests volums, aplicant un blending,
-    en aquest cas hauríem de fer servir el mètode setOverlapMethod() indicant una de les opcions (de moment únicament Blend)
-    \TODO acabar la doc sobre solapament
+    In case we want to overlap two volumes we must indicate the overlapping volume with the setOverlayInput () method.
+    When we overlap volumes we have 1 way to overlap these volumes, applying a blending,
+    in this case we should use the setOverlapMethod () method indicating one of the options (currently only Blend)
+    \ TODO finish the doc on overlap
 
-    Per defecte el visualitzador mostra la primera imatge en Axial. Per les altres vistes (Sagital i Coronal) mostraria la imatge central
+    By default the display shows the first image in Axial. For the other views (Sagittal and Coronal) it would show the central image
 
-    Podem escollir quines annotacions textuals i de referència apareixeran en la vista 2D a través dels flags "AnnotationFlags" a través dels mètodes
-    \c enableAnnotation() o \c removeAnnotation() que faran visible o invisible l'anotació indicada.
-    Per defecte el flag és \c AllAnnotation i per tant es veuen totes les anotacions per defecte.
+    We can choose which textual and reference annotations will appear in the 2D view through the "AnnotationFlags" flags through the methods
+    \ c enableAnnotation () or \ c removeAnnotation () which will make the specified annotation visible or invisible.
+    The default flag is \ c AllAnnotation and therefore all default annotations are displayed.
   */
 class Q2DViewer : public QViewer {
 Q_OBJECT
 public:
-    /// Tipus de solapament dels models
+    /// Types of overlapping models
     enum OverlapMethod { None, Blend };
 
-    /// Alineament de la imatge (dreta, esquerre, centrat)
+    /// Image alignment (right, left, centered)
     enum AlignPosition { AlignCenter, AlignRight, AlignLeft };
 
     Q2DViewer(QWidget *parent = 0);
     ~Q2DViewer();
 
-    /// Ens retorna la vista que tenim en aquells moments del volum
+    /// It gives us back the view we have in those moments of the volume
     OrthogonalPlane getView() const;
 
     /// Return the view plane on the specified input. If i is out of range, default constructed value will be returned.
@@ -88,21 +88,21 @@ public:
 
     Volume* getMainInput() const;
 
-    /// Gets the i-th input. If i is out of range, null is returned
+    ///Gets the i-th input. If i is out of range, null is returned
     Volume* getInput(int i) const;
 
     QList<Volume*> getInputs() const;
 
     int getNumberOfInputs() const;
 
-    /// Ens retorna el drawer per poder pintar-hi primitives
-    /// @return Objecte drawer del viewer
+    /// We return the drawer to be able to paint primitives
+    /// @return Viewer drawer object
     Drawer* getDrawer() const;
 
     /// Returns the VOI LUT that is currently applied to the image in this viewer.
     virtual VoiLut getCurrentVoiLut() const;
 
-    /// Retorna la llesca/fase actual
+    ///  Returns the current slice / phase
     int getCurrentSlice() const;
     int getCurrentPhase() const;
 
@@ -112,10 +112,10 @@ public:
     /// Gets the current phase on the specified input. If i is out of range, 0 will be returned
     int getCurrentPhaseOnInput(int i) const;
 
-    /// Calcula la coordenada de la imatge que es troba per sota del cursor en coordenades de món
-    /// En el cas el cursor estigui fora de la imatge, la coordenada no té cap validesa
-    /// @param xyz[] La coordenada de la imatge, en sistema de coordenades de món
-    /// @return Cert si el cursor es troba dins de la imatge, fals altrament
+    /// Calculates the coordinate of the image below the cursor in world coordinates
+    /// In case the cursor is out of the image, the coordinate has no validity
+    /// @param xyz [] The coordinate of the image, in world coordinate system
+    /// @return True if the cursor is inside the image, false otherwise
     bool getCurrentCursorImageCoordinate(double xyz[3]);
 
     /// Same as getCurrentCursorImageCoordinate with the chance to specify from which input we want to get the coordinate.
@@ -129,11 +129,11 @@ public:
     /// Same as getCurrentDisplayedImage() but returning the corresponding image on the specified input
     Image* getCurrentDisplayedImageOnInput(int i) const;
 
-    /// Ens dóna el pla d'imatge actual que estem visualitzant
-    /// @param vtkReconstructionHack HACK variable booleana que ens fa un petit hack
-    /// per casos en que el pla "real" no és el que volem i necessitem una petita modificació
-    /// ATENCIÓ: Només es donarà aquest paràmetre (amb valor true) en casos que realment se sàpiga el que s'està fent!
-    /// @return El pla imatge actual
+    /// Gives us the current image plan we are viewing
+    /// @param vtkReconstructionHack HACK boolean variable that makes us a little hack
+    /// for cases where the "real" plan is not what we want and need a small modification
+    /// WARNING: This parameter will only be given (with true value) in cases where you really know what is being done!
+    /// @return The current image plan
     ImagePlane* getCurrentImagePlane(bool vtkReconstructionHack = false);
 
     /// Returns the laterality corresponding to the current displayed image.
@@ -145,18 +145,18 @@ public:
     /// Retorna el thickness. En cas que no disposem del thickness, el valor retornat serà 0.0
     double getCurrentSliceThickness() const;
 
-    /// Retorna la orientació de pacient corresponent a la imatge que s'està visualitzant en aquell moment,
-    /// és a dir, tenint en compte rotacions, flips, reconstruccions, etc.
+    /// Returns the patient orientation corresponding to the image currently being displayed,
+    /// that is, taking into account rotations, flips, reconstructions, and so on.
     PatientOrientation getCurrentDisplayedImagePatientOrientation() const;
 
-    /// Ens diu quin és el pla de projecció de la imatge que es veu en aquell moment
-    /// Valors: AXIAL, SAGITAL, CORONAL, OBLIQUE o N/A
+    /// It tells us what is the projection plane of the image that is seen at that moment
+    /// Values: AXIAL, SAGITAL, CORONAL, OBLIQUE or N / A
     QString getCurrentAnatomicalPlaneLabel() const;
 
     /// Returns current anatomical plane as AnatomicalPlaneType
     AnatomicalPlane getCurrentAnatomicalPlane() const;
 
-    /// Retorna l'espai que hi ha entre les llesques segons la vista actual i si hi ha el thickness activat
+    /// Returns the space between the slices according to the current view and if the thickness is activated
     double getCurrentSpacingBetweenSlices();
 
     /// Returns the depth (z coordinate value) of the main displayed image
@@ -171,9 +171,9 @@ public:
     /// Gets the pixel data corresponding to the current rendered image from the specified input. If i is out of range, null will be returned.
     VolumePixelData* getCurrentPixelDataFromInput(int i);
     
-    /// Ens dóna la llesca mínima/màxima de llesques, tenint en compte totes les imatges,
-    /// tant com si hi ha fases com si no
-    /// @return valor de la llesca mínima/màxima
+    /// Gives us the minimum / maximum slice of slices, taking into account all the images,
+    /// whether there are phases or not
+    /// @return minimum / maximum slice value
     int getMinimumSlice() const;
     int getMaximumSlice() const;
 
@@ -196,18 +196,18 @@ public:
     /// Returns true if the current image of the selected input is visible, false otherwise
     bool isInputVisible(int i) const;
     
-    /// Ens indica si s'està aplicant o no thick slab
+    /// It tells us whether or not thick slab is being applied
     bool isThickSlabActive() const;
     
     /// Ask is thickslab is active on the i-th input. If i is out of range, false will be returned
     bool isThickSlabActiveOnInput(int i) const;
 
-    /// Obtenim el mode de projecció del thickslab.
-    /// Si el thickslab no està actiu, el valor és indefinit
+    /// We get the projection mode of the thickslab.
+    /// If the thickslab is not active, the value is indefinite
     int getSlabProjectionMode() const;
 
-    /// Obtenim el gruix de l'slab
-    /// Si el thickslab no està actiu, el valor és indefinit
+    /// We get the thickness of the slab
+         /// If the thickslab is not active, the value is indefinite
     int getSlabThickness() const;
 
     /// Casts the given QViewer to a Q2DViewer object
@@ -231,20 +231,20 @@ public:
     /// any restriction to show display shutters.
     bool canShowDisplayShutter() const;
 
-    /// Donada una coordenada de món, l'ajustem perquè caigui dins dels límits de l'imatge actual
-    /// Això ens serveix per tools que agafen qualsevol punt de món, però necessiten que aquesta estigui
-    /// dins dels límits de la imatge, com pot ser una ROI. Aquest mètode acaba d'ajustar la coordenada perquè
-    /// estigui dins dels límits de la pròpia imatge
-    /// @param xyz[] Coordenada que volem ajustar. Serà un paràmetre d'entrada/sortida i el seu contingut
-    /// es modificarà perquè caigui dins dels límits de la imatge
+    /// Given a world coordinate, we adjust it so that it falls within the limits of the current image
+    /// This serves us for tools that take any point in the world, but need it to be
+    /// within the limits of the image, such as an ROI. This method just adjusts the coordinate because
+    /// is within the limits of the image itself
+    /// @param xyz [] Coordinate we want to adjust. It will be an input / output parameter and its contents
+    /// will be modified to fall within the image limits
     void putCoordinateInCurrentImageBounds(double xyz[3]);
 
-    /// donat un punt 3D en espai de referència DICOM, ens dóna la projecció d'aquest punt sobre
-    /// el pla actual, transformat a coordenades de món VTK
-    /// @param pointToProject[]
-    /// @param projectedPoint[]
-    /// @param vtkReconstructionHack HACK variable booleana que ens fa un petit hack
-    /// per casos en que el pla "real" no és el que volem i necessitem una petita modificació
+    /// given a 3D point in DICOM reference space, it gives us the projection of this point on
+    /// the current plan, transformed into VTK world coordinates
+    /// @param pointToProject []
+    /// @param projectedPoint []
+    /// @param vtkReconstructionHack HACK boolean variable that makes us a little hack
+    /// for cases where the "real" plan is not what we want and need a small modification
     void projectDICOMPointToCurrentDisplayedImage(const double pointToProject[3], double projectedPoint[3], bool vtkReconstructionHack = false);
 
     bool getDicomWorldCoordinates(const double xyz[3], double dicomWorldPosition[4]);
@@ -256,8 +256,8 @@ public:
     /// Indiquem que cal actualitzar l'Overlay actual
     void updateOverlay();
 
-    /// Assignem l'opacitat del volum solapat.
-    /// Els valors podran anar de 0.0 a 1.0, on 0.0 és transparent i 1.0 és completament opac.
+    /// Assign the opacity of the overlapping volume.
+    /// Values can range from 0.0 to 1.0, where 0.0 is transparent and 1.0 is completely opaque.
     void setOverlayOpacity(double opacity);
 
     /// Returns the current transfer function of the main volume.
@@ -287,9 +287,9 @@ public:
 public slots:
     virtual void setInput(Volume *volume);
 
-    /// Especifica el volum d'entrada de forma asíncrona.
-    /// Es pot indicar un command que s'executarà un cop el volum s'ha carregat i està a punt de ser visualitzat.
-    /// Útil per poder especificar canvis al viewer (canvi de llesca, w/l, etc.) sense preocupar-se de quan s'ha carregat el volume.
+    /// Specifies the input volume asynchronously.
+    /// You can specify a command to run once the volume has been loaded and is about to be displayed.
+    /// Useful for specifying changes to the viewer (slice change, w / l, etc.) without worrying about when the volume has been loaded.
     void setInputAsynchronously(Volume *volume, QViewerCommand *inputFinishedCommand = 0);
     void setInputAsynchronously(const QList<Volume*> &volumes, QViewerCommand *inputFinishedCommand = 0);
 
@@ -297,16 +297,16 @@ public slots:
 
     void resetView(const AnatomicalPlane &anatomicalPlane);
 
-    /// Restaura el visualitzador a l'estat inicial
+    /// Restores the viewer to its initial state
     void restore();
 
-    /// Esborra totes les primitives del visor
+    /// Deletes all viewfinder primitives
     void clearViewer();
 
-    /// Canvia el WW del visualitzador, per tal de canviar els blancs per negres, i el negres per blancs
+    /// Change the WW of the viewer, in order to change whites to blacks, and blacks to whites
     void invertVoiLut();
 
-    /// Canvia la llesca que veiem de la vista actual
+    /// It changes the slice we see from the current view
     void setSlice(int value);
 
     /// Sets the given phase index to the main volume.
@@ -314,10 +314,10 @@ public slots:
     /// Sets the given phase index to the volume at the given index. If there isn't a volume at the given index, it does nothing.
     void setPhaseInVolume(int index, int phase);
 
-    /// Indica el tipu de solapament dels volums, per defecte blending
+    /// Indicates the type of volume overlap, by default blending
     void setOverlapMethod(OverlapMethod method);
 
-    /// Afegir o treure la visibilitat d'una anotació textual/gràfica
+    /// Add or remove the visibility of a textual / graphic annotation
     void enableAnnotation(AnnotationFlags annotation, bool enable = true);
     void removeAnnotation(AnnotationFlags annotation);
 
@@ -331,23 +331,23 @@ public slots:
     /// Clears the transfer function of the main volume.
     void clearTransferFunction();
 
-    /// L'únic que fa és emetre el senyal seedPositionChanged, per poder-ho cridar desde la seedTool
-    /// TODO Aquest mètode hauria de quedar obsolet
+    /// All it does is issue the seedPositionChanged signal, so you can call it from the seedTool
+    /// EVERYTHING This method should become obsolete
     void setSeedPosition(double pos[3]);
 
-    /// Aplica una rotació de 90 graus en el sentit de les agulles del rellotge
-    /// tantes "times" com li indiquem, per defecte sempre serà 1 "time"
+    /// Apply a 90-degree rotation clockwise
+         /// as many "times" as we tell you, by default it will always be 1 "time"
     void rotateClockWise(int times = 1);
 
-    /// Aplica una rotació de 90 graus en el sentit contrari a les agulles del rellotge
-    /// tantes "times" com li indiquem, per defecte sempre serà 1 "time"
+    /// Apply a 90-degree rotation counterclockwise
+    /// as many "times" as we tell you, by default it will always be 1 "time"
     void rotateCounterClockWise(int times = 1);
 
-    /// Aplica un flip horitzontal/vertical sobre la imatge. El flip vertical es farà com una rotació de 180º seguida d'un flip horitzontal
+    /// Apply a horizontal / vertical flip over the image. The vertical flip will be done as a 180º rotation followed by a horizontal flip
     void horizontalFlip();
     void verticalFlip();
 
-    // TODO aquests mètodes també haurien d'estar en versió QString!
+    // ALL of these methods should also be in QString version!
 
     /// Sets the given slab projection mode to the main volume.
     void setSlabProjectionMode(int projectionMode);
@@ -362,52 +362,52 @@ public slots:
     /// Disables thick slab. Acts as a shortcut for setSlabThickness(1)
     void disableThickSlab();
 
-    /// Alineament de la imatge dins del visualitzador
+    /// // ALL of these methods should also be in QString version!
     void alignLeft();
     void alignRight();
 
-    /// Posa la posició d'alineament de la imatge (dreta, esquerre, centrat)
+/// Set the image alignment position (right, left, centered)
     void setAlignPosition(AlignPosition alignPosition);
 
-    /// Aplica les transformacions 2D necessàries sobre la imatge actual perquè aquesta tingui la orientació indicada
-    /// La orientació indicada ha de ser possible de conseguir mitjançant operacions de rotació i flip. En cas que no
-    /// existeixin combinacions possibles, no es canviarà la orientació de la imatge
+    /// Apply the necessary 2D transformations on the current image so that it has the indicated orientation
+         /// The indicated orientation must be possible to obtain by means of operations of rotation and flip. In case not
+         /// if possible combinations exist, the image orientation will not be changed
     void setImageOrientation(const PatientOrientation &desiredPatientOrientation);
 
-    /// Fa que els ImageOverlays siguin visibles o no
+    ////// Makes ImageOverlays visible or not
     void showImageOverlays(bool enable);
 
-    /// Fa que els shutters siguin visibles o no
+    /// Makes the shutters visible or not
     void showDisplayShutters(bool enable);
 
     /// Sets the fusion balance as a value in the range [0, 100] representing the weight of the second input.
     void setFusionBalance(int balance);
 
 signals:
-    /// Envia la nova llesca en la que ens trobem
+    ///Send the new slice we are in
     void sliceChanged(int);
 
-    /// Envia la nova fase en la que ens trobem
+    /// Send the new phase we are in
     void phaseChanged(int);
 
-    /// Envia la nova vista en la que ens trobem
+    ///Send the new view we are in
     void viewChanged(int);
 
-    /// Emitted when a new patient orientation has been set
+    ///Emitted when a new patient orientation has been set
     void imageOrientationChanged(const PatientOrientation &orientation);
     
-    /// Senyal que s'envia quan la llavor s'ha canviat
-    /// TODO Mirar de treure-ho i posar-ho en la tool SeedTool
+    /// Signal sent when the seed has changed
+    /// EVERYTHING Try to take it out and put it in the SeedTool tool
     void seedPositionChanged(double x, double y, double z);
 
     /// Emitted when the slab projection mode has changed.
     void slabProjectionModeChanged(int slabProjectionMode);
 
-    /// S'emet quan canvia l'slab thickness
-    /// @param thickness Nou valor de thickness
+    /// Issued when the thickness thickness changes
+         /// @param thickness New thickness value
     void slabThicknessChanged(int thickness);
 
-    /// Senyal que s'envia quan ha canviat l'overlay
+    /// Signal sent when the overlay has changed
     void overlayChanged();
     void overlayModified();
 
@@ -461,30 +461,30 @@ private:
     /// Re-inicia els paràmetres de la càmera segons la vista actual.
     void resetCamera();
 
-    /// Aplica el factor de rotació adient segons els girs que li indiquem. No actualitza la càmera ni l'escena, simplement
-    /// es fa servir per posar els valors correctes a les variables internes que controlen com està girada la imatge.
+    /// Apply the appropriate rotation factor according to the turns we indicate. It doesn’t update the camera or the scene, simply
+         /// is used to set the correct values to the internal variables that control how the image is rotated.
     void rotate(int times);
 
-    /// Sets if image should be flipped (horizontally) or not. It does not update the camera nor renders the scene.
+/// Sets if image should be flipped (horizontally) or not. It does not update the camera nor renders the scene.
     void setFlip(bool flip);
     
     /// Updates the camera, renders and emits the current image orientataion
     void applyImageOrientationChanges();
     
-    /// Carrega un volum asíncronament
+    /// Load a volume asynchronously
     void loadVolumeAsynchronously(Volume *volume);
     void loadVolumesAsynchronously(const QList<Volume *> &volumes);
 
     /// Retorna un volum "dummy"
     Volume* getDummyVolumeFromVolume(Volume *volume);
 
-    /// Especifica quin command s'ha d'executar després d'especificar un volum com a input
+    ///Specifies which command to run after specifying a volume as input
     void setInputFinishedCommand(QViewerCommand *command);
 
-    /// Elimina el command que s'hauria d'executar després de que s'especifiqui un input
+    /// Deletes the command that should be executed after an input is specified
     void deleteInputFinishedCommand();
 
-    /// Si està definit, executa el command definit per després d'especificar un input al viewer
+    /// If set, run the command set to after specifying input to the viewer
     void executeInputFinishedCommand();
 
     /// Updates the current image default presets values. It only applies to original acquisition plane.
@@ -496,10 +496,10 @@ private:
     /// Elimina els bitmaps que s'hagin creat per aquest viewer
     void removeViewerBitmaps();
     
-    /// Carrega en memòria els ImageOverlays del volum passat per paràmetre (sempre que no sigui un dummy) i els afegeix al Drawer
+    /// Loads ImageOverlays from the last volume per parameter (as long as it's not a dummy) and adds them to the Drawer
     void loadOverlays(Volume *volume);
 
-    /// Enum to define the different dimensions an image slice could be associated to
+    ///Enum to define the different dimensions an image slice could be associated to
     enum SliceDimension { SpatialDimension, TemporalDimension };
     /// Updates the image slice to be displayed on the specified dimension
     void updateSliceToDisplay(int value, SliceDimension dimension);
@@ -515,12 +515,12 @@ private:
     QList<VolumeDisplayUnit*> getDisplayUnits() const;
 
 private slots:
-    /// Actualitza les transformacions de càmera (de moment rotació i flip)
+    /// Update camera transformations (currently rotate and flip)
     void updateCamera();
 
-    /// Reimplementem per tal de que faci un setInputAsynchronously
-    /// TODO: De moment es fa així de manera xapussa fins que no es traspassin els mètode de càrrega
-    /// asíncrona a QViewer.
+    /// We reimplement so that it does a setInputAsynchronously
+         /// TODO: At the moment this is done in a sloppy way until the loading methods are transferred
+         /// asynchronous to QViewer.
     virtual void setInputAndRender(Volume *volume);
     void setInputAndRender(const QList<Volume*> &volumes);
 
@@ -531,44 +531,44 @@ private slots:
     void volumeReaderJobFinished();
 
 protected:
-    /// Aquest és el segon volum afegit a solapar
+    /// This is the second volume added to overlap
     Volume *m_overlayVolume;
 
-    /// Aquest és el blender per veure imatges fusionades
+    /// This is the blender for viewing merged images
     BlendFilter* m_blender;
 
-    /// Opacitat del volum solapat
+    /// Opacity of the overlapping volume
     double m_overlayOpacity;
 
 private:
-    /// Nom del grups dins del drawer per als Overlays
+    /// Name of the groups in the drawer for Overlays
     static const QString OverlaysDrawerGroup;
 
-    /// Constant per a definir el nom d'objecte dels volums "dummy"
+    /// Constant for defining the object name of "dummy" volumes
     static const QString DummyVolumeObjectName;
 
-    /// Tipus de solapament dels volums en cas que en tinguem més d'un
+    /// Types of overlapping volumes in case we have more than one
     OverlapMethod m_overlapMethod;
 
-    /// Factor de rotació. En sentit de les agulles del rellotge 0: 0º, 1: 90º, 2: 180º, 3: 270º.
+    /// Rotation factor. Clockwise 0: 0º, 1: 90º, 2: 180º, 3: 270º.
     int m_rotateFactor;
 
-    /// Indica si cal aplicar un flip horitzontal o no sobre la càmera
+    /// Indicates whether or not to apply a horizontal flip to the camera
     bool m_applyFlip;
 
-    /// Aquesta variable controla si la imatge està flipada respecte la seva orientació original. Útil per controlar annotacions.
+    /// This variable controls whether the image is flipped from its original orientation. Useful for controlling annotations.
     bool m_isImageFlipped;
 
-    /// Especialista en dibuixar primitives
+    ///Specialist in drawing primitives
     Drawer *m_drawer;
 
-    /// Indica quin tipus de projecció apliquem sobre l'slab
+    /// Indicate what type of projection we apply on the slab
     int m_slabProjectionMode;
 
-    /// Conté el mapeig d'operacions a fer quan voelm passar d'una orientació a un altre
+    /// Contains the mapping of operations to do when voelm move from one orientation to another
     ImageOrientationOperationsMapper *m_imageOrientationOperationsMapper;
 
-    /// Posició a on s'ha d'alinear la imatge (dreta, esquerre o centrat)
+    /// Position where the image should be aligned (right, left, or centered)
     AlignPosition m_alignPosition;
 
     /// Manager of the reading of volumes
@@ -576,10 +576,10 @@ private:
 
     QViewerCommand *m_inputFinishedCommand;
 
-    /// Llistat d'overlays
+    /// List of overlays
     QList<DrawerBitmap*> m_viewerBitmaps;
 
-    /// Controla si els overlays estan habilitats o no
+    /// Controls whether overlays are enabled or not
     bool m_overlaysAreEnabled;
     
     /// If true, display shutters are visible when they are available and it's possible to show them.
