@@ -25,9 +25,9 @@ public:
     enum UnfoldType { UnfoldImages, UnfoldSeries, DefaultUnfoldType = UnfoldSeries };
     enum UnfoldDirectionType { LeftToRightFirst, TopToBottomFirst, DefaultUnfoldDirection = LeftToRightFirst };
     enum ExclusionCriteriaType { Survey, Localizer };
-    
+
     StudyLayoutConfig();
-    /// Constructor amb paràmetres més habituals
+    /// Builder with most common parameters
     StudyLayoutConfig(const QString &modality, UnfoldType unfoldType = DefaultUnfoldType, UnfoldDirectionType unfoldDirection = DefaultUnfoldDirection);
     ~StudyLayoutConfig();
 
@@ -49,19 +49,19 @@ public:
     bool operator ==(const StudyLayoutConfig &config) const;
 
 private:
-    /// Nombre màxim de visors a desplegar. Si és zero indicaria que s'han de desplegar tants com sigui possible.
+    /// Maximum number of viewers to deploy. If it is zero it would indicate that as many as possible should be deployed.
     int m_maxNumberOfViewers;
 
-    /// Tipus de desplegament
+    /// Type of deployment
     UnfoldType m_unfoldType;
 
-    /// Direcció de desplegament
+    /// Deployment direction
     UnfoldDirectionType m_unfoldDirection;
 
-    /// Conjunt de criteris d'exclusió
+    ///Set of exclusion criteria
     QSet<ExclusionCriteriaType> m_exclusionCriteria;
 
-    /// Modalitat a la que aplicar aquesta configuració
+    /// How to apply this setting
     QString m_modality;
 };
 
