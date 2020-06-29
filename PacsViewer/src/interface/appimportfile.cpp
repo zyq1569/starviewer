@@ -28,10 +28,10 @@
 namespace udg {
 
 AppImportFile::AppImportFile(QObject *parent)
- : QObject(parent)
+    : QObject(parent)
 {
-    // TODO: De moment es desactiven els warnings en release perquè no apareixi la finestra vtkOutputWindow
-    //      però la solució bona passa per evitar els warnings o bé redirigir-los a un fitxer.
+    // TODO: Warnings in release are currently disabled so that the vtkOutputWindow window does not appear
+    // but the good solution is to avoid warnings or redirect them to a file.
 #ifdef QT_NO_DEBUG
     itk::Object::GlobalWarningDisplayOff();
 #endif
@@ -95,7 +95,7 @@ void AppImportFile::openDirectory(bool recursively)
         }
         else
         {
-           // We will only consider files in the root directory without recursively scanning
+            // We will only consider files in the root directory without recursively scanning
             filenames << generateFilenames(directoryName);
         }
 

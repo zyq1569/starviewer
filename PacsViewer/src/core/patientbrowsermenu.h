@@ -26,60 +26,60 @@ class Volume;
 class PatientBrowserMenuExtendedInfo;
 class PatientBrowserMenuList;
 
-/ **
-    Widget in the form of a menu that displays the patient information we give him
-    of entrance so that we can navigate through their studies and corresponding volumes
-  * /
-class PatientBrowserMenu: public QWidget {
-Q_OBJECT
+/**
+Widget in the form of a menu that displays the patient information we give him
+     of entrance so that we can navigate through their studies and corresponding volumes
+  */
+class PatientBrowserMenu : public QWidget {
+    Q_OBJECT
 public:
-    PatientBrowserMenu (QWidget * parent = 0);
-    ~ PatientBrowserMenu ();
+    PatientBrowserMenu(QWidget *parent = 0);
+    ~PatientBrowserMenu();
 
     /// We assign a patient to represent in the menu
-    void setPatient;
+    void setPatient(Patient *patient);
 
     /// Sets if the menu can show fusion pair options if any
-    void setShowFusionOptions (bool show);
+    void setShowFusionOptions(bool show);
 
 public slots:
     /// We display the menu in the indicated position
-    void popup (const QPoint & point, const QString & identifier = QString ());
+    void popup(const QPoint &point, const QString &identifier = QString());
 
 signals:
     /// Signal that notifies the volume corresponding to the chosen item
-    void selectedVolume (Volume *);
-    void selectedVolumes (const QList <Volume *> &);
+    void selectedVolume(Volume *);
+    void selectedVolumes(const QList<Volume *> &);
 
 private slots:
     /// Update views related to the active item (the one the mouse hovers over)
-    void updateActiveItemView (const QString & identifier);
+    void updateActiveItemView(const QString &identifier);
 
     /// Given the item identifier does the relevant actions.
     /// In this case it is responsible for obtaining the volume selected by the user and notifying it
-    void processSelectedItem (const QString & identifier);
+    void processSelectedItem(const QString &identifier);
 
 private:
     /// Create the widgets that make up the menu
-    void createWidgets ();
+    void createWidgets();
 
     /// It returns us true if we need to align the menu to the right. False in case it has to be aligned to the left.
-    bool shouldAlignMenuToTheRight (const QRect & currentScreenGeometry);
+    bool shouldAlignMenuToTheRight(const QRect &currentScreenGeometry);
 
     /// Calculates the size that is outside the widget screen with the list of studies / series according to the popup point.
     /// If it is inside the screen, the size will be (0,0). The third parameter indicates how we want the menu to be aligned
     /// with respect to the screen. If true, do the calculations keeping in mind that it is aligned to the right, otherwise as if it is aligned to the left
-    void computeListOutsideSize (const QPoint & popupPoint, QSize & out, bool rightAligned);
+    void computeListOutsideSize(const QPoint &popupPoint, QSize &out, bool rightAligned);
 
     /// Place the additional information widget in the most appropriate place depending on the position of the main menu
-    void placeAdditionalInfoWidget ();
+    void placeAdditionalInfoWidget();
 
 private:
     /// Attribute that saves the pointer to the basic menu that represents the patient data
-    PatientBrowserMenuList * m_patientBrowserList;
+    PatientBrowserMenuList *m_patientBrowserList;
 
     /// Attribute that saves the pointer in the menu with additional information of the selected item
-    PatientBrowserMenuExtendedInfo * m_patientAdditionalInfo;
+    PatientBrowserMenuExtendedInfo *m_patientAdditionalInfo;
 
     /// Identifiers of the screens with respect to where the menu is displayed
     /// The ID of the current screen, and the attached screens, will be calculated each time the menu popup is performed
