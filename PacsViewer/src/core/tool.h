@@ -28,63 +28,63 @@ class Q2DViewer;
     Classe base per a totes les tools
   */
 class Tool : public QObject {
-Q_OBJECT
+    Q_OBJECT
 public:
-    Tool(QViewer *viewer, QObject *parent = 0);
-    ~Tool();
+    Tool (QViewer * viewer, QObject * parent = 0);
+    ~ Tool ();
 
-    /// Li assignem una configuracio, si la que te per defecte no ens val
-    /// @param configuration Configuracio que li volem assignar
-    virtual void setConfiguration(ToolConfiguration *configuration);
+    /// We assign a configuration, if the one you have by default is not valid for us
+    /// @param configuration Configuration we want to assign to it
+    virtual void setConfiguration (ToolConfiguration * configuration);
 
-    /// Retorna la configuracio actual de la tool
-    /// TODO hauria de ser const o no?
-    ToolConfiguration* getConfiguration() const;
+    /// Returns the current tool configuration
+    /// EVERYTHING should be const or not?
+    ToolConfiguration * getConfiguration () const;
 
-    /// Assigna les dades
-    /// @param data dades que assignem a la tool
-    virtual void setToolData(ToolData *data);
+    /// Assign the data
+    /// @param data data that we assign to the tool
+    virtual void setToolData (ToolData * data);
 
-    /// Ens retorna les dades de la tool
-    /// @return Dades de la tool
-    /// TODO hauria de ser const o no?
-    virtual ToolData* getToolData() const;
+    /// Returns the data of the tool
+    /// @return Tool data
+    /// EVERYTHING should be const or not?
+    virtual ToolData * getToolData () const;
 
-    /// Ens determina si aquesta tool té dades compartides o no
-    /// @return Cert si té dades compartides, fals altrament
-    /// TODO podem implementar de dues maneres aquest mètode.
-    /// 1.- Cada classe defineix amb la variable m_hasSharedData si té dades compartides o no
-    /// 2.- Definim aquest mètode virtual i cada classe el reimplementa retornant el valor que volem
-    /// El mètode 1 sembla millor perquè no cal mantenir tantes línies de codi, encara que és més fàcil de tenir
-    /// problemes ja que és més fàcil donar valors a la variable per error o no inicialitzar-la correctament
-    bool hasSharedData() const;
+    /// Determines whether this tool has shared data or not
+    /// @return True if you have shared data, otherwise false
+    /// EVERYTHING we can implement this method in two ways.
+    /// 1.- Each class defines with the variable m_hasSharedData whether it has shared data or not
+    /// 2.- We define this virtual method and each class re-implements it returning the value we want
+    /// Method 1 seems better because you don't have to maintain as many lines of code, although it's easier to have
+    /// problems because it is easier to give values ​​to the variable by mistake or not to initialize it correctly
+    bool hasSharedData () const;
 
-    /// Ens determina si la tool té dades persistents o no
-    bool hasPersistentData() const;
+    /// Determines whether the tool has persistent data or not
+    bool hasPersistentData () const;
 
-    /// Retorna el nom de la tool
-    QString toolName();
+    /// Returns the name of the tool
+    QString toolName ();
 
-    /// Decideix què s'ha de fer per cada event rebut
-    virtual void handleEvent(unsigned long eventID) = 0;
+    /// Decide what to do for each event received
+    virtual void handleEvent (unsigned long eventID) = 0;
 
 protected:
-    /// Viewer sobre el que s'executa la tool
-    QViewer *m_viewer;
+    /// Viewer on which the tool runs
+    QViewer * m_viewer;
 
-    /// Configuracio de la tool
-    ToolConfiguration *m_toolConfiguration;
+    /// Tool configuration
+    ToolConfiguration * m_toolConfiguration;
 
-    /// Dades de la tool
-    ToolData *m_toolData;
+    /// Tool data
+    ToolData * m_toolData;
 
-    /// Indica si les seves dades hauran de ser o no compartides
+    /// Indicates whether or not your data should be shared
     bool m_hasSharedData;
 
-    /// Nom de la tool TODO podem fer servir QMetaObject::className()? i ens estalviem aquesta variable?
+    /// Tool name Can we all use QMetaObject :: className ()? and do we save this variable?
     QString m_toolName;
 
-    /// Indica si la tool té dades persistents
+    /// Indicates whether the tool has persistent data
     bool m_hasPersistentData;
 };
 
