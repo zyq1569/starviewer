@@ -73,27 +73,27 @@ public:
     QList <Q2DViewerWidget *> getViewersInsideGeometry (const QRectF & geometry);
 
 public slots:
-    /// Marquem com a seleccionat el viewer passat per paràmetre
+    ///We mark as selected the viewer passed by parameter
     void setSelectedViewer(Q2DViewerWidget *viewer);
 
     /// Resizes the given viewer to change between normal (demaximized) and maximized states.
     void toggleMaximization(Q2DViewerWidget *viewer);
 
 signals:
-    /// Senyal que s'emet quan s'afegeix un visualitzador
+    /// Signal that is emitted when a viewer is added
     void viewerAdded(Q2DViewerWidget *viewer);
 
     /// Signal to be emitted just before the viewer widget is going to be deleted
     void viewerRemoved(Q2DViewerWidget *viewer);
 
-    /// Senyal que s'emet quan s'amaga un visualitzador, és a dir,
+    /// Signal that is emitted when a viewer is hidden, that is,
     // deixa de ser visible però segueix existint
     void viewerHidden(Q2DViewerWidget *viewer);
 
     /// Emitted when a previously hid viewer is shown
     void viewerShown(Q2DViewerWidget *viewer);
 
-    /// Senyal que s'emet quan el visualitzador seleccionat canvia
+    /// Signal that is output when the selected viewer changes
     void selectedViewerChanged(Q2DViewerWidget *viewer);
 
     void manualSynchronizationStateChanged(bool enable);
