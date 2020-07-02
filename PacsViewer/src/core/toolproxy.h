@@ -37,44 +37,44 @@ class ToolData;
         - Guarda el nom de cadascuna de les tools
   */
 class ToolProxy : public QObject {
-Q_OBJECT
+    Q_OBJECT
 public:
     ToolProxy(QObject *parent = 0);
     ~ToolProxy();
 
-    /// Afegeix una tool al registre intern. Aquesta tool escoltarà els events
-    /// que se li comuniquin mitjançant forward event
+    /// Add a tool to the internal registry. This tool will listen to the events
+    /// to be communicated to you by forward event
     /// @param tool
     void addTool(Tool *tool);
 
-    /// Donat un nom de tool, l'elimina del registre.
-    /// @param toolName Nom de la tool a eliminar del proxy
-    /// @return Cert si la tenia, fals altrament
+    /// Given a tool name, remove it from the registry.
+    /// @param toolName Name of the tool to remove from the proxy
+    /// @return True if I had it, false otherwise
     bool removeTool(const QString &toolName);
 
-    /// Buida i elimina totes les tools del proxy
+    /// Empty and remove all proxy tools
     void removeAllTools();
 
-    /// Ens diu si la tool demanada està activa o no
-    /// @param toolName Nom de la tool que volem consultar
-    /// @return Cert si la tool està activa, fals altrament
+    /// Tells us if the requested tool is active or not
+    /// @param toolName Name of the tool we want to consult
+    /// @return True if the tool is active, false otherwise
     bool isToolActive(const QString &toolName);
 
-    /// Ens retorna la tool demanada
-    /// @param toolName Nom de la tool que volem obtenir
-    /// @return La tool demanada, NUL si no està registrada en el proxy
+    /// Returns the requested tool
+    /// @param toolName Name of the tool we want to get
+    /// @return The requested tool, NUL if it is not registered in the proxy
     Tool* getTool(const QString &toolName);
 
 public slots:
-    /// Avalua l'event que ha rebut del visualitzador al que està associat i l'envia a les tools actives
+    /// Evaluates the event it has received from the viewer it is associated with and sends it to the active tools
     void forwardEvent(unsigned long eventID);
 
 private:
-     /// Map on hi guardem les tools associades a una clau determinada pel nom de la tool.
-     /// En principi no es poden tenir dues tools amb el mateix nom
+    /// Map where we store the tools associated with a key determined by the name of the tool.
+    /// In principle you can't have two tools with the same name
     QMap<QString, Tool*> m_toolsMap;
 
-    /// En aquest repositori ens encarregarem de guardar les dades persistents de les tools que ho necessitin
+    /// In this repository we will take care of saving the persistent data of the tools that need it
     QMap<QString, ToolData*> m_persistentToolDataRepository;
 
 };
