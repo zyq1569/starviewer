@@ -294,12 +294,12 @@ private:
     /// XRF Positioner Module C.8.7.6 (RF), and must be present (1) in Breast Tomosynthesis Acquisition Module C.8.21.3.4 (Br To)
     double m_estimatedRadiographicMagnificationFactor;
 
-    /// Vectors d'orientació de la imatge respecte al pacient.
-    /// Veure C.6.7.2.1.1. (020,0037) Tipus 1.
+    /// Image orientation vectors with respect to the patient.
+    /// See C.6.7.2.1.1. (020,0037) Type 1.
     ImageOrientation m_imageOrientationPatient;
 
-    /// Posició de la imatge. Les coordenades x,y,z la cantonada superior esquerre (primer pixel transmés) de la imatge, en mm.
-    /// Veure C.6.7.2.1.1. (0020,0032) Tipus 1. \TODO aka origen?.
+    /// Image position. The x, y, z coordinates the upper left corner (first transmitted pixel) of the image, in mm.
+    /// See C.6.7.2.1.1. (0020,0032) Type 1. \ EVERYTHING aka origin ?.
     double m_imagePositionPatient[3];
 
     /// Gruix de llesca en mm. (0018,0050) Tipus 2.
@@ -309,49 +309,49 @@ private:
     /// Nombre de mostres per pixel en la imatge. Veure C.6.7.3.1.1. (0028,0002) Tipus 1.
     int m_samplesPerPixel;
 
-    /// Interpretació fotomètrica (monocrom,color...). Veure C.6.7.3.1.2. (0028,0004) Tipus 1.
+    /// Photometric interpretation (monochrome, color ...). See C.6.7.3.1.2. (0028,0004) Type 1.
     PhotometricInterpretation m_photometricInterpretation;
 
-    /// Files i columnes de la imatge. (0028,0010),(0028,0011) Tipus 1
+    /// Rows and columns of the image. (0028,0010), (0028,0011) Type 1
     int m_rows;
     int m_columns;
 
-    /// Bits allotjats per cada pixel. Cada mostra ha de tenir el mateix nombre de pixels allotjats. Veure PS 3.5 (0028,0100)
+    /// Bits hosted by each pixel. Each sample must have the same number of pixels hosted. See PS 3.5 (0028,0100)
     int m_bitsAllocated;
 
-    /// Bits emmagatzemats per cada pixel. Cada mostra ha de tenir el mateix nombre de pixels emmagatzemats. Veure PS 3.5 (0028,0101)
+    /// Bits stored for each pixel. Each sample must have the same number of pixels stored. See PS 3.5 (0028,0101)
     int m_bitsStored;
 
-    /// Bit més significant. Veure PS 3.5. (0028,0102) Tipus 1
+    /// Most significant bit. See PS 3.5. (0028,0102) Type 1
     int m_highBit;
 
-    /// Representació de cada mostra. Valors enumerats 0000H=unsigned integer, 0001H=complement a 2. (0028,0103) Tipus 1
+    /// Representation of each sample. Listed values ​​0000H = unsigned integer, 0001H = complement to 2. (0028,0103) Type 1
     int m_pixelRepresentation;
 
-    /// Valors de rescalat de la MODALITY LUT. (0028,1053),(0028,1054). Tipus 1
+    /// MODALITY LUT rescaling values. (0028,1053), (0028,1054). Type 1
     double m_rescaleSlope, m_rescaleIntercept;
 
-    /// Valors de rescalat de la VOI LUT. (0028,1050),(0028,1051) Tipus 1C, present si no hi ha VOI LUT Sequence
-    /// Poden incloure "Explicació" dels window levels si n'hi ha, texte descriptiu.(0028,1055) Tipus 3.
-    /// Com que podem tenir més d'un tindrem una llista
-    QList<VoiLut> m_voiLutList;
+    /// VOI LUT rescaling values. (0028,1050), (0028,1051) Type 1C, present if there is no VOI LUT Sequence
+    /// May include "Explanation" of window levels if any, descriptive text. (0028,1055) Type 3.
+    /// Since we can have more than one we will have a list
+    QList <VoiLut> m_voiLutList;
 
-    // TODO millorar definició
-    /// Situació especial de la llesca en mm. (0020,1041)
-    /// SC->tipus 3
-    /// NM->tipus 3
-    /// CT-> A la documentació dicom aquest camp no hi figura però philips l'utiliza com a Table Position
+    // ALL improve definition
+    /// Special situation of the slice in mm. (0020,1041)
+    /// SC-> type 3
+    /// NM-> type 3
+    /// CT-> The documentation says this field does not appear but philips uses it as a Table Position
     QString m_sliceLocation;
 
-    /// Tipus d'imatge. Ens pot definir si es tracta d'un localizer, per exemple. Conté els valors separats per '\\'
-    /// Es troba al mòdul General Image C.7.6.1 i als mòduls Enhanced MR/CT/XA/XRF Image (C.8.13.1/C.8.15.2/C.8.19.2)
-    /// En el cas d'imatges Enhanced CT/MR l'omplirem amb el valor FrameType contingut al functional group CT/MR Image Frame Type
+    /// Image type. You can define us if it is a localizer, for example. Contains values ​​separated by '\\'
+    /// Found in General Image module C.7.6.1 and Enhanced MR / CT / XA / XRF Image modules (C.8.13.1 / C.8.15.2 / C.8.19.2)
+    /// In the case of Enhanced CT / MR images we will fill it with the FrameType value contained in the functional group CT / MR Image Frame Type
     QString m_imageType;
 
-    /// Vista radiogràfica associada a Patient Position. El trobem als mòduls CR Series (C.8.1.1) i DX Positioning (C.8.11.5)
-    /// Valors definits:
-    /// AP = Anterior/Posterior
-    /// PA = Posterior/Anterior
+    /// Radiographic view associated with Patient Position. We find it in the CR Series (C.8.1.1) and DX Positioning (C.8.11.5) modules
+    /// Defined values:
+    /// AP = Previous / Back
+    /// PA = Previous / Previous
     /// LL = Left Lateral
     /// RL = Right Lateral
     /// RLD = Right Lateral Decubitus
@@ -360,19 +360,19 @@ private:
     /// LLO = Left Lateral Oblique
     QString m_viewPosition;
 
-    /// Lateralitat de la possiblement aparellada part del cos examinada.
-    /// El trobem als mòduls DX Anatomy (C.8.11.2), Mammography Image (C.8.11.7), Intra-oral Image (C.8.11.9) i Ocular Region Imaged (C.8.17.5)
-    /// També el trobem al mòdul Frame Anatomy (C.7.6.16.2.8) comú a tots els enhanced, però el tag s'anomena Frame Laterality en comptes d'Image Laterality.
-    /// Valors definits:
+    /// Laterality of the possibly matched part of the body examined.
+    /// We find it in the modules DX Anatomy (C.8.11.2), Mammography Image (C.8.11.7), Intra-oral Image (C.8.11.9) and Ocular Region Imaged (C.8.17.5)
+    /// We also find it in the Frame Anatomy module (C.7.6.16.2.8) common to all enhanced, but the tag is called Frame Laterality instead of Image Laterality.
+    /// Defined values:
     /// R = right
     /// L = left
     /// U = unpaired
     /// B = both left and right
     QChar m_imageLaterality;
 
-    /// Descripció del tipus de vista de la imatge. El seu ús l'aplicarem bàsicament pels casos de mammografia definits a
-    /// PS 3.16 - Context ID 4014 (cranio-caudal, medio-lateral oblique, etc...) però podríem extendre el seu ús a d'altres tipus d'imatge
-    /// que també fan ús d'aquest tag per guardar aquest tipus d'informació amb altres possibles valors específics.
+    /// Description of the image view type. Its use will be applied basically for mammography cases defined in
+    /// PS 3.16 - Context ID 4014 (cranio-caudal, medio-lateral oblique, etc ...) but we could extend its use to other types of image
+    /// which also make use of this tag to store this type of information with other possible specific values.
     QString m_viewCodeMeaning;
 
     /// Frame number
