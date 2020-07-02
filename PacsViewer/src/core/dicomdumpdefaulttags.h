@@ -34,31 +34,31 @@ public:
 
     ~DICOMDumpDefaultTags();
 
-    /// Mètode per definir el SOPClassUID
-    void setSOPClassUID(const QString &sopClassUid);
+    /// Method for defining the SOPClassUID
+    void setSOPClassUID (const QString & sopClassUid);
 
-    /// Mètode que retorna el SOPClassUID
-    QString getSOPClassUID() const;
+    /// Method that returns the SOPClassUID
+    QString getSOPClassUID () const;
 
-    /// Mètode per afegir una restricció a la llista de restriccions
-    void addRestriction(const DICOMDumpDefaultTagsRestriction &restriction);
+    /// Method for adding a constraint to the constraint list
+    void addRestriction (const DICOMDumpDefaultTagsRestriction & restriction);
 
-    /// Mètode per definir la llista de restriccions d'un DICOMDumpDefaultTags
-    void addRestrictions(const QList<DICOMDumpDefaultTagsRestriction> &restrictionsList);
+    /// Method for defining the constraint list of a DICOMDumpDefaultTags
+    void addRestrictions (const QList <DICOMDumpDefaultTagsRestriction> & restrictionsList);
 
-    /// Mètode que retorna la llista de restriccions d'un DICOMDumpDefaultTags
-    QList<DICOMDumpDefaultTagsRestriction> getRestrictions() const;
+    /// Method that returns the constraint list of a DICOMDumpDefaultTags
+    QList <DICOMDumpDefaultTagsRestriction> getRestrictions () const;
 
-    /// Mètode que retorna el número de restriccions que té definides un DICOMDumpDefaultTags
-    int getNumberOfRestrictions() const;
+    /// Method that returns the number of constraints that a DICOMDumpDefaultTags has defined
+    int getNumberOfRestrictions () const;
 
-    /// Mètode per afegir un DICOMTag a la llista de DICOMTags per mostrar
-    void addTagToShow(const DICOMTag &dicomTag);
+    /// Method for adding a DICOMTag to the list of DICOMTags to display
+    void addTagToShow (const DICOMTag & dicomTag);
 
-    /// Mètode per afegir la llista de Tags que s'han de visualitzar per defecte en un DICOMDumpDefaultTags
-    void addTagsToShow(const QList<DICOMTag> &tagsToShow);
+    /// Method for adding the list of Tags to be displayed by default in a DICOMDumpDefaultTags
+    void addTagsToShow (const QList <DICOMTag> & tagsToShow);
 
-    /// Retorna la llista de Tags que s'ha de visualitzar per defecte per el SOPClassUID definit
+    /// Returns the list of Tags to be displayed by default for the defined SOPClassUID
     QList<DICOMTag> getTagsToShow() const;
 
 private:

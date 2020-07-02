@@ -30,7 +30,7 @@ public:
     double applyMethodVTK();
     void applyMethodVTKRecursive(vtkImageData *imMask, int a, int b, int c, int prof);
 
-    /// Neteja els casos propers al crani
+    /// Clean the cases near the skull
     double applyCleanSkullMethod();
 
     void applyFilter(Volume *output);
@@ -141,28 +141,28 @@ private:
     /// Volum que volem segmentar
     Volume *m_Volume;
 
-    /// Volum on guardarem el resultat de la segmetnació que volem segmentar
+    /// Volume where we will save the result of the segmentation that we want to segment
     Volume *m_Mask;
     Volume *m_filteredInputImage;
 
-    /// Posició de la llavor
+    /// Position of the seed
     double m_px, m_py, m_pz;
 
-    /// Llindars de l'histograma
+    /// Histogram thresholds
     int m_lowerThreshold, m_upperThreshold;
 
-    /// Llindars de l'histograma
+    /// Histogram thresholds
     int m_lowerVentriclesThreshold, m_upperVentriclesThreshold;
 
-    /// Valors interns i externs de la màscara
+    /// Internal and external values of the mask
     int m_insideMaskValue, m_outsideMaskValue;
 
-    /// Valors interns i externs de la màscara
+    /// Internal and external values of the mask
     double m_volume;
     int m_cont;
     int m_edemaCont;
 
-    /// Valors mètode edema
+    /// Edema method values
     double m_initialDistance;
     int m_timeThreshold;
     double m_stoppingTime;
@@ -172,7 +172,7 @@ private:
     double m_constant;
     double m_alpha;
 
-    /// Retorna quants voxels != de 0 hi ha a la màscara
+    /// Returns how many voxels! = Of 0 are in the mask
     int computeSizeMask();
 
 };
