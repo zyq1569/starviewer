@@ -22,33 +22,33 @@ class QMovie;
 namespace udg {
 
 /**
-    Widget que s'encarrega de visualitzar el progrés d'alguna tasca que hi pugui haver en un QViewer.
-    Per exemple, el progrés de la càrrega d'un volum asíncrona, descàrrega de prèvies...
-    En el cas que alguna d'aquestes tasques doni error, dona l'opció de mostrar aquests errors en el mateix
-    widget.
+     Widget that displays the progress of any task that may be in a QViewer.
+     For example, the progress of loading an asynchronous volume, downloading previews ...
+     In the event that any of these tasks fail, it gives the option to display these errors in it
+     widget.
   */
 
 class QViewerWorkInProgressWidget : public QWidget, private Ui::QViewerWorkInProgressWidget {
-Q_OBJECT
+    Q_OBJECT
 public:
     explicit QViewerWorkInProgressWidget(QWidget *parent = 0);
 
-    /// Especifica quin és el títol que es posa a la tasca que s'estigui fent
-    void setTitle(const QString &text);
+    /// Specifies the title given to the task being performed
+    void setTitle (const QString & text);
 
-    /// Mostra l'error que se li passi. Útil per mostrar a l'usuari si es produeix un error al fer el "work in progress".
-    void showError(const QString &errorText);
+    /// Show the error that happens to you. Useful for showing the user if an error occurs while doing the "work in progress".
+    void showError (const QString & errorText);
 
-    /// Reinicia el widget.
-    void reset();
+    /// Restart the widget.
+    void reset ();
 
 public slots:
-    /// Actualitza el progrés del "work in progress".
+    /// Update work in progress.
     void updateProgress(int progress);
 
 protected:
-    /// Per evitar que l'animació consumeixi recursos quan no és necessita, només l'activem quan el widget és visible,
-    /// desactivant-la si no ho és.
+    /// To prevent the animation from consuming resources when it is not needed, we only activate it when the widget is visible,
+    /// disabling it if it is not.
     virtual void showEvent(QShowEvent *event);
     virtual void hideEvent(QHideEvent *event);
 

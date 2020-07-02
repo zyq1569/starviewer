@@ -36,37 +36,37 @@ namespace udg {
 class Series;
 
 /**
-    Classe que encapsula les propietats d'una imatge d'una sèrie de la classe Series
+ Class that encapsulates the properties of an image of a series of the Series class
   */
 class Image : public QObject {
-Q_OBJECT
+    Q_OBJECT
 public:
     Image(QObject *parent = 0);
     ~Image();
 
-    /// Assigna/obté el SOPInstanceUID de la imatge
-    void setSOPInstanceUID(const QString &uid);
-    QString getSOPInstanceUID() const;
+    /// Assign / get the SOPInstanceUID of the image
+    void setSOPInstanceUID (const QString & uid);
+    QString getSOPInstanceUID () const;
 
-    /// Assigna/obté l'instance number
-    void setInstanceNumber(const QString &number);
-    QString getInstanceNumber() const;
+    /// Assign / get instance number
+    void setInstanceNumber (const QString & number);
+    QString getInstanceNumber () const;
 
-    /// Assignar/Obtenir la orientació del pla de la imatge, també anomenat direction cosines.
-    /// Els valors són els vectors que formen el pla d'imatge.
-    /// A partir d'aquests dos vectors, es calcula la normal del pla d'imatge
-    /// @param orientation[] Els valors dels vectors que defineixen el pla d'imatge.
-    void setImageOrientationPatient(const ImageOrientation &imageOrientation);
-    ImageOrientation getImageOrientationPatient() const;
+    /// Assign / Obtain the orientation of the image plane, also called direction cousins.
+    /// Values are the vectors that make up the image plane.
+    /// From these two vectors, the normal of the image plane is calculated
+    /// @param orientation [] The values of the vectors that define the image plane.
+    void setImageOrientationPatient (const ImageOrientation & imageOrientation);
+    ImageOrientation getImageOrientationPatient () const;
 
-    /// Assignar/Obtenir l'orientació del pacient
-    void setPatientOrientation(const PatientOrientation &orientation);
-    PatientOrientation getPatientOrientation() const;
+    /// Assign / Obtain patient orientation
+    void setPatientOrientation (const PatientOrientation & orientation);
+    PatientOrientation getPatientOrientation () const;
 
-    /// Assignar/Obtenir l'espaiat dels pixels
-    void setPixelSpacing(double x, double y);
-    void setPixelSpacing(const PixelSpacing2D &spacing);
-    PixelSpacing2D getPixelSpacing() const;
+    /// Assign / Get pixel spacing
+    void setPixelSpacing (double x, double y);
+    void setPixelSpacing (const PixelSpacing2D & spacing);
+    PixelSpacing2D getPixelSpacing () const;
 
     /// Set/Get Imager Pixel Spacing
     void setImagerPixelSpacing(double x, double y);
@@ -83,19 +83,19 @@ public:
     /// ImagerPixelSpacing corrected by EstimatedRadiographicFactor
     PixelSpacing2D getPreferredPixelSpacing() const;
 
-    /// Assignar/Obtenir l'slice thickness, aka espaiat de les Z
+    ///Assign / Obtain slice thickness, aka Z spacing
     void setSliceThickness(double z);
     double getSliceThickness() const;
 
-    /// Assignar/Obtenir la posició de la imatge.
+    ///Assign / Obtain the position of the image.
     void setImagePositionPatient(double position[3]);
     const double* getImagePositionPatient() const;
 
-    /// Assignar/Obtenir els samples per pixel
+    /// Assign / Obtain samples per pixel
     void setSamplesPerPixel(int samples);
     int getSamplesPerPixel() const;
 
-    /// Assignar/Obtenir la interpretació fotomètrica
+    /// Assign / Obtain the photometric interpretation
     void setPhotometricInterpretation(const QString &value);
     PhotometricInterpretation getPhotometricInterpretation() const;
 
@@ -113,166 +113,165 @@ public:
     void setBitsStored(int bits);
     int getBitsStored() const;
 
-    /// Assignar/Obtenir el bit més alt
-    void setHighBit(int highBit);
-    int getHighBit() const;
+    /// Assign / Get the highest bit
+    void setHighBit (int highBit);
+    int getHighBit () const;
 
-    /// Assignar/Obtenir la representació dels pixels
-    void setPixelRepresentation(int representation);
-    int getPixelRepresentation() const;
+    /// Assign / Obtain pixel representation
+    void setPixelRepresentation (int representation);
+    int getPixelRepresentation () const;
 
-    /// Assignar/Obtenir els valors del rescalat de la MODALITY LUT que s'apliquen sobre la imatge
-    /// la fòrmula és f(x) = a*x + b, on 'x' és el valor del pixel de la imatge, 'a' l'Slope i 'b' l'Intercept
+    /// Assign / Obtain MODALITY LUT embedding values that are applied to the image
+    /// the formula is f (x) = a * x + b, where 'x' is the pixel value of the image, 'a' the Slope and 'b' the Intercept
     void setRescaleSlope(double slope);
     double getRescaleSlope() const;
     void setRescaleIntercept(double intercept);
     double getRescaleIntercept() const;
 
-    /// Assignar/Obtenir els valors del rescalat de la VOI LUT que s'apliquen sobre la imatge
-    void addVoiLut(const VoiLut &voiLut);
-    VoiLut getVoiLut(int index = 0) const;
+    /// Assign / Obtain the values of the embossing of the VOI LUT that are applied on the image
+    void addVoiLut (const VoiLut & voiLut);
+    VoiLut getVoiLut (int index = 0) const;
 
-    /// Assignem el llistat de WindowLevels de la imatge. Si el llistat conté algun WW/WL invàlid, no s'afegeix
-    /// Sempre s'esborrarà qualsevol llistat de window level que hi hagués anteriorment
-    void setVoiLutList(const QList<VoiLut> &voiLutList);
+    /// Assign the WindowLevels list of the image. If the listing contains an invalid WW / WL, it is not added
+    /// Any previous window level list will always be deleted
+    void setVoiLutList (const QList <VoiLut> & voiLutList);
     
-    /// Ens retorna el nombre de window levels que tenim
-    int getNumberOfVoiLuts();
+    /// It returns the number of window levels we have
+    int getNumberOfVoiLuts ();
 
-    /// Li indiquem quina és la sèrie pare a la qual pertany
-    void setParentSeries(Series *series);
-    Series* getParentSeries() const;
+    /// We tell you which parent series it belongs to
+    void setParentSeries (Series * series);
+    Series * getParentSeries () const;
 
-    /// Assigna/retorna el path absolut de la imatge
-    void setPath(const QString &path);
-    QString getPath() const;
+    /// Assigns / returns the absolute path of the image
+    void setPath (const QString & path);
+    QString getPath () const;
 
-    /// Assigna / retorna el slice location de la imatge
-    void setSliceLocation(const QString &sliceLocation);
-    QString getSliceLocation() const;
+    /// Assigns / returns the slice location of the image
+    void setSliceLocation (const QString & sliceLocation);
+    QString getSliceLocation () const;
 
-    /// Assignar/Obtenir la data i hora en que la sèrie s'ha descarregat a la base de dades Local
-    void setRetrievedDate(QDate date);
-    void setRetrievedTime(QTime time);
-    QDate getRetrievedDate();
-    QTime getRetrievedTime();
+    /// Assign / Obtain the date and time the series was downloaded to the Local database
+    void setRetrievedDate (QDate data);
+    void setRetrievedTime (QTime time);
+    QDate getRetrievedDate ();
+    QTime getRetrievedTime ();
 
-    /// Assignar/Obtenir la descripció del tipus d'imatge
-    void setImageType(const QString &imageType);
-    QString getImageType() const;
+    /// Assign / Get the description of the image type
+    void setImageType (const QString & imageType);
+    QString getImageType () const;
 
-    /// Assignar/Obtenir la viewPosition
-    void setViewPosition(const QString &viewPosition);
-    QString getViewPosition() const;
+    /// Assign / Get the viewPosition
+    void setViewPosition (const QString & viewPosition);
+    QString getViewPosition () const;
 
-    /// Assignar/Obtenir la lateritat de la imatge
-    void setImageLaterality(const QChar &imageLaterality);
-    QChar getImageLaterality() const;
+    /// Assign / Obtain the laterity of the image
+    void setImageLaterality (const QChar & imageLaterality);
+    QChar getImageLaterality () const;
 
-    /// Assignar/Obtenir la descripció del View Code. De moment només s'aplicarà per imatges de mammografia.
-    void setViewCodeMeaning(const QString &viewCodeMeaning);
-    QString getViewCodeMeaning() const;
+    /// Assign / Get the description of the View Code. For now it will only be applied for mammography images.
+    void setViewCodeMeaning (const QString & viewCodeMeaning);
+    QString getViewCodeMeaning () const;
 
-    /// Assignar/Obtenir el número de frame
-    void setFrameNumber(int frameNumber);
-    int getFrameNumber() const;
+    /// Assign / Get the frame number
+    void setFrameNumber (int frameNumber);
+    int getFrameNumber () const;
 
-    /// Assignar/Obtenir el número de fase
+    /// Assign / Obtain the phase number
     void setPhaseNumber (int phaseNumber);
-    int getPhaseNumber() const;
+    int getPhaseNumber () const;
 
-    /// Assigna/Obtenir el número de volum al qual pertany la imatge dins la sèrie
+    /// Assign / Obtain the volume number to which the image in the series belongs
     void setVolumeNumberInSeries (int volumeNumberInSeries);
-    int getVolumeNumberInSeries() const;
+    int getVolumeNumberInSeries () const;
 
-    /// Assignar/Obtenir el número que ocupa la imatge dins volum
-    void setOrderNumberInVolume(int orderNumberInVolume);
-    int getOrderNumberInVolume() const;
+    /// Assign / Obtain the number occupied by the image within volume
+    void setOrderNumberInVolume (int orderNumberInVolume);
+    int getOrderNumberInVolume () const;
 
-    /// Assignar/Obtenir el Content Time (moment de creació de les dades)
-    void setImageTime(const QString &imageTime);
-    QString getImageTime() const;
+    /// Assign / Obtain Content Time (time of data creation)
+    void setImageTime (const QString & imageTime);
+    QString getImageTime () const;
 
-    /// Ens retorna la hora en format hh:mm:ss en que va començar la creació de la imatge
-    QString getFormattedImageTime() const;
-
+    /// Returns the time in hh: mm: ss format in which the image creation began
+    QString getFormattedImageTime () const;
     /// Sets the transfer syntax UID.
     void setTransferSyntaxUID(const QString &transferSyntaxUID);
     /// Returns the transfer syntax UID.
     const QString& getTransferSyntaxUID() const;
 
-    /// Ens retorna la distància de l'orígen de la imatge passada per paràmetre respecte a un orígen 0, 0, 0, segons la normal del pla
-    /// TODO Assignar-li un nom més entenedor
-    static double distance(Image *image);
-    
-    /// Mètodes per obtenir/assignar el número d'overlays que té la imatge
-    bool hasOverlays() const;
-    unsigned short getNumberOfOverlays() const;
-    void setNumberOfOverlays(unsigned short overlays);
+    /// Returns the distance of the origin of the image passed by parameter with respect to an origin 0, 0, 0, according to the normal of the plane
+    /// EVERYTHING Give it a more understandable name
+    static double distance (Image * image);
 
-    /// Obté la llista d'overlays
-    QList<ImageOverlay> getOverlays();
+    /// Methods for obtaining / assigning the number of overlays that the image has
+    bool hasOverlays () const;
+    unsigned short getNumberOfOverlays () const;
+    void setNumberOfOverlays (unsigned short overlays);
 
-    /// Obté una llista amb la divisió en regions de tots els overlays. Es fusionen tots els overlays originals en un de sol 
-    /// i després es fa la partició òptima de les diferents parts que el composen
-    QList<ImageOverlay> getOverlaysSplit();
+    /// Gets the list of overlays
+    QList <ImageOverlay> getOverlays ();
 
-    /// Ens diu si té shutters o no
-    bool hasDisplayShutters() const;
-    
-    /// Afegeix un Display Shutter a l'imatge
-    void addDisplayShutter(const DisplayShutter &shutter);
-    
-    /// Assigna una llista de Display Shutters a l'imatge. Aquesta sobreescriu l'anterior.
-    void setDisplayShutters(const QList<DisplayShutter> &shuttersList);
-    
-    /// Obté la llista de Display Shutters
-    QList<DisplayShutter> getDisplayShutters() const;
+    /// Gets a list with the division into regions of all overlays. All original overlays are merged into one
+    /// and then the optimal partition of the different parts that make it up is done
+    QList <ImageOverlay> getOverlaysSplit ();
 
-    /// Ens retorna la composició de DisplayShutters adequada per display
-    /// Si no existeixen shutters o no hi ha cap disposició vàlida ens tornarà un DisplayShutter buit
-    DisplayShutter getDisplayShutterForDisplay();
+    /// It tells us if it has shutters or not
+    bool hasDisplayShutters () const;
+
+    /// Adds a Display Shutter to the image
+    void addDisplayShutter (const DisplayShutter & shutter);
+
+    /// Assigns a list of Display Shutters to the image. This overwrites the above.
+    void setDisplayShutters (const QList <DisplayShutter> & shuttersList);
+
+    /// Gets the Display Shutters list
+    QList <DisplayShutter> getDisplayShutters () const;
+
+    /// Returns the appropriate DisplayShutters composition for display
+    /// If there are no shutters or no valid layouts an empty DisplayShutter will return
+    DisplayShutter getDisplayShutterForDisplay ();
 
     /// Returns display shutter for display in vtkImageData format, with the same dimensions as the image.
     /// The z value of the extent can be specified with zSlice.
     /// The vtkImageData object is created only the first time, subsequent calls return the same object.
-    vtkImageData* getDisplayShutterForDisplayAsVtkImageData(int zSlice = 0);
+    vtkImageData * getDisplayShutterForDisplayAsVtkImageData (int zSlice = 0);
 
-    /// Assingar/Obtenir el DICOMSource de la imatge. Indica quin és l'origen dels fitxers DICOM que conté la imatge
-    void setDICOMSource(const DICOMSource &imageDICOMSource);
-    DICOMSource getDICOMSource() const;
+    /// Assign / Obtain the DICOMSource from the image. Indicates the source of the DICOM files contained in the image
+    void setDICOMSource (const DICOMSource & imageDICOMSource);
+    DICOMSource getDICOMSource () const;
 
-    /// Ens retorna la clau que identifica la imatge
-    QString getKeyIdentifier() const;
+    /// Returns the key that identifies the image
+    QString getKeyIdentifier () const;
 
-    /// El mètode ens retorna el thumbnail de la imatge. Es crearà el primer cop que es demani
-    /// @param getFromCache Si és cert intentarà carregar el thumbnail si es troba creat a la cache.
-    ///                     Altrament, simplement comprobarà que no estigui creat a memòria i prou
-    /// @param resolution La resolució amb la que volem el thumbnail
-    /// @return Un QPixmap amb el thumbnail
-    QPixmap getThumbnail(bool getFromCache = false, int resolution = 100);
+    /// The method returns the thumbnail of the image. It will be created the first time it is requested
+    /// @param getFromCache If true it will try to load the thumbnail if it is created in the cache.
+    /// Otherwise, it will simply check that it is not created in memory and enough
+    /// @param resolution The resolution with which we want the thumbnail
+    /// @return A QPixmap with the thumbnail
+    QPixmap getThumbnail (bool getFromCache = false, int resolution = 100);
 
-    /// Ens retorna una llista amb les modalitats que suportem com a Image
-    static QStringList getSupportedModalities();
+    /// Returns a list of the modes we support as Image
+    static QStringList getSupportedModalities ();
 
 private:
-    /// Llegeix els overlays. Si splitOverlays és true, els guarda fent una divisió de les regions òptimes a la llista m_overlaysSplit
-    /// Sinó els llegeix per separat i els guarda a la llista m_overlaysList
+    /// Read the overlays. If splitOverlays is true, save them by dividing the optimal regions in the m_overlaysSplit list
+    /// Otherwise read them separately and save them in the m_overlaysList
     bool readOverlays(bool splitOverlays = true);
 
 private:
     /// Atributs DICOM
 
-    /// Identificador de la imatge/arxiu. (0008,0018)
+    /// Image / file identifier. (0008,0018)
     QString m_SOPInstanceUID;
 
-    /// Informació general de la imatge. C.7.6 General Image Module - PS 3.3.
+    /// General image information. C.7.6 General Image Module - PS 3.3.
 
-    /// Nombre que identifica la imatge. (0020,0013) Tipus 2
+    /// Number that identifies the image. (0020,0013) Type 2
     QString m_instanceNumber;
 
-    /// Orientació anatòmica de les files i columnes de la imatge (LR/AP/HF). Requerit si la imatge no requereix Image Orientation(Patient)(0020,0037) i
-    /// Image Position(Patient)(0020,0032). Veure C.6.7.1.1.1. (0020,0020) Tipus 2C.
+    /// Anatomical orientation of the rows and columns of the image (LR / AP / HF). Required if image does not require Image Orientation (Patient) (0020,0037) i
+    /// Image Position (Patient) (0020,0032). See C.6.7.1.1.1. (0020,0020) Type 2C.
     PatientOrientation m_patientOrientation;
 
     // TODO Referenced Image Sequence (0008,1140) Tipus 3. Seqüència que referència altres imatges significativament relacionades amb aquestes,
@@ -283,7 +282,7 @@ private:
     // Image Plane Module C.6.7.2
     /// Distància física entre el centre de cada píxel (row,column) en mm. Veure 10.7.1.3. (0028,0030) Tipus 1
     PixelSpacing2D m_pixelSpacing;
-    
+
     /// Imager Pixel spacing (0018,1164)
     /// Physical distance measured at the front plane of the Image Receptor housing between the center of each pixel.
     /// Present in CR (3), DX, MG, IO (1), Enhanced XA/XRF (1C), 3D XA (1C)
@@ -376,19 +375,19 @@ private:
     /// que també fan ús d'aquest tag per guardar aquest tipus d'informació amb altres possibles valors específics.
     QString m_viewCodeMeaning;
 
-    /// Número de frame
+    /// Frame number
     int m_frameNumber;
 
-    /// Número de fase de la imatge
+    /// Image phase number
     int m_phaseNumber;
 
-    /// Número de volum al qual pertany la imatge dins la sèrie
+    /// Volume number to which the image in the series belongs
     int m_volumeNumberInSeries;
 
-    /// Número d'ordre de la imatge dins el vo
+    /// Image order number within vo
     int m_orderNumberInVolume;
 
-    /// Moment en el que es va crear el pixel data
+    /// Time the pixel data was created
     QString m_imageTime;
 
     // TODO C.7.6.5 CINE MODULE: Multi-frame Cine Image
@@ -397,43 +396,43 @@ private:
     /// Transfer syntax defines how DICOM objects are serialized.
     QString m_transferSyntaxUID;
 
-    /// Atributs NO-DICOM
+    /// NO-DICOM attributes
 
-    /// El path absolut de la imatge
+    /// The absolute path of the image
     QString m_path;
 
-    /// Data en que la imatge s'ha descarregat a la base de dades local
+    /// Date the image was downloaded to the local database
     QDate m_retrievedDate;
     QTime m_retrieveTime;
 
-    /// Atribut que ens dirà quants overlays té la imatge
+    /// Attribute that will tell us how many overlays the image has
     unsigned short m_numberOfOverlays;
-    
-    /// Llista d'overlays carregats
-    QList<ImageOverlay> m_overlaysList;
 
-    /// Llista que conté la partició en regions òptimes de la fusió de tots els overlays
-    QList<ImageOverlay> m_overlaysSplit;
+    /// List of loaded overlays
+    QList <ImageOverlay> m_overlaysList;
 
-    /// Llista de display shutters
-    QList<DisplayShutter> m_shuttersList;
-    
-    /// DisplayShutter per display que guardarem un cop creat
+    /// List containing the partition in optimal regions of the merging of all overlays
+    QList <ImageOverlay> m_overlaysSplit;
+
+    /// List of display shutters
+    QList <DisplayShutter> m_shuttersList;
+
+    /// DisplayShutter per display that we will save once created
     DisplayShutter m_displayShutterForDisplay;
-    
-    /// Ens indica si hem de crear el display shutter per display
+
+    /// Tells us if we need to create the display shutter by display
     bool m_haveToBuildDisplayShutterForDisplay;
 
     /// Display shutter for display in vtkImageData format.
-    vtkSmartPointer<vtkImageData> m_displayShutterForDisplayVtkImageData;
+    vtkSmartPointer <vtkImageData> m_displayShutterForDisplayVtkImageData;
 
-    /// La sèrie pare
-    Series *m_parentSeries;
+    /// The parent series
+    Series * m_parentSeries;
 
-    /// Cache de la imatge de previsualització
+    /// Cache preview image
     QPixmap m_thumbnail;
 
-    //Indica quin és l'origen de les imatges DICOM
+    // Indicates the origin of DICOM images
     DICOMSource m_imageDICOMSource;
 };
 
