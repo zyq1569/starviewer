@@ -69,7 +69,7 @@ class TransferFunctionModel;
     The default flag is \ c AllAnnotation and therefore all default annotations are displayed.
   */
 class Q2DViewer : public QViewer {
-Q_OBJECT
+    Q_OBJECT
 public:
     /// Types of overlapping models
     enum OverlapMethod { None, Blend };
@@ -207,7 +207,7 @@ public:
     int getSlabProjectionMode() const;
 
     /// We get the thickness of the slab
-         /// If the thickslab is not active, the value is indefinite
+    /// If the thickslab is not active, the value is indefinite
     int getSlabThickness() const;
 
     /// Casts the given QViewer to a Q2DViewer object
@@ -336,7 +336,7 @@ public slots:
     void setSeedPosition(double pos[3]);
 
     /// Apply a 90-degree rotation clockwise
-         /// as many "times" as we tell you, by default it will always be 1 "time"
+    /// as many "times" as we tell you, by default it will always be 1 "time"
     void rotateClockWise(int times = 1);
 
     /// Apply a 90-degree rotation counterclockwise
@@ -366,12 +366,12 @@ public slots:
     void alignLeft();
     void alignRight();
 
-/// Set the image alignment position (right, left, centered)
+    /// Set the image alignment position (right, left, centered)
     void setAlignPosition(AlignPosition alignPosition);
 
     /// Apply the necessary 2D transformations on the current image so that it has the indicated orientation
-         /// The indicated orientation must be possible to obtain by means of operations of rotation and flip. In case not
-         /// if possible combinations exist, the image orientation will not be changed
+    /// The indicated orientation must be possible to obtain by means of operations of rotation and flip. In case not
+    /// if possible combinations exist, the image orientation will not be changed
     void setImageOrientation(const PatientOrientation &desiredPatientOrientation);
 
     ////// Makes ImageOverlays visible or not
@@ -404,7 +404,7 @@ signals:
     void slabProjectionModeChanged(int slabProjectionMode);
 
     /// Issued when the thickness thickness changes
-         /// @param thickness New thickness value
+    /// @param thickness New thickness value
     void slabThicknessChanged(int thickness);
 
     /// Signal sent when the overlay has changed
@@ -452,20 +452,20 @@ private:
     /// Print some information related to the volume
     void printVolumeInformation();
 
-    /// Actualitza el pipeline del filtre de shutter segons si està habilitat o no
+    /// Update the shutter filter pipeline depending on whether it is enabled or not
     void updateShutterPipeline();
 
     /// Updates the mask used as display shutter if display shutters should and can be shown.
     void updateDisplayShutterMask();
 
-    /// Re-inicia els paràmetres de la càmera segons la vista actual.
+    ///Resets the camera settings to the current view.
     void resetCamera();
 
     /// Apply the appropriate rotation factor according to the turns we indicate. It doesn’t update the camera or the scene, simply
-         /// is used to set the correct values to the internal variables that control how the image is rotated.
+    /// is used to set the correct values to the internal variables that control how the image is rotated.
     void rotate(int times);
 
-/// Sets if image should be flipped (horizontally) or not. It does not update the camera nor renders the scene.
+    /// Sets if image should be flipped (horizontally) or not. It does not update the camera nor renders the scene.
     void setFlip(bool flip);
     
     /// Updates the camera, renders and emits the current image orientataion
@@ -519,8 +519,8 @@ private slots:
     void updateCamera();
 
     /// We reimplement so that it does a setInputAsynchronously
-         /// TODO: At the moment this is done in a sloppy way until the loading methods are transferred
-         /// asynchronous to QViewer.
+    /// TODO: At the moment this is done in a sloppy way until the loading methods are transferred
+    /// asynchronous to QViewer.
     virtual void setInputAndRender(Volume *volume);
     void setInputAndRender(const QList<Volume*> &volumes);
 
