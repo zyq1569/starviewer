@@ -198,7 +198,7 @@ void Q2DViewerWidget::setSelected(bool option)
     QBrush brush = QApplication::palette().window();
     if (option)
     {
-        // Si seleccionem el widget, li canviem el color de fons
+        //If we select the widget, we change the background color
         brush.setColor(QColor(85, 160, 255));
     }
     QPalette palette = this->palette();
@@ -239,8 +239,8 @@ void Q2DViewerWidget::enableSynchronization(bool enable)
     
     if (m_synchronizeButtonAction->isChecked() != enable)
     {
-        // Ens han invocat el mètode directament, no s'ha fet clicant el botó
-        // Això farà invocar aquest mètode de nou passant per "l'else"
+        // We have been invoked the method directly, it was not done by clicking the button
+        // This will invoke this method again through "else"
         m_synchronizeButtonAction->setChecked(enable);
     }
     else
