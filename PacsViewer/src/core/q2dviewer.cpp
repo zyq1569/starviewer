@@ -45,7 +45,7 @@
 
 // Qt
 #include <QResizeEvent>
-// Include's bàsics vtk
+// Include basic vtk
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
@@ -63,8 +63,8 @@ const QString Q2DViewer::OverlaysDrawerGroup("Overlays");
 const QString Q2DViewer::DummyVolumeObjectName("Dummy Volume");
 
 Q2DViewer::Q2DViewer(QWidget *parent)
-: QViewer(parent), m_overlayVolume(0), m_blender(0), m_overlapMethod(Q2DViewer::Blend), m_rotateFactor(0), m_applyFlip(false),
-  m_isImageFlipped(false), m_slabProjectionMode(AccumulatorFactory::Maximum), m_fusionBalance(50)
+    : QViewer(parent), m_overlayVolume(0), m_blender(0), m_overlapMethod(Q2DViewer::Blend), m_rotateFactor(0), m_applyFlip(false),
+      m_isImageFlipped(false), m_slabProjectionMode(AccumulatorFactory::Maximum), m_fusionBalance(50)
 {
     m_displayUnitsFactory = new VolumeDisplayUnitHandlerFactory;
     initializeDummyDisplayUnit();
@@ -75,18 +75,18 @@ Q2DViewer::Q2DViewer(QWidget *parent)
     connect(m_volumeReaderManager, SIGNAL(progress(int)), m_workInProgressWidget, SLOT(updateProgress(int)));
     connect(m_patientBrowserMenu, SIGNAL(selectedVolumes(QList<Volume*>)), this, SLOT(setInputAndRender(QList<Volume*>)));
 
-    // Creem anotacions i actors
+    // We create annotations and actors
     m_annotationsHandler = new Q2DViewerAnnotationHandler(this);
     initializeCamera();
 
-    // Creem el drawer, passant-li com a visor l'objecte this
+    //We create the drawer, passing the object this as a viewfinder
     m_drawer = new Drawer(this);
 
     m_imageOrientationOperationsMapper = new ImageOrientationOperationsMapper();
 
     m_alignPosition = Q2DViewer::AlignCenter;
 
-    // Inicialitzem el filtre de shutter
+    // We initialize the shutter filter
     m_showDisplayShutters = true;
     m_overlaysAreEnabled = true;
 }
@@ -95,16 +95,16 @@ Q2DViewer::~Q2DViewer()
 {
     delete m_displayUnitsFactory;
     delete m_dummyDisplayUnit;
-    // Fem delete d'altres objectes vtk en cas que s'hagin hagut de crear
+    // We delete other vtk objects in case they had to be created
     delete m_blender;
 
     removeViewerBitmaps();
     
-    // TODO hem hagut de fer eliminar primer el drawer per davant d'altres objectes
-    // per solucionar el ticket #539, però això denota que hi ha algun problema de
-    // disseny que fa que no sigui prou robust. L'ordre en que s'esborren els objectes
-    // no ens hauria d'afectar
-    // HACK Imposem que s'esborri primer el drawer
+    // WE ALL had to remove the drawer first in front of other objects
+    // to fix ticket # 539, but this indicates that there is a problem with
+    // design that makes it not robust enough. The order in which objects are deleted
+    // shouldn't affect us
+    // HACK We force the drawer to be deleted first
     delete m_drawer;
     delete m_imageOrientationOperationsMapper;
 
@@ -113,7 +113,7 @@ Q2DViewer::~Q2DViewer()
 
 void Q2DViewer::rotateClockWise(int times)
 {
-    // Almenys ha de ser 1 (+90º)
+    // Must be at least 1 (+ 90º)
     if (times <= 0)
     {
         return;
@@ -126,7 +126,7 @@ void Q2DViewer::rotateClockWise(int times)
 
 void Q2DViewer::rotateCounterClockWise(int times)
 {
-    // Almenys ha de ser 1 (-90º)
+    // Must be at least 1 (-90º)
     if (times <= 0)
     {
         return;
@@ -159,8 +159,8 @@ PatientOrientation Q2DViewer::getCurrentDisplayedImagePatientOrientation() const
         return PatientOrientation();
     }
     
-    // Si no estem a la vista axial (adquisició original) obtindrem 
-    // la orientació a través de la primera imatge
+    // If we are not in the axial view (original acquisition) we will get
+    // orientation through the first image
     int index = (getCurrentViewPlane() == OrthogonalPlane::XYPlane) ? getCurrentSlice() : 0;
 
     PatientOrientation originalOrientation;
@@ -175,41 +175,41 @@ PatientOrientation Q2DViewer::getCurrentDisplayedImagePatientOrientation() const
     }
     else
     {
-        DEBUG_LOG("L'índex d'imatge actual és incorrecte o no hi ha imatges al volum. Això no hauria de passar en aquest mètode.");
+        DEBUG_LOG("The current image index is incorrect or there are no images in the volume. This should not happen in this method.");
         return PatientOrientation();
     }
     
-    // Escollim les etiquetes que hem agafar com a referència segons la vista actual
+    //We choose the labels we have taken as a reference according to the current view
     QString baseRowLabel;
     QString baseColumnLabel;
     switch (getCurrentViewPlane())
     {
-        case OrthogonalPlane::XYPlane:
-            baseRowLabel = originalOrientation.getRowDirectionLabel();
-            baseColumnLabel = originalOrientation.getColumnDirectionLabel();
-            break;
+    case OrthogonalPlane::XYPlane:
+        baseRowLabel = originalOrientation.getRowDirectionLabel();
+        baseColumnLabel = originalOrientation.getColumnDirectionLabel();
+        break;
 
-        case OrthogonalPlane::YZPlane:
-            baseRowLabel = originalOrientation.getColumnDirectionLabel();
-             // TODO Tenim la normal "al revés", en realitat hauria de ser el contrari
-            baseColumnLabel = PatientOrientation::getOppositeOrientationLabel(originalOrientation.getNormalDirectionLabel());
-            break;
+    case OrthogonalPlane::YZPlane:
+        baseRowLabel = originalOrientation.getColumnDirectionLabel();
+        // EVERYTHING We have the normal "upside down", it should actually be the opposite
+        baseColumnLabel = PatientOrientation::getOppositeOrientationLabel(originalOrientation.getNormalDirectionLabel());
+        break;
 
-        case OrthogonalPlane::XZPlane:
-            baseRowLabel = originalOrientation.getRowDirectionLabel();
-            // TODO Tenim la normal "al revés", en realitat hauria de ser el contrari
-            baseColumnLabel = PatientOrientation::getOppositeOrientationLabel(originalOrientation.getNormalDirectionLabel());
-            break;
+    case OrthogonalPlane::XZPlane:
+        baseRowLabel = originalOrientation.getRowDirectionLabel();
+        //EVERYTHING We have the normal "upside down", it should actually be the opposite
+        baseColumnLabel = PatientOrientation::getOppositeOrientationLabel(originalOrientation.getNormalDirectionLabel());
+        break;
     }
 
-    // Ara caldrà escollir les etiquetes corresponents en funció de les rotacions i flips
+    // You will now need to choose the appropriate labels based on the rotations and flips
     QString rowLabel;
     QString columnLabel;
     int absoluteRotateFactor = (4 + m_rotateFactor) % 4;
     if (getCurrentViewPlane() == OrthogonalPlane::YZPlane || getCurrentViewPlane() == OrthogonalPlane::XZPlane)
     {
-        // HACK FLIP De moment necessitem fer aquest truc. Durant el refactoring caldria
-        // veure si es pot fer d'una manera millor
+        // HACK FLIP At the moment we need to do this trick. During refactoring it would be necessary
+        // see if it can be done in a better way
         if (m_isImageFlipped)
         {
             absoluteRotateFactor = (absoluteRotateFactor + 2) % 4;
@@ -217,25 +217,25 @@ PatientOrientation Q2DViewer::getCurrentDisplayedImagePatientOrientation() const
     }
     switch (absoluteRotateFactor)
     {
-        case 0:
-            rowLabel = baseRowLabel;
-            columnLabel = baseColumnLabel;
-            break;
+    case 0:
+        rowLabel = baseRowLabel;
+        columnLabel = baseColumnLabel;
+        break;
 
-        case 1:
-            rowLabel = PatientOrientation::getOppositeOrientationLabel(baseColumnLabel);
-            columnLabel = baseRowLabel;
-            break;
+    case 1:
+        rowLabel = PatientOrientation::getOppositeOrientationLabel(baseColumnLabel);
+        columnLabel = baseRowLabel;
+        break;
 
-        case 2:
-            rowLabel = PatientOrientation::getOppositeOrientationLabel(baseRowLabel);
-            columnLabel = PatientOrientation::getOppositeOrientationLabel(baseColumnLabel);
-            break;
+    case 2:
+        rowLabel = PatientOrientation::getOppositeOrientationLabel(baseRowLabel);
+        columnLabel = PatientOrientation::getOppositeOrientationLabel(baseColumnLabel);
+        break;
 
-        case 3:
-            rowLabel = baseColumnLabel;
-            columnLabel = PatientOrientation::getOppositeOrientationLabel(baseRowLabel);
-            break;
+    case 3:
+        rowLabel = baseColumnLabel;
+        columnLabel = PatientOrientation::getOppositeOrientationLabel(baseRowLabel);
+        break;
     }
 
     if (m_isImageFlipped)
@@ -285,13 +285,13 @@ void Q2DViewer::updatePreferredImageOrientation()
         return;
     }
     
-    // Hi ha estudis que són de la modalitat MG que no s'han d'orientar. S'han afegit unes excepcions per poder-los controlar.
+    //There are studies that are of the MG modality that should not be targeted. Some exceptions have been added to be able to control them.
     MammographyImageHelper mammographyImageHelper;
     if (mammographyImageHelper.isStandardMammographyImage(image))
     {
         PatientOrientation desiredOrientation = mammographyImageHelper.getImageOrientationPresentation(image);
 
-        // Apliquem la orientació que volem
+        //We apply the orientation we want
         setImageOrientation(desiredOrientation);
     }
 }
@@ -485,9 +485,9 @@ void Q2DViewer::loadVolumesAsynchronously(const QList<Volume*> &volumes)
 
     m_volumeReaderManager->readVolumes(volumes);
 
-    // TODO: De moment no tenim cap més remei que especificar un volume fals. La resta del viewer (i els que en depenen) s'esperen
-    // tenir un volum carregat després de cridar a setInput.
-    // També tenim el problema de que perquè surti al menú de botó dret com a seleccionat, cal posar-li el mateix id.
+    // EVERYTHING: At the moment we have no choice but to specify a fake volume. The rest of the viewer (and those that depend on it) are expected
+    // have a volume loaded after calling setInput.
+    // We also have the problem that in order for it to appear in the right-click menu as selected, you have to put the same id.
     QList<Volume*> dummies;
     foreach (Volume *volume, volumes) {
         Volume *dummyVolume = getDummyVolumeFromVolume(volume);
@@ -531,7 +531,7 @@ void Q2DViewer::setNewVolumesAndExecuteCommand(const QList<Volume*> &volumes)
 
 Volume* Q2DViewer::getDummyVolumeFromVolume(Volume *volume)
 {
-    // TODO: Estem perdent memòria durant la vida del 2dviewer, caldria esborrar el dummy d'abans
+    // TODO: We are losing memory for the life of the 2dviewer, the dummy from before would have to be deleted
     Volume *newVolume = new Volume(this);
     newVolume->setObjectName(DummyVolumeObjectName);
     newVolume->setImages(volume->getImages());
@@ -549,29 +549,29 @@ void Q2DViewer::setNewVolumes(const QList<Volume*> &volumes, bool setViewerStatu
         return;
     }
 
-    // Cal que primer posem l'estatus en VisualizingVolume per tal de que el QVTKWidget pugui obtenir el tamany que li correspon
-    // si no, ens podem trobar que encara no s'hagi mostrat i tingui tamanys no definits fent que la imatge no es mostri completa #1434
-    // TODO: Caldria que fitRenderingIntoViewport() fos indepdent de si s'està visualitzant o no el QVTKWidget
+    // We must first set the status in VisualizingVolume so that the QVTKWidget can get the size it deserves
+    // if not, we may find that it has not yet been displayed and has undefined sizes making the image not show full # 1434
+    // EVERYTHING: fitRenderingIntoViewport () should be independent of whether or not the QVTKWidget is being displayed
     if (setViewerStatusToVisualizingVolume)
     {
         setViewerStatus(VisualizingVolume);
     }
 
     // HACK
-    // Desactivem el rendering per tal de millorar l'eficiència del setInput ja que altrament es renderitza múltiples vegades
+    // We disable rendering in order to improve the efficiency of setInput as otherwise it is rendered multiple times
     enableRendering(false);
     
     // Check if there was input before and take the appropiate actions
     if (hasInput())
     {
-        // Al fer un nou input, les distàncies que guardava el drawer no tenen sentit, pertant s'esborren
+        // When making a new input, the distances saved by the drawer do not make sense, so they are deleted
         m_drawer->removeAllPrimitives();
 
         Volume *mainInput = getMainInput();
 
         if (mainInput != volumes.first())
         {
-            // Al canviar de volum, eliminem overlays que poguèssim tenir anteriorment
+            // By changing the volume, we eliminate overlays that we may have had before
             removeViewerBitmaps();
         }
 
@@ -599,7 +599,7 @@ void Q2DViewer::setNewVolumes(const QList<Volume*> &volumes, bool setViewerStatu
     setCurrentViewPlane(OrthogonalPlane::XYPlane);
     m_alignPosition = Q2DViewer::AlignCenter;
 
-    // Això es fa per destruir el blender en cas que ja hi hagi algun input i es vulgui canviar
+    // This is done to destroy the blender in case there is already some input and you want to change it
     delete m_blender;
     m_blender = 0;
 
@@ -615,17 +615,17 @@ void Q2DViewer::setNewVolumes(const QList<Volume*> &volumes, bool setViewerStatu
     resetViewToAcquisitionPlane();
 
     // HACK
-    // S'activa el rendering de nou per tal de que es renderitzi l'escena
+    //Rendering is activated again so that the scene is rendered
     enableRendering(true);
 
     executeInputFinishedCommand();
-    // Indiquem el canvi de volum
+    // We indicate the change in volume
     emit volumeChanged(getMainInput());
 }
 
 void Q2DViewer::removeViewerBitmaps()
 {
-    // Eliminem els bitmaps que teníem fins ara
+    // We deleted the bitmaps we had so far
     foreach (DrawerBitmap *bitmap, m_viewerBitmaps)
     {
         bitmap->decreaseReferenceCount();
@@ -660,16 +660,16 @@ void Q2DViewer::loadOverlays(Volume *volume)
             Image *image = volume->getImage(sliceIndex, phaseIndex);
             if (!image)
             {
-                ERROR_LOG(QString("Error inesperat intentant accedir a la imatge amb índexs: %1(slice), %2(phase) del volum actual")
-                    .arg(sliceIndex).arg(phaseIndex));
-                DEBUG_LOG(QString("Error inesperat intentant accedir a la imatge amb índexs: %1(slice), %2(phase) del volum actual")
-                    .arg(sliceIndex).arg(phaseIndex));
+                ERROR_LOG(QString("Unexpected error trying to access image with indexes:% 1 (slice),% 2 (phase) of current volume")
+                          .arg(sliceIndex).arg(phaseIndex));
+                DEBUG_LOG(QString("Unexpected error trying to access image with indexes:% 1 (slice),% 2 (phase) of current volume")
+                          .arg(sliceIndex).arg(phaseIndex));
             }
             else
             {
                 if (image->hasOverlays())
                 {
-                    // Calculem l'origen del bitmap corresponent a aquesta imatge
+                    // We calculate the source of the bitmap corresponding to this image
                     double imageOrigin[3];
                     imageOrigin[0] = volumeOrigin[0];
                     imageOrigin[1] = volumeOrigin[1];
@@ -678,9 +678,9 @@ void Q2DViewer::loadOverlays(Volume *volume)
                     foreach(const ImageOverlay &overlay, image->getOverlaysSplit())
                     {
                         DrawerBitmap *overlayBitmap = overlay.getAsDrawerBitmap(imageOrigin, volumeSpacing);
-                        // Inicialment no serà, segons la llesca en que ens trobem el Drawer decidirà sobre la seva visibilitat
+                        // Initially it will not be, according to the slice in which we are the Drawer will decide on its visibility
                         overlayBitmap->setVisibility(false);
-                        // La primitiva no es podrà esborrar amb les tools
+                        // The primitive cannot be deleted with the tools
                         overlayBitmap->setErasable(false);
                         overlayBitmap->increaseReferenceCount();
                         getDrawer()->draw(overlayBitmap, OrthogonalPlane::XYPlane, sliceIndex);
@@ -729,19 +729,19 @@ void Q2DViewer::updateOverlay()
     
     switch (m_overlapMethod)
     {
-        case None:
-            // Actualitzem el pipeline
-            getMainDisplayUnit()->getImagePipeline()->setInput(getMainInput()->getVtkData());
-            // TODO aquest procediment és possible que sigui insuficient,
-            // caldria unficar el pipeline en un mateix mètode
-            break;
+    case None:
+        // Actualitzem el pipeline
+        getMainDisplayUnit()->getImagePipeline()->setInput(getMainInput()->getVtkData());
+        // ALL this procedure may be insufficient,
+        // the pipeline should be unified in the same method
+        break;
 
-        case Blend:
-            // TODO Revisar la manera de donar-li l'input d'un blending al visualitzador
-            // Aquest procediment podria ser insuficent de cares a com estigui construit el pipeline
-            m_blender->update();
-            getMainDisplayUnit()->getImagePipeline()->setInput(m_blender->getOutput());
-            break;
+    case Blend:
+        // TODO Review how to give a blending input to the viewer
+        // This procedure may be insufficient in terms of how the pipeline is built
+        m_blender->update();
+        getMainDisplayUnit()->getImagePipeline()->setInput(m_blender->getOutput());
+        break;
     }
 
     emit overlayModified();
@@ -780,7 +780,7 @@ void Q2DViewer::resetView(const OrthogonalPlane &view)
     int desiredSlabSlices = 1;
     if (isThickSlabActive())
     {
-        // In case thick slab is enabled, we should keep the slice thickness, 
+        // In case thick slab is enabled, we should keep the slice thickness,
         // so the proper number of slices of the thick slab should be computed for the new view
         double currentSlabThickness = getCurrentSliceThickness();
         int viewIndex = view.getZIndex();
@@ -788,7 +788,7 @@ void Q2DViewer::resetView(const OrthogonalPlane &view)
         desiredSlabSlices = qRound(currentSlabThickness / zSpacingAfterReset);
     }
     
-    // Important, cal desactivar el thickslab abans de fer m_currentViewPlane = view, sinó falla amb l'update extent
+    //Important, thickslab must be disabled before making m_currentViewPlane = view, otherwise it fails with the update extent
     disableThickSlab();
     setCurrentViewPlane(view);
     m_annotationsHandler->updateAnnotations(VoiLutAnnotation);
@@ -808,7 +808,7 @@ void Q2DViewer::resetView(const OrthogonalPlane &view)
         getCurrentRenderedItemBounds(bounds);
         getRenderer()->ResetCamera(bounds);
 
-        // Calculem la llesca que cal mostrar segons la vista escollida
+        // We calculate the slice to be shown according to the chosen view
         int initialSliceIndex = 0;
         if (getCurrentViewPlane() == OrthogonalPlane::YZPlane || getCurrentViewPlane() == OrthogonalPlane::XZPlane)
         {
@@ -843,61 +843,61 @@ void Q2DViewer::updateCamera()
         double roll = 0.0;
         switch (getCurrentViewPlane())
         {
-            case OrthogonalPlane::XYPlane:
-                if (m_isImageFlipped)
-                {
-                    roll = m_rotateFactor * 90. + 180.;
-                }
-                else
-                {
-                    roll = -m_rotateFactor * 90. + 180.;
-                }
-                break;
+        case OrthogonalPlane::XYPlane:
+            if (m_isImageFlipped)
+            {
+                roll = m_rotateFactor * 90. + 180.;
+            }
+            else
+            {
+                roll = -m_rotateFactor * 90. + 180.;
+            }
+            break;
 
-            case OrthogonalPlane::YZPlane:
-                if (m_isImageFlipped)
-                {
-                    roll = m_rotateFactor * 90. - 90.;
-                }
-                else
-                {
-                    roll = -m_rotateFactor * 90. - 90.;
-                }
-                break;
+        case OrthogonalPlane::YZPlane:
+            if (m_isImageFlipped)
+            {
+                roll = m_rotateFactor * 90. - 90.;
+            }
+            else
+            {
+                roll = -m_rotateFactor * 90. - 90.;
+            }
+            break;
 
-            case OrthogonalPlane::XZPlane:
-                if (m_isImageFlipped)
-                {
-                    roll = m_rotateFactor * 90.;
-                }
-                else
-                {
-                    roll = -m_rotateFactor * 90.;
-                }
-                break;
+        case OrthogonalPlane::XZPlane:
+            if (m_isImageFlipped)
+            {
+                roll = m_rotateFactor * 90.;
+            }
+            else
+            {
+                roll = -m_rotateFactor * 90.;
+            }
+            break;
         }
         camera->SetRoll(roll);
 
         if (m_applyFlip)
         {
-            // Alternativa 1)
-            // TODO Així movem la càmera, però faltaria que la imatge no es mogués de lloc
-            // potser implementant a la nostra manera el metode Azimuth i prenent com a centre
-            // el centre de la imatge. Una altra possibilitat es contrarestar el desplaçament de la
-            // camera en l'eix en que s'ha produit
+            // Alternative 1)
+            // EVERYTHING This is how we move the camera, but the image would not move
+            // perhaps implementing the Azimuth method in our own way and taking it as a center
+            // the center of the image. Another possibility is to counteract the displacement of the
+            // camera on the axis on which it occurred
             camera->Azimuth(180);
             switch (getCurrentViewPlane())
             {
-                // HACK Aquest hack esta relacionat amb els de getCurrentDisplayedImageOrientationLabels()
-                // és un petit truc perque la imatge quedi orientada correctament. Caldria
-                // veure si en el refactoring podem fer-ho d'una forma millor
-                case OrthogonalPlane::YZPlane:
-                case OrthogonalPlane::XZPlane:
-                    rotate(-2);
-                    break;
+            // HACK This hack is related to getCurrentDisplayedImageOrientationLabels ()
+            // is a little trick for the image to be oriented correctly. Caldria
+            // see if in refactoring we can do it in a better way
+            case OrthogonalPlane::YZPlane:
+            case OrthogonalPlane::XZPlane:
+                rotate(-2);
+                break;
 
-                default:
-                    break;
+            default:
+                break;
             }
 
             getRenderer()->ResetCameraClippingRange();
@@ -909,7 +909,7 @@ void Q2DViewer::updateCamera()
     }
     else
     {
-        DEBUG_LOG("Intentant actualitzar rotació de càmera sense haver donat un input abans...");
+        DEBUG_LOG("Trying to update camera rotation without giving an input before ...");
     }
 }
 
@@ -918,21 +918,21 @@ void Q2DViewer::resetCamera()
     vtkCamera *camera = getActiveCamera();
     Q_ASSERT(camera);
 
-    // Ajustem els paràmetres de la càmera segons la vista
+    // We adjust the camera settings according to the view
     double cameraRoll = 0.0;
     switch (getCurrentViewPlane())
     {
-        case OrthogonalPlane::XYPlane:
-            cameraRoll = 180.0;
-            break;
+    case OrthogonalPlane::XYPlane:
+        cameraRoll = 180.0;
+        break;
 
-        case OrthogonalPlane::YZPlane:
-            cameraRoll = -90.0;
-            break;
+    case OrthogonalPlane::YZPlane:
+        cameraRoll = -90.0;
+        break;
 
-        case OrthogonalPlane::XZPlane:
-            cameraRoll = 0.0;
-            break;
+    case OrthogonalPlane::XZPlane:
+        cameraRoll = 0.0;
+        break;
     }
 
     camera->SetRoll(cameraRoll);
@@ -976,14 +976,14 @@ void Q2DViewer::updateSliceToDisplay(int value, SliceDimension dimension)
         // First update the index of the corresponding dimension
         switch (dimension)
         {
-            case SpatialDimension:
-                getMainDisplayUnit()->setSlice(value);
-                updateSecondaryVolumesSlices();
-                break;
+        case SpatialDimension:
+            getMainDisplayUnit()->setSlice(value);
+            updateSecondaryVolumesSlices();
+            break;
 
-            case TemporalDimension:
-                getMainDisplayUnit()->setPhase(value);
-                break;
+        case TemporalDimension:
+            getMainDisplayUnit()->setPhase(value);
+            break;
         }
 
         // Then update display (image and associated annotations)
@@ -1011,19 +1011,19 @@ void Q2DViewer::updateSliceToDisplay(int value, SliceDimension dimension)
         // Finally we emit the signal of the changed value and render the scene
         switch (dimension)
         {
-            case SpatialDimension:
-                if (getCurrentSlice() != oldSlice)
-                {
-                    emit sliceChanged(getCurrentSlice());
-                }
-                break;
+        case SpatialDimension:
+            if (getCurrentSlice() != oldSlice)
+            {
+                emit sliceChanged(getCurrentSlice());
+            }
+            break;
 
-            case TemporalDimension:
-                if (getCurrentPhase() != oldPhase)
-                {
-                    emit phaseChanged(getCurrentPhase());
-                }
-                break;
+        case TemporalDimension:
+            if (getCurrentPhase() != oldPhase)
+            {
+                emit phaseChanged(getCurrentPhase());
+            }
+            break;
         }
         
         render();
@@ -1077,16 +1077,16 @@ void Q2DViewer::resizeEvent(QResizeEvent *resize)
         fitRenderingIntoViewport();
         switch (m_alignPosition)
         {
-            case AlignRight:
-                alignRight();
-                break;
+        case AlignRight:
+            alignRight();
+            break;
 
-            case AlignLeft:
-                alignLeft();
-                break;
+        case AlignLeft:
+            alignLeft();
+            break;
 
-            default:
-                break;
+        default:
+            break;
         }
         enableRendering(true);
         this->render();
@@ -1159,17 +1159,17 @@ bool Q2DViewer::getDicomWorldCoordinates(const double xyz[3], double dicomWorldP
     ImagePlane *currentPlane = NULL;
     bool result = false;
 
-    // 2.- Trobar l'índex del vòxel en el DICOM
+    // 2.- Find the voxel index in the DICOM
     this->getMainInput()->computeCoordinateIndex(xyz, index);
 
-    // 3.- Necessitem la imatge la qual pertany el punt per tal de trobar la imatge del dicom que conté la informació del pla.
+    // 3.- We need the image to which the point belongs in order to find the dicom image that contains the plan information.
     double *spacing = this->getMainInput()->getSpacing();
 
     currentPlane = getCurrentImagePlane();
 
     if (currentPlane)
     {
-        // 3.- Construim la matiu per mapejar l'index del píxel del DICOM a un punt del món real
+        // 3.-We construct the mat to map the DICOM pixel index to a point in the real world
         double currentPlaneRowVector[3];
         double currentPlaneColumnVector[3];
         double currentPlaneOrigin[3];
@@ -1191,7 +1191,7 @@ bool Q2DViewer::getDicomWorldCoordinates(const double xyz[3], double dicomWorldP
             projectionMatrix->SetElement(row, 3, currentPlaneOrigin[row]);
         }
 
-        // 3.- Mappeig de l'índex del píxel al món real
+        // 3.- Real-world pixel index mapping
         dicomWorldPosition[0] = (double)index[0];
         dicomWorldPosition[1] = (double)index[1];
         dicomWorldPosition[2] = (double)index[2];
@@ -1205,7 +1205,7 @@ bool Q2DViewer::getDicomWorldCoordinates(const double xyz[3], double dicomWorldP
     else
     {
         DEBUG_LOG("The requested plane is not available, maybe due to poor multiframe support.");
-        INFO_LOG("No es pot actualitzar la posició del cursor 3D perquè no podem obtenir el pla corresponent.");
+        INFO_LOG("The position of the 3D cursor cannot be updated because we cannot get the corresponding plane.");
     }
 
     delete currentPlane;
@@ -1215,14 +1215,14 @@ bool Q2DViewer::getDicomWorldCoordinates(const double xyz[3], double dicomWorldP
 
 void Q2DViewer::projectDICOMPointToCurrentDisplayedImage(const double pointToProject[3], double projectedPoint[3], bool vtkReconstructionHack)
 {
-    // AQUÍ SUMEM L'origen TAL CUAL + L'ERROR DE DESPLAÇAMENT VTK
+    // HERE WE ADD THE SOURCE AS IT IS + THE VTK DISPLACEMENT ERROR
     //
-    // La projecció es fa de la següent manera:
-    // Primer es fa una  una projecció convencional del punt sobre el pla actual (DICOM)
-    // Com que el mapeig de coordenades VTK va a la seva bola, necessitem corretgir el desplaçament
-    // introduit per VTK respecte a les coordenades "reals" de DICOM
-    // Aquest desplaçament consistirà en tornar a sumar l'origen del primer pla del volum
-    // en principi, fer-ho amb l'origen de m_mainVolume també seria correcte
+    // The projection is done as follows:
+    // First a conventional projection of the point on the current plan (DICOM) is made
+    // Since VTK coordinate mapping goes to its ball, we need to correct the displacement
+    // introduced by VTK with respect to the "real" coordinates of DICOM
+    // This shift will consist of re-adding the source of the foreground of the volume
+    // in principle, doing this with the m_mainVolume source would also be correct
 
     ImagePlane *currentPlane = getCurrentImagePlane(vtkReconstructionHack);
     if (currentPlane)
@@ -1232,12 +1232,12 @@ void Q2DViewer::projectDICOMPointToCurrentDisplayedImage(const double pointToPro
         currentPlane->projectPoint(pointToProject, planeProjectedPoint, getCurrentViewPlane() == OrthogonalPlane::YZPlane && vtkReconstructionHack);
         
         //
-        // CORRECIÓ VTK!
+        // VTK CORRECTION!
         //
-        // A partir d'aquí cal corretgir l'error introduit pel mapeig que fan les vtk
-        // cal sumar l'origen de la primera imatge, o el que seria el mateix, l'origen de m_mainVolume
+        // From here it is necessary to correct the error introduced by the mapping made by the vtk
+        // you need to add the source of the first image, or what would be the same, the source of m_mainVolume
         //
-        // TODO provar si amb l'origen de m_mainVolume també funciona bé
+        // TODO test if with the source of m_mainVolume also works fine
         Image *firstImage = getMainInput()->getImage(0);
         const double *ori = firstImage->getImagePositionPatient();
         int xIndex, yIndex, zIndex;
@@ -1313,9 +1313,9 @@ bool Q2DViewer::getCurrentCursorImageCoordinateOnInput(double xyz[3], int i)
         inside = true;
         // Calculem el pixel trobat
         picker->GetPickPosition(xyz);
-        // Calculem la profunditat correcta. S'ha de tenir en compte que en el cas que tinguem fases
-        // vtk no n'és conscient (cada fase es desplaça en la profunditat z com si fos una imatge més)
-        // i si no fèssim aquest càlcul, estaríem donant una coordenada Z incorrecta
+        // We calculate the correct depth. It should be borne in mind that in the event that we have phases
+        // vtk is not aware of it (each phase moves in depth z as if it were one more image)
+        // and if we didn't do this calculation, we would be giving an incorrect Z coordinate
         int zIndex = displayUnit->getViewPlane().getZIndex();
         xyz[zIndex] =  displayUnit->getCurrentDisplayedImageDepth();
     }
@@ -1392,7 +1392,7 @@ QChar Q2DViewer::getCurrentDisplayedImageLaterality() const
 
 void Q2DViewer::updateImageSlices()
 {
-    // Ens assegurem que tenim dades vàlides
+    //We make sure we have valid data
     if (!getMainInput()->isPixelDataLoaded())
     {
         return;
@@ -1403,7 +1403,7 @@ void Q2DViewer::updateImageSlices()
         volumeDisplayUnit->updateImageSlice(m_renderer->GetActiveCamera());
     }
 
-    // TODO Si separem els renderers potser caldria aplicar-ho a cada renderer?
+    // TODO If we separate the renderers maybe we should apply it to each renderer?
     getRenderer()->ResetCameraClippingRange();
 }
 
@@ -1478,8 +1478,8 @@ void Q2DViewer::printVolumeInformation()
     getMainInput()->getScalarRange(range);
     DEBUG_LOG("*** Grayscale Transform Pipeline Begin ***");
     DEBUG_LOG(QString("Image Information: Bits Allocated: %1, Bits Stored: %2, Pixel Range %3 to %4, SIGNED?Pixel Representation: %5, Photometric interpretation: %6")
-                 .arg(getMainInput()->getImage(0)->getBitsAllocated()).arg(getMainInput()->getImage(0)->getBitsStored()).arg(range[0]).arg(range[1])
-                 .arg(getMainInput()->getImage(0)->getPixelRepresentation()).arg(getMainInput()->getImage(0)->getPhotometricInterpretation().getAsQString()));
+              .arg(getMainInput()->getImage(0)->getBitsAllocated()).arg(getMainInput()->getImage(0)->getBitsStored()).arg(range[0]).arg(range[1])
+            .arg(getMainInput()->getImage(0)->getPixelRepresentation()).arg(getMainInput()->getImage(0)->getPhotometricInterpretation().getAsQString()));
     // Fins que no implementem Presentation states aquest serà el cas que sempre s'executarà el 100% dels casos
 }
 
@@ -1644,7 +1644,7 @@ void Q2DViewer::restore()
     }
 
     // TODO The view is reseted to the acquisition plane but could be more appropiate having a
-    // defined command to place the image properly by default depending on the input if no one is defined 
+    // defined command to place the image properly by default depending on the input if no one is defined
     // Take into account this call disables thickslab
     resetViewToAcquisitionPlane();
     VoiLutHelper::selectDefaultPreset(getVoiLutData(), getMainInput());
@@ -1706,51 +1706,51 @@ void Q2DViewer::setAlignPosition(AlignPosition alignPosition)
     int boundIndex = 0;
     switch (getCurrentViewPlane())
     {
-        case OrthogonalPlane::XYPlane:
-            // Si es dóna el cas que o bé està rotada 180º o bé està voltejada, cal agafar l'altre extrem
-            // L'operació realitzada és un XOR (!=)
-            if (m_isImageFlipped != (qAbs(m_rotateFactor) == 2))
-            {
-                if (alignPosition == AlignLeft)
-                {
-                    boundIndex = 1;
-                }
-            }
-            else
-            {
-                if (alignPosition == AlignRight)
-                {
-                    boundIndex = 1;
-                }
-            }
-
-            motionVector[0] = bounds[boundIndex] - alignmentPoint[0];
-            
-            break;
-
-        case OrthogonalPlane::YZPlane:
+    case OrthogonalPlane::XYPlane:
+        // If it is the case that it is either rotated 180º or it is turned over, it is necessary to take the other end
+        // The operation performed is a XOR (! =)
+        if (m_isImageFlipped != (qAbs(m_rotateFactor) == 2))
+        {
             if (alignPosition == AlignLeft)
             {
-                boundIndex = 2;
+                boundIndex = 1;
             }
-            else if (alignPosition == AlignRight)
-            {
-                boundIndex = 3;
-            }
-            
-            motionVector[1] = bounds[boundIndex] - alignmentPoint[1];
-            
-            break;
-
-        case OrthogonalPlane::XZPlane:
+        }
+        else
+        {
             if (alignPosition == AlignRight)
             {
                 boundIndex = 1;
             }
-            
-            motionVector[0] = bounds[boundIndex] - alignmentPoint[0];
-            
-            break;
+        }
+
+        motionVector[0] = bounds[boundIndex] - alignmentPoint[0];
+
+        break;
+
+    case OrthogonalPlane::YZPlane:
+        if (alignPosition == AlignLeft)
+        {
+            boundIndex = 2;
+        }
+        else if (alignPosition == AlignRight)
+        {
+            boundIndex = 3;
+        }
+
+        motionVector[1] = bounds[boundIndex] - alignmentPoint[1];
+
+        break;
+
+    case OrthogonalPlane::XZPlane:
+        if (alignPosition == AlignRight)
+        {
+            boundIndex = 1;
+        }
+
+        motionVector[0] = bounds[boundIndex] - alignmentPoint[0];
+
+        break;
     }
 
     pan(motionVector);
@@ -1798,13 +1798,13 @@ void Q2DViewer::showDisplayShutters(bool enable)
 
 void Q2DViewer::rotate(int times)
 {
-    // Si és zero no cal fer res
+    // If it is zero nothing needs to be done
     if (times == 0)
     {
         return;
     }
 
-    // Si la imatge està invertida per efecte mirall el sentit de les rotacions serà el contrari
+    // If the image is inverted by mirror effect the direction of the rotations will be the opposite
     if (m_isImageFlipped)
     {
         times = -times;
@@ -1889,11 +1889,11 @@ Q2DViewer* Q2DViewer::castFromQViewer(QViewer *viewer)
 bool Q2DViewer::canShowDisplayShutter() const
 {
     return getMainInput()
-        && getMainInput()->objectName() != DummyVolumeObjectName
-        && !isThickSlabActive()
-        && getCurrentViewPlane() == OrthogonalPlane::XYPlane
-        && getCurrentDisplayedImage()
-        && getCurrentDisplayedImage()->getDisplayShutterForDisplayAsVtkImageData(getMainInput()->getImageIndex(getCurrentSlice(), getCurrentPhase()));
+            && getMainInput()->objectName() != DummyVolumeObjectName
+            && !isThickSlabActive()
+            && getCurrentViewPlane() == OrthogonalPlane::XYPlane
+            && getCurrentDisplayedImage()
+            && getCurrentDisplayedImage()->getDisplayShutterForDisplayAsVtkImageData(getMainInput()->getImageIndex(getCurrentSlice(), getCurrentPhase()));
 }
 
 void Q2DViewer::updateDisplayShutterMask()
