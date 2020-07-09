@@ -19,7 +19,7 @@
 #include "anatomicalplane.h"
 
 #include <QWidget>
-// Llista de captures de pantalla
+// List of screenshots
 #include <QList>
 #include <vtkImageData.h>
 

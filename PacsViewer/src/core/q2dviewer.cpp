@@ -460,7 +460,7 @@ void Q2DViewer::executeInputFinishedCommand()
 
 void Q2DViewer::setInputFinishedCommand(QViewerCommand *command)
 {
-    /// Ens assegurem que la nova command que ens passen no és la mateixa que tenim actualment
+    ///We make sure that the new command they pass us is not the same as we currently have
     if (command != m_inputFinishedCommand)
     {
         deleteInputFinishedCommand();
@@ -730,7 +730,7 @@ void Q2DViewer::updateOverlay()
     switch (m_overlapMethod)
     {
     case None:
-        // Actualitzem el pipeline
+        // We update the pipeline
         getMainDisplayUnit()->getImagePipeline()->setInput(getMainInput()->getVtkData());
         // ALL this procedure may be insufficient,
         // the pipeline should be unified in the same method
@@ -793,7 +793,7 @@ void Q2DViewer::resetView(const OrthogonalPlane &view)
     setCurrentViewPlane(view);
     m_annotationsHandler->updateAnnotations(VoiLutAnnotation);
     
-    // Reiniciem valors per defecte de la càmera
+    // We reset the camera to defaults
     m_rotateFactor = 0;
     setFlip(false);
     m_isImageFlipped = false;
