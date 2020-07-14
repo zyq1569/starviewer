@@ -100,11 +100,11 @@ int ScreenLayout::getScreenOnTheRightOf(int screenID) const
     int rightScreenID = Screen::NullScreenID;
     Screen screen = getScreen(screenID);
     Screen screenToCompare;
-    // Buscar una pantalla a la dreta i a la mateixa altura + o -
+    // Find a screen on the right and at the same height + or -
     for (int i = 0; i < getNumberOfScreens(); ++i)
     {
         screenToCompare = getScreen(i);
-        // Si està a la dreta, però no està completament per sobre ni per sota
+        // If it is on the right, but it is not completely above or below
         if (screenToCompare.isOnRight(screen) && !screenToCompare.isOver(screen) && !screenToCompare.isUnder(screen))
         {
             // Si encara no hem trobat cap pantalla
@@ -112,8 +112,8 @@ int ScreenLayout::getScreenOnTheRightOf(int screenID) const
             {
                 rightScreenID = i;
             }
-            // De les pantalles de la dreta, volem la més pròxima
-            // Si la pantalla que hem trobat està més a l'esquerra que la que tenim
+            // From the screens on the right, we want the closest one
+            // If the screen we found is further to the left than the one we have
             else if (screenToCompare.isOnLeft(getScreen(rightScreenID)))
             {
                 rightScreenID = i;
@@ -129,20 +129,20 @@ int ScreenLayout::getScreenOnTheLeftOf(int screenID) const
     int leftScreenID = Screen::NullScreenID;
     Screen screen = getScreen(screenID);
     Screen screenToCompare;
-    // Buscar una pantalla a l'esquera i a la mateixa altura + o -
+    // Find a screen on the left and at the same height + or -
     for (int i = 0; i < getNumberOfScreens(); ++i)
     {
         screenToCompare = getScreen(i);
-        // Si està a l'esquera, però no està completament per sobre ni per sota
+        // If it is on the left, but it is not completely above or below
         if (screenToCompare.isOnLeft(screen) && !screenToCompare.isOver(screen) && !screenToCompare.isUnder(screen))
         {
-            // Si encara no hem trobat cap pantalla
+            // If we have not found any screen yet
             if (leftScreenID == Screen::NullScreenID)
             {
                 leftScreenID = i;
             }
-            // De les pantalles de l'esquera, volem la més pròxima
-            // Si la pantalla que hem trobat està més a la dreta que la que tenim
+            // From the screens on the left, we want the closest one
+            // If the screen we found is further to the right than the one we have
             else if (screenToCompare.isOnRight(getScreen(leftScreenID)))
             {
                 leftScreenID = i;
@@ -163,7 +163,7 @@ int ScreenLayout::getPreviousScreenOf(int screenID) const
     Screen currentScreen = getScreen(screenID);
 
     int previousScreenID = getScreenOnTheLeftOf(screenID);
-    // Si no hi ha cap pantalla a l'esquerra, llavors busquem la de més a la dreta que està per sobre d'aquesta
+    // If there is no screen on the left, then look for the one on the far right that is above it
     if (previousScreenID == -1)
     {
         Screen screen;
@@ -172,12 +172,12 @@ int ScreenLayout::getPreviousScreenOf(int screenID) const
             screen = getScreen(i);
             if (screen.isHigher(currentScreen))
             {
-                // Si encara no hem trobat cap pantalla
+                //If we have not found any screen yet
                 if (previousScreenID == -1)
                 {
                     previousScreenID = i;
                 }
-                // De les pantalles de sobre, volem la més a la dreta
+                //From the screens above, we want the far right
                 else if (screen.isOnRight(getScreen(previousScreenID)))
                 {
                     previousScreenID = i;
@@ -186,11 +186,11 @@ int ScreenLayout::getPreviousScreenOf(int screenID) const
         }
     }
 
-    // Si no hi ha cap pantalla per sobre de la actual, agafarem la de més avall a la dreta
+    //If there is no screen above the current one, we will take the one on the bottom right
     if (previousScreenID == -1)
     {
         Screen screen;
-        // Amb això assegurem que mai arribarà al moveToDesktop valent -1
+        // This ensures that you will never get to the brave moveToDesktop -1
         previousScreenID = 0;
         for (int i = 1; i < getNumberOfScreens(); i++)
         {
@@ -200,7 +200,7 @@ int ScreenLayout::getPreviousScreenOf(int screenID) const
             {
                 previousScreenID = i;
             }
-            // Si no, si no està per sobre, l'agafem si està més a la dreta que l'actual
+            //If not, if it is not above, we take it if it is further to the right than the current one
             else
             {
                 Screen previousScreen = getScreen(previousScreenID);
@@ -224,10 +224,10 @@ int ScreenLayout::getNextScreenOf(int screenID) const
     
     Screen currentScreen = getScreen(screenID);
 
-    // Buscar una pantalla a la dreta i a la mateixa altura + o -
+    // Find a screen on the right and at the same height + or -
     int nextScreenID = getScreenOnTheRightOf(screenID);
     
-    // Si no hi ha cap pantalla a la dreta, llavors busquem la de més a l'esquerra que està per sota d'aquesta
+    // If there is no screen on the right, then look for the one on the far left that is below it
     if (nextScreenID == -1)
     {
         Screen screen;
@@ -236,12 +236,12 @@ int ScreenLayout::getNextScreenOf(int screenID) const
             screen = getScreen(i);
             if (screen.isLower(currentScreen))
             {
-                // Si encara no hem trobat cap pantalla
+                // If we have not found any screen yet
                 if (nextScreenID == -1)
                 {
                     nextScreenID = i;
                 }
-                // De les pantalles de sota, volem la més a l'esquerra
+                // From the screens below, we want the one on the left
                 else if (screen.isOnLeft(getScreen(nextScreenID)))
                 {
                     nextScreenID = i;
@@ -250,21 +250,21 @@ int ScreenLayout::getNextScreenOf(int screenID) const
         }
     }
 
-    // Si no hi ha cap patalla per sota de la actual, agafarem la de més amunt a l'esquerra
+    // If there is no patalla below the current one, we will take the one on the top left
     if (nextScreenID == -1)
     {
         Screen screen;
-        // Amb això assegurem que mai arribarà al moveToDesktop valent -1
+        // This ensures that you will never get to the brave moveToDesktop -1
         nextScreenID = 0;
         for (int i = 1; i < getNumberOfScreens(); i++)
         {
             screen = getScreen(i);
-            // Si està per sobre de l'actual ens la quedem
+            // If it is above the current one we will keep it
             if (screen.isOver(getScreen(nextScreenID)))
             {
                 nextScreenID = i;
             }
-            // Si no, si no està per sota, l'agafem si està més a l'esquerra que l'actual
+            // If not, if it's not below, we'll take it if it's further to the left than the current one
             else
             {
                 Screen nextScreen = getScreen(nextScreenID);
