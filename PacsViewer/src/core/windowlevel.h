@@ -29,27 +29,27 @@ public:
     WindowLevel(double width, double center, const QString &name = QString());
     ~WindowLevel();
 
-    /// Defineix/obté la descripció window level
+    /// Define / get the window level description
     void setName(const QString &name);
     const QString& getName() const;
     
-    /// Defineix/obté el width del window level
+    /// Defines / obtains the width of the window level
     void setWidth(double width);
     double getWidth() const;
     
-    /// Defineix/obté el center del window level
+    /// Defines / obtains the center of the window level
     void setCenter(double center);
     double getCenter() const;
 
-    /// Ens determina si els valors de width i level són vàlids.
-    /// Un WindowLevel serà sempre vàlid excepte en el cas que width sigui 0
+    /// Determines whether the width and level values are valid.
+    /// A WindowLevel will always be valid unless the width is 0
     bool isValid() const;
 
-    /// Compara si els valors de window width i window level són iguals amb el WindowLevel passat per paràmetre.
-    /// La descripció no es té en compte en aquesta comparació
+    /// Compare if the window width and window level values are the same as the WindowLevel passed by parameter.
+    /// The description is not taken into account in this comparison
     bool valuesAreEqual(const WindowLevel &windowLevel) const;
 
-    /// Compara que tots els membres de la classe siguin iguals
+    /// Compare that all members of the class are equal
     bool operator==(const WindowLevel &windowLevelToCompare) const;
 
 private:

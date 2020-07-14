@@ -47,10 +47,22 @@ public:
     vtkTypeMacro(vtkVolumeRayCastVoxelShaderCompositeFunction, vtkVolumeRayCastFunction)
     void PrintSelf(ostream &os, vtkIndent indent);
 
-    void SetCompositeMethod(CompositeMethod compositeMethod) { m_compositeMethod = qBound(ClassifyInterpolate, compositeMethod, InterpolateClassify); }
-    CompositeMethod GetCompositeMethod() const { return m_compositeMethod; }
-    void SetCompositeMethodToInterpolateFirst() { m_compositeMethod = InterpolateClassify; }
-    void SetCompositeMethodToClassifyFirst() { m_compositeMethod = ClassifyInterpolate; }
+    void SetCompositeMethod(CompositeMethod compositeMethod)
+    {
+        m_compositeMethod = qBound(ClassifyInterpolate, compositeMethod, InterpolateClassify);
+    }
+    CompositeMethod GetCompositeMethod() const
+    {
+        return m_compositeMethod;
+    }
+    void SetCompositeMethodToInterpolateFirst()
+    {
+        m_compositeMethod = InterpolateClassify;
+    }
+    void SetCompositeMethodToClassifyFirst()
+    {
+        m_compositeMethod = ClassifyInterpolate;
+    }
     const char* GetCompositeMethodAsString() const;
 
     //BTX
@@ -79,7 +91,7 @@ protected:
     TrilinearInterpolator *m_interpolator;
 
 private:
-    /// Opacitat mínima que ha de restar per continuar el ray casting.
+    /// Minimum opacity that must be subtracted to continue ray casting.
     static const float MINIMUM_REMAINING_OPACITY;
 
     vtkVolumeRayCastVoxelShaderCompositeFunction(const vtkVolumeRayCastVoxelShaderCompositeFunction&);    // Not implemented.

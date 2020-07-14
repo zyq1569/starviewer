@@ -40,16 +40,21 @@ template <class VS>
 class vtkVolumeRayCastSingleVoxelShaderCompositeFunction : public vtkVolumeRayCastFunction {
 
 public:
-    enum CompositeMethod { ClassifyInterpolate, InterpolateClassify };
+    enum CompositeMethod
+    { ClassifyInterpolate, InterpolateClassify };
 
     static vtkVolumeRayCastSingleVoxelShaderCompositeFunction* New();
     vtkTypeMacro(vtkVolumeRayCastSingleVoxelShaderCompositeFunction, vtkVolumeRayCastFunction)
     void PrintSelf(ostream &os, vtkIndent indent);
 
-    void SetCompositeMethod(CompositeMethod compositeMethod) { m_compositeMethod = qBound(ClassifyInterpolate, compositeMethod, InterpolateClassify); }
-    CompositeMethod GetCompositeMethod() const { return m_compositeMethod; }
-    void SetCompositeMethodToInterpolateFirst() { m_compositeMethod = InterpolateClassify; }
-    void SetCompositeMethodToClassifyFirst() { m_compositeMethod = ClassifyInterpolate; }
+    void SetCompositeMethod(CompositeMethod compositeMethod)
+    { m_compositeMethod = qBound(ClassifyInterpolate, compositeMethod, InterpolateClassify); }
+    CompositeMethod GetCompositeMethod() const
+    { return m_compositeMethod; }
+    void SetCompositeMethodToInterpolateFirst()
+    { m_compositeMethod = InterpolateClassify; }
+    void SetCompositeMethodToClassifyFirst()
+    { m_compositeMethod = ClassifyInterpolate; }
     const char* GetCompositeMethodAsString() const;
 
     //BTX

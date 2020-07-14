@@ -36,14 +36,14 @@ public:
     QString getOperatingSystemAsString();
     QString getOperatingSystemAsShortString();
 
-    /// Retorna la quantitat total de memòria RAM en MegaBytes
+    /// Returns the total amount of RAM in MegaBytes
     unsigned int getRAMTotalAmount();
     QList<unsigned int> getRAMModulesCapacity();
     QList<unsigned int> getRAMModulesFrequency();
 
     unsigned int getCPUNumberOfCores();
     
-    /// Retorna una llista amb la freqüència de cada processador 
+    /// Returns a list of the frequency of each processor
     QList<unsigned int> getCPUFrequencies();
     unsigned int getCPUL2CacheSize();
 
@@ -58,7 +58,7 @@ public:
     QStringList getScreenVendors();
 
     QStringList getHardDiskDevices();
-    unsigned int getHardDiskCapacity(const QString &device); // Del disc dur que conté la carpeta de la cache de Starviewer
+    unsigned int getHardDiskCapacity(const QString &device); // From the disc dur I counted the Starviewer cache folder
     unsigned int getHardDiskFreeSpace(const QString &device);
     bool doesOpticalDriveHaveWriteCapabilities();
 
@@ -68,7 +68,7 @@ public:
     bool isDesktopCompositionEnabled();
 
 protected:
-    /// Mètode alternatiu per si no podem obtenir el nombre de nuclis via WMI
+    /// Alternative method in case we can't get the number of cores via WMI
     virtual unsigned int getCPUNumberOfCoresFromEnvironmentVar();
 
     /// Gets the major version of the service pack

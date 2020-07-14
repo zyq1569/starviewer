@@ -155,7 +155,7 @@ public:
     void setAutomaticallyLoadPatientBrowserMenuSelectedInput(bool load);
 
     /// Returns viewer status. Useful for whether the viewer is viewing data
-         /// or loading ...
+    /// or loading ...
     ViewerStatus getViewerStatus() const;
     ViewerStatus getPreviousViewerStatus() const;
 

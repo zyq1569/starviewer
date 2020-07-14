@@ -39,13 +39,13 @@ private slots:
     /// Resets the tool to a valid initial state.
     void reset();
 
-    /// Comença el window level
+    /// The window level begins
     void startWindowLevel();
 
-    /// Calcula el nou window level
+    /// Calculate the new window level
     void doWindowLevel();
 
-    /// Atura l'estat de window level
+    /// Stops window level status
     void endWindowLevel();
 
     /// Updates the way window level is being modified
@@ -76,7 +76,7 @@ private:
     QPoint m_windowLevelStartPosition;
     QPoint m_windowLevelCurrentPosition;
 
-    /// Estats d'execució de la tool
+    /// Tool execution states
     int m_state;
 
     /// Available behaviours to modify the window level

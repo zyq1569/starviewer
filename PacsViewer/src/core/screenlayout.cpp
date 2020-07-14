@@ -195,7 +195,7 @@ int ScreenLayout::getPreviousScreenOf(int screenID) const
         for (int i = 1; i < getNumberOfScreens(); i++)
         {
             screen = getScreen(i);
-            // Si està per sota de l'actual ens la quedem
+            // If it is below the current we stay
             if (screen.isUnder(getScreen(previousScreenID)))
             {
                 previousScreenID = i;
