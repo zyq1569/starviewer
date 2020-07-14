@@ -154,8 +154,8 @@ public:
     /// or, conversely, nothing will be done. By default it is enabled and the input will be loaded in the viewfinder.
     void setAutomaticallyLoadPatientBrowserMenuSelectedInput(bool load);
 
-    /// Retorna l'status del viewer. Útil per saber si el visor està visualitzant dades
-    /// o està carregant...
+    /// Returns viewer status. Useful for whether the viewer is viewing data
+         /// or loading ...
     ViewerStatus getViewerStatus() const;
     ViewerStatus getPreviousViewerStatus() const;
 
@@ -181,7 +181,7 @@ public slots:
     /// Manage the events you receive from the window
     void eventHandler(vtkObject *object, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command);
 
-    /// Força l'execució de la visualització
+    ///Force display execution
     void render();
 
     /// We assign whether this viewer is active, that is, what it is interacting with
