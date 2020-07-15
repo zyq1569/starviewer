@@ -197,10 +197,10 @@ bool Screen::isBottom(const Screen &screen) const
 
 bool Screen::isLeft(const Screen &screen) const
 {
-    // Esta posat a l'esquerra
+    // It is placed on the left
     if (abs(m_geometry.right() - screen.getGeometry().left()) < MaximumDistanceInBetween)
     {
-        // Te la mateixa alçada
+        // It has the same height
         int topPart = abs(m_geometry.top() - screen.getGeometry().top());
         int bottomPart = abs(m_geometry.bottom() - screen.getGeometry().bottom());
         if (topPart + bottomPart < MaximumDistanceInBetween)
@@ -213,10 +213,10 @@ bool Screen::isLeft(const Screen &screen) const
 
 bool Screen::isRight(const Screen &screen) const
 {
-    // Esta posat a l'esquerra
+    // It is placed on the left
     if (abs(m_geometry.left() - screen.getGeometry().right()) < MaximumDistanceInBetween)
     {
-        // Te la mateixa alçada
+        // It has the same height
         int topPart = abs(m_geometry.top() - screen.getGeometry().top());
         int bottomPart = abs(m_geometry.bottom() - screen.getGeometry().bottom());
         if (topPart + bottomPart < MaximumDistanceInBetween)

@@ -33,8 +33,8 @@ namespace udg {
 class TrilinearInterpolator;
 
 /**
- * Classe que fa un ray casting permetent aplicar un voxel shader per decidir el color de cada vòxel. El tipus del voxel shader és un paràmetre de template per
- * evitar cridar mètodes virtuals.
+* Class that does a ray casting allowing to apply a voxel shader to decide the color of each voxel. The voxel shader type is a template parameter for
+  * avoid calling virtual methods.
  */
 template <class VS>
 class vtkVolumeRayCastSingleVoxelShaderCompositeFunction : public vtkVolumeRayCastFunction {
@@ -78,7 +78,7 @@ protected:
     TrilinearInterpolator *m_interpolator;
 
 private:
-    /// Opacitat mínima que ha de restar per continuar el ray casting.
+    /// Minimum opacity that must be subtracted to continue ray casting.
     static const float MINIMUM_REMAINING_OPACITY;
 
     vtkVolumeRayCastSingleVoxelShaderCompositeFunction(const vtkVolumeRayCastSingleVoxelShaderCompositeFunction&);    // Not implemented.

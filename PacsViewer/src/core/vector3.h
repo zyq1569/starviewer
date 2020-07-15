@@ -23,87 +23,87 @@
 namespace udg {
 
 /**
-    Vector de dimensió 3.
+Dimension vector 3.
 
-    Inclou tots els mètodes per treballar amb vectors 3D amb components reals.
+     It includes all methods for working with 3D vectors with real components
   */
 template <class T>
 class TVector3 {
 
 public:
-    /// Retorna el producte escalar dels vectors.
+    /// Returns the scalar product of the vectors.
     static T dot(const TVector3<T> &v1, const TVector3<T> &v2);
-    /// Retorna el producte vectorial dels vectors.
+    /// Returns the vector product of the vectors.
     static TVector3<T> cross(const TVector3<T> &v1, const TVector3<T> &v2);
 
     TVector3(T x = 0.0, T y = 0.0, T z = 0.0);
     template <class C>
     TVector3(const TVector3<C> &v);
 
-    /// Assigna els components del vector.
+    /// Assign the components of the vector.
     void set(T x, T y, T z);
 
-    /// Retorna el mòdul del vector.
+    /// Returns the vector module..
     T length() const;
-    /// Retorna el mòdul al quadrat del vector.
+    /// Returns the squared module of the vector.
     T lengthSquared() const;
-    /// Normalitza el vector i el retorna per referència.
+    /// Normalize the vector and return it for reference.
     TVector3<T>& normalize();
 
-    /// Operador d'assignació.
+    /// Assignment operator.
     template <class C>
     TVector3<T>& operator =(const TVector3<C> &v);
 
-    /// Retorna cert si els vector són iguals.
+    /// Returns true if the vectors are equal.
     bool operator ==(const TVector3<T> &v) const;
-    /// Retorna cert si els vectors són diferents.
+    ///Returns true if the vectors are different.
     bool operator !=(const TVector3<T> &v) const;
 
-    /// Retorna una còpia del vector.
+    ///  Returns a copy of the vector.
     TVector3<T> operator +() const;
-    /// Retorna el vector negat.
+    /// Returns the denied vector.
     TVector3<T> operator -() const;
-    /// Retorna la suma de vectors.
+    ///Returns the sum of vectors.
     TVector3<T> operator +(const TVector3<T> &v) const;
-    /// Suma els vectors, assigna el resultat sobre l'actual i el retorna per referència.
+    /// Add the vectors, assign the result over the current one and return it for reference..
     TVector3<T>& operator +=(const TVector3<T> &v);
-    /// Retorna la resta dels vectors.
+    ///Returns the rest of the vectors..
     TVector3<T> operator -(const TVector3<T> &v) const;
-    /// Resta els vectors, assigna el resultat sobre l'actual i el retorna per referència.
+    /// Subtract the vectors, assign the result over the current one and return it for reference
     TVector3<T>& operator -=(const TVector3<T> &v);
-    /// Retorna el producte escalar dels vectors.
+    /// Returns the scalar product of the vectors.
 
     // Producte escalar
     T operator *(const TVector3<T> &v) const;
-    /// Retorna el producte vectorial dels vectors.
+    ///  Returns the vector product of the vectors.
 
-    // Producte vectorial
+    // Vector product
     TVector3<T> operator ^(const TVector3<T> &v) const;
 
-    /// Retorna una representació del vector en forma de text.
+    ///  Returns a representation of the vector in text form.
     QString toString() const;
     operator QString() const;
 
-    /// Producte d'un escalar per un vector.
+    /// Product of a scalar for a vector..
     template <class C>
     friend TVector3<C> operator *(double a, const TVector3<C> &v);
-    /// Producte d'un vector per un escalar.
+    /// Product of a vector by a scalar..
     template <class C>
     friend TVector3<C> operator *(const TVector3<C> &v, double a);
-    /// Producte d'un vector per un escalar assignat al propi vector.
+    /// Product of a vector by a scalar assigned to the vector itself..
     template <class C>
     friend TVector3<C>& operator *=(TVector3<C> &v, double a);
-    /// Divisió d'un vector per un escalar.
+    /// Division of a vector by a scalar.
     template <class C>
     friend TVector3<C> operator /(const TVector3<C> &v, double a);
-    /// Divisió d'un vector per un escalar assignada al propi vector.
+    /// Division of a vector by a scalar assigned to the vector itself..
     template <class C>
     friend TVector3<C>& operator /=(TVector3<C> &v, double a);
 
-    /// Lectura des d'un QDataStream.
+    /// Reading from a QDataStream..
     template <class C>
     friend QDataStream& operator >>(QDataStream &in, TVector3<C> &v);
-    /// Escriptura a un QDataStream.
+    ///Writing to a QDataStream.
     template <class C>
     friend QDataStream& operator <<(QDataStream &out, const TVector3<C> &v);
 
@@ -127,14 +127,14 @@ inline TVector3<T> TVector3<T>::cross(const TVector3<T> &v1, const TVector3<T> &
 
 template <class T>
 inline TVector3<T>::TVector3(T aX, T aY, T aZ)
- : x(aX), y(aY), z(aZ)
+    : x(aX), y(aY), z(aZ)
 {
 }
 
 template <class T>
 template <class C>
 inline TVector3<T>::TVector3(const TVector3<C> &v)
- : x(v.x), y(v.y), z(v.z)
+    : x(v.x), y(v.y), z(v.z)
 {
 }
 

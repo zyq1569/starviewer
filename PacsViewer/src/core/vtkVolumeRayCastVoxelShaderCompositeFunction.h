@@ -36,7 +36,7 @@ class TrilinearInterpolator;
 class VoxelShader;
 
 /**
-    Classe que fa un ray casting permetent aplicar un voxel shader per decidir el color de cada vòxel.
+   Class that does a ray casting allowing to apply a voxel shader to decide the color of each voxel.
   */
 class vtkVolumeRayCastVoxelShaderCompositeFunction : public vtkVolumeRayCastFunction {
 
