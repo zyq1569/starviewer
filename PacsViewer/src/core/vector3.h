@@ -24,7 +24,6 @@ namespace udg {
 
 /**
 Dimension vector 3.
-
      It includes all methods for working with 3D vectors with real components
   */
 template <class T>

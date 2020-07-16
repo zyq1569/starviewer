@@ -28,13 +28,13 @@ class Tool;
 class ToolData;
 
 /**
-    Classe encarregada de mantenir les tools actives per un visualitzador i de proporcionar-lis els events corresponents.
-    Les seves tasques són:
-        - Rep tots els events d'un viewer
-        - Coneix les tools actives per a un determinat viewer
-        - Passa els events rebuts a totes les tools actives
-        - Està associat a un viewer com atribut d'aquest
-        - Guarda el nom de cadascuna de les tools
+Class responsible for keeping the tools active for a viewer and providing them with the corresponding events.
+     Their tasks are:
+         - Receives all events from a viewer
+         - Know the active tools for a given viewer
+         - Pass the received events to all active tools
+         - It is associated with a viewer as an attribute of this
+         - Save the name of each of the tools
   */
 class ToolProxy : public QObject {
     Q_OBJECT
