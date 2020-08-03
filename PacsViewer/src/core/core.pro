@@ -2,6 +2,9 @@
 # -------------------------------------------
 # Subdirectori relatiu al directori principal del projecte: ./src/core
 # L'objectiu és una biblioteca:
+QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
+QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
+
 FORMS += qlogviewerbase.ui \
     qcustomwindowleveldialogbase.ui \
     qtransferfunctioneditorbyvaluesbase.ui \

@@ -42,9 +42,9 @@ class ApplicationVersionChecker;
 class ExternalApplication;
 
 class QApplicationMainWindow : public QMainWindow {
-Q_OBJECT
+    Q_OBJECT
 public:
-    /// El constructor del Mainwindow. Aquí es crea tot l'esquelet de l'interfície: Menús, Barres d'eines, toolbox, working area, etc..
+    /// The builder of the Mainwindow. Here the whole skeleton of the interface is created: Menus, Toolbars, toolbox, working area, etc...
     QApplicationMainWindow(QWidget *parent = 0);
 
     ~QApplicationMainWindow();
@@ -54,30 +54,30 @@ public:
     /// @param patient El pacient
     void setPatient(Patient *patient);
 
-    /// Crea una nova finestra i l'obre. Si li proporcionem dades de pacient, els hi afegeix
-    /// @param context Dades de pacient que volem que contingui la nova finestra
+    /// Create a new window and open it. If we provide you with patient data, add them
+    /// @param context Patient data that we want the new window to contain
     QApplicationMainWindow* setPatientInNewWindow(Patient *patient);
 
-    /// Ens retorna el punter al pacient que té ara
+    /// It returns the pointer to the patient it has now
     Patient* getCurrentPatient();
 
-    /// Retorna el numero de finestres amb diferents models que tenim obertes, el num. de QApplicationMainWindow
+    /// Returns the number of windows with different models we have open, the num. of QApplicationMainWindow
     unsigned int getCountQApplicationMainWindow();
 
-    /// Retorna totes finestres que tenim obertes
+    /// Returns all windows we have open
     static QList<QApplicationMainWindow*> getQApplicationMainWindows();
 
-    /// Retorna la finestra activa actual
+    /// Returns the current active window
     static QApplicationMainWindow* getActiveApplicationMainWindow();
 
-    /// Mètode que retorna el workspace a on poder afegir extensions
+    ///Method that returns the workspace to which you can add extensions
     ExtensionWorkspace* getExtensionWorkspace();
 
-    /// Connecta els volums d'un pacient al mètode que notifica la càrrega de volums
+    /// Connects a patient’s volumes to the method that reports volume loading
     void connectPatientVolumesToNotifier(Patient *patient);
 
 protected:
-    /// Aquest event ocurreix quanes tanca la finestra. És el moment en que es realitzen algunes tasques com desar la configuració
+    ///This event occurs when you close the window. It is the time when some tasks like performing the configuration are performed
     virtual void closeEvent(QCloseEvent *event);
 
     virtual void resizeEvent(QResizeEvent *event);
@@ -85,61 +85,61 @@ protected:
     virtual void showEvent(QShowEvent *event);
 
 private:
-    /// Crea i inicialitza les accions de l'aplicació
+    /// Creates and initializes application actions
     void createActions();
 
-    /// Crea els menús.
+    /// Create menus.
     void createMenus();
 
-    /// Crea el menú per escollir l'idioma de l'aplicació
+    /// Create the menu to choose the language of the application
     void createLanguageMenu();
 
-    /// Crea una acció per canviar d'idioma passant l'idioma (ex. Catalan) i el locale al que s'ha de canviar (ex. ca_ES)
+    /// Create an action to change the language by passing the language (eg Catalan) and the locale to be changed (eg ca_ES)
     QAction* createLanguageAction(const QString &language, const QString &locale);
 
-    /// Elimina totes les extensions que contingui el workspace i elimina els volums del pacient actual
-    /// TODO: Cal que s'hi esborrin les dades de Patient, Study, Series, etc. també.
+    /// Removes all extensions contained in the workspace and removes the volumes of the current patient
+    /// EVERYTHING: Patient, Study, Series, etc. data must be deleted. too.
     void killBill();
 
-    /// Llegeix la configuració inicial amb la que engega el programa
+    /// Reads the initial configuration with which the program starts
     void readSettings();
 
-    /// Escriu la configuració amb la que s'engegarà el programa el pròxim cop. \TODO: s'hauria de cridar també quan obrim una finestra nova?
+    ///Enter the configuration with which the program will start next time. \ TODO: should it also be called when we open a new window?
     void writeSettings();
 
-    /// Fa accessibles les extensions a través dels menús. S'hauria de cridar quan ja
-    /// tenim un input vàlid i es poden carregar volums
+    /// Make extensions accessible through menus. It should be called when already
+    /// we have valid input and volumes can be loaded
     void enableExtensions();
 
     /// Marca aquesta aplicació com a aplicació beta, mostrant informació a l'usuari.
     void markAsBetaVersion();
 
-    /// Actualitza la informació que es mostra a l'usuari en el menú com a versió beta.
+    ///Updates the information displayed to the user in the menu as a beta version.
     void updateBetaVersionTextPosition();
 
     /// Envia una petició per descarregar un estudi a través del seu accession number
     void sendRequestRetrieveStudyWithAccessionNumberToLocalStarviewer(QString accessionNumber);
 
-    /// Calcula el tamany de la lletra del text de les tools si CoreSettings::AutoToolTextSize es true.
-    /// Altrament s'agafarà el valor que ja hi havia a CoreSettings::DefalutToolTextSize.
+    /// Calculate the font size of the tools text if CoreSettings :: AutoToolTextSize is true.
+    /// Otherwise the value that was already in CoreSettings :: DefalutToolTextSize will be taken.
     void computeDefaultToolTextSize();
 
 private slots:
-    /// Mètode genèric que s'assabenta del progrés de càrrega d'un volum i el notifica d'alguna manera en l'interfície
-    /// com per exemple un QProgressDialog o en un label
-    /// @param progress valor del progrés de càrrega
+    /// Generic method that finds out the loading progress of a volume and notifies it in some way in the interface
+    /// such as a QProgressDialog or a label
+    /// @param progress value of load progress
     void updateVolumeLoadProgressNotification(int progress);
 
-    /// Mostra el diàleg on s'explica que és una versió beta.
+    /// Displays the dialog explaining that it is a beta version.
     void showBetaVersionDialog();
 
-    /// Crea una nova finestra i la mostra. Retorna una referència a la finestra creada.
+    ///Create a new window and display it. Returns a reference to the created window.
     QApplicationMainWindow* openBlankWindow();
 
-    /// Mostra el formulari d'about
+    /// Show the out form
     void about();
 
-    /// Canvia a l'idioma indicat
+    ///Switch to the indicated language
     void switchToLanguage(QString locale);
 
     /// Launches the corresponding external application. (Where the number is
@@ -147,7 +147,7 @@ private slots:
     /// error message box.
     void launchExternalApplication(int i);
 
-    /// Maximitza a tantes pantalles com es pugui
+    /// Maximize as many screens as you can
     void maximizeMultipleScreens();
 
     /// Moure la finestra de pantalla

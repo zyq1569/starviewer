@@ -68,7 +68,7 @@ bool is32BitProgramOnWindows()
 namespace udg {
 
 VolumeReaderJobFactory::VolumeReaderJobFactory(QObject *parent)
- : QObject(parent)
+    : QObject(parent)
 {
 }
 
@@ -124,14 +124,14 @@ void VolumeReaderJobFactory::assignResourceRestrictionPolicy(VolumeReaderJob *vo
         {
             m_resourceRestrictionPolicy.setCap(maximumNumberOfVolumesLoadingConcurrently);
             volumeReaderJob->assignQueuePolicy(&m_resourceRestrictionPolicy);
-            INFO_LOG(QString("Limitem a %1 la quantitat de volums carregant-se simultàniament.").arg(m_resourceRestrictionPolicy.cap()));
+            INFO_LOG(QString("We limit the number of volumes loading simultaneously to% 1.").arg(m_resourceRestrictionPolicy.cap()));
         }
         else
         {
-            ERROR_LOG("El valor per limitar la quantitat de volums carregant-se simultàniament ha de ser més gran de 0.");
+            ERROR_LOG("The value for limiting the number of volumes loading simultaneously must be greater than 0.");
         }
     }
-    else 
+    else
     {
         QStringList allowedModalities;
         bool checkMultiframeImages = false;
@@ -156,13 +156,13 @@ void VolumeReaderJobFactory::assignResourceRestrictionPolicy(VolumeReaderJob *vo
             numberOfVolumesLoadingConcurrently = 1;
             if (is32BitWindows())
             {
-                INFO_LOG(QString("Windows 32 bits amb volums que poden requerir molta memòria. Limitem a %1 la quantitat de volums carregant-se simultàniament.")
-                    .arg(numberOfVolumesLoadingConcurrently));
+                INFO_LOG(QString("32-bit Windows with volumes that may require a lot of memory. We limit the number of volumes loading simultaneously to% 1.")
+                         .arg(numberOfVolumesLoadingConcurrently));
             }
             else
             {
-                INFO_LOG(QString("Windows 64 bits amb volums multiframe que poden requerir molta memòria. Limitem a %1 la quantitat de volums carregant-se "
-                    "simultàniament.").arg(numberOfVolumesLoadingConcurrently));
+                INFO_LOG(QString("64-bit Windows with multiframe volumes that may require a lot of memory. We limit the amount of volumes loading to% 1 "
+                                 "simultaneously.").arg(numberOfVolumesLoadingConcurrently));
             }
         }
         else
@@ -186,7 +186,7 @@ bool VolumeReaderJobFactory::checkForResourceRestrictions(bool checkMultiframeIm
     while (iterator.hasNext() && !foundRestriction)
     {
         Volume *currentVolume = iterator.next();
-        // Mirem si és multiframe
+        // Let's see if it's multiframe
         if (checkMultiframeImages)
         {
             if (currentVolume->isMultiframe())
@@ -195,7 +195,7 @@ bool VolumeReaderJobFactory::checkForResourceRestrictions(bool checkMultiframeIm
             }
         }
 
-        // Mirem si és una modalitat a la que cal aplicar restricció o no
+        // Let’s see if it’s a modality that needs to be restricted or not
         if (!modalitiesWithoutRestriction.isEmpty())
         {
             QString modality = currentVolume->getModality();
@@ -211,9 +211,9 @@ bool VolumeReaderJobFactory::checkForResourceRestrictions(bool checkMultiframeIm
 
 void VolumeReaderJobFactory::unmarkVolumeFromJobAsLoading(ThreadWeaver::JobPointer job)
 {
-    // TODO Aquí és el lloc més correcte per desmarcar el volume?? Així tenim el problema de que no podem destruïr aquest objecte
-    // fins que s'ha finalitzat el job, si no, no es marcaria mai com a carregat. Si no es fa aquí, hem de tenir en compte
-    // problemes de concurrència.
+    // TODO Here is the most correct place to uncheck the volume ?? So we have the problem that we cannot destroy this object
+    // until the job is completed, otherwise it will never be marked as loaded. If it’s not done here, we need to keep that in mind
+    // concurrency problems.
     QSharedPointer<VolumeReaderJob> volumeReaderJob = job.dynamicCast<VolumeReaderJob>();
     if (volumeReaderJob)
     {
@@ -225,7 +225,7 @@ bool VolumeReaderJobFactory::isVolumeLoading(Volume *volume) const
 {
     if (!volume)
     {
-        DEBUG_LOG("El volum és nul. No pot estar carregant-se.");
+        DEBUG_LOG("The volume is zero. It may not be loading.");
         return false;
     }
 
@@ -236,7 +236,7 @@ void VolumeReaderJobFactory::cancelLoadingAndDeleteVolume(Volume *volume)
 {
     if (!volume)
     {
-        DEBUG_LOG("El volum és nul. No es pot fer cancel de la càrrega ni esborrar.");
+        DEBUG_LOG("The volume is zero. Unable to cancel upload or delete.");
         return;
     }
 
@@ -278,7 +278,7 @@ void VolumeReaderJobFactory::unmarkVolumeAsLoading(const Identifier &volumeIdent
 
 ThreadWeaver::Queue* VolumeReaderJobFactory::getWeaverInstance() const
 {
-    // TODO De moment es retorna la instància global, caldria permetre passar-la com a paràmetre.
+    // TODO At the moment the global instance is returned, it should be allowed to pass it as a parameter.
     return ThreadWeaver::Queue::instance();
 }
 

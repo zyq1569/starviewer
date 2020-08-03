@@ -29,7 +29,7 @@ Identifier VolumeRepository::addVolume(Volume *model)
 
     id = this->addItem(model);
     emit itemAdded(id);
-    INFO_LOG("S'ha afegit al repositori el volum amb id: " + QString::number(id.getValue()));
+    INFO_LOG("The volume with id has been added to the repository: " + QString::number(id.getValue()));
     return id;
 }
 
@@ -44,7 +44,7 @@ void VolumeRepository::deleteVolume(Identifier id)
     Volume *volume = this->getVolume(id);
     if (!volume)
     {
-        INFO_LOG(QString("No existeix cap volum al repositori amb l'id: %1. No esborrarem res del repositori.").arg(id.getValue()));
+        INFO_LOG(QString("There is no volume in the repository with the id:% 1. We will not delete anything from the repository.").arg(id.getValue()));
         return;
     }
 
@@ -56,7 +56,7 @@ void VolumeRepository::deleteVolume(Identifier id)
     volumeReader->cancelLoadingAndDeleteVolume(volume);
 
     emit itemRemoved(id);
-    INFO_LOG("S'ha esborrat del repositori el volum amb id: " + QString::number(id.getValue()));
+    INFO_LOG("The volume with id has been deleted from the repository: " + QString::number(id.getValue()));
 }
 
 int VolumeRepository::getNumberOfVolumes()

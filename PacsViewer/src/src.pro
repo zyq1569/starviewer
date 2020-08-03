@@ -3,6 +3,9 @@
 # Subdirectory related to the main project directory: ./src
 # The goal is a subdirectory of the project
 
+QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
+QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
+
 TEMPLATE = subdirs 
 
 include(compilationtype.pri)
