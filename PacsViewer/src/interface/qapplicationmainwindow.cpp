@@ -70,23 +70,22 @@
 
 namespace udg {
 
-// Per processar les opcions entrades per línia de comandes hem d'utilitzar un Singleton de StarviewerApplicationCommandLine, això ve degut a que
-// d'instàncies de QApplicationMainWindow en tenim tantes com finestres obertes d'Starviewer tinguem. Instàncies deQApplicationMainWindow es crees
-// i es destrueixen a mesura que s'obre una nova finestra o es tanca una finestra d'Starviewer per tant no podem responsabilitzar a cap
-// QApplicationMainWindow que s'encarregui de antendre les peticions rebudes via arguments o rebudes d'altres instàncies d'Starviewer a través
-// de QtSingleApplication, perquè no podem garantir que cap QApplicationMainWindow estigui viva durant tota l'execució d'Starviewer, per encarregar-se
-// de processar els arugments de línia de comandes.
+// To process the options entered by command line we have to use a Singleton of StarviewerApplicationCommandLine, this comes because
+// of QApplicationMainWindow instances we have as many as Starviewer open windows we have. Instances of QApplicationMainWindow are created
+// and are destroyed as a new window opens or a Starviewer window closes so we can't hold anyone responsible
+// QApplicationMainWindow to handle requests received via arguments or received from other instances of Starviewer via
+// from QtSingleApplication, because we can't guarantee that no QApplicationMainWindow will be alive throughout the execution of Starviewer, to take care of
+// to process command line arugments.
 
-// Per això el que s'ha fet és que totes les QApplicationMainWindow es connectin a un signal de la mateixa instància de
-// StarviewerSingleApplicationCommandLineSingleton, aquest signal és newOptionsToRun() que s'emet cada vegada que es reben nous arguments ja
-// procedeixin de la mateixa instància al iniciar-la o d'altres instàncies via QtSingleApplication. Una vegada s'ha emés el signal les instàncies
-// de QApplicationMainWindow a mesura que responen al signal amb el mètode takeOptionToRun() van processan tots els arguments fins que no en
-// queda cap per processar.
+// That's why all QApplicationMainWindow is connected to a signal from the same instance of
+// StarviewerSingleApplicationCommandLineSingleton, this signal is newOptionsToRun () that is output every time new arguments are received already
+// proceed from the same instance at startup or from other instances via QtSingleApplication. Once the signal has been issued the instances
+// from QApplicationMainWindow as they respond to the signal with the takeOptionToRun () method they process all the arguments until they don't
+// there is none left to process.
 
-// L'opció que processa una instància de QApplicationMainWindow obtinguda a través del mètode takeOptionToRun() desapereix de la llista d'opcions
-// per processar de StarviewerApplicationCommandLine, de manera que tot i que totes les instàncies de QApplicationMainWindow poden processar
-// opcions rebuts, cada opció només serà processat per la primera instància que l'agafi a través del mètode takeOptionToRun().
-
+// The option that processes a QApplicationMainWindow instance obtained through the takeOptionToRun () method disappears from the list of options
+// to process StarviewerApplicationCommandLine, so even though all instances of QApplicationMainWindow can process
+// options received, each option will only be processed by the first instance that takes it through the takeOptionToRun () method.
 typedef SingletonPointer<StarviewerApplicationCommandLine> StarviewerSingleApplicationCommandLineSingleton;
 
 QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
@@ -102,8 +101,8 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     if (!databaseInstallation.checkStarviewerDatabase())
     {
         QString errorMessage = databaseInstallation.getErrorMessage();
-        QMessageBox::critical(0, ApplicationNameString, tr("There have been some errors:") + "\n" + errorMessage + "\n\n" + 
-                                                    tr("You can resolve this error at Tools > Configuration > Local Database."));
+        QMessageBox::critical(0, ApplicationNameString, tr("There have been some errors:") + "\n" + errorMessage + "\n\n" +
+                              tr("You can resolve this error at Tools > Configuration > Local Database."));
     }
 
     m_extensionHandler = new ExtensionHandler(this);
@@ -116,16 +115,16 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     m_applicationVersionChecker = new ApplicationVersionChecker(this);
     m_applicationVersionChecker->checkReleaseNotes();
 
-    // Llegim les configuracions de l'aplicació, estat de la finestra, posicio,etc
+    // We read the settings of the application, state of the window, position, etc
     readSettings();
-    // Icona de l'aplicació
+    // Application icon
     this->setWindowIcon(QIcon(":/images/starviewer.png"));
     this->setWindowTitle(ApplicationNameString);
 
-// Amb starviewer lite no hi haurà hanging protocols, per tant no els carregarem
+    // With starviewer lite there will be no hanging protocols, so we will not load them
 #ifndef STARVIEWER_LITE
-    // Càrrega dels repositoris que necessitem tenir carregats durant tota l'aplicació
-    // Només carregarem un cop per sessió/instància d'starviewer
+    // Load the repositories we need to have loaded throughout the application
+    // We will only load once per session / instance of starviewer
     static bool repositoriesLoaded = false;
     if (!repositoriesLoaded)
     {
@@ -142,7 +141,7 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     }
 #endif
 
-    // Creem el progress dialog que notificarà la càrrega de volums
+    // We create the progress dialog that will notify the volume loading
     m_progressDialog = new QProgressDialog(this);
     m_progressDialog->setModal(true);
     m_progressDialog->setRange(0, 100);
@@ -206,7 +205,7 @@ void QApplicationMainWindow::createActions()
 
     m_pacsAction = new QAction(this);
 #ifdef STARVIEWER_LITE
-    // El menú "PACS" es dirà "Exams"
+    //The "PACS" menu will be called "Exams"
     m_pacsAction->setText(tr("&Exams..."));
     m_pacsAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::OpenExams));
     m_pacsAction->setStatusTip(tr("Browse exams"));
@@ -223,7 +222,7 @@ void QApplicationMainWindow::createActions()
     m_signalMapper->setMapping(m_localDatabaseAction, 10);
     connect(m_localDatabaseAction, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
 #endif
-    // TODO potser almenys per la versió Lite caldria canviar la icona
+    //EVERYTHING maybe at least for the Lite version the icon would have to be changed
     m_pacsAction->setIcon(QIcon(":/images/pacsQuery.png"));
     m_signalMapper->setMapping(m_pacsAction, 7);
     connect(m_pacsAction, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
@@ -395,9 +394,9 @@ void QApplicationMainWindow::createMenus()
     m_fileMenu->addAction(m_exitAction);
 
 #ifdef STARVIEWER_LITE
-    // No afegim els menús de visualització
+    // We do not add display menus
 #else
-    // Accions relacionades amb la visualització
+    // Actions related to visualization
     m_visualizationMenu = menuBar()->addMenu(tr("&Visualization"));
 
     foreach (QAction *action, m_actionsList)
@@ -416,7 +415,7 @@ void QApplicationMainWindow::createMenus()
     createExternalApplicationsMenu();
     connect(ExternalApplicationsManager::instance(), SIGNAL(onApplicationsChanged()), this, SLOT(createExternalApplicationsMenu()));
 
-    // Menú 'window'
+    // Menu 'window'
     m_windowMenu = menuBar()->addMenu(tr("&Window"));
     m_moveWindowToDesktopMenu = m_windowMenu->addMenu(tr("Move to Screen"));
     m_moveWindowToDesktopMenu->addAction(m_moveToDesktopAction);
@@ -426,7 +425,7 @@ void QApplicationMainWindow::createMenus()
     
     menuBar()->addSeparator();
 
-    // Menú d'ajuda i suport
+    //Help and support menu
     m_helpMenu = menuBar()->addMenu(tr("&Help"));
     m_helpMenu->addAction(m_openUserGuideAction);
     m_helpMenu->addAction(m_openQuickStartGuideAction);
@@ -530,10 +529,10 @@ QAction* QApplicationMainWindow::createLanguageAction(const QString &language, c
 
 void QApplicationMainWindow::killBill()
 {
-    // Eliminem totes les extensions
+    // We remove all extensions
     this->getExtensionWorkspace()->killThemAll();
-    // TODO descarregar tots els volums que tingui el pacient en aquesta finestra
-    // quan ens destruim alliberem tots els volums que hi hagi a memòria
+    // TODO download all the volumes that the patient has in this window
+    // when we destroy ourselves we release all the volumes in memory
     if (this->getCurrentPatient() != NULL)
     {
         foreach (Study *study, this->getCurrentPatient()->getStudies())
@@ -590,7 +589,7 @@ QApplicationMainWindow* QApplicationMainWindow::openBlankWindow()
 
 void QApplicationMainWindow::setPatient(Patient *patient)
 {
-    // Si les dades de pacient són nules, no fem res
+    //If patient data is null, we do nothing
     if (!patient)
     {
         DEBUG_LOG("NULL Patient, maybe creating a blank new window");
@@ -599,11 +598,11 @@ void QApplicationMainWindow::setPatient(Patient *patient)
 
     if (this->getCurrentPatient())
     {
-        // Primer ens carreguem el pacient
+        // First we charge the patient
         this->killBill();
         delete m_patient;
         m_patient = NULL;
-        DEBUG_LOG("Ja teníem un pacient, l'esborrem.");
+        DEBUG_LOG("We already had a patient, we deleted him.");
     }
 
     m_patient = patient;
@@ -660,9 +659,9 @@ ExtensionWorkspace* QApplicationMainWindow::getExtensionWorkspace()
 
 void QApplicationMainWindow::closeEvent(QCloseEvent *event)
 {
-    // \TODO aquí hauríem de controlar si l'aplicació està fent altres tasques pendents que s'haurien de finalitzar abans de tancar
-    // l'aplicació com per exemple imatges en descàrrega del PACS o similar.
-    // Caldria fer-ho de manera centralitzada.
+    // \ TODO here we should check if the application is doing other pending tasks that should be completed before closing
+    // the application such as downloaded images from PACS or similar.
+    // It should be done centrally.
     event->accept();
 }
 
@@ -759,22 +758,22 @@ void QApplicationMainWindow::newCommandLineOptionsToRun()
 {
     QPair<StarviewerApplicationCommandLine::StarviewerCommandLineOption, QString> optionValue;
 
-    // Mentre quedin opcions per processar
+    //As long as there are options to process
     while (StarviewerSingleApplicationCommandLineSingleton::instance()->takeOptionToRun(optionValue))
     {
         switch (optionValue.first)
         {
-            case StarviewerApplicationCommandLine::openBlankWindow:
-                INFO_LOG("Rebut argument de linia de comandes per obrir nova finestra");
-                openBlankWindow();
-                break;
-            case StarviewerApplicationCommandLine::retrieveStudyFromAccessioNumber:
-                INFO_LOG("Rebut argument de linia de comandes per descarregar un estudi a traves del seu accession number");
-                sendRequestRetrieveStudyWithAccessionNumberToLocalStarviewer(optionValue.second);
-                break;
-            default:
-                INFO_LOG("Argument de linia de comandes invalid");
-                break;
+        case StarviewerApplicationCommandLine::openBlankWindow:
+            INFO_LOG("Rebut argument de linia de comandes per obrir nova finestra");
+            openBlankWindow();
+            break;
+        case StarviewerApplicationCommandLine::retrieveStudyFromAccessioNumber:
+            INFO_LOG("Rebut argument de linia de comandes per descarregar un estudi a traves del seu accession number");
+            sendRequestRetrieveStudyWithAccessionNumberToLocalStarviewer(optionValue.second);
+            break;
+        default:
+            INFO_LOG("Argument de linia de comandes invalid");
+            break;
         }
     }
 }
@@ -788,10 +787,10 @@ void QApplicationMainWindow::sendRequestRetrieveStudyWithAccessionNumberToLocalS
     }
     else
     {
-        // TODO:S'hauria de fer un missatge més genèric
+        //EVERYTHING: A more generic message should be made
         QMessageBox::information(this, ApplicationNameString,
                                  tr("Please activate \"Listen to RIS requests\" option in %1 configuration to retrieve studies from SAP.")
-                               .arg(ApplicationNameString));
+                                 .arg(ApplicationNameString));
     }
 }
 
