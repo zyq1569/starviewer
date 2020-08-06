@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
     {
         // There is another instance of Starviewer running
         //starviewer已经正在运行
-        INFO_LOG("Another instance of starviewer is running. Command line arguments will be sent to the main instance.");
+        WARN_LOG("Another instance of starviewer is running. Command line arguments will be sent to the main instance.");
 
         sendToFirstStarviewerInstanceCommandLineOptions(app);
 
