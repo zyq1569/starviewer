@@ -75,7 +75,8 @@ namespace udg {
 #ifdef QT_NO_DEBUG
     #define DEBUG_LOG(msg) while (false)
 #else
-    #define DEBUG_LOG(msg) udg::debugLog(msg,__FILE__,__LINE__,LOG_FUNC)
+    #define DEBUG_LOG(msg) while (false)
+    // #define DEBUG_LOG(msg) udg::debugLog(msg,__FILE__,__LINE__,LOG_FUNC)
 #endif
 
 #define INFO_LOG(msg) udg::infoLog(msg,__FILE__,__LINE__,LOG_FUNC)
