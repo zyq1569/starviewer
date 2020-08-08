@@ -250,7 +250,6 @@ int main(int argc, char *argv[])
     }
     else
     {
-        INFO_LOG("start to creat QApplicationMainWindow");
         udg::QApplicationMainWindow *mainWin = new udg::QApplicationMainWindow; // Main instance, no more running
         // We connect to receive arguments from other instances
         QObject::connect(&app, SIGNAL(messageReceived(QString)), StarviewerSingleApplicationCommandLineSingleton::instance(), SLOT(parseAndRun(QString)));
