@@ -25,6 +25,7 @@
 #include "logging.h"
 #include "mathtools.h"
 #include "starviewerapplication.h"
+#include "coresettings.h"
 
 // TODO: Ouch! SuperGuarrada (tm). Per poder fer sortir el menú i tenir accés al Patient principal. S'ha d'arreglar en quan es tregui les dependències de
 // interface, pacs, etc.etc.!!
@@ -35,6 +36,7 @@
 #include <QContextMenuEvent>
 #include <QMessageBox>
 #include <QDir>
+#include <QScreen>
 
 // Include's vtk
 #include <QVTKWidget.h>
@@ -53,9 +55,10 @@
 namespace udg {
 
 QViewer::QViewer(QWidget *parent)
-    : QWidget(parent), m_mainVolume(0), m_contextMenuActive(true), m_mouseHasMoved(false), m_voiLutData(0),
-      m_isRenderingEnabled(true), m_isActive(false)
+ : QWidget(parent), m_mainVolume(0), m_contextMenuActive(true), m_mouseHasMoved(false), m_voiLutData(0),
+   m_isRenderingEnabled(true), m_isActive(false)
 {
+    m_lastAngleDelta = QPoint();
     m_defaultFitIntoViewportMarginRate = 0.0;
     m_vtkWidget = new QVTKWidget(this);
     m_vtkWidget->setFocusPolicy(Qt::WheelFocus);
@@ -101,7 +104,7 @@ QViewer::~QViewer()
     // Cal que la eliminació del vtkWidget sigui al final ja que els altres
     // objectes que eliminem en poden fer ús durant la seva destrucció
     delete m_toolProxy;
-    delete m_patientBrowserMenu;
+    m_patientBrowserMenu->deleteLater();
     m_windowToImageFilter->Delete();
     delete m_vtkWidget;
     m_vtkQtConnections->Delete();
@@ -159,12 +162,22 @@ QSize QViewer::getRenderWindowSize() const
 
 QPoint QViewer::getEventPosition() const
 {
-    return QPoint(this->getInteractor()->GetEventPosition()[0], this->getInteractor()->GetEventPosition()[1]);
+    QPoint point(this->getInteractor()->GetEventPosition()[0], this->getInteractor()->GetEventPosition()[1]);
+    point *= this->devicePixelRatioF();
+    return point;
+
 }
 
 QPoint QViewer::getLastEventPosition() const
 {
-    return QPoint(this->getInteractor()->GetLastEventPosition()[0], this->getInteractor()->GetLastEventPosition()[1]);
+    QPoint point(this->getInteractor()->GetLastEventPosition()[0], this->getInteractor()->GetLastEventPosition()[1]);
+    point *= this->devicePixelRatioF();
+    return point;
+}
+
+QPoint QViewer::getWheelAngleDelta() const
+{
+    return m_lastAngleDelta;
 }
 
 bool QViewer::isActive() const
@@ -189,49 +202,58 @@ void QViewer::eventHandler(vtkObject *object, unsigned long vtkEvent, void *clie
     // orientation movements. Only vertical events with a delta different to 0 are captured.
     switch (vtkEvent)
     {
-    case vtkCommand::MouseWheelForwardEvent:
-    case vtkCommand::MouseWheelBackwardEvent:
-    {
-        QWheelEvent *e = (QWheelEvent*)callData;
-        if (e)
+        case vtkCommand::MouseWheelForwardEvent:
+        case vtkCommand::MouseWheelBackwardEvent:
         {
-            if (e->delta() == 0 || e->orientation() == Qt::Horizontal)
+            QWheelEvent *e = (QWheelEvent*)callData; //WARNING: I don't like that casting here, may become dangerous.
+            if (e)
             {
-                return;
+                if (e->delta() == 0 || e->orientation() == Qt::Horizontal)
+                {
+                    return;
+                }
             }
         }
     }
-    }
 #endif
+
+    if (vtkEvent == vtkCommand::MouseWheelForwardEvent || vtkEvent == vtkCommand::MouseWheelBackwardEvent)
+    {
+        QWheelEvent *event = (QWheelEvent*)callData; //WARNING: I don't like that casting here, may become dangerous.
+        if (event)
+        {
+            m_lastAngleDelta = event->angleDelta();
+        }
+    }
 
     // Quan la finestra sigui "seleccionada" s'emetrà un senyal indicant-ho. Entenem seleccionada quan s'ha clicat o mogut la rodeta per sobre del visor.
     // TODO Ara resulta ineficient perquè un cop seleccionat no caldria re-enviar aquesta senyal. Cal millorar el sistema
     switch (vtkEvent)
     {
-    case QVTKWidget::ContextMenuEvent:
-    case vtkCommand::LeftButtonPressEvent:
-    case vtkCommand::RightButtonPressEvent:
-    case vtkCommand::MiddleButtonPressEvent:
-    case vtkCommand::MouseWheelForwardEvent:
-    case vtkCommand::MouseWheelBackwardEvent:
-        m_mouseHasMoved = false;
-        setActive(true);
-        if (vtkEvent == vtkCommand::LeftButtonPressEvent && getInteractor()->GetRepeatCount() == 1)
-        {
-            emit doubleClicked();
-        }
-        break;
+        case QVTKWidget::ContextMenuEvent:
+        case vtkCommand::LeftButtonPressEvent:
+        case vtkCommand::RightButtonPressEvent:
+        case vtkCommand::MiddleButtonPressEvent:
+        case vtkCommand::MouseWheelForwardEvent:
+        case vtkCommand::MouseWheelBackwardEvent:
+            m_mouseHasMoved = false;
+            setActive(true);
+            if (vtkEvent == vtkCommand::LeftButtonPressEvent && getInteractor()->GetRepeatCount() == 1)
+            {
+                emit doubleClicked();
+            }
+            break;
 
-    case vtkCommand::MouseMoveEvent:
-        m_mouseHasMoved = true;
-        break;
+        case vtkCommand::MouseMoveEvent:
+            m_mouseHasMoved = true;
+            break;
 
-    case vtkCommand::RightButtonReleaseEvent:
-        if (!m_mouseHasMoved)
-        {
-            contextMenuRelease();
-        }
-        break;
+        case vtkCommand::RightButtonReleaseEvent:
+            if (!m_mouseHasMoved)
+            {
+                contextMenuRelease();
+            }
+            break;
     }
     emit eventReceived(vtkEvent);
 }
@@ -337,40 +359,40 @@ bool QViewer::saveGrabbedViews(const QString &baseName, FileType extension)
         QString fileExtension;
         switch (extension)
         {
-        case PNG:
-            writer = vtkPNGWriter::New();
-            fileExtension = "png";
-            break;
+            case PNG:
+                writer = vtkPNGWriter::New();
+                fileExtension = "png";
+                break;
 
-        case JPEG:
-            writer = vtkJPEGWriter::New();
-            fileExtension = "jpg";
-            break;
+            case JPEG:
+                writer = vtkJPEGWriter::New();
+                fileExtension = "jpg";
+                break;
 
-        case TIFF:
-            writer = vtkTIFFWriter::New();
-            fileExtension = "tiff";
-            break;
+            case TIFF:
+                writer = vtkTIFFWriter::New();
+                fileExtension = "tiff";
+                break;
 
-        case PNM:
-            writer = vtkPNMWriter::New();
-            fileExtension = "pnm";
-            break;
+            case PNM:
+                writer = vtkPNMWriter::New();
+                fileExtension = "pnm";
+                break;
 
-        case BMP:
-            writer = vtkBMPWriter::New();
-            fileExtension = "bmp";
-            break;
+            case BMP:
+                writer = vtkBMPWriter::New();
+                fileExtension = "bmp";
+                break;
 
-        case DICOM:
-            // TODO A suportar
-            DEBUG_LOG("El format DICOM encara no està suportat per guardar imatges");
-            return false;
+            case DICOM:
+                // TODO A suportar
+                DEBUG_LOG("El format DICOM encara no està suportat per guardar imatges");
+                return false;
 
-        case META:
-            // TODO A suportar
-            DEBUG_LOG("El format META encara no està suportat per guardar imatges");
-            return false;
+            case META:
+                // TODO A suportar
+                DEBUG_LOG("El format META encara no està suportat per guardar imatges");
+                return false;
         }
         int count = m_grabList.count();
         if (count == 1)
@@ -664,10 +686,14 @@ void QViewer::contextMenuRelease()
 
     // Obtenim la posició de l'event
     QPoint point = this->getEventPosition();
+    point /= this->devicePixelRatioF(); // Vtk pixels are real pixels, Qt wants logical pixels.
 
     // Remember to flip y
     QSize size = this->getRenderWindowSize();
+    size /= this->devicePixelRatioF(); // Vtk pixels are real pixels, Qt wants logical pixels.
     point.setY(size.height() - point.y());
+
+
 
     // Map to global
     QPoint globalPoint = this->mapToGlobal(point);
@@ -710,20 +736,20 @@ void QViewer::setCameraViewPlane(const OrthogonalPlane &viewPlane)
     camera->SetFocalPoint(0.0, 0.0, 0.0);
     switch (this->getCurrentViewPlane())
     {
-    case OrthogonalPlane::XYPlane:
-        camera->SetViewUp(0.0, -1.0, 0.0);
-        camera->SetPosition(0.0, 0.0, -1.0);
-        break;
+        case OrthogonalPlane::XYPlane:
+            camera->SetViewUp(0.0, -1.0, 0.0);
+            camera->SetPosition(0.0, 0.0, -1.0);
+            break;
 
-    case OrthogonalPlane::YZPlane:
-        camera->SetViewUp(0.0, 0.0, 1.0);
-        camera->SetPosition(1.0, 0.0, 0.0);
-        break;
+        case OrthogonalPlane::YZPlane:
+            camera->SetViewUp(0.0, 0.0, 1.0);
+            camera->SetPosition(1.0, 0.0, 0.0);
+            break;
 
-    case OrthogonalPlane::XZPlane:
-        camera->SetViewUp(0.0, 0.0, 1.0);
-        camera->SetPosition(0.0, -1.0, 0.0);
-        break;
+        case OrthogonalPlane::XZPlane:
+            camera->SetViewUp(0.0, 0.0, 1.0);
+            camera->SetPosition(0.0, -1.0, 0.0);
+            break;
     }
 }
 
@@ -772,10 +798,10 @@ void QViewer::contextMenuEvent(QContextMenuEvent *menuEvent)
 {
     if (m_contextMenuActive)
     {
-        // It is possible that in some moments (when the patient is loaded and other dialogs leave)
-        // no window is active or it is not even a QApplicationMainWindow and it is a dialog,
-        // so it can return NULL to us and sometimes it made us crack the app. This is how we heal ourselves in health
-        // EVERYTHING It would be nice to check
+        // És possible que en alguns moments (quan es carrega el pacient i surten altres diàlegs)
+        // no hi hagi window activa o que aquesta ni sigui una QApplicationMainWindow i ho sigui un diàleg,
+        // per tant, ens pot tornar NULL i en algunes ocasions ens feia petar l'aplicació. Així ens curem en salut
+        // TODO Estaria bé comprovar
         QApplicationMainWindow *mainWindow = QApplicationMainWindow::getActiveApplicationMainWindow();
         if (!mainWindow)
         {
@@ -851,31 +877,31 @@ void QViewer::initializeWorkInProgressByViewerStatus(ViewerStatus status)
     m_workInProgressWidget->reset();
     switch (status)
     {
-    case NoVolumeInput:
-    case VisualizingVolume:
-        // Do nothing
-        break;
+        case NoVolumeInput:
+        case VisualizingVolume:
+            // Do nothing
+            break;
         
-    case DownloadingVolume:
-        m_workInProgressWidget->setTitle(tr("Downloading related study..."));
-        break;
+        case DownloadingVolume:
+            m_workInProgressWidget->setTitle(tr("Downloading related study..."));
+            break;
         
-    case LoadingVolume:
-        m_workInProgressWidget->setTitle(tr("Loading data..."));
-        break;
+        case LoadingVolume:
+            m_workInProgressWidget->setTitle(tr("Loading data..."));
+            break;
         
-    case DownloadingError:
-        m_workInProgressWidget->setTitle(tr("Error downloading related study"));
-        m_workInProgressWidget->showError(QString());
-        break;
+        case DownloadingError:
+            m_workInProgressWidget->setTitle(tr("Error downloading related study"));
+            m_workInProgressWidget->showError(QString());
+            break;
         
-    case LoadingError:
-        m_workInProgressWidget->setTitle(tr("Error loading data"));
-        break;
+        case LoadingError:
+            m_workInProgressWidget->setTitle(tr("Error loading data"));
+            break;
 
-    case VisualizingError:
-        m_workInProgressWidget->setTitle(tr("Error visualizing data"));
-        break;
+        case VisualizingError:
+            m_workInProgressWidget->setTitle(tr("Error visualizing data"));
+            break;
     }
 }
 
@@ -904,8 +930,8 @@ void QViewer::handleNotEnoughMemoryForVisualizationError()
 {
     setViewerStatus(VisualizingError);
     m_workInProgressWidget->showError(tr("There's not enough memory for the rendering process. Try to close all the open %1 windows, restart the application "
-                                         "and try again. If the problem persists, adding more RAM memory or switching to a 64-bit operating system may solve the problem.")
-                                      .arg(ApplicationNameString));
+        "and try again. If the problem persists, adding more RAM memory or switching to a 64-bit operating system may solve the problem.")
+        .arg(ApplicationNameString));
     // The cursor may have been changed by a tool that hasn't finished its operation and won't receive a mouse button release event,
     // thus the cursor is reset to its default form here
     // TODO Tools should be able to handle this situation by themselves
@@ -923,6 +949,14 @@ void QViewer::setupRenderWindow()
     renderWindow->AddRenderer(getRenderer());
     renderWindow->DoubleBufferOn();
     renderWindow->LineSmoothingOn();
+    renderWindow->SetDPI(QGuiApplication::primaryScreen()->logicalDotsPerInch());
+
+    if (!Settings().getValue(CoreSettings::DontForceMultiSampling).toBool())
+    {
+        // This is the default of VTK except on Mac due to some alleged problems in some models, and is needed to get smooth lines
+        // The setting will allow to avoid those problems if they arise, at the cost of getting aliased lines
+        renderWindow->SetMultiSamples(8);
+    }
 
     // TODO This is needed for the rendering process to work correctly if coming from handleNotEnoughMemoryForVisualizationError().
     //      Alternatively the rendering process also works correctly after a Q2DViewer::restore().

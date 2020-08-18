@@ -20,8 +20,7 @@
 #include <QMovie>
 #include <QFileDialog>
 #include <QScrollBar>
-#include <QWebFrame>
-#include <QWebHistory>
+#include <QWebEngineHistory>
 
 #include "diagnosistestfactory.h"
 #include "diagnosistest.h"
@@ -44,24 +43,26 @@ QDiagnosisTest::QDiagnosisTest(QWidget *parent)
     createConnections();
 
     QMovie *operationAnimation = new QMovie(this);
-    operationAnimation->setFileName(":/images/loader.gif");
+    operationAnimation->setFileName(":/images/animations/loader.gif");
     m_animationInProgressLabel->setMovie(operationAnimation);
     operationAnimation->start();
 
-    // Do we choose icon with? which appears next to the close button
+    //Treiem icona amb ? que apareix al costat del botó de tancar
     this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     
     m_diagnosisTestsResults->setContextMenuPolicy(Qt::NoContextMenu);
-    m_diagnosisTestsResults->history()->setMaximumItemCount(0);
 }
 
 QDiagnosisTest::~QDiagnosisTest()
 {
-    qDeleteAll(m_runDiagnosisTest->getDiagnosisTestToRun());
-    delete m_runDiagnosisTest;
-
+    // TODO Should finish in a cleaner way. Calling terminate() is dangerous.
+    //      Instead, should stop running the tests (in particular, cancel PACS echoes) and call m_threadRunningDiagnosisTest->quit()
+    //      And should not need to wait for the thread to finish: just connect to the finished() signal and destroy thread and tests there
+    //      Exception: if the application quits, should the thread be terminated?
     m_threadRunningDiagnosisTest->terminate();
     m_threadRunningDiagnosisTest->wait();
+    qDeleteAll(m_runDiagnosisTest->getDiagnosisTestToRun());
+    delete m_runDiagnosisTest;
     delete m_threadRunningDiagnosisTest;
 }
 
@@ -82,6 +83,8 @@ void QDiagnosisTest::createConnections()
     connect(this, SIGNAL(start()), m_runDiagnosisTest, SLOT(run()));
     connect(m_runDiagnosisTest, SIGNAL(runningDiagnosisTest(DiagnosisTest*)), this, SLOT(updateRunningDiagnosisTestProgress(DiagnosisTest*)));
     connect(m_runDiagnosisTest, SIGNAL(finished()), this, SLOT(finishedRunningDiagnosisTest()));
+
+    connect(m_diagnosisTestsResults, &QWebEngineView::loadFinished, [this] { m_diagnosisTestsResults->history()->clear(); });
 }
 
 void QDiagnosisTest::runDiagnosisTest()
@@ -124,7 +127,7 @@ void QDiagnosisTest::finishedRunningDiagnosisTest()
 
 void QDiagnosisTest::viewTestsLabelClicked()
 {
-    m_diagnosisTestsResults->page()->mainFrame()->evaluateJavaScript("showAllTests(); null");
+    m_diagnosisTestsResults->page()->runJavaScript("showAllTests(); null");
     m_diagnosisTestsResults->setVisible(true);
     m_viewTestsLabel->setVisible(false);
     this->adjustSize();
@@ -133,7 +136,7 @@ void QDiagnosisTest::viewTestsLabelClicked()
 void QDiagnosisTest::fillDiagnosisTestsResultTable()
 {
     QString html = m_diagnosisTestResultWriter.getAsQString();
-    m_diagnosisTestsResults->page()->mainFrame()->setHtml(html);
+    m_diagnosisTestsResults->page()->setHtml(html);
 }
 
 void QDiagnosisTest::updateWidgetToRunDiagnosisTest()
@@ -148,7 +151,7 @@ void QDiagnosisTest::updateWidgetToRunDiagnosisTest()
 
 void QDiagnosisTest::saveDiagnosisTestResultsAsFile()
 {
-    QString pathFile = QFileDialog::getSaveFileName(this, tr("Save Diagnosis Tests Results"), QDir::homePath(), tr("Text Files (*.txt)"));
+    QString pathFile = QFileDialog::getSaveFileName(this, tr("Save Diagnosis Tests Results"), QDir::homePath(), tr("HTML Files (*.html)"));
 
     if (!pathFile.isEmpty())
     {

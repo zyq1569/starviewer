@@ -15,8 +15,6 @@
 #ifndef _LOGGING_
 #define _LOGGING_
 
-#include "easylogging++.h"
-
 #include <QString>
 
 
@@ -75,8 +73,7 @@ namespace udg {
 #ifdef QT_NO_DEBUG
     #define DEBUG_LOG(msg) while (false)
 #else
-    #define DEBUG_LOG(msg) while (false)
-    // #define DEBUG_LOG(msg) udg::debugLog(msg,__FILE__,__LINE__,LOG_FUNC)
+    #define DEBUG_LOG(msg) udg::debugLog(msg,__FILE__,__LINE__,LOG_FUNC)
 #endif
 
 #define INFO_LOG(msg) udg::infoLog(msg,__FILE__,__LINE__,LOG_FUNC)
@@ -85,13 +82,6 @@ namespace udg {
 #define FATAL_LOG(msg) udg::fatalLog(msg,__FILE__,__LINE__,LOG_FUNC)
 #define VERBOSE_LOG(vLevel, msg) udg::verboseLog(vLevel, msg,__FILE__,__LINE__,LOG_FUNC)
 #define TRACE_LOG(msg) udg::traceLog(msg,__FILE__,__LINE__,LOG_FUNC)
-
-#define LOG_INFO(msg) udg::infoLog(msg,__FILE__,__LINE__,LOG_FUNC)
-#define LOG_WARN(msg) udg::warnLog(msg,__FILE__,__LINE__,LOG_FUNC)
-#define LOG_ERROR(msg) udg::errorLog(msg,__FILE__,__LINE__,LOG_FUNC)
-#define LOG_FATA(msg) udg::fatalLog(msg,__FILE__,__LINE__,LOG_FUNC)
-#define LOG_VERBOSE(vLevel, msg) udg::verboseLog(vLevel, msg,__FILE__,__LINE__,LOG_FUNC)
-#define LOG_TRACE(msg) udg::traceLog(msg,__FILE__,__LINE__,LOG_FUNC)
 
 
 

@@ -32,6 +32,8 @@
 #include "interfacesettings.h"
 #include "screenmanager.h"
 #include "patientcomparer.h"
+#include "patient.h"
+#include "image.h"
 
 // PACS --------------------------------------------
 #include "queryscreen.h"
@@ -43,13 +45,13 @@ typedef SingletonPointer<QueryScreen> QueryScreenSingleton;
 typedef Singleton<PatientComparer> PatientComparerSingleton;
 
 ExtensionHandler::ExtensionHandler(QApplicationMainWindow *mainApp, QObject *parent)
-    : QObject(parent)
+ : QObject(parent)
 {
     m_mainApp = mainApp;
 
     createConnections();
 
-    // Cada cop que creem una nova finestra tancarem qualsevol instància de QueryScreen. Així queda més clar que
+    // Cada cop que creem una nova finestra tancarem qualsevol instància de QueryScreen. Així queda més clar que 
     // la finestra que la invoca és la que rep el resultat d'aquesta
     // TODO Cal millorar el disseny de la interacció amb la QueryScreen per tal de no tenir problemes com els que s'exposen als tickets
     // #1858, #1018. De moment ho solventem amb aquests hacks, però no són una bona solució
@@ -80,49 +82,49 @@ void ExtensionHandler::queryScreenIsClosed()
 
 void ExtensionHandler::request(int who)
 {
-    // \ TODO: create the extension with factory :: createExtension, not as it is now
-    // \ ALL numbering is completely temporary !!! this system will have to be changed
-    INFO_LOG("Extension request with ID: " + QString::number(who));
+    // \TODO: crear l'extensió amb el factory ::createExtension, no com està ara
+    // \TODO la numeració és completament temporal!!! s'haurà de canviar aquest sistema
+    INFO_LOG("Request d'extensió amb ID: " + QString::number(who));
     switch (who)
     {
-    case 1:
-        m_importFileApp.open();
-        break;
+        case 1:
+            m_importFileApp.open();
+            break;
 
-    case 6:
-        m_importFileApp.openDirectory();
-        break;
+        case 6:
+            m_importFileApp.openDirectory();
+            break;
 
-    case 7:
-        // HACK because the QueryScreen is a singleton, this causes side effects when we had
-        // two windows (see ticket # 542). Let's do this little hack so that this doesn't happen.
-        // It remains to be resolved in the appropriate way
-        disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
-        QueryScreenSingleton::instance()->showPACSTab();
-        connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
-        m_haveToCloseQueryScreen = true;
-        break;
+        case 7:
+            // HACK degut a que la QueryScreen és un singleton, això provoca efectes colaterals quan teníem
+            // dues finestres (mirar ticket #542). Fem aquest petit hack perquè això no passi.
+            // Queda pendent resoldre-ho de la forma adequada
+            disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
+            QueryScreenSingleton::instance()->showPACSTab();
+            connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
+            m_haveToCloseQueryScreen = true;
+            break;
 
-    case 8:
-        // HACK because the QueryScreen is a singleton, this causes side effects when we had
-        // two windows (see ticket # 542). Let's do this little hack so that this doesn't happen.
-        // It remains to be resolved in the appropriate way
-        disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
-        QueryScreenSingleton::instance()->openDicomdir();
-        connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
-        m_haveToCloseQueryScreen = true;
-        break;
+        case 8:
+            // HACK degut a que la QueryScreen és un singleton, això provoca efectes colaterals quan teníem
+            // dues finestres (mirar ticket #542). Fem aquest petit hack perquè això no passi.
+            // Queda pendent resoldre-ho de la forma adequada
+            disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
+            QueryScreenSingleton::instance()->openDicomdir();
+            connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
+            m_haveToCloseQueryScreen = true;
+            break;
 
-    case 10:
-        // Show location
-        // HACK because the QueryScreen is a singleton, this causes side effects when we had
-        // two windows (see ticket # 542). Let's do this little hack so that this doesn't happen.
-        // It remains to be resolved in the appropriate way
-        disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
-        QueryScreenSingleton::instance()->showLocalExams();
-        connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
-        m_haveToCloseQueryScreen = true;
-        break;
+        case 10:
+            // Mostrar local
+            // HACK degut a que la QueryScreen és un singleton, això provoca efectes colaterals quan teníem
+            // dues finestres (mirar ticket #542). Fem aquest petit hack perquè això no passi.
+            // Queda pendent resoldre-ho de la forma adequada
+            disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
+            QueryScreenSingleton::instance()->showLocalExams();
+            connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
+            m_haveToCloseQueryScreen = true;
+            break;
     }
 }
 
@@ -132,8 +134,8 @@ bool ExtensionHandler::request(const QString &who)
     ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create(who);
     if (!mediator)
     {
-        WARN_LOG("Could not create mediator for: " + who);
-        DEBUG_LOG("Could not create mediator for: " + who);
+        WARN_LOG("No s'ha pogut crear el mediator per: " + who);
+        DEBUG_LOG("No s'ha pogut crear el mediator per: " + who);
         ok = false;
         return ok;
     }
@@ -143,8 +145,8 @@ bool ExtensionHandler::request(const QString &who)
     QString requestedExtensionLabel = mediator->getExtensionID().getLabel();
     if (!Settings().getValue(InterfaceSettings::AllowMultipleInstancesPerExtension).toBool())
     {
-        // We only want one instance per extension
-        // We must then check that the extension we are requesting is not already created
+        // Només volem una instància per extensió
+        // Cal comprovar llavors que l'extensió que demanem no estigui ja creada
         int count = m_mainApp->getExtensionWorkspace()->count();
         bool found = false;
         while (extensionIndex < count && !found)
@@ -158,20 +160,20 @@ bool ExtensionHandler::request(const QString &who)
                 extensionIndex++;
             }
         }
-        // If we find it, we won't have to create it again
+        // Si la trobem, no caldrà crear-la de nou
         if (found)
         {
             createExtension = false;
         }
     }
 
-    // Depending on the existing settings and extensions, we may or may not create the requested extension
+    // Segons la configuració i les extensions existents, haurem de crear o no l'extensió demanada
     if (createExtension)
     {
         QWidget *extension = ExtensionFactory::instance()->create(who);
         if (extension)
         {
-            INFO_LOG("Activate extension: " + who);
+            INFO_LOG("Activem extensió: " + who);
             mediator->initializeExtension(extension, m_extensionContext);
             m_mainApp->getExtensionWorkspace()->addApplication(extension, requestedExtensionLabel, who);
         }
@@ -183,7 +185,7 @@ bool ExtensionHandler::request(const QString &who)
     }
     else
     {
-        // Otherwise we show the already existing extension
+        // Sinó mostrem l'extensió ja existent
         m_mainApp->getExtensionWorkspace()->setCurrentIndex(extensionIndex);
     }
 
@@ -235,7 +237,7 @@ void ExtensionHandler::processInput(const QStringList &inputFiles)
     if (numberOfPatients == 0)
     {
         QMessageBox::critical(0, ApplicationNameString, tr("Sorry, it seems that there is no patient data that can be loaded."));
-        ERROR_LOG("Error making patientFiller child. 0 patients returned.");
+        ERROR_LOG("Error fent el fill de patientFiller. Ha retornat 0 pacients.");
         return;
     }
 
@@ -265,13 +267,13 @@ void ExtensionHandler::processInput(const QStringList &inputFiles)
             else
             {
                 ERROR_LOG(patientsList.at(i)->toString());
-                ERROR_LOG("Error loading this patient. The returned series is null.");
+                ERROR_LOG("Error carregant aquest pacient. La serie retornada és null.");
             }
         }
         else
         {
             ERROR_LOG(patientsList.at(i)->toString());
-            ERROR_LOG("Error carregant aquest pacient. Returned studio is null.");
+            ERROR_LOG("Error carregant aquest pacient. L'study retornat és null.");
         }
 
         if (!error)
@@ -294,12 +296,12 @@ void ExtensionHandler::processInput(const QStringList &inputFiles)
     }
     if (patientsWithError.isEmpty())
     {
-        // There are no mistakes, we load them all
+        // No hi ha cap error, els carreguem tots
         processInput(patientsList);
     }
     else
     {
-        // We only load the correct ones
+        // Carreguem únicament els correctes
         QList<Patient*> rightPatients;
         foreach (int index, correctlyLoadedPatients)
         {
@@ -312,7 +314,7 @@ void ExtensionHandler::processInput(const QStringList &inputFiles)
 void ExtensionHandler::processInput(QList<Patient*> patientsList, bool loadOnly)
 {
     QList<Patient*> mergedPatientsList = mergePatients(patientsList);
-    // If we try to charge one of all the patients who are loaded the same as the one we have already loaded, we keep it
+    // Si de tots els pacients que es carreguen intentem carregar-ne un d'igual al que ja tenim carregat, el mantenim
     bool canReplaceActualPatient = true;
     if (m_mainApp->getCurrentPatient())
     {
@@ -333,7 +335,7 @@ void ExtensionHandler::processInput(QList<Patient*> patientsList, bool loadOnly)
 
     bool firstPatient = true;
 
-    // We add correctly loaded patients
+    // Afegim els pacients carregats correctament
     foreach (Patient *patient, mergedPatientsList)
     {
         generatePatientVolumes(patient, QString());
@@ -343,7 +345,7 @@ void ExtensionHandler::processInput(QList<Patient*> patientsList, bool loadOnly)
         {
             if (mainApp->isMinimized())
             {
-                //If the Starviewer window is minimized we return it to its original state when viewing the study
+                //Si la finestra d'Starviewer està minimitzada la tornem al seu estat original al visualitzar l'estudi
                 ScreenManager().restoreFromMinimized(mainApp);
             }
 
@@ -354,7 +356,7 @@ void ExtensionHandler::processInput(QList<Patient*> patientsList, bool loadOnly)
         }
         firstPatient = false;
 
-        // Once a patient is loaded, we can no longer replace him
+        // Un cop carregat un pacient, ja no el podem reemplaçar
         canReplaceActualPatient = false;
     }
 }
@@ -387,7 +389,7 @@ void ExtensionHandler::generatePatientVolumes(Patient *patient, const QString &d
     Q_UNUSED(defaultSeriesUID);
     foreach (Study *study, patient->getStudies())
     {
-        // For each series, if your images are multiframe or of different sizes from each other they will go in separate volumes
+        // Per cada sèrie, si les seves imatges són multiframe o de mides diferents entre sí aniran en volums separats
         foreach (Series *series, study->getViewableSeries())
         {
             int currentVolumeNumber;
@@ -465,9 +467,9 @@ QApplicationMainWindow* ExtensionHandler::addPatientToWindow(Patient *patient, b
         {
             mainApp->connectPatientVolumesToNotifier(patient);
             *(mainApp->getCurrentPatient()) += *patient;
-            DEBUG_LOG("We already had data on this patient. We merge information");
+            DEBUG_LOG("Ja teníem dades d'aquest pacient. Fusionem informació");
 
-            //Let's see if there are any open extensions, but open the default one
+            // Mirem si hi ha alguna extensió oberta, sinó obrim la de per defecte
             if (mainApp->getExtensionWorkspace()->count() == 0)
             {
                 openDefaultExtension();
@@ -493,13 +495,13 @@ QApplicationMainWindow* ExtensionHandler::addPatientToWindow(Patient *patient, b
             if (!loadOnly)
             {
                 usedMainApp = m_mainApp->setPatientInNewWindow(patient);
-                DEBUG_LOG("We have a patient and they don’t let us replace him. We open it in a new window.");
+                DEBUG_LOG("Tenim pacient i no ens deixen substituir-lo. L'obrim en una finestra nova.");
             }
             else
             {
-                // \ TODO Given the problems explained in ticket # 1087, deleting objects here can make the application crash if you request studies
-                // without explicitly going through the QueryScreen. Since no volume has been loaded into memory at this point,
-                // therefore there will be no major memory leaks if we do not delete it, we get to not delete any object and thus minimize the problem.
+                // \TODO Tenint en compte els problemes explicats al tiquet #1087, eliminar els objectes aquí pot fer petar l'aplicació en cas de demanar estudis
+                //       sense passar explícitament per la QueryScreen. Donat que en aquest punt encara no s'ha carregat cap volum a memòria,
+                //       per tant no hi haurà fugues importants de memòria si no ho eliminem, obtem per no esborrar cap objecte i així minimitzem el problema.
             }
         }
     }
@@ -511,19 +513,28 @@ void ExtensionHandler::openDefaultExtension()
 {
     if (m_mainApp->getCurrentPatient())
     {
-        Settings settings;
-        QString defaultExtension = settings.getValue(InterfaceSettings::DefaultExtension).toString();
-        if (!request(defaultExtension))
+        // TODO If there are no images nor documents it would be better to inform the user than to open an extension, but a message box doesn't let the tests
+        //      continue, so for the moment we keep the old behaviour for this scenario.
+        if (m_extensionContext.hasImages() || !m_extensionContext.hasEncapsulatedDocuments())
         {
-            WARN_LOG("The request for the so-called default extension failed: " + defaultExtension + ". We start default 2D extension (hardcoded)");
-            DEBUG_LOG("The request for the so-called default extension failed: " + defaultExtension + ". We start default 2D extension (hardcoded))");
-            request("Q2DViewerExtension");
+            Settings settings;
+            QString defaultExtension = settings.getValue(InterfaceSettings::DefaultExtension).toString();
+            if (!request(defaultExtension))
+            {
+                WARN_LOG("Ha fallat la petició per la default extension anomenada: " + defaultExtension + ". Engeguem extensió 2D per defecte(hardcoded)");
+                request("Q2DViewerExtension");
+            }
+        }
+
+        if (m_extensionContext.hasEncapsulatedDocuments())
+        {
+            request("PdfExtension");
         }
     }
     else
     {
-        DEBUG_LOG("No patient data!");
+        DEBUG_LOG("No hi ha dades de pacient!");
     }
 }
 
-};  // end namespace udg
+}   // end namespace udg

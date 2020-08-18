@@ -28,10 +28,10 @@
 namespace udg {
 
 AppImportFile::AppImportFile(QObject *parent)
-    : QObject(parent)
+ : QObject(parent)
 {
-    // TODO: Warnings in release are currently disabled so that the vtkOutputWindow window does not appear
-    // but the good solution is to avoid warnings or redirect them to a file.
+    // TODO: De moment es desactiven els warnings en release perquè no apareixi la finestra vtkOutputWindow
+    //      però la solució bona passa per evitar els warnings o bé redirigir-los a un fitxer.
 #ifdef QT_NO_DEBUG
     itk::Object::GlobalWarningDisplayOff();
 #endif
@@ -76,18 +76,18 @@ void AppImportFile::openDirectory(bool recursively)
     QString directoryName = QFileDialog::getExistingDirectory(0, tr("Choose a directory to scan"), m_workingDicomDirectory, QFileDialog::ShowDirsOnly);
     if (!directoryName.isEmpty())
     {
-        INFO_LOG("Scanning directory: " + directoryName + " to open the studies it contains");
+        INFO_LOG("S'escaneja el directori: " + directoryName + " per obrir els estudis que hi contingui");
         m_workingDicomDirectory = directoryName;
         writeSettings();
 
-        // List where we will save all the compatible files in the directories
+        // Llista on guardarem tots els arxius compatibles que hi ha als directoris
         QStringList filenames;
         if (recursively)
         {
-            //  Let's recursively explore all directories
+            // Explorem recursivament tots els directoris
             QStringList dirList;
             scanDirectories(directoryName, dirList);
-            // For each directory, we get the files we can handle
+            // Per cada directori, obtenim els arxius que podem tractar
             foreach (const QString &dirName, dirList)
             {
                 filenames << generateFilenames(dirName);
@@ -95,7 +95,7 @@ void AppImportFile::openDirectory(bool recursively)
         }
         else
         {
-            // We will only consider files in the root directory without recursively scanning
+            // Tindrem en compte únicament els arxius que hi hagi en el directori arrel sense explorar recursivament
             filenames << generateFilenames(directoryName);
         }
 
@@ -113,11 +113,11 @@ void AppImportFile::openDirectory(bool recursively)
 QStringList AppImportFile::generateFilenames(const QString &dirPath)
 {
     QStringList list;
-    // We check that the directory has files
+    // Comprovem que el directori tingui arxius
     QDir dir(dirPath);
     QFileInfoList fileInfoList = dir.entryInfoList(QDir::Files);
 
-    // We add to the list each of the absolute paths of the files contained in the directory
+    // Afegim a la llista cadascun dels paths absoluts dels arxius que contingui el directori
     foreach (const QFileInfo &fileInfo, fileInfoList)
     {
         list << fileInfo.absoluteFilePath();
@@ -131,13 +131,13 @@ void AppImportFile::scanDirectories(const QString &rootPath, QStringList &dirsLi
     QDir rootDir(rootPath);
     if (rootDir.exists())
     {
-        //  Add the current directory to the list
+        // Afegim el directori actual a la llista
         dirsList << rootPath;
-        //  Let's look if we have more directories
+        // Busquem si tenim més directoris
         QStringList subdirs = rootDir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
         if (!subdirs.isEmpty())
         {
-            //  For each subdirectory we scan recursively
+            // Per cada subdirectori escanejem recursivament
             foreach (const QString &subDir, subdirs)
             {
                 scanDirectories(rootPath + "/" + subDir, dirsList);

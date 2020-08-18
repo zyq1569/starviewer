@@ -30,7 +30,7 @@ namespace udg {
 Image::Image(QObject *parent)
  : QObject(parent), m_sliceThickness(0.0), m_samplesPerPixel(1), m_photometricInterpretation("MONOCHROME2"), m_rows(0), m_columns(0), m_bitsAllocated(16),
  m_bitsStored(16), m_pixelRepresentation(0), m_rescaleSlope(1), m_rescaleIntercept(0), m_frameNumber(0), m_phaseNumber(0), m_volumeNumberInSeries(0),
- m_orderNumberInVolume(0), m_parentSeries(NULL)
+ m_orderNumberInVolume(0), m_overlaysSplitComputed(false), m_parentSeries(NULL)
 {
     m_estimatedRadiographicMagnificationFactor = 1.0;
     
@@ -299,7 +299,7 @@ void Image::setVoiLutList(const QList<VoiLut> &voiLutList)
     }
 }
 
-int Image::getNumberOfVoiLuts()
+int Image::getNumberOfVoiLuts() const
 {
     return m_voiLutList.size();
 }
@@ -314,14 +314,24 @@ void Image::setRetrievedTime(QTime retrievedTime)
     m_retrieveTime = retrievedTime;
 }
 
-QDate Image::getRetrievedDate()
+QDate Image::getRetrievedDate() const
 {
     return m_retrievedDate;
 }
 
-QTime Image::getRetrievedTime()
+QTime Image::getRetrievedTime() const
 {
     return m_retrieveTime;
+}
+
+const QString& Image::getAcquisitionNumber() const
+{
+    return m_acquisitionNumber;
+}
+
+void Image::setAcquisitionNumber(QString acquisitionNumber)
+{
+    m_acquisitionNumber = std::move(acquisitionNumber);
 }
 
 void Image::setImageType(const QString &imageType)
@@ -449,12 +459,12 @@ const QString& Image::getTransferSyntaxUID() const
 
 double Image::distance(Image *image)
 {
-    // Distance calculation (based on Jolinda Smith's algorithm)
+    // Càlcul de la distància (basat en l'algorisme de Jolinda Smith)
     double distance = 0.0;
     
-    // Origin of the plan
+    // Origen del pla
     const double *imagePosition = image->getImagePositionPatient();
-    // Normal of the plane on which we will project the origin
+    // Normal del pla sobre la qual projectarem l'origen
     QVector3D normalVector = image->getImageOrientationPatient().getNormalVector();
     distance = normalVector.x() * imagePosition[0] + normalVector.y() * imagePosition[1] + normalVector.z() * imagePosition[2];
 
@@ -480,8 +490,8 @@ QList<ImageOverlay> Image::getOverlays()
 {
     if (hasOverlays())
     {
-        // If the number of overlays we have assigned does not match the number of items in the list
-        // means we haven't loaded them yet
+        // Si el número d'overlays que tenim assignats no coincideix amb el número d'elements de la llista
+        // significa que encara no els hem carregat
         if (getNumberOfOverlays() != m_overlaysList.count())
         {
             readOverlays(false);
@@ -495,9 +505,10 @@ QList<ImageOverlay> Image::getOverlaysSplit()
 {
     if (hasOverlays())
     {
-        if (m_overlaysSplit.isEmpty())
+        if (!m_overlaysSplitComputed)
         {
             readOverlays(true);
+            m_overlaysSplitComputed = true;
         }
     }
 
@@ -537,10 +548,11 @@ DisplayShutter Image::getDisplayShutterForDisplay()
     {
         return m_displayShutterForDisplay;
     }
-
-    // If we get this far, then it means we need to build the DisplayShutter for display
-    // First we remove the shutters that don't make sense to apply
-    // what would be the rectangular shutters that have a size equal to or larger than the image and those that have no defined shape
+ 
+    // Si arribem fins aquí, llavors significa que hem de construir el DisplayShutter per display
+    
+    // Primer eliminem els shutters que no tingui sentit aplicar
+    // com serien els shutters rectangulars que tinguin una mida igual o major a la imatge i els que no tenen cap forma definida
     QList<DisplayShutter> shutterList = this->getDisplayShutters();
     QRect imageRect(1, 1, this->getColumns(), this->getRows());
     for (int i = 0; i < shutterList.count(); ++i)
@@ -549,7 +561,7 @@ DisplayShutter Image::getDisplayShutterForDisplay()
         if (shutter.getShape() == DisplayShutter::RectangularShape)
         {
             QPolygon points = shutter.getAsQPolygon();
-            QRect shutterRect(points.at(0), points.at(2));
+            QRect shutterRect(points.at(0), points.at(2));       
             if (imageRect.intersected(shutterRect).contains(imageRect, false))
             {
                 shutterList.removeAt(i);
@@ -561,14 +573,14 @@ DisplayShutter Image::getDisplayShutterForDisplay()
         }
     }
 
-    // Once the sieve is done, we return the intersection of the resulting shutters
+    // Un cop feta la criba, retornem la intersecció dels shutters resultants
     m_displayShutterForDisplay = DisplayShutter::intersection(shutterList);
     m_haveToBuildDisplayShutterForDisplay = false;
     
     return m_displayShutterForDisplay;
 }
 
-vtkImageData* Image::getDisplayShutterForDisplayAsVtkImageData(int zSlice)
+vtkImageData* Image::getDisplayShutterForDisplayAsVtkImageData()
 {
     if (!hasDisplayShutters())
     {
@@ -580,15 +592,14 @@ vtkImageData* Image::getDisplayShutterForDisplayAsVtkImageData(int zSlice)
         DisplayShutter shutter = this->getDisplayShutterForDisplay();
         if (shutter.getShape() != DisplayShutter::UndefinedShape)
         {
-            m_displayShutterForDisplayVtkImageData = shutter.getAsVtkImageData(m_columns, m_rows, zSlice);
+            m_displayShutterForDisplayVtkImageData = shutter.getAsVtkImageData(m_columns, m_rows);
             if (m_displayShutterForDisplayVtkImageData)
             {
                 m_displayShutterForDisplayVtkImageData->SetOrigin(m_imagePositionPatient);
-                m_displayShutterForDisplayVtkImageData->SetSpacing(m_pixelSpacing.x(), m_pixelSpacing.y(), 1);
             }
         }
     }
-// TODO Assuming that all calls to this method on the same Image object have all the same zSlice. What should we do otherwise?
+
     return m_displayShutterForDisplayVtkImageData;
 }
 
@@ -637,11 +648,12 @@ QPixmap Image::getThumbnail(bool getFromCache, int resolution)
     {
         if (getFromCache)
         {
-            // First we try to find the thumbnail with volume number and then without volume number
-            // If we can't find any files, we'll have to re-create them
-            // We get the base directory where the thumbnail can be found
+            // Primer provem de trobar el thumbnail amb número de volum i després sense número de volum
+            // Si no trobem cap fitxer, l'haurem de crear de nou
+
+            // Obtenim el directori base on es pot trobar el thumbnail
             QString thumbnailPath = QFileInfo(getPath()).absolutePath();
-            // Absolute path of thumbnail file
+            // Path absolut de l'arxiu de thumbnail
             QString thumbnailFilePath = QString("%1/thumbnail%2.png").arg(thumbnailPath).arg(getVolumeNumberInSeries());
 
             QFileInfo thumbnailFile(thumbnailFilePath);
@@ -674,14 +686,14 @@ QStringList Image::getSupportedModalities()
 {
     // Modalitats extretes de DICOM PS 3.3 C.7.3.1.1.1
     QStringList supportedModalities;
-    // Modalities that we know are image and that in principle we must be able to support
+    // Modalitats que sabem que són d'imatge i que en principi hem de poder suportar
     supportedModalities << "CR" << "CT" << "MR" << "US" << "BI" << "DD" << "ES" << "PT" << "ST" << "XA" << "RTIMAGE" << "DX" << "IO" << "GM" << "XC" << "OP"
                         << "NM" << "OT" << "CD" << "DG" << "LS" << "RG" << "TG" << "RF" << "MG" << "PX" << "SM" << "ECG" << "IVUS";
-    // "Non-standard" modes but that would correspond to images we can support
+    // Modalitats "no estàndars" però que es correspondrien amb imatges que podem suportar
     supportedModalities << "SC";
 
-    // These modalities are in principle not image. We keep them documented in case they need to be included in the list
-    // EVERYTHING You need to check if they are image modes and delete them as appropriate
+    // Aquestes modalitats en principi no són d'imatge. Les mantenim documentades per si calgués incloure-les a la llista
+    // TODO Cal comprovar si són modalitats d'imatge i eliminar-les segons el cas
     // "RTSTRUCT" << "RTRECORD" << "EPS" << "RTDOSE" << "RTPLAN" << "HD" << "SMR" << "AU"
 
     return supportedModalities;
@@ -699,8 +711,8 @@ bool Image::readOverlays(bool splitOverlays)
             ImageOverlay mergedOverlay = ImageOverlay::mergeOverlays(reader.getOverlays(), mergeOk);
             if (!mergeOk)
             {
-                ERROR_LOG("Overlays merge failed! Possible cause: lack of memory");
-                DEBUG_LOG("Overlays merge failed! Possible cause: lack of memory");
+                ERROR_LOG("Ha fallat el merge d'overlays! Possible causa: falta de memòria");
+                DEBUG_LOG("Ha fallat el merge d'overlays! Possible causa: falta de memòria");
                 return false;
             }
 
@@ -715,8 +727,8 @@ bool Image::readOverlays(bool splitOverlays)
     }
     else
     {
-        ERROR_LOG("Failed to read image overlay with path: " + this->getPath());
-        DEBUG_LOG("Failed to read image overlay with path: " + this->getPath());
+        ERROR_LOG("Ha fallat la lectura de l'overlay de la imatge amb path: " + this->getPath());
+        DEBUG_LOG("Ha fallat la lectura de l'overlay de la imatge amb path: " + this->getPath());
         return false;
     }
 }

@@ -19,11 +19,21 @@
 
 namespace udg {
 
-const QString StarviewerVersionString("0.13.3");
-const QString StarviewerBuildID("2020062400");
+const QString StarviewerVersionString("0.15.0-devel");
+const QString StarviewerBuildID("2018021200");
 
-// Indicates for this starviewer version which bd revision is required
-const int StarviewerDatabaseRevisionRequired(9592);
+#ifdef Q_OS_WIN
+const QString StarviewerBuildPlatform("Windows");
+#endif
+#ifdef Q_OS_OSX
+const QString StarviewerBuildPlatform("Mac");
+#endif
+#ifdef Q_OS_LINUX
+const QString StarviewerBuildPlatform("Linux");
+#endif
+
+// Indica per aquesta versió d'starviewer quina és la revisió de bd necessària
+const int StarviewerDatabaseRevisionRequired(9593);
 
 const QString OrganizationNameString("GILab");
 const QString OrganizationDomainString("starviewer.udg.edu");
@@ -37,17 +47,21 @@ const QString OrganizationDomainString("starviewer.udg.edu");
 const QString OrganizationEmailString("support@starviewer.udg.edu");
 const QString OrganizationWebURL("http://starviewer.udg.edu");
 
-// Default pathways where user configurations and files are saved
-// Path base for user data
-//const QString UserDataRootPath(QDir::homePath() + "/.starviewer/");
-const QString UserDataRootPath(QDir::currentPath());
-// Path del log
-const QString UserLogsPath(UserDataRootPath + "/log/");
-// Absolute log file path
+// Paths per defecte on es guarden configuracions i arxius d'usuari
+/// Path base per a dades d'usuari
+const QString UserDataRootPath(QDir::homePath() + "/.starviewer/");
+/// Path del log
+const QString UserLogsPath(UserDataRootPath + "log/");
+/// Ruta absoluta del fitxer de log
 const QString UserLogsFile(UserLogsPath + "starviewer.log");
 
-// TODO const QString LogConfigurationFileLocation();
+// Note: the following two are methods because they depend on QApplication being initialized.
 
-}; // End namespace udg
+/// Returns the base directory where the application is installed.
+QString installationPath();
+/// Returns the root source directory (the one containing src).
+QString sourcePath();
+
+}
 
 #endif

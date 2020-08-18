@@ -37,8 +37,8 @@ VolumeReaderJob::~VolumeReaderJob()
 
 void VolumeReaderJob::requestAbort()
 {
-    // We need to protect access to m_volumeReaderToAbort with a lock because if not, it could be the case that it is checked if it is null, if not
-    // i, jut before calling his methods, this is set to null, popping the application.
+    // Hem de protegir l'accés a m_volumeReaderToAbort amb un lock ja que si no, es podria donar el cas que es comprovés si és null, donés que no
+    // i, jut abans de cridar els seus mètodes, aquest es posés a null, fent petar l'aplicació.
     QMutexLocker locker(&m_volumeReaderToAbortMutex);
 
     m_abortRequested = true;
@@ -81,8 +81,8 @@ void VolumeReaderJob::run(ThreadWeaver::JobPointer self, ThreadWeaver::Thread *t
     VolumeReader *volumeReader = new VolumeReader();
 
     {
-        // The locker will only be valid within the scope. This is done instead of with a .lock or .unlock for
-        // make sure that if an exception is skipped the lock will be released.
+        // El locker només serà vàlid dintre de l'scope. Es fa així en comptes de fer-ho amb un .lock o .unlock per
+        // assegurar-nos que si salta una excepció s'alliberarà el lock.
         QMutexLocker locker(&m_volumeReaderToAbortMutex);
         m_volumeReaderToAbort = volumeReader;
     }

@@ -31,17 +31,17 @@ public:
 
     virtual ~DICOMAttribute();
 
-    /// Assign / Get the Tag associated with the attribute
-    void setTag (const DICOMTag & tag);
-    DICOMTag * getTag ();
+    /// Assigna/Obtenir el Tag associat a l'atribut
+    void setTag(const DICOMTag &tag);
+    DICOMTag* getTag();
 
-    /// Abstract method to know if the attribute is of type value
-    virtual bool isValueAttribute () = 0;
+    /// Mètode abstracte per saber si l'atribut és de tipus valor
+    virtual bool isValueAttribute() = 0;
 
-    /// Abstract method to know if the attribute is of sequence type
-    virtual bool isSequenceAttribute () = 0;
+    /// Mètode abstracte per saber si l'atribut és de tipus seqüència
+    virtual bool isSequenceAttribute() = 0;
 
-    /// Abstract method that returns the content of the formatted attribute
+    /// Mètode abstracte que retorna el contingut de l'atribut formatat
     virtual QString toString(bool verbose = false) = 0;
 
 private:

@@ -1,27 +1,16 @@
+#include "logging.h"
+#include "easylogging++.h"
+INITIALIZE_EASYLOGGINGPP
+
 #include <QDir>
 #include <QApplication>
 
-#include "../core/starviewerapplication.h"
-#include "../core/logging.h"
+// Definicions globals d'aplicació
+#include "starviewerapplication.h"
 #include <QProcess>
 
-INITIALIZE_EASYLOGGINGPP
 
-void configureLogging()
-{
-    QDir logDir = udg::UserLogsPath;
-    if (!logDir.exists())
-    {
-        logDir.mkpath(udg::UserLogsPath);
-    }
-    el::Configurations defaultConf;
-    defaultConf.setToDefault();
-    QString logDirFilename = udg::UserLogsPath+"/starviewer_sapwrapper.log";
-    defaultConf.set(el::Level::Global,el::ConfigurationType::Filename, logDirFilename.toStdString());
-    el::Loggers::reconfigureLogger("default", defaultConf);
-
-}
-
+/// Imprimim l'ajuda del programa
 void printHelp()
 {
     printf("Invalid arguments: you must specify one parameter, the accession number of the study to retrieve.\n\n");
@@ -30,16 +19,16 @@ void printHelp()
 
 QString getStarviewerExecutableFilePath()
 {
-#ifdef _WIN32
-    // In windows to be able to run the starviewer we must keep in mind that if it is in a directory that contains spaces
-    // like the C: \ Program Files \ Starviewer \ starviewer.exe directory, we have to put the path in quotes
-    // so that it does not interpret it as parameters, for example "C: \ Program Files \ Starviewer \ starviewer.exe"
+    #ifdef _WIN32
+        // En windows per poder executar l'starviewer hem de tenir en compte que si està en algun directori que conte espais
+        // com el directori C:\Program Files\Starviewer\starviewer.exe, hem de posar el path entre cometes
+        // per a que no ho interpreti com a paràmetres, per exemple "C:\Program Files\Starviewer\starviewer.exe"
 
-    // We add quotes in case any of the directory contains space
-    return "\"" + QCoreApplication::applicationDirPath() + "/starviewer.exe" + "\"";
-#else
-    return QCoreApplication::applicationDirPath() + "/starviewer";
-#endif
+        // Afegim les cometes per si algun dels directori conté espai
+        return "\"" + QCoreApplication::applicationDirPath() + "/starviewer.exe" + "\"";
+    #else
+        return QCoreApplication::applicationDirPath() + "/starviewer";
+    #endif
 }
 
 /// Engega un starviewer passant-li per comandes de línia el accessionNumber del estudi a descarragar
@@ -48,16 +37,20 @@ void retrieveStudy(QString accessionNumber)
     QProcess process;
     QString starviewerCommandLine = " -accessionnumber " + accessionNumber;
 
-    // Run an instance of Starviewer using the command line option -accessionnumber "value of accessio number"
-    //INFO_LOG("Starviewer_sapwrapper :: New instance of Starviewer will start to request download of the studio with accession number" + accessionNumber);
+    // Executem una instància del Starviewer utiltizant la opció de línia de comandes -accessionnumber "valor del accessio number"
+
+    INFO_LOG("Starviewer_sapwrapper::S'iniciara nova instancia del Starviewer per demanar descarrega de l'estudi amb accession number" + accessionNumber);
     process.startDetached(getStarviewerExecutableFilePath() + starviewerCommandLine);
 }
 
 int main(int argc, char *argv[])
 {
-    configureLogging();
-
+    int returnValue = 0;
     QApplication application(argc, argv);
+    udg::beginLogging();
+    INFO_LOG("==================================================== BEGIN STARVIEWER SAP WRAPPER ====================================================");
+    INFO_LOG(QString("%1 Version %2 BuildID %3").arg(udg::ApplicationNameString).arg(udg::StarviewerVersionString).arg(udg::StarviewerBuildID));
+
     QStringList parametersList = application.arguments();
 
     application.setOrganizationName(udg::OrganizationNameString);
@@ -72,7 +65,13 @@ int main(int argc, char *argv[])
     }
     else
     {
-        //INFO_LOG(QString("StarviewerSAPWrapper::Número de parametres incorrecte, s'han passat %1 parametres").arg(QString().setNum(argc - 1)));
+        INFO_LOG(QString("StarviewerSAPWrapper::Número de parametres incorrecte, s'han passat %1 parametres").arg(QString().setNum(argc - 1)));
         printHelp();
     }
+
+    INFO_LOG(QString("%1 Version %2 BuildID %3, returnValue %4").arg(udg::ApplicationNameString).arg(udg::StarviewerVersionString)
+             .arg(udg::StarviewerBuildID).arg(returnValue));
+    INFO_LOG("===================================================== END STARVIEWER SAP WRAPPER =====================================================");
+
+    return returnValue;
 }

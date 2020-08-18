@@ -26,66 +26,66 @@ namespace udg {
 class ApplicationCommandLineOptions;
 
 /**
-This class configures an ApplicationCommandLineOptions object with valid command line options
-     for starviewer, in this way we have centralized in one place the configuration of the parameters accepted by Starviewer
-     This class can be used to either parse parameters entered by command line in the same instance or parameters
-     received from other instances of Starviewer via QtSingleApplication
+    Aquesta classe configura un objecte ApplicationCommandLineOptions amb les opcions per línia de comandes vàlides
+    per starviewer, d'aquesta manera tenim centralitzat en un sol lloc la configuració dels paràmetres acceptats per Starviewer
+    Aquesta classe pot ser utilitza tant per parsejar paràmetres entrats per línia de comandes a la mateixa instància o paràmetres
+    rebuts des d'altres instàncies d'Starviewer a través de QtSingleApplication
 
-Now Starviewer itself accepts these options:
+    Ara Starviewer mateix accepta aquestes opcions:
 
-     -accessionnumber valueAccessionNumber: Search the study with the accession number value specified in the PACS marked to search by
-                                             defect and if it finds it download it.
-     (blank): Running an instance of starviewer without any parameters opens starviewer with a blank window.
+    -accessionnumber valorAccessionNumber : Cerca l'estudi amb el valor d'accession number especificat als PACS marcats per cercar per
+                                            defecte i si el troba el descarrega.
+    (blanc)                                : Si s'executa una instància d'starviewer sense cap paràmetre s'obre starviewer amb una finestra en blanc.
   */
 class StarviewerApplicationCommandLine : public QObject {
-    Q_OBJECT
+Q_OBJECT
 public:
-    //Here we define the possible options you can ask us from the command line
+    // Aquí definim les possibles opcions que ens poden demanar des de línia de comandes
     enum StarviewerCommandLineOption { openBlankWindow, retrieveStudyFromAccessioNumber };
 
-    /// Returns the ApplicationCommandLineOptions with the valid arguments that Starviewer accepts per command line
+    /// Retorna el ApplicationCommandLineOptions amb els arguments vàlids que accepta Starviewer per línia de comandes
     static ApplicationCommandLineOptions getStarviewerApplicationCommandLineOptions();
 
-    /// Parse a list of arguments, returns boolea indicating whether the arugments in the list are valid according to the parameters
-    /// that accepts Starviewer by command line, if any of the arguments are invalid the QString errorInvalidCommanLineArguments
-    /// returns a description of what the invalid arguments are
+    /// Parseja una llista d'arguments, retorna boolea indicant si els arugments de la llista sòn valids d'acord amb els paràmetres
+    /// que accepta Starviewer per línia de comandes, si algun dels arguments no són vàlids el QString errorInvalidCommanLineArguments
+    /// retorna una descripció de quins són els arguments invàlids
     bool parse(QStringList arguments, QString &errorInvalidCommanLineArguments);
 
-    /// Parse a list of arguments, returns boolea indicating whether the arugments in the list are valid according to the parameters
-    /// that accepts Starviewer by command line, if any of the arguments are invalid the QString errorInvalidCommanLineArguments
-    /// returns a description of what the invalid arguments are, if the arguments are valid it emits the signal newOptionsToRun, for
-    /// indicate that there are requests via line command to be ateges
+    /// Parseja una llista d'arguments, retorna boolea indicant si els arugments de la llista sòn valids d'acord amb els paràmetres
+    /// que accepta Starviewer per línia de comandes, si algun dels arguments no són vàlids el QString errorInvalidCommanLineArguments
+    /// retorna una descripció de quins són els arguments invàlids, si els arguments són vàlids fa un emit del signal newOptionsToRun, per
+    /// indicar que hi ha peticions via comanda de línia per ser ateges
     bool parseAndRun(QStringList arguments, QString &errorInvalidCommanLineArguments);
 
-    /// Parse a list of past arguments in a QString separated by ';', return boolea indicating whether the arugments in the list
-    /// are valid according to the parameters accepted by Starviewer per command line, if any of the arguments are invalid on
-    /// QString errorInvalidCommanLineArguments returns a description of what the invalid arguments are, if the arguments are valid
-    /// emits the signal newOptionsToRun, to indicate that there are requests via line command to be ateges
+    /// Parseja una llista d'arguments passats en un QString separats per ';', retorna boolea indicant si els arugments de la llista
+    /// sòn valids d'acord amb els paràmetres que accepta Starviewer per línia de comandes, si algun dels arguments no són vàlids el
+    /// QString errorInvalidCommanLineArguments retorna una descripció de quins són els arguments invàlids, si els arguments són vàlids
+    /// fa un emit del signal newOptionsToRun, per indicar que hi ha peticions via comanda de línia per ser ateges
     bool parseAndRun(const QString &argumentsListAsQString, QString &errorInvalidCommanLineArguments);
 
-    /// Returns one of the arguments requested via command line with its value, if there are no new arguments to process
-    /// returns false the method
+    /// Retorna un dels arguments que s'han demanat via línia de comandes amb el seu valor, si no hi ha nous arguments per processar
+    /// retorna false el mètode
     bool takeOptionToRun(QPair<StarviewerApplicationCommandLine::StarviewerCommandLineOption, QString> &optionValue);
 
 signals:
-    /// Signal that is issued to indicate that we have received new arguments from the command line to be executed
+    /// Signal que s'emet per indicar que hem rebut nous arguments des de línia de comandes que s'han d'executar
     void newOptionsToRun();
 
 public slots:
-    /// Slot that passing the command line argument list as QString separated by ";" he parses them, and sends signal
-    /// to indicate that there are arguments to execute. If any of the options is invalid it does not execute anything and returns false
+    /// Slot que passant la llista d'arguments de la línia de comandes com a QString separat per ";" els parseja, i llança signal
+    /// per indicar que hi ha arguments pendents d'executar. Si alguna de les opcions no és vàlida no executa res i retorna fals
     bool parseAndRun(const QString &argumentsListAsQString);
 
 private:
     static const QString accessionNumberOption;
 
-    // We save the option (line command argument) with its value
+    // Guardem l'opció (argument de comanda de línies) amb el seu valor
     QList<QPair<StarviewerCommandLineOption, QString> > m_commandLineOptionListToProcess;
 
-    //QMutex to ensure that two processes access the m_commandLineOptionListToProcess with write operations
+    // QMutex per assegurar que dos processos accedeixin a la m_commandLineOptionListToProcess amb operacions d'escriptura
     QMutex m_mutexCommandLineOptionListToProcess;
 
-    ///Adds to the list m_commandLineOptionListToProcess, an option with its value, as pending
+    /// Afegeix a la llista m_commandLineOptionListToProcess, una opció amb el seu valor, com a pendent d'executar
     void AddOptionToCommandLineOptionListToProcess(QPair<StarviewerApplicationCommandLine::StarviewerCommandLineOption, QString> optionValue);
 };
 

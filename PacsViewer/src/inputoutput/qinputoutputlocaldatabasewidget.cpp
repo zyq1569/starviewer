@@ -106,11 +106,11 @@ void QInputOutputLocalDatabaseWidget::createContextMenuQStudyTreeWidget()
 {
     QAction *action;
 
-    action = m_contextMenuQStudyTreeWidget.addAction(QIcon(":/images/view.png"), tr("&View"), this, SLOT(viewFromQStudyTreeWidget()));
+    action = m_contextMenuQStudyTreeWidget.addAction(QIcon(":/images/icons/visibility.svg"), tr("&View"), this, SLOT(viewFromQStudyTreeWidget()));
     action->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::ViewSelectedStudies));
     (void) new QShortcut(action->shortcut(), this, SLOT(viewFromQStudyTreeWidget()));
 
-    action = m_contextMenuQStudyTreeWidget.addAction(QIcon(":/images/databaseRemove.png"), tr("&Delete"), this, SLOT(deleteSelectedItemsFromLocalDatabase()));
+    action = m_contextMenuQStudyTreeWidget.addAction(QIcon(":/images/icons/edit-delete.svg"), tr("&Delete"), this, SLOT(deleteSelectedItemsFromLocalDatabase()));
     action->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::DeleteSelectedLocalDatabaseStudies));
     (void) new QShortcut(action->shortcut(), this, SLOT(deleteSelectedItemsFromLocalDatabase()));
 
@@ -119,7 +119,7 @@ void QInputOutputLocalDatabaseWidget::createContextMenuQStudyTreeWidget()
     action->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::SendSelectedStudiesToDICOMDIRList));
     (void) new QShortcut(action->shortcut(), this, SLOT(addSelectedStudiesToCreateDicomdirList()));
 
-    action = m_contextMenuQStudyTreeWidget.addAction(QIcon(":/images/store.png"), tr("Send to PACS"), this, SLOT(selectedStudiesStoreToPacs()));
+    action = m_contextMenuQStudyTreeWidget.addAction(QIcon(":/images/icons/upload-media.svg"), tr("Send to PACS"), this, SLOT(selectedStudiesStoreToPacs()));
     action->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::StoreSelectedStudiesToPACS));
     (void) new QShortcut(action->shortcut(), this, SLOT(selectedStudiesStoreToPacs()));
 #endif
@@ -155,7 +155,7 @@ void QInputOutputLocalDatabaseWidget::queryStudy(DicomMask queryMask)
 
     clear();
 
-    patientStudyList = localDatabaseManager.queryPatientStudy(queryMask);
+    patientStudyList = localDatabaseManager.queryPatientsAndStudies(queryMask);
 
     if (showDatabaseManagerError(localDatabaseManager.getLastError()))
     {
@@ -189,7 +189,7 @@ void QInputOutputLocalDatabaseWidget::addStudyToQStudyTreeWidget(QString studyUI
     QList<Patient*> patientList;
 
     studyMask.setStudyInstanceUID(studyUID);
-    patientList = localDatabaseManager.queryPatientStudy(studyMask);
+    patientList = localDatabaseManager.queryPatientsAndStudies(studyMask);
     if (showDatabaseManagerError(localDatabaseManager.getLastError()))
     {
         return;
@@ -461,7 +461,7 @@ void QInputOutputLocalDatabaseWidget::addSelectedStudiesToCreateDicomdirList()
     for (int index = 0; index < selectedDICOMItemsFromQStudyTreeWidget.count(); index++)
     {
         studyMask.setStudyInstanceUID(selectedDICOMItemsFromQStudyTreeWidget.at(index).first.getStudyInstanceUID());
-        patientList = localDatabaseManager.queryPatientStudy(studyMask);
+        patientList = localDatabaseManager.queryPatientsAndStudies(studyMask);
         if (showDatabaseManagerError(localDatabaseManager.getLastError()))
         {
             return;

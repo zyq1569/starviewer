@@ -48,19 +48,19 @@ Settings::~Settings()
 QVariant Settings::getValue(const QString &key) const
 {
     QVariant value;
-    // First let's see if we have value in the settings
-    // If it is empty, then we take the default value that we have in the register
-    // EVERYTHING we should get the settings object with getSettingsObject (key)
-    // but it is necessary to solve before a linkage problem produced by external projects (crashreporter / sapwrapper)
+    // Primer mirem si tenim valor als settings
+    // Si estigués buit, llavors agafem el valor per defecte que tinguem al registre
+    // TODO hauríem d'obtenir l'objecte de settings amb getSettingsObject(key)
+    // però cal resoldre abans un problema de linkatge produit per projectes externs (crashreporter/sapwrapper)
     value = m_qsettingsObjectsMap.value(SettingsRegistry::instance()->getAccessLevel(key))->value(key);
     if (value == QVariant())
     {
         value = SettingsRegistry::instance()->getDefaultValue(key);
     }
 
-    // Get the setting properties
-    // EVERYTHING at the moment we only deal with "Parseable"
-    // if it is Parseable, we try to parse the value, otherwise we return it as is
+    // Obtenir les propietats del setting
+    // TODO de moment només tractem "Parseable"
+    // si és Parseable, mirem de parsejar el valor, altrament el retornem tal qual
     Settings::Properties properties = SettingsRegistry::instance()->getProperties(key);
     if (properties & Settings::Parseable)
     {
@@ -76,8 +76,8 @@ void Settings::setValue(const QString &key, const QVariant &value)
 
 bool Settings::contains(const QString &key) const
 {
-    // EVERYTHING we should get the settings object with getSettingsObject (key)
-    // but it is necessary to solve before a linkage problem produced by external projects (crashreporter / sapwrapper)
+    // TODO hauríem d'obtenir l'objecte de settings amb getSettingsObject(key)
+    // però cal resoldre abans un problema de linkatge produit per projectes externs (crashreporter/sapwrapper)
     return m_qsettingsObjectsMap.value(SettingsRegistry::instance()->getAccessLevel(key))->contains(key);
 }
 
@@ -100,12 +100,12 @@ Settings::SettingsListItemType Settings::getListItem(const QString &key, int ind
     if (index < size && index >= 0)
     {
         qsettings->setArrayIndex(index);
-        // We fill the key-value set from the keys in the list index
+        // Omplim el conjunt de claus-valor a partir de les claus de l'índex de la llista
         item = fillSettingsListItemFromKeysList(qsettings->allKeys(), qsettings);
     }
     else
     {
-        DEBUG_LOG("Index out of range. Returned item will be empty");
+        DEBUG_LOG("Índex fora de rang. L'element retornat serà buit");
     }
     qsettings->endArray();
 
@@ -123,9 +123,9 @@ Settings::SettingListType Settings::getList(const QString &key)
         qsettings->setArrayIndex(i);
 
         SettingsListItemType item;
-        // We fill the key-value set from the keys in the list index
+        // Omplim el conjunt de claus-valor a partir de les claus de l'índex de la llista
         item = fillSettingsListItemFromKeysList(qsettings->allKeys(), qsettings);
-        // We add the new set of values to the list
+        // Afegim el nou conjunts de valors a la llista
         list << item;
     }
     qsettings->endArray();
@@ -158,7 +158,7 @@ void Settings::setListItem(int index, const QString &key, const SettingsListItem
     }
     else
     {
-        DEBUG_LOG("Index is out of range");
+        DEBUG_LOG("L'index està fora de rang més gran");
     }
 }
 
@@ -173,17 +173,17 @@ void Settings::removeListItem(const QString &key, int index)
     }
     else
     {
-        DEBUG_LOG("Index is out of range");
+        DEBUG_LOG("L'index està fora de rang més gran");
     }
 }
 
 void Settings::setList(const QString &key, const SettingListType &list)
 {
     QSettings *qsettings = getSettingsObject(key);
-    // We removed everything that might be from that list above
+    // Eliminem tot el que pogués haver d'aquella llista anteriorment
     remove(key);
     int index = 0;
-    // We write the list
+    // Escrivim la llista
     qsettings->beginWriteArray(key);
     foreach (const SettingsListItemType &item, list)
     {

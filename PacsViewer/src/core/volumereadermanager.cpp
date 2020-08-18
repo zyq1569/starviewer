@@ -66,8 +66,8 @@ void VolumeReaderManager::readVolumes(const QList<Volume*> &volumes)
 
 void VolumeReaderManager::cancelReading()
 {
-    // EVERYTHING: The current job should really be canceled here. At the moment we can't do it and just disconnect it
-         // When it's done right, consider what happens if some other viewer wants to keep downloading it anyway and we cancel it here?
+    // TODO: Aquí s'hauria de cancel·lar realment el current job. De moment no podem fer-ho i simplement el desconnectem
+    // Quan es faci bé, tenir en compte què passa si algun altre visor el vol continuar descarregant igualment i nosaltres aquí el cancelem?
     for (int i = 0; i < m_volumeReaderJobs.size(); ++i)
     {
         QSharedPointer<VolumeReaderJob> job = m_volumeReaderJobs[i].toStrongRef().dynamicCast<VolumeReaderJob>();
@@ -98,7 +98,7 @@ QList<Volume*> VolumeReaderManager::getVolumes()
 
 QString VolumeReaderManager::getLastErrorMessageToUser()
 {
-    //TODO Now only returns the message of the first one that failed
+    // TODO Ara només retorna el missatge del primer que ha fallat
     return m_lastError;
 }
 

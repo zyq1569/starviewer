@@ -20,80 +20,81 @@
 namespace udg {
 
 /**
-Class that encapsulates the parameters needed to define a PACS server to connect to
-     These parameters are:
+    Classe que encapsula els paràmetres necessaris per definir un servidor PACS al qual connectar-nos
+    Aquests paràmetres són:
 
-     Connection details (required)
-        - AETitle of the PACS
-        - PACS server IP
-        - PACS connection port
+    Dades de connexió (imprescindibles)
+       - AETitle del PACS
+       - IP del servidor PACS
+       - Port de connexió del PACS
 
-     Descriptive Data (optional)
-        - Institution to which the PACS belongs
-        - Description of the PACS
-        - Location of the PACS
+    Dades Descriptives (opcionals)
+       - Institució a la que pertany el PACS
+       - Descripció del PACS
+       - Ubicació del PACS
 
-     Other data
-        - AETitle of the local machine
-        - Maximum number of simultaneous connections
-        - Connection timeout
-        - Local Port of Query / Retrieve
-     ALL of this data should be relocated to a more appropriate location as it is
-     the same for any connection to a PACS and therefore should not be part of this class
+    Altres dades
+       - AETitle de la màquina local
+       - Nombre màxim de connexions simultànies
+       - Timeout de la connexió
+       - Port Local de Query/Retrieve
+    TODO aquestes dades s'haurien de reubicar en un lloc més adient ja que són
+    les mateixes per a qualsevol connexió amb un PACS i per tant no haurien de formar part d'aquesta classe
   */
 class PacsDevice {
 public:
     PacsDevice();
 
-    /// Assign / Return the address to the PACS to which we want to connect
-    void setAddress (const QString & address);
-    QString getAddress () const;
+    /// Assigna/Retorna l'adreça al PACS al qual ens volem connectar
+    void setAddress(const QString &address);
+    QString getAddress() const;
 
-    /// Assign / Return the port of the PACS to which we want to connect
-    void setQueryRetrieveServicePort (int port);
-    int getQueryRetrieveServicePort () const;
+    /// Assigna/Retorna el port del PACS al qual ens volem connectar
+    void setQueryRetrieveServicePort(int port);
+    int getQueryRetrieveServicePort() const;
 
-    /// Assign / Return the AETitle of the PACS to which we want to connect
-    void setAETitle (const QString & AETitle);
-    QString getAETitle () const;
+    /// Assigna/Retorna l'AETitle del PACS al qual ens volem connectar
+    void setAETitle(const QString &AETitle);
+    QString getAETitle() const;
 
-    /// Assign / Return the PACS description
-    void setDescription (const QString & description);
-    QString getDescription () const;
+    /// Assigna/Retorna la descripció del PACS
+    void setDescription(const QString &description);
+    QString getDescription() const;
 
-    /// Assigns / Returns the institution to which the PACS belongs
-    void setInstitution (const QString & institution);
-    QString getInstitution () const;
+    /// Assigna/Retorna la institucio a la qual pertany el PACS
+    void setInstitution(const QString &institution);
+    QString getInstitution() const;
 
-    /// Assign / Return the location of the PACS
-    void setLocation (const QString & location);
-    QString getLocation () const;
+    /// Assigna/Retorna la ubicació del PACS
+    void setLocation(const QString &location);
+    QString getLocation() const;
 
-    /// Assign / Return if this PACS is the default for queries.
-    void setDefault (bool isDefault);
-    bool isDefault () const;
+    /// Assigna/Retorna si aquest PACS és un de predeterminat per fer les consultes.
+    void setDefault(bool isDefault);
+    bool isDefault() const;
 
-    /// Assign / Return the PACS ID. Key field assigned by the application.
-    void setID (const QString & id);
-    QString getID () const;
+    /// Assigna/Retorna l'ID del PACS. Camp clau assignat per l'aplicació.
+    void setID(const QString &id);
+    QString getID() const;
 
-    /// Assign / Return if we can make queries / downloads to the PACS
-    void setQueryRetrieveServiceEnabled (bool isQueryRetrieveServiceEnabled);
-    bool isQueryRetrieveServiceEnabled () const;
+    /// Assigna/Retorna si podem fer consultes/descarregues al PACS
+    void setQueryRetrieveServiceEnabled(bool isQueryRetrieveServiceEnabled);
+    bool isQueryRetrieveServiceEnabled() const;
 
-    /// Assign / Return if we can send images to the PACS
-    void setStoreServiceEnabled (bool isStoreServiceEnabled);
-    bool isStoreServiceEnabled () const;
+    /// Assigna/Retorna si podem enviar imatges al PACS
+    void setStoreServiceEnabled(bool isStoreServiceEnabled);
+    bool isStoreServiceEnabled() const;
 
-    /// Assign / Return the port through which we have to send images to the PACS
-    void setStoreServicePort (int storeServicePort);
-    int getStoreServicePort () const;
+    /// Assigna/Retorna el port pel qual hem d'enviar imatges al PACS
+    void setStoreServicePort(int storeServicePort);
+    int getStoreServicePort() const;
 
-    /// Tells us if this object contains data or not
-    bool isEmpty () const;
+    /// Ens diu si aquest objecte conté dades o no
+    bool isEmpty() const;
 
-    /// Tells us if the past PACS is the same as the current object. It will be when they have the same AETitle, Address and QueryPort
-    bool isSamePacsDevice (const PacsDevice & pacsDevice) const;
+    /// Ens indica si el PACS passat és el mateix que l'objecte actual. Ho serà quan tinguin el mateix AETitle, Address i QueryPort
+    bool isSamePacsDevice(const PacsDevice &pacsDevice) const;
+
     bool operator ==(const PacsDevice &device) const;
 
 private:

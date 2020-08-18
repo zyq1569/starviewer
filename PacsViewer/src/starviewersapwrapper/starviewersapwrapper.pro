@@ -1,6 +1,3 @@
-QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
-QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
-
 TEMPLATE = app
 
 include(../applicationstargetnames.pri)
@@ -12,16 +9,24 @@ macx {
     DESTDIR = $${DESTDIR}/$${TARGET_STARVIEWER}.app/Contents/MacOS
 }
 
-HEADERS = ../core/starviewerapplication.h \
-    ../thirdparty/easylogging++/easylogging++.h
+HEADERS = ../core/starviewerapplication.h
 
-SOURCES = starviewersapwrapper.cpp \ 
-    ../thirdparty/easylogging++/easylogging++.cc
+SOURCES = starviewersapwrapper.cpp \
+    ../core/logging.cpp \
+    ../core/starviewerapplication.cpp
 
 INCLUDEPATH += ../core
 
+include(../../addlibrarydependency.pri)
+addLibraryDependency(../thirdparty, ../thirdparty, easylogging++)
+
+official_release {
+    win32:RESOURCES += ../main/qtconf/win/qtconf.qrc
+    #macx:RESOURCES += ../main/qtconf/mac/qtconf.qrc    # For future use
+    #linux:RESOURCES += ../main/qtconf/linux/qtconf.qrc # For future use
+}
+
 include(../corelibsconfiguration.pri)
 include(../compilationtype.pri)
-#include(../log4cxx.pri)
 
 QT += widgets

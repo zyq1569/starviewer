@@ -33,36 +33,36 @@ public:
     bool doesStarviewerHaveAccesThroughFirewall();
 
 protected:
-    /// Initialize the Windows Firewall so you can use it.
-    /// @param firewallProfile is output and contains the firewall profile.
+    /// Inicialitza el Firewall de windows per tal de poder-lo utilitzar.
+    /// @param firewallProfile és de sortida i conté el perfil del firewall.
     virtual HRESULT initializeWindowsFirewall(INetFwProfile **firewallProfile);
 
-    /// Check if the firewall is turned on.
+    /// Comprova si el firewall està engegat.
     virtual HRESULT windowsFirewallIsOn(INetFwProfile *firewallProfile, bool *firewallOn);
 
-    ///Check if the firewall allows exceptions.
+    /// Comprova si el firewall permet excepcions.
     virtual HRESULT doesWindowsFirewallAllowExceptions(INetFwProfile *firewallProfile, bool *exceptionsAllowed);
 
-    /// Given a firewall profile and path to an application executable, check if it is in the firewall exception list.
-    /// The result you return is whether it went well or not.
-    /// @param firewallApplicationEnabled is output and saves whether the application is in the exception list or not.
+    /// Donat un perfil de firewall i un path a un executable d'una aplicació, comprova si aquesta està a la llista d'excepcions del firewall.
+    /// El resultat que retorna és de si ha anat bé o no.
+    /// @param firewallApplicationEnabled és de sortida i guarda si l'aplicació està a la llista d'excepcions o no.
     virtual HRESULT isApplicationEnabledAtFirewall(INetFwProfile *firewallProfile, BSTR firewallProcessImageFileName, bool *firewallApplicationEnabled);
 
-    /// Returns the path from where starviewer is running
+    /// Retorna el path des d'on s'executa starviewer
     virtual BSTR getStarviewerExecutablePath();
 
-    /// Transforms a QString into a 'Basic String' text string in Visual Basic. It is the user's responsibility to release the string
-    /// when you no longer need it, using the SysFreeString function.
+    /// Transforma un QString a una cadena de text 'Basic String' de Visual Basic. És responsabilitat de l'usuari alliberar la cadena
+    /// quan ja no la necessiti més, utilitzant la funció SysFreeString.
     virtual BSTR fromQStringToBSTR(const QString &string);
 
-    /// Initialize the Windows Firewall library.
-    /// Return true if everything went well.
+    /// Inicialitza la llibreria del Firewall de windows.
+    /// Retorna cert si tot ha anat bé.
     virtual HRESULT initializeWindowsFirewallLibrary(LPVOID pvReserved, DWORD dwCoInit);
 
-    ///Finish the windows firewall library.
+    /// Finalitza la llibreria del firewall de windows.
     virtual void UninitializeWindowsFirewallLibrary();
 
-    /// Clear the firewall profile if it is not null
+    /// Esborra el firewall profile si no és nul
     virtual void CleanupWindowsFirewall(INetFwProfile *firewallProfile);
 
 };

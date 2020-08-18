@@ -28,53 +28,53 @@ class Tool;
 class ToolData;
 
 /**
-Class responsible for keeping the tools active for a viewer and providing them with the corresponding events.
-     Their tasks are:
-         - Receives all events from a viewer
-         - Know the active tools for a given viewer
-         - Pass the received events to all active tools
-         - It is associated with a viewer as an attribute of this
-         - Save the name of each of the tools
+    Classe encarregada de mantenir les tools actives per un visualitzador i de proporcionar-lis els events corresponents.
+    Les seves tasques són:
+        - Rep tots els events d'un viewer
+        - Coneix les tools actives per a un determinat viewer
+        - Passa els events rebuts a totes les tools actives
+        - Està associat a un viewer com atribut d'aquest
+        - Guarda el nom de cadascuna de les tools
   */
 class ToolProxy : public QObject {
-    Q_OBJECT
+Q_OBJECT
 public:
     ToolProxy(QObject *parent = 0);
     ~ToolProxy();
 
-    /// Add a tool to the internal registry. This tool will listen to the events
-    /// to be communicated to you by forward event
+    /// Afegeix una tool al registre intern. Aquesta tool escoltarà els events
+    /// que se li comuniquin mitjançant forward event
     /// @param tool
     void addTool(Tool *tool);
 
-    /// Given a tool name, remove it from the registry.
-    /// @param toolName Name of the tool to remove from the proxy
-    /// @return True if I had it, false otherwise
+    /// Donat un nom de tool, l'elimina del registre.
+    /// @param toolName Nom de la tool a eliminar del proxy
+    /// @return Cert si la tenia, fals altrament
     bool removeTool(const QString &toolName);
 
-    /// Empty and remove all proxy tools
+    /// Buida i elimina totes les tools del proxy
     void removeAllTools();
 
-    /// Tells us if the requested tool is active or not
-    /// @param toolName Name of the tool we want to consult
-    /// @return True if the tool is active, false otherwise
+    /// Ens diu si la tool demanada està activa o no
+    /// @param toolName Nom de la tool que volem consultar
+    /// @return Cert si la tool està activa, fals altrament
     bool isToolActive(const QString &toolName);
 
-    /// Returns the requested tool
-    /// @param toolName Name of the tool we want to get
-    /// @return The requested tool, NUL if it is not registered in the proxy
+    /// Ens retorna la tool demanada
+    /// @param toolName Nom de la tool que volem obtenir
+    /// @return La tool demanada, NUL si no està registrada en el proxy
     Tool* getTool(const QString &toolName);
 
 public slots:
-    /// Evaluates the event it has received from the viewer it is associated with and sends it to the active tools
+    /// Avalua l'event que ha rebut del visualitzador al que està associat i l'envia a les tools actives
     void forwardEvent(unsigned long eventID);
 
 private:
-    /// Map where we store the tools associated with a key determined by the name of the tool.
-    /// In principle you can't have two tools with the same name
+     /// Map on hi guardem les tools associades a una clau determinada pel nom de la tool.
+     /// En principi no es poden tenir dues tools amb el mateix nom
     QMap<QString, Tool*> m_toolsMap;
 
-    /// In this repository we will take care of saving the persistent data of the tools that need it
+    /// En aquest repositori ens encarregarem de guardar les dades persistents de les tools que ho necessitin
     QMap<QString, ToolData*> m_persistentToolDataRepository;
 
 };

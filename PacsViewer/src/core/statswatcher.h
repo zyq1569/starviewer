@@ -13,9 +13,9 @@
  *************************************************************************************/
 
 /**
-Widget Viewer for statistics
-  EVERYTHING needs to be added a setting that tells us whether statistics are allowed or not
-  and depending on their value record or not the statistics
+ Observador de widgets per obtenir estadístiques
+ TODO cal afegir un setting que ens digui si es permeten les estadístiques o no
+ i en funció del seu valor registrar o no les estadístques
 */
 
 #ifndef UDGSTATSWATCHER_H
@@ -31,43 +31,43 @@ class QMenu;
 
 namespace udg {
 class StatsWatcher : public QObject {
-    Q_OBJECT
+Q_OBJECT
 public:
     StatsWatcher(QObject *parent = 0);
     StatsWatcher(const QString &context, QObject *parent = 0);
     ~StatsWatcher();
 
-    /// Click counter. For each click of the button it will tell us the name of the object
-    void addClicksCounter (QAbstractButton * button);
+    /// Comptador de clicks. Per cada click del botó ens dirà el nom de l'objecte
+    void addClicksCounter(QAbstractButton *button);
 
-    /// Count when an action has been fired
-    // Count when shooting, either with a click or a shortcut
-    void addTriggerCounter (QMenu * menu);
+    /// Compta quan una acció s'ha disparat
+    // Compta quan es dispara, ja sigui amb un clik o un shortcut
+    void addTriggerCounter(QMenu *menu);
 
-    /// Records actions performed on a slider
-    void addSliderObserver (QAbstractSlider * slider);
+    /// Registra les accions fetes sobre un slider
+    void addSliderObserver(QAbstractSlider *slider);
 
-    /// Method for logging statistical messages in the corresponding format
-    static void log (const QString & message);
+    /// Mètode per loggejar missatges estadístics en el format corresponent
+    static void log(const QString &message);
 
 private slots:
-    /// Log in the log on which the object was clicked
-    /// Checks if the object is "checkable" (type QAbstractButton)
-    /// Depending on this, a different message is recorded in order to differentiate
-    /// clickable only objects and objects that can be activated or deactivated
-    void registerClick (bool checked);
+    /// Registra en el log l'objecte sobre el qual s'ha fet el click
+    /// Es comprova si l'objecte és "checkable" (tipus QAbstractButton)
+    /// Segons això es reguistra un missatge diferent per poder diferenciar
+    /// objectes únicament clickables i objectes que es poden activar o desactivar
+    void registerClick(bool checked);
 
-    /// Records the activation (trigger) of a QAction
-    void registerActionTrigger (QAction * action);
+    /// Registra l'activació (trigger) d'una QAction
+    void registerActionTrigger(QAction *action);
 
-    /// Records the action performed on a slider
-    void registerSliderAction (int action = 10);
+    /// Registra l'acció feta sobre un slider
+    void registerSliderAction(int action = 10);
 
 private:
-    /// Add additional information about the context we are making the observation
+    /// Afegeix informació adicional sobre el contexte que estem fent l'observació
     QString m_context;
 
-    /// Indicates whether statistics logs will be logged or not
+    /// Indica si els logs d'estadístiques es registraran o no
     bool m_registerLogs;
 };
 

@@ -17,6 +17,8 @@
 
 #include <QString>
 
+class vtkLookupTable;
+
 namespace udg {
 
 /**
@@ -29,28 +31,31 @@ public:
     WindowLevel(double width, double center, const QString &name = QString());
     ~WindowLevel();
 
-    /// Define / get the window level description
+    /// Defineix/obté la descripció window level
     void setName(const QString &name);
     const QString& getName() const;
     
-    /// Defines / obtains the width of the window level
+    /// Defineix/obté el width del window level
     void setWidth(double width);
     double getWidth() const;
     
-    /// Defines / obtains the center of the window level
+    /// Defineix/obté el center del window level
     void setCenter(double center);
     double getCenter() const;
 
-    /// Determines whether the width and level values are valid.
-    /// A WindowLevel will always be valid unless the width is 0
+    /// Ens determina si els valors de width i level són vàlids.
+    /// Un WindowLevel serà sempre vàlid excepte en el cas que width sigui 0
     bool isValid() const;
 
-    /// Compare if the window width and window level values are the same as the WindowLevel passed by parameter.
-    /// The description is not taken into account in this comparison
+    /// Compara si els valors de window width i window level són iguals amb el WindowLevel passat per paràmetre.
+    /// La descripció no es té en compte en aquesta comparació
     bool valuesAreEqual(const WindowLevel &windowLevel) const;
 
-    /// Compare that all members of the class are equal
+    /// Compara que tots els membres de la classe siguin iguals
     bool operator==(const WindowLevel &windowLevelToCompare) const;
+
+    /// Returns a vtkLookupTable representing this WindowLevel.
+    vtkLookupTable* toVtkLookupTable() const;
 
 private:
     QString m_name;

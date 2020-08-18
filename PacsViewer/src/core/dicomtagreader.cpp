@@ -1,8 +1,8 @@
 /*************************************************************************************
-   Copyright (C) 2014 Graphics and Image Laboratory, University of Girona &
-   Institute of Diagnostic Imaging.
-   Girona 2014. All rights reserved.
-   http://starviewer.udg.edu
+  Copyright (C) 2014 Laboratori de Gràfics i Imatge, Universitat de Girona &
+  Institut de Diagnòstic per la Imatge.
+  Girona 2014. All rights reserved.
+  http://starviewer.udg.edu
 
   This file is part of the Starviewer (Medical Imaging Software) open source project.
   It is subject to the license terms in the LICENSE file found in the top-level
@@ -29,23 +29,22 @@
 
 namespace {
 
-/// Returns true if the given tag contains text that is encoded with the Specific Character Set (0008,0005).
-/// See http://www.dabsoft.ch/dicom/3/C.12.1.1.2/.
+/// Returns true if the given tag contains text that is encoded with the Specific Character Set (0008,0005). See http://www.dabsoft.ch/dicom/3/C.12.1.1.2/.
 bool isEncodedText(const DcmTag &tag)
 {
     DcmEVR vr = tag.getVR().getEVR();
 
     switch (vr)
     {
-    case EVR_SH:
-    case EVR_LO:
-    case EVR_ST:
-    case EVR_PN:
-    case EVR_LT:
-    case EVR_UT:
-        return true;
-    default:
-        return false;
+        case EVR_SH:
+        case EVR_LO:
+        case EVR_ST:
+        case EVR_PN:
+        case EVR_LT:
+        case EVR_UT:
+            return true;
+        default:
+            return false;
     }
 }
 
@@ -105,7 +104,7 @@ bool DICOMTagReader::setFile(const QString &filename)
     if (status.good())
     {
         m_hasValidFile = true;
-        // Delete the previous object if any
+        // Eliminem l'objecte anterior si n'hi hagués
         deleteDataLastLoadedFile();
 
         m_dicomHeader = new DcmMetaInfo(*dicomFile.getMetaInfo());
@@ -115,8 +114,8 @@ bool DICOMTagReader::setFile(const QString &filename)
     else
     {
         m_hasValidFile = false;
-        DEBUG_LOG(QString("Error reading file [% 1] \ nPossible cause:% 2 ").arg(filename).arg(status.text()));
-        ERROR_LOG(QString("Error reading file [% 1] \ nPossible cause:% 2 ").arg(filename).arg(status.text()));
+        DEBUG_LOG(QString("Error en llegir l'arxiu [%1]\nPossible causa: %2 ").arg(filename).arg(status.text()));
+        ERROR_LOG(QString("Error en llegir l'arxiu [%1]\nPossible causa: %2 ").arg(filename).arg(status.text()));
         return false;
     }
 
@@ -141,10 +140,10 @@ void DICOMTagReader::setDcmDataset(const QString &filename, DcmDataset *dcmDatas
     }
 
     m_filename = filename;
-    // Assume it will always be a valid file.
-    //  EVERYTHING Is it necessary to do some validation in these cases?
-    // Maybe in these cases the filename should always be empty as we express it
-    // explicitly that we read a memory element
+    // Assumim que sempre serà un fitxer vàlid.
+    /// TODO Cal fer alguna validació en aquests casos?
+    // Potser en aquests casos el filename hauria de ser sempre buit ja que així expressem
+    // explícitament que llegim un element de memòria
     m_hasValidFile = true;
 
     deleteDataLastLoadedFile();
@@ -170,6 +169,11 @@ bool DICOMTagReader::tagExists(const DICOMTag &tag) const
     bool existsInHeader = m_dicomHeader && m_dicomHeader->tagExists(DcmTagKey(tag.getGroup(), tag.getElement()));
 
     return existsInDataset || existsInHeader;
+}
+
+bool DICOMTagReader::hasAttribute(const DICOMTag &tag) const
+{
+    return tagExists(tag);
 }
 
 QString DICOMTagReader::getValueAttributeAsQString(const DICOMTag &tag) const
@@ -201,6 +205,41 @@ QString DICOMTagReader::getValueAttributeAsQString(const DICOMTag &tag) const
                 {
                     result = value.c_str();
                 }
+                break;
+            }
+            else
+            {
+                logStatusForTagOperation(tag, status);
+            }
+        }
+    }
+
+    return result;
+}
+
+QByteArray DICOMTagReader::getValueAttributeAsByteArray(const DICOMTag &tag) const
+{
+    if (!m_dicomData && !m_dicomHeader)
+    {
+        DEBUG_LOG("No dataset nor header is loaded. Returning default QByteArray.");
+        return QByteArray();
+    }
+
+    // Look for the attribute in the dataset first; if not found, then look in the header
+    DcmItem *dcmItems[2] = { m_dicomData, m_dicomHeader };
+    QByteArray result;
+
+    for (int i = 0; i < 2; i++)
+    {
+        if (dcmItems[i])
+        {
+            const Uint8 *value;
+            unsigned long size;
+            OFCondition status = dcmItems[i]->findAndGetUint8Array(DcmTagKey(tag.getGroup(), tag.getElement()), value, &size);
+
+            if (status.good())
+            {
+                result = QByteArray(reinterpret_cast<const char*>(value), size);
                 break;
             }
             else
@@ -279,6 +318,23 @@ DICOMSequenceAttribute* DICOMTagReader::getSequenceAttribute(const DICOMTag &seq
     }
 }
 
+DICOMSequenceItem* DICOMTagReader::getFirstSequenceItem(const DICOMTag &sequenceTag, ReturnValueOfTags returnValueOfTags) const
+{
+    DICOMSequenceAttribute *sequence = getSequenceAttribute(sequenceTag, returnValueOfTags);
+
+    if (sequence)
+    {
+        const QList<DICOMSequenceItem*> &items = sequence->getItems();
+
+        if (!items.isEmpty())
+        {
+            return items.first();
+        }
+    }
+
+    return nullptr;
+}
+
 void DICOMTagReader::initialize()
 {
     m_dicomData = 0;
@@ -320,7 +376,7 @@ DICOMSequenceAttribute* DICOMTagReader::convertToDICOMSequenceAttribute(DcmSeque
         for (unsigned int j = 0; j < dcmtkItem->card(); j++)
         {
             DcmElement *element = dcmtkItem->getElement(j);
-            //It is a Sequence of Items
+            // És una Sequence of Items
             if (!element->isLeaf())
             {
                 dicomItem->addAttribute(convertToDICOMSequenceAttribute(OFstatic_cast(DcmSequenceOfItems*, element), returnValueOfTags));
@@ -350,7 +406,7 @@ DICOMValueAttribute* DICOMTagReader::convertToDICOMValueAttribute(DcmElement *dc
     
     if (!dcmtkDICOMElement->isLeaf())
     {
-        // This is a sequence, it cannot be converted to an attribute
+        // Es tracta d'una seqüència, no es pot convertir a atribut
         return 0;
     }
     
@@ -358,7 +414,7 @@ DICOMValueAttribute* DICOMTagReader::convertToDICOMValueAttribute(DcmElement *dc
     dicomValueAttribute->setTag(DICOMTag(dcmtkDICOMElement->getGTag(), dcmtkDICOMElement->getETag()));
 
     if (returnValueOfTags != DICOMTagReader::ExcludeHeavyTags ||
-            (dcmtkDICOMElement->getTag() != DcmTag(DCM_PixelData) && dcmtkDICOMElement->getTag() != DcmTag(DCM_OverlayData)))
+        (dcmtkDICOMElement->getTag() != DcmTag(DCM_PixelData) && dcmtkDICOMElement->getTag() != DcmTag(DCM_OverlayData)))
     {
         OFString value;
         OFCondition status = dcmtkDICOMElement->getOFStringArray(value);
@@ -377,11 +433,17 @@ DICOMValueAttribute* DICOMTagReader::convertToDICOMValueAttribute(DcmElement *dc
             }
 
             dicomValueAttribute->setValue(string);
+
+            // HACK for wrong VR (#2146)
+            if (dcmtkDICOMElement->getVR() == EVR_UN)
+            {
+                dicomValueAttribute->setValueRepresentation(DICOMValueAttribute::Unknown);
+            }
         }
         else
         {
             dicomValueAttribute->setValue(QString("Unreadable tag value: %1").arg(status.text()));
-            logStatusForTagOperation(DICOMTag(dcmtkDICOMElement->getTag().getGroup(), dcmtkDICOMElement->getTag().getElement()), status);
+            logStatusForTagOperation(DICOMTag(dcmtkDICOMElement->getTag().getGroup(), dcmtkDICOMElement->getTag().getElement()), status);            
         }
     }
 
@@ -402,7 +464,7 @@ QList<DICOMAttribute*> DICOMTagReader::convertToDICOMAttributeQList(DcmItem *dcm
     {
         currentElement = OFstatic_cast(DcmElement*, dcmItem->nextInContainer(currentElement));
 
-        // This is a sequence
+        // Es tracta d'una seqüència
         if (!currentElement->isLeaf())
         {
             DICOMSequenceAttribute *dicomSequenceAttribute = convertToDICOMSequenceAttribute(OFstatic_cast(DcmSequenceOfItems*, currentElement),
@@ -448,7 +510,7 @@ void DICOMTagReader::logStatusForTagOperation(const DICOMTag &tag, const OFCondi
 
     if (QString::compare(status.text(), "Tag Not Found", Qt::CaseInsensitive) != 0)
     {
-        DEBUG_LOG(QString("The following problem occurred while trying to get the tag% 1 ::% 2").arg(tag.getKeyAsQString()).arg(status.text()));
+        DEBUG_LOG(QString("S'ha produit el següent problema a l'intentar obtenir el tag %1 :: %2").arg(tag.getKeyAsQString()).arg(status.text()));
     }
 }
 

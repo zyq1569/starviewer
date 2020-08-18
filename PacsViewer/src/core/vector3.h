@@ -15,94 +15,107 @@
 #ifndef VECTOR3_H
 #define VECTOR3_H
 
+#include <array>
 #include <cmath>
 
 #include <QDataStream>
 #include <QString>
+#include <QVector3D>
 
 namespace udg {
 
 /**
-Dimension vector 3.
-     It includes all methods for working with 3D vectors with real components
+    Vector de dimensió 3.
+
+    Inclou tots els mètodes per treballar amb vectors 3D amb components reals.
   */
 template <class T>
 class TVector3 {
 
 public:
-    /// Returns the scalar product of the vectors.
+    /// Retorna el producte escalar dels vectors.
     static T dot(const TVector3<T> &v1, const TVector3<T> &v2);
-    /// Returns the vector product of the vectors.
+    /// Retorna el producte vectorial dels vectors.
     static TVector3<T> cross(const TVector3<T> &v1, const TVector3<T> &v2);
 
-    TVector3(T x = 0.0, T y = 0.0, T z = 0.0);
+    TVector3();
+    TVector3(T x, T y, T z);
+    TVector3(const QVector3D &v);
+    template <class C>
+    TVector3(C v[3]);
+    template <class C>
+    TVector3(const std::array<C, 3> &v);
     template <class C>
     TVector3(const TVector3<C> &v);
 
-    /// Assign the components of the vector.
+    template <class C>
+    operator std::array<C, 3>() const;
+    std::array<T, 3> toArray() const;
+
+    /// Assigna els components del vector.
     void set(T x, T y, T z);
 
-    /// Returns the vector module..
+    /// Retorna el mòdul del vector.
     T length() const;
-    /// Returns the squared module of the vector.
+    /// Retorna el mòdul al quadrat del vector.
     T lengthSquared() const;
-    /// Normalize the vector and return it for reference.
+    /// Normalitza el vector i el retorna per referència.
     TVector3<T>& normalize();
 
-    /// Assignment operator.
+    /// Operador d'assignació.
     template <class C>
     TVector3<T>& operator =(const TVector3<C> &v);
 
-    /// Returns true if the vectors are equal.
+    /// Retorna cert si els vector són iguals.
     bool operator ==(const TVector3<T> &v) const;
-    ///Returns true if the vectors are different.
+    /// Retorna cert si els vectors són diferents.
     bool operator !=(const TVector3<T> &v) const;
 
-    ///  Returns a copy of the vector.
+    /// Retorna una còpia del vector.
     TVector3<T> operator +() const;
-    /// Returns the denied vector.
+    /// Retorna el vector negat.
     TVector3<T> operator -() const;
-    ///Returns the sum of vectors.
+    /// Retorna la suma de vectors.
     TVector3<T> operator +(const TVector3<T> &v) const;
-    /// Add the vectors, assign the result over the current one and return it for reference..
+    /// Suma els vectors, assigna el resultat sobre l'actual i el retorna per referència.
     TVector3<T>& operator +=(const TVector3<T> &v);
-    ///Returns the rest of the vectors..
+    /// Retorna la resta dels vectors.
     TVector3<T> operator -(const TVector3<T> &v) const;
-    /// Subtract the vectors, assign the result over the current one and return it for reference
+    /// Resta els vectors, assigna el resultat sobre l'actual i el retorna per referència.
     TVector3<T>& operator -=(const TVector3<T> &v);
-    /// Returns the scalar product of the vectors.
+    /// Retorna el producte escalar dels vectors.
 
     // Producte escalar
     T operator *(const TVector3<T> &v) const;
-    ///  Returns the vector product of the vectors.
+    /// Retorna el producte vectorial dels vectors.
 
-    // Vector product
+    // Producte vectorial
     TVector3<T> operator ^(const TVector3<T> &v) const;
 
-    ///  Returns a representation of the vector in text form.
+    /// Retorna una representació del vector en forma de text.
     QString toString() const;
     operator QString() const;
 
-    /// Product of a scalar for a vector..
+    /// Producte d'un escalar per un vector.
     template <class C>
     friend TVector3<C> operator *(double a, const TVector3<C> &v);
-    /// Product of a vector by a scalar..
+    /// Producte d'un vector per un escalar.
     template <class C>
     friend TVector3<C> operator *(const TVector3<C> &v, double a);
-    /// Product of a vector by a scalar assigned to the vector itself..
+    /// Producte d'un vector per un escalar assignat al propi vector.
     template <class C>
     friend TVector3<C>& operator *=(TVector3<C> &v, double a);
-    /// Division of a vector by a scalar.
+    /// Divisió d'un vector per un escalar.
     template <class C>
     friend TVector3<C> operator /(const TVector3<C> &v, double a);
-    /// Division of a vector by a scalar assigned to the vector itself..
+    /// Divisió d'un vector per un escalar assignada al propi vector.
     template <class C>
     friend TVector3<C>& operator /=(TVector3<C> &v, double a);
 
-    /// Reading from a QDataStream..
+    /// Lectura des d'un QDataStream.
     template <class C>
     friend QDataStream& operator >>(QDataStream &in, TVector3<C> &v);
-    ///Writing to a QDataStream.
+    /// Escriptura a un QDataStream.
     template <class C>
     friend QDataStream& operator <<(QDataStream &out, const TVector3<C> &v);
 
@@ -125,16 +138,55 @@ inline TVector3<T> TVector3<T>::cross(const TVector3<T> &v1, const TVector3<T> &
 }
 
 template <class T>
+inline TVector3<T>::TVector3()
+ : x(0.0), y(0.0), z(0.0)
+{
+}
+
+template <class T>
 inline TVector3<T>::TVector3(T aX, T aY, T aZ)
-    : x(aX), y(aY), z(aZ)
+ : x(aX), y(aY), z(aZ)
+{
+}
+
+template <class T>
+inline TVector3<T>::TVector3(const QVector3D &v)
+ : x(v.x()), y(v.y()), z(v.z())
+{
+}
+
+template <class T>
+template <class C>
+inline TVector3<T>::TVector3(C v[3])
+ : x(v[0]), y(v[1]), z(v[2])
+{
+}
+
+template <class T>
+template <class C>
+inline TVector3<T>::TVector3(const std::array<C, 3> &v)
+ : x(v[0]), y(v[1]), z(v[2])
 {
 }
 
 template <class T>
 template <class C>
 inline TVector3<T>::TVector3(const TVector3<C> &v)
-    : x(v.x), y(v.y), z(v.z)
+ : x(v.x), y(v.y), z(v.z)
 {
+}
+
+template <class T>
+template <class C>
+inline TVector3<T>::operator std::array<C, 3>() const
+{
+    return std::array<C, 3>{{x, y, z}};
+}
+
+template <class T>
+inline std::array<T, 3> TVector3<T>::toArray() const
+{
+    return std::array<T, 3>(*this);
 }
 
 template <class T>

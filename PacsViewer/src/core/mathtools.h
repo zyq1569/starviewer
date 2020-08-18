@@ -18,6 +18,8 @@
 #include <QList>
 #include <QVector>
 
+#include "vector3.h"
+
 class QVector2D;
 class QVector3D;
 
@@ -173,8 +175,8 @@ static double angleInRadians(const QVector2D &vector);
 static double angleInDegrees(const QVector2D &vector);
 
 /// Calcula l'angle entre dos vectors. Retorna el valor en radians o graus
-static double angleInRadians(const QVector3D &vec1, const QVector3D &vec2);
-static double angleInDegrees(const QVector3D &vec1, const QVector3D &vec2);
+static double angleInRadians(const Vector3 &vec1, const Vector3 &vec2);
+static double angleInDegrees(const Vector3 &vec1, const Vector3 &vec2);
 
 /// Retorna cert si \a x és NaN.
 static bool isNaN(double x);
@@ -184,9 +186,6 @@ static unsigned int roundUpToPowerOf2(unsigned int v);
 
 /// Retorna el primer múltiple de multiple més gran o igual que i. Només funciona si múltiple > 0, però no es comproven els paràmetres.
 static unsigned int roundUpToMultipleOfNumber(unsigned int i, unsigned int multiple);
-
-/// Retorna un double amb la magnitud d'x i el signe d'y. La mateixa funcionalitat que std::copysign de C++11.
-static double copySign(double x, double y);
 
 private:
     /// Initializes random seed if needed

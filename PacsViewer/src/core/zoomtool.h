@@ -22,7 +22,7 @@ namespace udg {
 class QViewer;
 
 class ZoomTool : public Tool {
-    Q_OBJECT
+Q_OBJECT
 public:
     enum { None, Zooming };
 
@@ -32,20 +32,18 @@ public:
     void handleEvent(unsigned long eventID);
 
 private slots:
-    ///Zoom in
+    /// Comença el zoom
     void startZoom();
 
-    /// Calculate the new zoom
+    /// Calcula el nou zoom
     void doZoom();
 
-    /// Stops the zoom state
+    /// Atura l'estat de zoom
     void endZoom();
 
 private:
     int m_state;
 
-    /// Sets if we need to call render or not when zoom action is ended
-    bool m_mustRenderOnEnd;
 };
 
 }

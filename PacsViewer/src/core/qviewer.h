@@ -19,7 +19,7 @@
 #include "anatomicalplane.h"
 
 #include <QWidget>
-// List of screenshots
+// Llista de captures de pantalla
 #include <QList>
 #include <vtkImageData.h>
 
@@ -46,24 +46,24 @@ class QViewerWorkInProgressWidget;
 class VoiLut;
 
 /**
-   Base class for all display windows
+    Classe base per a totes les finestres de visualització
   */
 class QViewer : public QWidget {
-    Q_OBJECT
+Q_OBJECT
 public:
     QViewer(QWidget *parent = 0);
     ~QViewer();
 
-    /// File type you can save
+    /// Tipus de fitxer que pot desar
     enum FileType { PNG, JPEG, TIFF, DICOM, PNM, META, BMP };
 
-    /// Viewer status
+    /// Estat del viewer
     enum ViewerStatus { NoVolumeInput, DownloadingVolume, DownloadingError, LoadingVolume, LoadingError, VisualizingVolume, VisualizingError };
 
-    /// Returns the renderer interface
+    /// Retorna l'interactor renderer
     virtual vtkRenderWindowInteractor* getInteractor() const;
 
-    /// Returns the renderer
+    /// Retorna el renderer
     virtual vtkRenderer* getRenderer() const;
 
     /// Returns the main input
@@ -78,62 +78,64 @@ public:
     /// Retorna el vtkRenderWindow
     vtkRenderWindow* getRenderWindow() const;
 
-    /// Returns the size in screen coordinates (pixels?) Of the entire viewer viewport
-    /// hide the vtkRenderWindow call :: GetSize ()
+    /// Retorna la mida en coordenades de pantalla (píxels?) de tot el viewport del viewer
+    /// amaga la crida vtkRenderWindow::GetSize()
     QSize getRenderWindowSize() const;
 
-    /// Methods for obtaining the current and / or previous cursor coordinate
-    /// of the mouse during the last event
-    /// The returned coordinates are in Display's coordinate system
+    /// Mètodes per obtenir l'actual i/o l'anterior coordenada del cursor
+    /// del ratolí durant l'últim event
+    /// Les coordenades retornades estan en sistema de coordenades de Display
     QPoint getEventPosition() const;
     QPoint getLastEventPosition() const;
 
-    /// Tells us if the viewer is active at that time
-    /// @return True if active, false otherwise
+    QPoint getWheelAngleDelta() const;
+    
+    /// Ens diu si el viewer és actiu en aquell moment
+    /// @return Cert si actiu, fals altrament
     bool isActive() const;
 
-    /// Returns the Viewer ToolProxy
+    /// Ens retorna el ToolProxy del viewer
     ToolProxy* getToolProxy() const;
 
-    /// Pass display coordinates to world coordinates and vice versa
+    /// Passa coordenades de display a coordenades de món i viceversa
     void computeDisplayToWorld(double x, double y, double z, double worldPoint[3]);
     void computeWorldToDisplay(double x, double y, double z, double displayPoint[3]);
 
-    /// It gives us the world coordinate of the last (or previous) event captured
+    /// Ens dóna la coordenada de món de l'últim (o previ a aquest) event capturat
     void getEventWorldCoordinate(double worldCoordinate[3]);
     void getLastEventWorldCoordinate(double worldCoordinate[3]);
 
-    ///Fa captures the current view and saves it in an internal structure
+    /// Fa una captura de la vista actual i la guarda en una estructura interna
     void grabCurrentView();
 
-    /// Save the list of captures in a file of various types with the filename base \ c baseName and in the format specified by \ c extension.
-    /// Returns TRUE if there were images to save, FALSE otherwise
+    /// Desa la llista de captures en un arxiu de diversos tipus amb el nom de fitxer base \c baseName i en format especificat per \c extension.
+    /// Retorna TRUE si hi havia imatges per guardar, FALSE altrament
     bool saveGrabbedViews(const QString &baseName, FileType extension);
 
-    /// Returns the number of captured views that are saved
+    /// Retorna el nombre de vistes capturades que estan desades
     int grabbedViewsCount()
     {
         return m_grabList.size();
     }
 
-    ///Zoom in on the scene with the given factor
-    /// @param factor Zoom factor we want to apply to the camera
+    /// Fa zoom sobre l'escena amb el factor donat
+    /// @param factor Factor de zoom que volem aplicar a la càmera
     void zoom(double factor);
 
     /// Absolute zoom to the scene based on the factor value
     void absoluteZoom(double factor);
 
-    /// Move the camera according to the motion vector we pass to it
-    /// @param motionVector [] Motion vector that determines where and how far the camera moves
+    /// Desplaça la càmera segons el vector de moviment que li passem
+    /// @param motionVector[] Vector de moviment que determina cap on i quant es mou la càmera
     void pan(double motionVector[3]);
 
-    /// Zoom in on the box defined by the topCorner and bottomCorner parameters in world coordinates
-    /// to fit the size of the window.
-    /// The determination of which coordinate is considered "upper" or "lower" is relative depending on the point of view,
-    /// the really important thing is that these coordinates are two opposite vertices within the box you want to define
-    /// @param topCorner Top coordinate
-    /// @param bottomCorner Lower coordinate opposite the upper
-    /// @param marginRate value as a percentage of the margin you want to leave
+    /// Fem un zoom del requadre definit pels paràmetres topCorner i bottomCorner en coordenades de món
+    /// perquè s'ajusti a la mida de la finestra.
+    /// La determinació sobre quina coordenada es considera "superior" o "inferior" és relativa segons el punt de vista,
+    /// el realment important és que aquestes coordenades siguin dos vèrtexs oposats dins del requadre que es vol definir
+    /// @param topCorner Coordenada superior
+    /// @param bottomCorner Coordenada inferior oposada a la superior
+    /// @param marginRate valor en percentatge del marge que es vol deixar
     /// @return True if scale could be performed, false otherwise
     bool scaleToFit3D(double topCorner[3], double bottomCorner[3], double marginRate = 0.0);
 
@@ -142,24 +144,24 @@ public:
     /// Sets the VOI LUT presets data for this viewer.
     void setVoiLutData(VoiLutPresetsToolData *voiLutData);
 
-    /// Enables / disables renderings to take effect
-    /// Useful in cases where we need to do several operations of
-    /// visualization but we don't want these to take effect until we indicate it
+    /// Habilita/deshabilita que els renderings es facin efectius
+    /// Útil en els casos en que necessitem fer diverses operacions de
+    /// visualització però no volem que aquestes es facin efectives fins que no ho indiquem
     void enableRendering(bool enable);
 
-    /// It returns the patient menu with which the input is chosen
+    /// Ens retorna el menú de pacient amb el que s'escull l'input
     PatientBrowserMenu* getPatientBrowserMenu() const;
 
-    /// Specifies whether selecting an input from the patient menu will automatically load it
-    /// or, conversely, nothing will be done. By default it is enabled and the input will be loaded in the viewfinder.
+    /// Permet especificar si al seleccionar un input del menú de pacient aquest es carregarà automàticament
+    /// o, pel contrari, no es farà res. Per defecte està activat i es carregarà l'input al visor.
     void setAutomaticallyLoadPatientBrowserMenuSelectedInput(bool load);
 
-    /// Returns viewer status. Useful for whether the viewer is viewing data
-    /// or loading ...
+    /// Retorna l'status del viewer. Útil per saber si el visor està visualitzant dades
+    /// o està carregant...
     ViewerStatus getViewerStatus() const;
     ViewerStatus getPreviousViewerStatus() const;
 
-    /// Change viewer status
+    /// Canvia l'status del viewer
     void setViewerStatus(ViewerStatus status);
 
     /// Returns a unique string identifier of all inputs
@@ -175,20 +177,20 @@ public:
     virtual VoiLut getCurrentVoiLut() const;
 
 public slots:
-    /// We indicate the input data
+    /// Indiquem les dades d'entrada
     virtual void setInput(Volume *volume) = 0;
 
-    /// Manage the events you receive from the window
+    /// Gestiona els events que rep de la finestra
     void eventHandler(vtkObject *object, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command);
 
-    ///Force display execution
+    /// Força l'execució de la visualització
     void render();
 
-    /// We assign whether this viewer is active, that is, what it is interacting with
+    /// Assignem si aquest visualitzador és actiu, és a dir, amb el que s'està interactuant
     /// @param active
     void setActive(bool active);
 
-    ///Delete all screenshots
+    /// Elimina totes les captures de pantalla
     void clearGrabbedViews();
 
     /// Resets the view to a determined orthogonal plane
@@ -203,7 +205,7 @@ public slots:
     /// Resets the view to the original acquisition plane of the input volume
     void resetViewToAcquisitionPlane();
 
-    ///Activate or deactivate the context menu
+    /// Activa o desactiva el menú de contexte
     void enableContextMenu();
     void disableContextMenu();
 
@@ -214,25 +216,25 @@ public slots:
     void fitRenderingIntoViewport();
 
 signals:
-    ///We report the event received. \ TODO now we send the code in vtkCommand, but it could (or should) change for a mapping of ours
+    /// Informem de l'event rebut. \TODO ara enviem el codi en vtkCommand, però podria (o hauria de) canviar per un mapeig nostre
     void eventReceived(unsigned long eventID);
 
-    ///Signal that is emitted when another series is chosen for the input
+    /// Signal que s'emet quan s'escull una altra serie per l'input
     void volumeChanged(Volume *volume);
 
-    /// It is broadcast when the camera settings have changed
+    /// S'emet quan els paràmetres de la càmera han canviat
     void cameraChanged();
 
-    ///Reports that the viewer has received an event that is considered to have been selected
+    /// Informa que el visualitzador ha rebut un event que es considera com que aquest s'ha seleccionat
     void selected(void);
 
-    /// Reports that the zoom has changed
+    /// Informa que s'ha canviat el zoom
     void zoomFactorChanged(double factor);
 
-    ///Reports that the image has been moved
+    /// Informa que s'ha mogut la imatge
     void panChanged(double *translation);
 
-    /// Indicates that the viewfinder status has changed
+    /// Indica que l'estat del visor ha canviat
     void viewerStatusChanged();
 
     /// Signal emitted when the anatomical view has changed
@@ -252,12 +254,12 @@ protected:
     /// Updates the VOI LUT data.
     void updateVoiLutData();
 
-    /// We set the camera orientation of the main renderer
-    /// If the given parameter is not one of the valid listed values, it will do nothing
-    /// @param orientation Orientation
+    /// Fixem la orientació de la càmera del renderer principal
+    /// Si el paràmetre donat no és un dels valors enumerats vàlids, no farà res
+    /// @param orientation Orientació
     void setCameraOrientation(const OrthogonalPlane &orientation);
 
-    /// Sets the orientation of the given camera
+    /// Configura la orientació de la càmera donada
     void setCameraViewPlane(const OrthogonalPlane &viewPlane);
 
     /// Adjusts camera scale factor. Returns false if no scale could be performed, true otherwise.
@@ -267,13 +269,13 @@ protected:
     /// Sets the default rendered item orientation for the given anatomical plane
     virtual void setDefaultOrientation(const AnatomicalPlane &anatomicalPlane);
     
-    /// Returns the active camera to the main renderer, if any, NUL otherwise.
+    /// Ens retorna la càmera activa pel renderer principal, si n'hi ha, NUL altrament.
     vtkCamera* getActiveCamera();
 
-    /// Gives us the world coordinate of the last (or previous) event captured
-    /// @param worldCoordinate Variable where the coordinate will be returned
-    /// @param current If true, it gives us the coordinate of the most recent event,
-    /// if false, gives us the previous coordinate to the most recent event
+    /// Ens dóna la coordenada de món de l'últim (o previ a aquest) event capturat
+    /// @param worldCoordinate Variable on es retornarà la coordenada
+    /// @param current Si true, ens dóna la coordenada de l'event més recent,
+    /// si fals, ens dóna la coordenada anterior a l'event més recent
     void getRecentEventWorldCoordinate(double worldCoordinate[3], bool current);
 
     virtual void setupInteraction();
@@ -288,60 +290,60 @@ protected:
     void handleNotEnoughMemoryForVisualizationError();
 
 private slots:
-    /// Slot used when a series has been selected with the PatientBrowserMenu
-    /// Method that specifies an input followed by a call to the render () method
-    /// TODO: Converted to virtual in order to be reimplemented by Q2DViewer by asynchronous upload
+    /// Slot que s'utilitza quan s'ha seleccionat una sèrie amb el PatientBrowserMenu
+    /// Mètode que especifica un input seguit d'una crida al mètode render()
+    /// TODO: Convertit en virtual per tal de poder ser reimplementat per Q2DViewer per càrrega asíncrona
     virtual void setInputAndRender(Volume *volume);
 
 private:
-    /// Updates the current widget displayed on the screen from the viewer status
+    /// Actualitza quin és el widget actual que es mostra per pantalla a partir de l'estat del viewer
     void setCurrentWidgetByViewerStatus(ViewerStatus status);
 
-    /// Initializes the QWorkInProgress widget from status
+    /// Inicialitza el widget QWorkInProgress a partir de l'status
     void initializeWorkInProgressByViewerStatus(ViewerStatus status);
 
     /// Creates and configures the render window with the desired features.
     void setupRenderWindow();
 
 protected:
-    /// The volume to display
-    Volume * m_mainVolume;
+    /// El volum a visualitzar
+    Volume *m_mainVolume;
 
-    /// The widget to be able to display a vtk window with qt
-    QVTKWidget * m_vtkWidget;
+    /// El widget per poder mostrar una finestra vtk amb qt
+    QVTKWidget *m_vtkWidget;
 
-    /// The list of screenshots
-    QList <vtkImageData *> m_grabList;
+    /// La llista de captures de pantalla
+    QList<vtkImageData*> m_grabList;
 
-    /// Filter to connect what is displayed by the renderer in a pipeline, epr save the images in a file, for example
-    vtkWindowToImageFilter * m_windowToImageFilter;
+    /// Filtre per connectar el que es visualitza pel renderer en un pipeline, epr guardar les imatges en un arxiu, per exemple
+    vtkWindowToImageFilter *m_windowToImageFilter;
 
-    /// Event connector vtk and slots qt
-    vtkEventQtSlotConnect * m_vtkQtConnections;
+    /// Connector d'events vtk i slots qt
+    vtkEventQtSlotConnect *m_vtkQtConnections;
 
-    /// Default renderer
-    vtkRenderer * m_renderer;
+    /// Renderer per defecte
+    vtkRenderer *m_renderer;
 
-    /// Indicates whether the context menu is active or not. By default it is always active
+    /// Indica si el menú de contexte està actiu o no. Per defecte sempre està actiu
     bool m_contextMenuActive;
 
     /// ToolProxy
-    ToolProxy * m_toolProxy;
+    ToolProxy *m_toolProxy;
 
-    /// It will help us to control if the mouse has been moved between events
+    /// Ens servirà per controlar si entre event o event s'ha mogut el mouse
     bool m_mouseHasMoved;
 
     /// VOI LUT presets data for this viewer.
-    VoiLutPresetsToolData * m_voiLutData;
+    VoiLutPresetsToolData *m_voiLutData;
 
-    /// Indicates whether we should perform the rendering action or not
+    /// Indica si hem de fer l'acció de renderitzar o no
     bool m_isRenderingEnabled;
 
-    /// Patient menu through which we can choose the input of the viewer
-    PatientBrowserMenu * m_patientBrowserMenu;
+    /// Menú de pacient a través del qual podem escollir l'input del viewer
+    PatientBrowserMenu *m_patientBrowserMenu;
 
-    /// Widget that is displayed when an asynchronous job is being performed
-    QViewerWorkInProgressWidget * m_workInProgressWidget;
+    /// Widget que es mostra quan s'està realitzant algun treball asíncron
+    QViewerWorkInProgressWidget *m_workInProgressWidget;
 
     /// The default margin for fit into viewport. Should be between 0..1.
     double m_defaultFitIntoViewportMarginRate;
@@ -350,15 +352,18 @@ private:
     /// Current view plane: plane that is perpendicular to the camera pointing direction.
     OrthogonalPlane m_currentViewPlane;
 
-    /// Indicates whether the viewer is active or not
+    /// Indica si el viewer és actiu o no
     bool m_isActive;
+    
+    /// Last wheel scroll event angle delta.
+    QPoint m_lastAngleDelta;
 
-    /// Current and previous states of the current viewer
+    /// Estats actual i previ del visor actual
     ViewerStatus m_viewerStatus;
     ViewerStatus m_previousViewerStatus;
 
-    /// Layout that allows us to create different widgets for different viewer states.
-    QStackedLayout * m_stackedLayout;
+    /// Layout que ens permet crear widgets diferents per els estats diferents del visor.
+    QStackedLayout *m_stackedLayout;
 };
 
 };  // End namespace udg

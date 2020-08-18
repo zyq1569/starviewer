@@ -36,9 +36,9 @@ QLocale ApplicationTranslationsLoader::getDefaultLocale()
     Settings settings;
     QString defaultLocale = settings.getValue(CoreSettings::LanguageLocale).toString();
 
-    // Configure the application locations
-    // EVERYTHING is now simplified only to the languages that we
-    // support. See if it can be improved and made more generic
+    // Configurem les locales de l'aplicació
+    // TODO ara està simplificat només als idiomes que nosaltres
+    // suportem. Mirar si es pot millorar i fer més genèric
     QLocale::Language language;
     QLocale::Country country;
 

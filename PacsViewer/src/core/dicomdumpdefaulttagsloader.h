@@ -21,8 +21,8 @@
 namespace udg {
 
 /**
-Class responsible for retrieving XML files that contain information regarding the Default Tags that have been
-     to use for DICOMDump.
+    Classe encarregada de recuperar els arxius XML que contenen la informació referent als Default Tags que s'han
+    d'utilitzar pel DICOMDump.
   */
 class DICOMDumpDefaultTagsLoader {
 
@@ -31,14 +31,14 @@ public:
 
     ~DICOMDumpDefaultTagsLoader();
 
-    /// Method that loads defined XML files to a default address. (Hardcode)
-    void loadDefaults ();
+    /// Mètode que carrega els arxius XML definits a una adreça per defecte. (Hardcode)
+    void loadDefaults();
 
-    /// Method that loads XML files containing Tag information. The parameter can be the path of a Directory or File.
+    /// Mètode que carrega els arxius XML que contenen la informació dels Tags. El paràmetre pot ser el path d'un Directori o Fitxer.
     void loadXMLFiles(const QString &path);
 
 private:
-    /// Private methods for reading default tag files
+    /// Mètodes privats per fer la lectura dels fitxers de default tags
     QStringList loadXMLFiles(const QFileInfo &fileInfo);
     QString loadXMLFile(const QFileInfo &fileInfo);
 };

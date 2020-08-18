@@ -44,15 +44,15 @@ RelatedStudiesManager::~RelatedStudiesManager()
 
 void RelatedStudiesManager::queryMergedStudies(Patient *patient)
 {
-    INFO_LOG("Patient studies will be sought " + patient->getFullName() + " with ID " + patient->getID());
+    INFO_LOG("Es buscaran els estudis del pacient " + patient->getFullName() + " amb ID " + patient->getID());
 
     this->makeAsynchronousStudiesQuery(patient);
 }
 
 void RelatedStudiesManager::queryMergedPreviousStudies(Study *study)
 {
-    INFO_LOG("Previous patient studies will be sought " + study->getParentPatient()->getFullName() + " with ID " + study->getParentPatient()->getID() +
-             " of the study " + study->getInstanceUID() + " of the study " + study->getDate().toString());
+    INFO_LOG("Es buscaran els estudis previs del pacient " + study->getParentPatient()->getFullName() + " amb ID " + study->getParentPatient()->getID() +
+    " de l'estudi " + study->getInstanceUID() + " fet a la data " + study->getDate().toString());
 
     m_studyInstanceUIDOfStudyToFindRelated = study->getInstanceUID();
 
@@ -68,7 +68,7 @@ void RelatedStudiesManager::makeAsynchronousStudiesQuery(Patient *patient, QDate
 
     if (pacsDeviceListToQuery.count() == 0)
     {
-        // Otherwise there is no PACS for which to search by default we issue the queryFinished
+        // Sinó hi ha cap PACS pel qual cercar per defecte fem l'emit del queryFinished
         queryFinished();
         return;
     }
@@ -77,12 +77,12 @@ void RelatedStudiesManager::makeAsynchronousStudiesQuery(Patient *patient, QDate
 
     if (queryDicomMasksList.count() == 0)
     {
-        // If there is no query to do we end the search
+        // Sinó hi ha cap cconsulta a fer donem la cerca per finalitzada
         queryFinished();
     }
     else
     {
-        // If they tell us they want the study's up to a date, we have to mark that date in the dicomMasks
+        // Si ens diuen que volen els study's fins una data, hem de marcar aquesta data en els dicomMasks
         if (untilDate.isValid())
         {
             foreach (DicomMask dicomMask, queryDicomMasksList)
@@ -109,7 +109,7 @@ QList<Study*> RelatedStudiesManager::getStudiesFromDatabase(Patient *patient)
 
     foreach (const DicomMask &dicomMask, queryDicomMasksList)
     {
-        foreach(Patient *p, database.queryPatientStudy(dicomMask))
+        foreach(Patient *p, database.queryPatientsAndStudies(dicomMask))
         {
             foreach (Study *study, p->getStudies())
             {
@@ -177,12 +177,12 @@ bool RelatedStudiesManager::isExecutingQueries()
 
 void RelatedStudiesManager::queryPACSJobCancelled(PACSJobPointer pacsJob)
 {
-    // This slot is also used in case any other class cancels a PACSJob of ours for us to find out.
+    // Aquest slot també serveix per si alguna altre classe ens cancel·la un PACSJob nostre per a que ens n'assabentem
     QSharedPointer<QueryPacsJob> queryPACSJob = pacsJob.objectCast<QueryPacsJob>();
 
     if (queryPACSJob.isNull())
     {
-        ERROR_LOG("The canceled PACSJob is not a QueryPACSJob");
+        ERROR_LOG("El PACSJob que s'ha cancel·lat no es un QueryPACSJob");
     }
     else
     {
@@ -201,7 +201,7 @@ void RelatedStudiesManager::queryPACSJobFinished(PACSJobPointer pacsJob)
 
     if (queryPACSJob.isNull())
     {
-        ERROR_LOG("The completed PACSJob is not a QueryPACSJob");
+        ERROR_LOG("El PACSJob que ha finalitzat no es un QueryPACSJob");
     }
     else
     {
@@ -227,7 +227,7 @@ void RelatedStudiesManager::mergeFoundStudiesInQuery(PACSJobPointer queryPACSJob
 {
     if (queryPACSJob.objectCast<QueryPacsJob>()->getQueryLevel() != QueryPacsJob::study)
     {
-        /// If the consultation was not of studies we are not interested, we only look for studies
+        /// Si la consulta no era d'estudis no ens interessa, només cerquem estudis
         return;
     }
 
@@ -237,8 +237,8 @@ void RelatedStudiesManager::mergeFoundStudiesInQuery(PACSJobPointer queryPACSJob
         {
             if (!isStudyInMergedStudyList(study) && !isMainStudy(study))
             {
-                // If the study is not already on the list of added studies and it is not the same study for which we have been asked to
-                // previous we add it
+                // Si l'estudi no està a llista ja d'estudis afegits i no és el mateix estudi pel qua ens han demanat el
+                // previ l'afegim
                 m_mergedStudyList.append(study);
             }
         }
@@ -250,10 +250,10 @@ void RelatedStudiesManager::errorQueringPACS(PACSJobPointer queryPACSJob)
     if (queryPACSJob.objectCast<QueryPacsJob>()->getStatus() != PACSRequestStatus::QueryOk &&
             queryPACSJob.objectCast<QueryPacsJob>()->getStatus() != PACSRequestStatus::QueryCancelled)
     {
-        // Since we do two searches on the same pacs if one fails, the other will probably also fail to avoid sending
-        // two error signals if both fail, because from the outside the number of queries must be transparent
-        // which is done in the PACS, and they should receive a single error we check if we have the PACS ID in the signal list
-        // of errors in issued PACS
+        // Com que fem dos cerques al mateix pacs si una falla, l'altra segurament també fallarà per evitar enviar
+        // dos signals d'error si les dos fallen, ja que per des de fora ha de ser transparent el número de consultes
+        // que es fa al PACS, i han de rebre un sol error comprovem si tenim l'ID del PACS a la llista de signals
+        // d'errors en PACS emesos
         if (!m_pacsDeviceIDErrorEmited.contains(queryPACSJob->getPacsDevice().getID()))
         {
             m_pacsDeviceIDErrorEmited.append(queryPACSJob->getPacsDevice().getID());
@@ -264,8 +264,8 @@ void RelatedStudiesManager::errorQueringPACS(PACSJobPointer queryPACSJob)
 
 void RelatedStudiesManager::queryFinished()
 {
-    // When all the queries are finished is how much we issue with the previous studies found. We cannot broadcast the results we receive,
-    // because we have to merge the results received, so as not to have duplicates (Studies of the matiex patient that are more than one PACS)
+    // Quan totes les query han acabat és quant fem l'emit amb els estudis previs trobats. No podem emetre els resultats que anem rebent,
+    // perquè hem de fer un merge del resultats rebuts, per no tenir duplicats (Estudis del matiex pacient que estiguin a més d'un PACS)
     emit queryStudiesFinished(m_mergedStudyList);
 }
 
@@ -294,7 +294,7 @@ DicomMask RelatedStudiesManager::getBasicDicomMask()
 {
     DicomMask dicomMask;
 
-    /// We define the fields that the query must return
+    /// Definim els camps que la consulta ha de retornar
     dicomMask.setPatientName("");
     dicomMask.setPatientID("");
     dicomMask.setStudyID("");
@@ -309,7 +309,7 @@ DicomMask RelatedStudiesManager::getBasicDicomMask()
 
 RelatedStudiesManager::LoadStatus RelatedStudiesManager::loadStudy(Study *study)
 {
-    if (LocalDatabaseManager().existsStudy(study))
+    if (LocalDatabaseManager().studyExists(study->getInstanceUID()))
     {
         SingletonPointer<QueryScreen>::instance()->loadStudyFromDatabase(study->getInstanceUID());
         return Loaded;
@@ -346,17 +346,17 @@ void RelatedStudiesManager::retrieveAndApplyAction(Study *study, const PacsDevic
     QInputOutputPacsWidget::ActionsAfterRetrieve queryScreenAction = QInputOutputPacsWidget::None;
     switch (action)
     {
-    case None:
-        queryScreenAction = QInputOutputPacsWidget::None;
-        break;
+        case None:
+            queryScreenAction = QInputOutputPacsWidget::None;
+            break;
 
-    case View:
-        queryScreenAction = QInputOutputPacsWidget::View;
-        break;
+        case View:
+            queryScreenAction = QInputOutputPacsWidget::View;
+            break;
 
-    case Load:
-        queryScreenAction = QInputOutputPacsWidget::Load;
-        break;
+        case Load:
+            queryScreenAction = QInputOutputPacsWidget::Load;
+            break;
     }
     
     QueryScreen *queryScreen = SingletonPointer<QueryScreen>::instance();

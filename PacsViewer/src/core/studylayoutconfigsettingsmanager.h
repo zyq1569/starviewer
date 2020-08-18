@@ -22,26 +22,26 @@ namespace udg {
 class StudyLayoutConfig;
 
 /** 
-Class that is responsible for obtaining, adding, updating, and deleting StudyLayoutConfig stored in settings.
+    Classe que s'encarrega d'obtenir, afegir, actualitzar i esborrar els StudyLayoutConfig desats a settings.
   */
 class StudyLayoutConfigSettingsManager {
 public:
     StudyLayoutConfigSettingsManager();
     ~StudyLayoutConfigSettingsManager();
 
-    /// Returns the list of configurations saved in settings
-    QList <StudyLayoutConfig> getConfigList () const;
+    /// Ens retorna la llista de configuracions desades a settings
+    QList<StudyLayoutConfig> getConfigList() const;
 
-    /// Methods for adding a new configuration, updating it, or deleting it. Returns true if the operation is performed successfully, false otherwise.
+    /// Mètodes per afegir una nova configuració, actualitzar-la o esborrar-la. Retorna cert si l'operació es duu a terme amb èxit, fals altrament.
 
-    /// Add a new configuration if none exists for that mode
-    bool addItem (const StudyLayoutConfig & config);
+    /// Afegeix una nova configuració si no n'existeix cap per aquella modalitat
+    bool addItem(const StudyLayoutConfig &config);
 
-    /// Update the configuration in case there is one configured for that mode
-    bool updateItem (const StudyLayoutConfig & config);
+    /// Actualitza la configuració en cas que n'existeixi una de configurada per aquella modalitat
+    bool updateItem(const StudyLayoutConfig &config);
 
-    /// Delete the configuration in case there is one configured for that mode
-    bool deleteItem (const StudyLayoutConfig & config);
+    /// Esborra la configuració en cas que n'existeixi una de configurada per aquella modalitat
+    bool deleteItem(const StudyLayoutConfig &config);
 };
 
 }

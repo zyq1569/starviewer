@@ -27,62 +27,62 @@ class PatientBrowserMenuExtendedInfo;
 class PatientBrowserMenuList;
 
 /**
-Widget in the form of a menu that displays the patient information we give him
-     of entrance so that we can navigate through their studies and corresponding volumes
+    Widget en forma de menú que desplega la informació del pacient que li donem
+    d'entrada de forma que poguem navegar pels seus estudis i corresponents volums
   */
 class PatientBrowserMenu : public QWidget {
-    Q_OBJECT
+Q_OBJECT
 public:
     PatientBrowserMenu(QWidget *parent = 0);
     ~PatientBrowserMenu();
 
-    /// We assign a patient to represent in the menu
+    /// Assignem un pacient per representar al menu
     void setPatient(Patient *patient);
 
     /// Sets if the menu can show fusion pair options if any
     void setShowFusionOptions(bool show);
 
 public slots:
-    /// We display the menu in the indicated position
+    /// Fem que es mostri el menú en la posició indicada
     void popup(const QPoint &point, const QString &identifier = QString());
 
 signals:
-    /// Signal that notifies the volume corresponding to the chosen item
+    /// Senyal que notifica el volum corresponent a l'ítem escollit
     void selectedVolume(Volume *);
     void selectedVolumes(const QList<Volume *> &);
 
 private slots:
-    /// Update views related to the active item (the one the mouse hovers over)
+    /// Actualitza les vistes relacionades amb l'ítem actiu (aquell pel qual passa el ratolí per sobre)
     void updateActiveItemView(const QString &identifier);
 
-    /// Given the item identifier does the relevant actions.
-    /// In this case it is responsible for obtaining the volume selected by the user and notifying it
+    /// Donat l'identificador de l'ítem fa les accions pertinents.
+    /// En aquest cas s'encarrega d'obtenir el volum seleccionat per l'usuari i notificar-ho
     void processSelectedItem(const QString &identifier);
 
 private:
-    /// Create the widgets that make up the menu
+    /// Crea els widgets dels que es composa el menú
     void createWidgets();
 
-    /// It returns us true if we need to align the menu to the right. False in case it has to be aligned to the left.
+    /// Ens retorna cert si cal alinear el menú a la dreta. Fals en cas que s'hagi d'alinear a la l'esquerra.
     bool shouldAlignMenuToTheRight(const QRect &currentScreenGeometry);
-
-    /// Calculates the size that is outside the widget screen with the list of studies / series according to the popup point.
-    /// If it is inside the screen, the size will be (0,0). The third parameter indicates how we want the menu to be aligned
-    /// with respect to the screen. If true, do the calculations keeping in mind that it is aligned to the right, otherwise as if it is aligned to the left
+    
+    /// Calcula la mida que queda fora de la pantalla del widget amb la llista d'estudis/sèries segons el punt de popup.
+    /// Si queda dins de la pantalla, la mida serà (0,0). El tercer paràmetre indica com volem que quedi alineat el menú
+    /// respecte la pantalla. Si true, fa els càlculs tenint en compte que s'alinea a la dreta, altrament com si s'alineés a l'esquerra
     void computeListOutsideSize(const QPoint &popupPoint, QSize &out, bool rightAligned);
-
-    /// Place the additional information widget in the most appropriate place depending on the position of the main menu
+    
+    /// Col·loca el widget d'informació adicional all lloc més adient depenent de la posició del menú principal
     void placeAdditionalInfoWidget();
 
 private:
-    /// Attribute that saves the pointer to the basic menu that represents the patient data
+    /// Atribut que guarda el punter al menú basic que representa les dades del pacient
     PatientBrowserMenuList *m_patientBrowserList;
 
-    /// Attribute that saves the pointer in the menu with additional information of the selected item
+    /// Atribut que guarda el punter al menú amb informació addicional de l'ítem seleccionat
     PatientBrowserMenuExtendedInfo *m_patientAdditionalInfo;
 
-    /// Identifiers of the screens with respect to where the menu is displayed
-    /// The ID of the current screen, and the attached screens, will be calculated each time the menu popup is performed
+    /// Identificadors de les pantalles respecte on es troba desplegat el menú
+    /// L'ID de la pantalla actual, i les pantalles annexes, es calcularà cada cop que es faci el popup del menú
     int m_currentScreenID;
     int m_leftScreenID;
     int m_rightScreenID;

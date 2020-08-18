@@ -32,8 +32,6 @@ QLogViewer::QLogViewer(QWidget *parent)
 {
     setupUi(this);
     readSettings();
-//  We load the log file
-//  updateData();
     createConnections();
 }
 
@@ -44,19 +42,19 @@ QLogViewer::~QLogViewer()
 
 void QLogViewer::updateData()
 {
-    // \TODO this directory should be saved in some sort of settings or similar
+    // \TODO aquest directori s'hauria de guardar en alguna mena de settings o similar
     QFile logFile(udg::UserLogsFile);
     if (!logFile.open(QFile::ReadOnly | QFile::Text))
     {
-        ERROR_LOG("Could not open log file");
-        m_logBrowser->setPlainText(tr("ERROR: No Log file found at this path: %1\nEnvironment variable (logFilePath): %2").
-                                   arg(udg::UserLogsFile).arg(QString::fromLocal8Bit(qgetenv("logFilePath"))));
+        ERROR_LOG("No s'ha pogut obrir l'arxiu de logs");
+        m_logBrowser->setPlainText(tr("ERROR: No Log file found at this path: %1\nEnvironment variable (logFilePath): %2").arg(udg::UserLogsFile).arg(
+                                   QString::fromLocal8Bit(qgetenv("logFilePath"))));
     }
     else
     {
-        INFO_LOG("The log file was successfully opened [" + QString(QString::fromLocal8Bit(qgetenv("logFilePath"))) + "]");
-        m_logBrowser->setReadOnly(true);
+        INFO_LOG("S'ha obert amb èxit l'arxiu de logs [" + udg::getLogFilePath() + "]");
         m_logBrowser->setPlainText(logFile.readAll());
+        m_logBrowser->moveCursor(QTextCursor::End);
     }
 }
 

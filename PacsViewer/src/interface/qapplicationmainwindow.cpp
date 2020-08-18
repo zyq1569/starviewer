@@ -41,7 +41,6 @@
 #include "screenmanager.h"
 #include "qscreendistribution.h"
 #include "volumerepository.h"
-#include "applicationstylehelper.h"
 #include "qdiagnosistest.h"
 
 // Amb starviewer lite no hi haurà hanging protocols, per tant no els carregarem
@@ -70,22 +69,23 @@
 
 namespace udg {
 
-// To process the options entered by command line we have to use a Singleton of StarviewerApplicationCommandLine, this comes because
-// of QApplicationMainWindow instances we have as many as Starviewer open windows we have. Instances of QApplicationMainWindow are created
-// and are destroyed as a new window opens or a Starviewer window closes so we can't hold anyone responsible
-// QApplicationMainWindow to handle requests received via arguments or received from other instances of Starviewer via
-// from QtSingleApplication, because we can't guarantee that no QApplicationMainWindow will be alive throughout the execution of Starviewer, to take care of
-// to process command line arugments.
+// Per processar les opcions entrades per línia de comandes hem d'utilitzar un Singleton de StarviewerApplicationCommandLine, això ve degut a que
+// d'instàncies de QApplicationMainWindow en tenim tantes com finestres obertes d'Starviewer tinguem. Instàncies deQApplicationMainWindow es crees
+// i es destrueixen a mesura que s'obre una nova finestra o es tanca una finestra d'Starviewer per tant no podem responsabilitzar a cap
+// QApplicationMainWindow que s'encarregui de antendre les peticions rebudes via arguments o rebudes d'altres instàncies d'Starviewer a través
+// de QtSingleApplication, perquè no podem garantir que cap QApplicationMainWindow estigui viva durant tota l'execució d'Starviewer, per encarregar-se
+// de processar els arugments de línia de comandes.
 
-// That's why all QApplicationMainWindow is connected to a signal from the same instance of
-// StarviewerSingleApplicationCommandLineSingleton, this signal is newOptionsToRun () that is output every time new arguments are received already
-// proceed from the same instance at startup or from other instances via QtSingleApplication. Once the signal has been issued the instances
-// from QApplicationMainWindow as they respond to the signal with the takeOptionToRun () method they process all the arguments until they don't
-// there is none left to process.
+// Per això el que s'ha fet és que totes les QApplicationMainWindow es connectin a un signal de la mateixa instància de
+// StarviewerSingleApplicationCommandLineSingleton, aquest signal és newOptionsToRun() que s'emet cada vegada que es reben nous arguments ja
+// procedeixin de la mateixa instància al iniciar-la o d'altres instàncies via QtSingleApplication. Una vegada s'ha emés el signal les instàncies
+// de QApplicationMainWindow a mesura que responen al signal amb el mètode takeOptionToRun() van processan tots els arguments fins que no en
+// queda cap per processar.
 
-// The option that processes a QApplicationMainWindow instance obtained through the takeOptionToRun () method disappears from the list of options
-// to process StarviewerApplicationCommandLine, so even though all instances of QApplicationMainWindow can process
-// options received, each option will only be processed by the first instance that takes it through the takeOptionToRun () method.
+// L'opció que processa una instància de QApplicationMainWindow obtinguda a través del mètode takeOptionToRun() desapereix de la llista d'opcions
+// per processar de StarviewerApplicationCommandLine, de manera que tot i que totes les instàncies de QApplicationMainWindow poden processar
+// opcions rebuts, cada opció només serà processat per la primera instància que l'agafi a través del mètode takeOptionToRun().
+
 typedef SingletonPointer<StarviewerApplicationCommandLine> StarviewerSingleApplicationCommandLineSingleton;
 
 QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
@@ -98,11 +98,11 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     this->setCentralWidget(m_extensionWorkspace);
 
     DatabaseInstallation databaseInstallation;
-    if (!databaseInstallation.checkStarviewerDatabase())
+    if (!databaseInstallation.checkDatabase())
     {
         QString errorMessage = databaseInstallation.getErrorMessage();
-        QMessageBox::critical(0, ApplicationNameString, tr("There have been some errors:") + "\n" + errorMessage + "\n\n" +
-                              tr("You can resolve this error at Tools > Configuration > Local Database."));
+        QMessageBox::critical(0, ApplicationNameString, tr("There have been some errors:") + "\n" + errorMessage + "\n\n" + 
+                                                    tr("You can resolve this error at Tools > Configuration > Local Database."));
     }
 
     m_extensionHandler = new ExtensionHandler(this);
@@ -112,19 +112,16 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     createActions();
     createMenus();
 
-    m_applicationVersionChecker = new ApplicationVersionChecker(this);
-    m_applicationVersionChecker->checkReleaseNotes();
-
-    // We read the settings of the application, state of the window, position, etc
+    // Llegim les configuracions de l'aplicació, estat de la finestra, posicio,etc
     readSettings();
-    // Application icon
-    this->setWindowIcon(QIcon(":/images/starviewer.png"));
+    // Icona de l'aplicació
+    this->setWindowIcon(QIcon(":/images/logo/logo.ico"));
     this->setWindowTitle(ApplicationNameString);
 
-    // With starviewer lite there will be no hanging protocols, so we will not load them
+// Amb starviewer lite no hi haurà hanging protocols, per tant no els carregarem
 #ifndef STARVIEWER_LITE
-    // Load the repositories we need to have loaded throughout the application
-    // We will only load once per session / instance of starviewer
+    // Càrrega dels repositoris que necessitem tenir carregats durant tota l'aplicació
+    // Només carregarem un cop per sessió/instància d'starviewer
     static bool repositoriesLoaded = false;
     if (!repositoriesLoaded)
     {
@@ -141,21 +138,20 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     }
 #endif
 
-    // We create the progress dialog that will notify the volume loading
+    // Creem el progress dialog que notificarà la càrrega de volums
     m_progressDialog = new QProgressDialog(this);
     m_progressDialog->setModal(true);
     m_progressDialog->setRange(0, 100);
-    m_progressDialog->setMinimumDuration(0);
+    m_progressDialog->setMinimumDuration(1);
     m_progressDialog->setWindowTitle(tr("Loading"));
     m_progressDialog->setLabelText(tr("Loading data, please wait..."));
     m_progressDialog->setCancelButton(0);
+    m_progressDialog->setValue(100);
 
 #ifdef BETA_VERSION
     markAsBetaVersion();
     showBetaVersionDialog();
 #endif
-
-    computeDefaultToolTextSize();
 
     m_statsWatcher = new StatsWatcher("Menu triggering", this);
     m_statsWatcher->addTriggerCounter(m_fileMenu);
@@ -174,6 +170,11 @@ QApplicationMainWindow::~QApplicationMainWindow()
     delete m_extensionHandler;
 }
 
+void QApplicationMainWindow::checkNewVersionAndShowReleaseNotes()
+{
+    ApplicationVersionChecker::checkAndShowReleaseNotes();
+}
+
 void QApplicationMainWindow::createActions()
 {
     m_signalMapper = new QSignalMapper(this);
@@ -184,14 +185,14 @@ void QApplicationMainWindow::createActions()
     m_newAction->setText(tr("&New Window"));
     m_newAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::NewWindow));
     m_newAction->setStatusTip(tr("Open a new working window"));
-    m_newAction->setIcon(QIcon(":/images/new.png"));
+    m_newAction->setIcon(QIcon(":/images/icons/window-new.svg"));
     connect(m_newAction, SIGNAL(triggered()), SLOT(openBlankWindow()));
 
     m_openAction = new QAction(this);
     m_openAction->setText(tr("&Open Files..."));
     m_openAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::OpenFile));
     m_openAction->setStatusTip(tr("Open one or several existing volume files"));
-    m_openAction->setIcon(QIcon(":/images/open.png"));
+    m_openAction->setIcon(QIcon(":/images/icons/document-open.svg"));
     m_signalMapper->setMapping(m_openAction, 1);
     connect(m_openAction, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
 
@@ -199,13 +200,13 @@ void QApplicationMainWindow::createActions()
     m_openDirAction->setText(tr("Open Files from a Directory..."));
     m_openDirAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::OpenDirectory));
     m_openDirAction->setStatusTip(tr("Open an existing DICOM folder"));
-    m_openDirAction->setIcon(QIcon(":/images/openDicom.png"));
+    m_openDirAction->setIcon(QIcon(":/images/icons/document-open.svg"));
     m_signalMapper->setMapping(m_openDirAction, 6);
     connect(m_openDirAction, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
 
     m_pacsAction = new QAction(this);
 #ifdef STARVIEWER_LITE
-    //The "PACS" menu will be called "Exams"
+    // El menú "PACS" es dirà "Exams"
     m_pacsAction->setText(tr("&Exams..."));
     m_pacsAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::OpenExams));
     m_pacsAction->setStatusTip(tr("Browse exams"));
@@ -218,12 +219,12 @@ void QApplicationMainWindow::createActions()
     m_localDatabaseAction->setText(tr("&Local Database Studies..."));
     m_localDatabaseAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::OpenLocalDatabaseStudies));
     m_localDatabaseAction->setStatusTip(tr("Browse local database studies"));
-    m_localDatabaseAction->setIcon(QIcon(":/images/database.png"));
+    m_localDatabaseAction->setIcon(QIcon(":/images/icons/database-local.svg"));
     m_signalMapper->setMapping(m_localDatabaseAction, 10);
     connect(m_localDatabaseAction, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
 #endif
-    //EVERYTHING maybe at least for the Lite version the icon would have to be changed
-    m_pacsAction->setIcon(QIcon(":/images/pacsQuery.png"));
+    // TODO potser almenys per la versió Lite caldria canviar la icona
+    m_pacsAction->setIcon(QIcon(":/images/icons/document-open-remote.svg"));
     m_signalMapper->setMapping(m_pacsAction, 7);
     connect(m_pacsAction, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
 
@@ -231,7 +232,7 @@ void QApplicationMainWindow::createActions()
     m_openDICOMDIRAction->setText(tr("Open DICOMDIR..."));
     m_openDICOMDIRAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::OpenDICOMDIR));
     m_openDICOMDIRAction->setStatusTip(tr("Open DICOMDIR from CD, DVD, USB flash drive or hard disk"));
-    m_openDICOMDIRAction->setIcon(QIcon(":/images/openDICOMDIR.png"));
+    m_openDICOMDIRAction->setIcon(QIcon(":/images/icons/document-open-dicomdir.svg"));
     m_signalMapper->setMapping(m_openDICOMDIRAction, 8);
     connect(m_openDICOMDIRAction, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
 
@@ -305,7 +306,7 @@ void QApplicationMainWindow::createActions()
     m_logViewerAction = new QAction(this);
     m_logViewerAction->setText(tr("Show Log File"));
     m_logViewerAction->setStatusTip(tr("Show log file"));
-    m_logViewerAction->setIcon(QIcon(":/images/logs.png"));
+    m_logViewerAction->setIcon(QIcon(":/images/icons/show-log.svg"));
     connect(m_logViewerAction, SIGNAL(triggered()), m_logViewer, SLOT(updateData()));
     connect(m_logViewerAction, SIGNAL(triggered()), m_logViewer, SLOT(exec()));
 
@@ -317,28 +318,28 @@ void QApplicationMainWindow::createActions()
     m_aboutAction = new QAction(this);
     m_aboutAction->setText(tr("&About"));
     m_aboutAction->setStatusTip(tr("Show the application's About box"));
-    m_aboutAction->setIcon(QIcon(":/images/starviewer.png"));
+    m_aboutAction->setIcon(QIcon(":/images/logo/logo.ico"));
     connect(m_aboutAction, SIGNAL(triggered()), SLOT(about()));
 
     m_closeAction = new QAction(this);
     m_closeAction->setText(tr("&Close"));
     m_closeAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::CloseCurrentExtension));
     m_closeAction->setStatusTip(tr("Close current extension page"));
-    m_closeAction->setIcon(QIcon(":/images/fileclose.png"));
+    m_closeAction->setIcon(QIcon(":/images/icons/project-development-close.svg"));
     connect(m_closeAction, SIGNAL(triggered()), m_extensionWorkspace, SLOT(closeCurrentApplication()));
 
     m_exitAction = new QAction(this);
     m_exitAction->setText(tr("E&xit"));
     m_exitAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::CloseApplication));
     m_exitAction->setStatusTip(tr("Exit the application"));
-    m_exitAction->setIcon(QIcon(":/images/exit.png"));
+    m_exitAction->setIcon(QIcon(":/images/icons/application-exit.svg"));
     connect(m_exitAction, SIGNAL(triggered()), qApp, SLOT(closeAllWindows()));
 
     m_configurationAction = new QAction(this);
     m_configurationAction->setText(tr("&Configuration..."));
     m_configurationAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::Preferences));
     m_configurationAction->setStatusTip(tr("Modify %1 configuration").arg(ApplicationNameString));
-    m_configurationAction->setIcon(QIcon(":/images/preferences.png"));
+    m_configurationAction->setIcon(QIcon(":/images/icons/configure.svg"));
     connect(m_configurationAction, SIGNAL(triggered()), SLOT(showConfigurationDialog()));
 
     m_runDiagnosisTestsAction = new QAction(this);
@@ -394,9 +395,9 @@ void QApplicationMainWindow::createMenus()
     m_fileMenu->addAction(m_exitAction);
 
 #ifdef STARVIEWER_LITE
-    // We do not add display menus
+    // No afegim els menús de visualització
 #else
-    // Actions related to visualization
+    // Accions relacionades amb la visualització
     m_visualizationMenu = menuBar()->addMenu(tr("&Visualization"));
 
     foreach (QAction *action, m_actionsList)
@@ -415,7 +416,7 @@ void QApplicationMainWindow::createMenus()
     createExternalApplicationsMenu();
     connect(ExternalApplicationsManager::instance(), SIGNAL(onApplicationsChanged()), this, SLOT(createExternalApplicationsMenu()));
 
-    // Menu 'window'
+    // Menú 'window'
     m_windowMenu = menuBar()->addMenu(tr("&Window"));
     m_moveWindowToDesktopMenu = m_windowMenu->addMenu(tr("Move to Screen"));
     m_moveWindowToDesktopMenu->addAction(m_moveToDesktopAction);
@@ -425,7 +426,7 @@ void QApplicationMainWindow::createMenus()
     
     menuBar()->addSeparator();
 
-    //Help and support menu
+    // Menú d'ajuda i suport
     m_helpMenu = menuBar()->addMenu(tr("&Help"));
     m_helpMenu->addAction(m_openUserGuideAction);
     m_helpMenu->addAction(m_openQuickStartGuideAction);
@@ -476,7 +477,7 @@ void QApplicationMainWindow::createExternalApplicationsMenu()
     }
 
     m_externalApplicationsMenu = m_toolsMenu->addMenu(tr("&External applications"));
-    m_externalApplicationsMenu->setIcon(QIcon(":/images/system-run.svg"));
+    m_externalApplicationsMenu->setIcon(QIcon(":/images/icons/system-run.svg"));
 
     QSignalMapper *signalMapper = new QSignalMapper(m_externalApplicationsMenu);
     connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(launchExternalApplication(int)));
@@ -529,10 +530,10 @@ QAction* QApplicationMainWindow::createLanguageAction(const QString &language, c
 
 void QApplicationMainWindow::killBill()
 {
-    // We remove all extensions
+    // Eliminem totes les extensions
     this->getExtensionWorkspace()->killThemAll();
-    // TODO download all the volumes that the patient has in this window
-    // when we destroy ourselves we release all the volumes in memory
+    // TODO descarregar tots els volums que tingui el pacient en aquesta finestra
+    // quan ens destruim alliberem tots els volums que hi hagi a memòria
     if (this->getCurrentPatient() != NULL)
     {
         foreach (Study *study, this->getCurrentPatient()->getStudies())
@@ -589,7 +590,7 @@ QApplicationMainWindow* QApplicationMainWindow::openBlankWindow()
 
 void QApplicationMainWindow::setPatient(Patient *patient)
 {
-    //If patient data is null, we do nothing
+    // Si les dades de pacient són nules, no fem res
     if (!patient)
     {
         DEBUG_LOG("NULL Patient, maybe creating a blank new window");
@@ -598,11 +599,11 @@ void QApplicationMainWindow::setPatient(Patient *patient)
 
     if (this->getCurrentPatient())
     {
-        // First we charge the patient
+        // Primer ens carreguem el pacient
         this->killBill();
         delete m_patient;
         m_patient = NULL;
-        DEBUG_LOG("We already had a patient, we deleted him.");
+        DEBUG_LOG("Ja teníem un pacient, l'esborrem.");
     }
 
     m_patient = patient;
@@ -659,9 +660,9 @@ ExtensionWorkspace* QApplicationMainWindow::getExtensionWorkspace()
 
 void QApplicationMainWindow::closeEvent(QCloseEvent *event)
 {
-    // \ TODO here we should check if the application is doing other pending tasks that should be completed before closing
-    // the application such as downloaded images from PACS or similar.
-    // It should be done centrally.
+    // \TODO aquí hauríem de controlar si l'aplicació està fent altres tasques pendents que s'haurien de finalitzar abans de tancar
+    // l'aplicació com per exemple imatges en descàrrega del PACS o similar.
+    // Caldria fer-ho de manera centralitzada.
     event->accept();
 }
 
@@ -672,12 +673,6 @@ void QApplicationMainWindow::resizeEvent(QResizeEvent *event)
         updateBetaVersionTextPosition();
     }
     QMainWindow::resizeEvent(event);
-}
-
-void QApplicationMainWindow::showEvent(QShowEvent *event)
-{
-    m_applicationVersionChecker->showIfCorrect();
-    QMainWindow::showEvent(event);
 }
 
 void QApplicationMainWindow::about()
@@ -704,7 +699,7 @@ void QApplicationMainWindow::markAsBetaVersion()
 {
     m_isBetaVersion = true;
     m_betaVersionMenuText = new QLabel(menuBar());
-    m_betaVersionMenuText->setText("<a href='beta'><img src=':/images/beta-warning.png'></a>&nbsp;<a href='beta'>Beta Version</a>");
+    m_betaVersionMenuText->setText("<a href='beta'><img src=':/images/icons/emblem-warning.svg'></a>&nbsp;<a href='beta'>Beta Version</a>");
     m_betaVersionMenuText->setAlignment(Qt::AlignVCenter);
     connect(m_betaVersionMenuText, SIGNAL(linkActivated(const QString&)), SLOT(showBetaVersionDialog()));
     updateBetaVersionTextPosition();
@@ -758,22 +753,22 @@ void QApplicationMainWindow::newCommandLineOptionsToRun()
 {
     QPair<StarviewerApplicationCommandLine::StarviewerCommandLineOption, QString> optionValue;
 
-    //As long as there are options to process
+    // Mentre quedin opcions per processar
     while (StarviewerSingleApplicationCommandLineSingleton::instance()->takeOptionToRun(optionValue))
     {
         switch (optionValue.first)
         {
-        case StarviewerApplicationCommandLine::openBlankWindow:
-            INFO_LOG("Rebut argument de linia de comandes per obrir nova finestra");
-            openBlankWindow();
-            break;
-        case StarviewerApplicationCommandLine::retrieveStudyFromAccessioNumber:
-            INFO_LOG("Rebut argument de linia de comandes per descarregar un estudi a traves del seu accession number");
-            sendRequestRetrieveStudyWithAccessionNumberToLocalStarviewer(optionValue.second);
-            break;
-        default:
-            INFO_LOG("Argument de linia de comandes invalid");
-            break;
+            case StarviewerApplicationCommandLine::openBlankWindow:
+                INFO_LOG("Rebut argument de linia de comandes per obrir nova finestra");
+                openBlankWindow();
+                break;
+            case StarviewerApplicationCommandLine::retrieveStudyFromAccessioNumber:
+                INFO_LOG("Rebut argument de linia de comandes per descarregar un estudi a traves del seu accession number");
+                sendRequestRetrieveStudyWithAccessionNumberToLocalStarviewer(optionValue.second);
+                break;
+            default:
+                INFO_LOG("Argument de linia de comandes invalid");
+                break;
         }
     }
 }
@@ -787,10 +782,10 @@ void QApplicationMainWindow::sendRequestRetrieveStudyWithAccessionNumberToLocalS
     }
     else
     {
-        //EVERYTHING: A more generic message should be made
+        // TODO:S'hauria de fer un missatge més genèric
         QMessageBox::information(this, ApplicationNameString,
                                  tr("Please activate \"Listen to RIS requests\" option in %1 configuration to retrieve studies from SAP.")
-                                 .arg(ApplicationNameString));
+                               .arg(ApplicationNameString));
     }
 }
 
@@ -825,11 +820,7 @@ void QApplicationMainWindow::showDiagnosisTestDialog()
 
 void QApplicationMainWindow::openReleaseNotes()
 {
-    m_applicationVersionChecker->showLocalReleaseNotes();
+    ApplicationVersionChecker::showLocalReleaseNotes();
 }
 
-void QApplicationMainWindow::computeDefaultToolTextSize()
-{
-    ApplicationStyleHelper().recomputeStyleToScreenOfWidget(this);
-}
-}; // end namespace udg
+} // end namespace udg

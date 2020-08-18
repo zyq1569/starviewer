@@ -29,7 +29,6 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QTextStream>
-#include <QApplication>
 
 namespace udg {
 
@@ -51,27 +50,21 @@ void HangingProtocolsLoader::loadDefaults()
     QString defaultPath = "/etc/xdg/" + OrganizationNameString + "/" + ApplicationNameString + "/hangingprotocols/";
     if (!QFile::exists(defaultPath))
     {
-        defaultPath = qApp->applicationDirPath() + "/hangingprotocols/";
+        defaultPath = installationPath() + "/hangingprotocols/";
     }
     if (!QFile::exists(defaultPath))
     {
-        // En entorn de desenvolupament Windows & Linux
-        defaultPath = qApp->applicationDirPath() + "/../hangingprotocols/";
-    }
-    if (!QFile::exists(defaultPath))
-    {
-        // En entorn de desenvolupament Mac OS X
-        defaultPath = qApp->applicationDirPath() + "/../../../../hangingprotocols/";
+        defaultPath = sourcePath() + "/hangingprotocols/";
     }
 
     if (QFile::exists(defaultPath))
     {
-        INFO_LOG(QString("Directory where the default hanging protocols will be searched: %1").arg(defaultPath));
+        INFO_LOG(QString("Directori a on es van a buscar els hanging protocols per defecte: %1").arg(defaultPath));
         loadXMLFiles(defaultPath);
     }
     else
     {
-        INFO_LOG(QString("The default directory for hanging protocols (% 1) does not exist. They will not be charged.").arg(defaultPath));
+        INFO_LOG(QString("El directori per defecte dels hanging protocols (%1) no existeix. No es carregaran.").arg(defaultPath));
     }
 
     /// Hanging protocols definits per l'usuari

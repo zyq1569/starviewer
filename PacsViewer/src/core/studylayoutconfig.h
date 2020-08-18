@@ -15,7 +15,7 @@
 #ifndef UDGSTUDYLAYOUTCONFIG_H
 #define UDGSTUDYLAYOUTCONFIG_H
 
-#include <QSet>
+#include <QList>
 #include <QString>
 
 namespace udg {
@@ -25,9 +25,9 @@ public:
     enum UnfoldType { UnfoldImages, UnfoldSeries, DefaultUnfoldType = UnfoldSeries };
     enum UnfoldDirectionType { LeftToRightFirst, TopToBottomFirst, DefaultUnfoldDirection = LeftToRightFirst };
     enum ExclusionCriteriaType { Survey, Localizer };
-
+    
     StudyLayoutConfig();
-    /// Builder with most common parameters
+    /// Constructor amb paràmetres més habituals
     StudyLayoutConfig(const QString &modality, UnfoldType unfoldType = DefaultUnfoldType, UnfoldDirectionType unfoldDirection = DefaultUnfoldDirection);
     ~StudyLayoutConfig();
 
@@ -49,19 +49,19 @@ public:
     bool operator ==(const StudyLayoutConfig &config) const;
 
 private:
-    /// Maximum number of viewers to deploy. If it is zero it would indicate that as many as possible should be deployed.
+    /// Nombre màxim de visors a desplegar. Si és zero indicaria que s'han de desplegar tants com sigui possible.
     int m_maxNumberOfViewers;
 
-    /// Type of deployment
+    /// Tipus de desplegament
     UnfoldType m_unfoldType;
 
-    /// Deployment direction
+    /// Direcció de desplegament
     UnfoldDirectionType m_unfoldDirection;
 
-    ///Set of exclusion criteria
-    QSet<ExclusionCriteriaType> m_exclusionCriteria;
+    /// Conjunt de criteris d'exclusió
+    QList<ExclusionCriteriaType> m_exclusionCriteria;
 
-    /// How to apply this setting
+    /// Modalitat a la que aplicar aquesta configuració
     QString m_modality;
 };
 

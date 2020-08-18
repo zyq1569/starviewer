@@ -40,15 +40,15 @@ bool SettingsAccessLevelFileReader::read(const QString &filePath)
         {
             QStringList list = settings.allKeys();
             QString fileVersion = settings.value("settingsAccessLevelVersion").toString();
-            //DEBUG_LOG("Versió d'arxiu 'settingsAccessLevel': " + fileVersion);
+            DEBUG_LOG("Versió d'arxiu 'settingsAccessLevel': " + fileVersion);
             if (!fileVersion.isEmpty())
             {
                 list.removeAt(list.indexOf("settingsAccessLevelVersion"));
             }
             else
             {
-                //DEBUG_LOG("No file version specified for " + filePath + " file. Assuming v1.0");
-                //WARN_LOG("No file version specified for " + filePath + " file. Assuming v1.0");
+                DEBUG_LOG("No file version specified for " + filePath + " file. Assuming v1.0");
+                WARN_LOG("No file version specified for " + filePath + " file. Assuming v1.0");
                 fileVersion = "1.0";
             }
             if (fileVersion == "1.0")
@@ -70,13 +70,13 @@ bool SettingsAccessLevelFileReader::read(const QString &filePath)
                     }
                     else
                     {
-                        //DEBUG_LOG("Valor inesperat d'accessLevel: " + value);
-                        //WARN_LOG("Valor inesperat d'accessLevel: " + value);
+                        DEBUG_LOG("Valor inesperat d'accessLevel: " + value);
+                        WARN_LOG("Valor inesperat d'accessLevel: " + value);
                         ok = false;
                     }
                     if (ok)
                     {
-                        //DEBUG_LOG(">>>>>>>>>>>>>Inserim la clau: " + key + " amb valor: " + value);
+                        DEBUG_LOG(">>>>>>>>>>>>>Inserim la clau: " + key + " amb valor: " + value);
                         m_accessLevelTable.insert(key, accessLevel);
                     }
                 }
@@ -86,12 +86,12 @@ bool SettingsAccessLevelFileReader::read(const QString &filePath)
 
         case QSettings::FormatError:
             ok = false;
-            //DEBUG_LOG("Error de format en l'arxiu: " + filePath + ". Possiblement el format no és el d'un .INI");
+            DEBUG_LOG("Error de format en l'arxiu: " + filePath + ". Possiblement el format no és el d'un .INI");
             break;
 
         case QSettings::AccessError:
             ok = false;
-            //DEBUG_LOG("Error d'accés amb el fitxer: " + filePath);
+            DEBUG_LOG("Error d'accés amb el fitxer: " + filePath);
             break;
     }
 
