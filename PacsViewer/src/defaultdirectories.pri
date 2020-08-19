@@ -2,7 +2,7 @@
 # com a variables de sistema les que vulguis substituir. Ex.: export ITKLIBDIR=/usr/lib64/InsightToolkit
 
 # Default install prefix is /usr/local
-SDK_INSTALL_PREFIX = $$(SDK_INSTALL_PREFIX)
+SDK_INSTALL_PREFIX = D:\SDK\starviewer-sdk-win64-0.15
 isEmpty(SDK_INSTALL_PREFIX){
     unix:SDK_INSTALL_PREFIX = $$(HOME)/starviewer-sdk-0.15/usr/local
     win32:SDK_INSTALL_PREFIX = $$(USERPROFILE)/starviewer-sdk-0.15/32

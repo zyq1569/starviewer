@@ -12,7 +12,7 @@
 
 #include "itkRegistre3DAffine.h"
 #include "volume.h"
-
+#include <QActionGroup>
 // Forward declarations
 class vtkActor;
 class vtkImageActor;

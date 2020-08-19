@@ -16,7 +16,7 @@
 
 #include <QtCore/qmath.h>
 #include <cfloat>
-
+#include <QList>
 namespace udg {
 
 ROIData::ROIData()
