@@ -33,7 +33,7 @@
 namespace udg {
 
 HangingProtocolsLoader::HangingProtocolsLoader(QObject *parent)
- : QObject(parent)
+    : QObject(parent)
 {
 
 }
@@ -45,7 +45,7 @@ HangingProtocolsLoader::~HangingProtocolsLoader()
 
 void HangingProtocolsLoader::loadDefaults()
 {
-    /// Hanging protocols definits per defecte, agafa el directori de l'executable TODO això podria ser un setting més
+    /// Hanging protocols defined by default, grab the executable directory ALL this could be one more setting
     // Path linux
     QString defaultPath = "/etc/xdg/" + OrganizationNameString + "/" + ApplicationNameString + "/hangingprotocols/";
     if (!QFile::exists(defaultPath))
@@ -59,12 +59,12 @@ void HangingProtocolsLoader::loadDefaults()
 
     if (QFile::exists(defaultPath))
     {
-        INFO_LOG(QString("Directori a on es van a buscar els hanging protocols per defecte: %1").arg(defaultPath));
+        INFO_LOG(QString("Directory where the default hanging protocols will be searched:% 1").arg(defaultPath));
         loadXMLFiles(defaultPath);
     }
     else
     {
-        INFO_LOG(QString("El directori per defecte dels hanging protocols (%1) no existeix. No es carregaran.").arg(defaultPath));
+        INFO_LOG(QString("The default directory for hanging protocols (% 1) does not exist. They will not be charged.").arg(defaultPath));
     }
 
     /// Hanging protocols definits per l'usuari
