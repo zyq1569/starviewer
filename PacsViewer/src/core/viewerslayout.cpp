@@ -26,7 +26,8 @@ namespace udg {
 namespace {
 
 /**
- * @brief The ExtendedGridIterator class extends the regular GridIterator with a method that returns the relative geometry corresponding to the current cell.
+ * @brief The ExtendedGridIterator class extends the regular GridIterator
+ * with a method that returns the relative geometry corresponding to the current cell.
  */
 class ExtendedGridIterator : public GridIterator {
 
@@ -52,7 +53,8 @@ struct ScreenLayoutInfo {
     int verticalPosition;
 };
 
-/// Given a window and a viewer, returns a struct with information on the number of screns occupied by the window and on which screen is the viewer.
+/// Given a window and a viewer, returns a struct with information on the number of
+/// screns occupied by the window and on which screen is the viewer.
 ScreenLayoutInfo getScreenLayoutInfo(QWidget *window, QWidget *viewer)
 {
     ScreenManager screenManager;
@@ -79,7 +81,7 @@ ScreenLayoutInfo getScreenLayoutInfo(QWidget *window, QWidget *viewer)
 }
 
 ViewersLayout::ViewersLayout(QWidget *parent)
- : QWidget(parent), m_selectedViewer(0)
+    : QWidget(parent), m_selectedViewer(0)
 {
     // Set a palette with a dark background to avoid flashes in mammography displays
     QPalette darkPalette;
@@ -126,10 +128,10 @@ Q2DViewerWidget* ViewersLayout::getNewQ2DViewerWidget()
 
 void ViewersLayout::deleteQ2DViewerWidget(Q2DViewerWidget *viewer)
 {
-    // TODO: Xapussilla que cal fer ja que si es fa un "delete viewer" directament peta al canviar d'HP i cal fer-li un deleteLater.
-    // Si es fa un deleteLater i prou els viewer no s'esborren fins que s'han creat els nous. Això faria que hi hagi un moment en que
-    // tindríem la memòria acumulada dels viewers vells i els nous (això inclou la memòria de textura que allotja el renderer). Això podria provar
-    // que ens en quedessim sense si es tracten d'imatges grans. Per això fem un delete del viewer i després el deleteLater perquè no peti.
+    // EVERYTHING: Slap that needs to be done because if you do a "delete viewer" it directly crashes when you change HP and you need to do a deleteLater.
+    // If a deleteLater is done and enough viewers are not deleted until new ones have been created. That would make there a time when
+    // we would have the accumulated memory of the old and new viewers (this includes the texture memory that houses the renderer). That might prove it
+    // that we would be left without if they are large images. That's why we delete the viewer and then deleteLater so it doesn't ask.
     emit viewerRemoved(viewer);
     delete viewer->getViewer();
     viewer->deleteLater();
