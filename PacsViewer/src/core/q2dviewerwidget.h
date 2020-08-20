@@ -28,40 +28,40 @@ class QFusionLayoutWidget;
 class QViewerCommand;
 
 /**
-    Aquesta classe és la interfície genèrica d'un Q2DViewer juntament amb el seu slider i spinbox corresponent. Conté el mètode per posar un input així
-    com els mètodes per modificar el valor de l'slider i l'spinbox.
+This class is the generic interface of a Q2DViewer along with its corresponding slider and spinbox. It contains the method to put such an input
+     as the methods for modifying the value of the slider and spinbox.
  */
 class Q2DViewerWidget : public QStackedWidget, private ::Ui::Q2DViewerWidgetBase {
-Q_OBJECT
+    Q_OBJECT
 public:
     Q2DViewerWidget(QWidget *parent = 0);
     ~Q2DViewerWidget();
 
-    /// Marca el widget com a seleccionat
+    /// Mark the widget as selected
     void setSelected(bool option);
 
-    /// Retorna el visualitzador
+    /// Returns the viewer
     Q2DViewer* getViewer();
 
     /// Retorna cert si el model té fases, fals altrament.
     bool hasPhases();
 
-    /// Acció pel botó de sincronitzacio
+    /// Action by sync button
     void setDefaultAction(QAction *synchronizeAction);
 
     void setInput(Volume *input);
     void setInputAsynchronously(Volume *input, QViewerCommand *command = 0);
 
-    /// Habilita o deshabilita el botó que permet activar o desactivar l'eina de sincronització
+    ///Enables or disables the button to enable or disable the sync tool
     void enableSynchronizationButton(bool enable);
 
 public slots:
-    /// Habilita o deshabilita l'eina de sincronització en el visor, si aquest la té registrada
-    /// Aquest mètode es podrà invocar al clicar sobré el botó de sincronització o bé cridant-lo directament
+    /// Enables or disables the synchronization tool in the viewer, if it is registered
+    /// This method can be invoked by clicking on the sync button or by calling it directly
     void enableSynchronization(bool enable);
 
 signals:
-    /// Aquest senyal s'emetrà quan el mouse entri al widget
+    ///This signal will be emitted when the mouse enters the widget
     void selected(Q2DViewerWidget *viewer);
 
     void manualSynchronizationStateChanged(bool enable);
@@ -88,36 +88,36 @@ signals:
     void fusionLayoutMprRightRequested(const QList<Volume*> &volumes);
 
 protected:
-    /// Sobrecàrrega de l'event que s'emet quan el mouse fa un clic dins l'àmbit del widget
+    /// Event overload that occurs when the mouse clicks within the widget scope
     void mousePressEvent(QMouseEvent *mouseEvent);
 
 private:
-    /// Crea les connexions entre signals i slots
+    /// Creates connections between signals and slots
     void createConnections();
 
-    /// Activa/Desactiva tots els widgets que es troben a la barra de l'slider, és a dir, tots excepte el viewer.
+    ///Enables / Disables all widgets in the slider bar, that is, all but the viewer.
     void setSliderBarWidgetsEnabled(bool enabled);
 
 private slots:
-    /// Aquest slot es cridarà quan es faci alguna acció sobre l'slider
-    /// i segons l'acció rebuda actualitzarà el valor de la llesca al visor
-    /// Així doncs, quan l'usuari mogui l'slider, ja sigui amb la rodeta del
-    /// mouse o pitjant a sobre del widget, li donarem el valor correcte al viewer
+    /// This slot will be called when some action is taken on the slider
+    /// and depending on the action received will update the value of the slice in the viewfinder
+    /// So when the user moves the slider, either with the
+    /// mouse or clicking on the widget, we will give the correct value to the viewer
     void updateViewerSliceAccordingToSliderAction(int action);
 
     void updateInput(Volume *input);
 
-    /// Fem que el viewer sigui actiu
+    /// We make the viewer active
     void setAsActiveViewer();
     
     /// Quan el visualitzador s'ha seleccionat, emet el senyal amb aquest widget
     void emitSelectedViewer();
 
-    /// Assigna el rang i el valor corresponent de l'slider segons l'input del viewer
+    /// Assigns the corresponding range and value of the slider according to the viewer's input
     void resetSliderRangeAndValue();
 
-    /// Actualitza el valor de l'etiqueta que ens indica quina
-    /// projecció del pla estem veient
+    /// Updates the value of the label that tells us which one
+    /// projection of the plan we are seeing
     void updateProjectionLabel();
 
     /// Actualitza l'estat d'habilitat dels widgets de la barra amb l'slider a partir de l'estat del viewer
