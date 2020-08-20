@@ -23,11 +23,13 @@ namespace udg {
 void beginLogging()
 {
     // Primer comprovem que existeixi el direcotori ~/.starviewer/log/ on guradarem els logs
-    QDir logDir = udg::UserLogsPath;
+    //QDir logDir = udg::UserLogsPath;
+    QDir logDir = udg::UserCurrentAppPath;//use current work path
     if (!logDir.exists())
     {
         // Creem el directori
-        logDir.mkpath(udg::UserLogsPath);
+        //logDir.mkpath(udg::UserLogsPath);
+        logDir.mkpath(udg::UserCurrentAppPath);
     }
     
     el::Configurations logConfig(getLogConfFilePath().toStdString());
@@ -48,8 +50,11 @@ QString getLogFilePath()
 
 QString getLogConfFilePath()
 {
-    // TODO donem per fet que l'arxiu es diu així i es troba a la localització que indiquem. S'hauria de fer una mica més flexible o genèric;
-    // està així perquè de moment volem anar per feina i no entretenir-nos però s'ha de fer bé.
+    // TODO we assume that the file is so called and is in the location we indicate.
+    // It should be made a little more flexible or generic;
+
+    // it's like that because at the moment we want to go to work
+    // and not entertain ourselves but it has to be done well.
 
     QString configurationFile;
 

@@ -52,9 +52,10 @@ const QString OrganizationWebURL("http://starviewer.udg.edu");
 const QString UserDataRootPath(QDir::homePath() + "/.starviewer/");
 /// Path del log
 const QString UserLogsPath(UserDataRootPath + "log/");
+const QString UserCurrentAppPath(QDir::homePath() + "/log/");
 /// Ruta absoluta del fitxer de log
 const QString UserLogsFile(UserLogsPath + "starviewer.log");
-
+const QString UserCurrentAppPathLogsFile(UserCurrentAppPath + "starviewer.log");
 // Note: the following two are methods because they depend on QApplication being initialized.
 
 /// Returns the base directory where the application is installed.

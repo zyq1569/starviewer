@@ -112,7 +112,7 @@ void sendToFirstStarviewerInstanceCommandLineOptions(QtSingleApplication &app)
     {
         ERROR_LOG("The argument list could not be sent to the main instance, the primary instance does not appear to respond.");
         QMessageBox::critical(NULL, udg::ApplicationNameString, QObject::tr("%1 is already running, but is not responding. "
-            "To open %1, you must first close the existing %1 process, or restart your system.").arg(udg::ApplicationNameString));
+                                                                            "To open %1, you must first close the existing %1 process, or restart your system.").arg(udg::ApplicationNameString));
     }
     else
     {
@@ -127,37 +127,46 @@ int main(int argc, char *argv[])
         QVariant cfgValue = udg::Settings().getValue(udg::CoreSettings::ScaleFactor);
         bool exists;
         int scaleFactor = cfgValue.toInt(&exists);
-        if (exists && scaleFactor != 1) { // Setting exists and is different than one
+        if (exists && scaleFactor != 1)
+        { // Setting exists and is different than one
             QString envVar = QString::number(1 + (scaleFactor * 0.125),'f', 3);
             qputenv("QT_SCALE_FACTOR", envVar.toUtf8());
             QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
         }
     }
 
-    // Utilitzem QtSingleApplication en lloc de QtApplication, ja que ens permet tenir executant sempre una sola instància d'Starviewer, si l'usuari executa
-    // una nova instància d'Starviewer aquesta ho detecta i envia la línia de comandes amb que l'usuari ha executat la nova instància principal.
-
+    // We use QtSingleApplication instead of QtApplication, as it allows us
+    // to always have a single instance of Starviewer running, if the user runs
+    // a new instance of Starviewer detects this and sends the command
+    // line with which the user has executed the new main instance.
     QtSingleApplication app(argc, argv);
-    // TODO tot aquest proces inicial de "setups" hauria d'anar encapsulat en una classe dedicada a tal efecte
+    // ALL this initial process of "setups" should be encapsulated in a class dedicated to this purpose
 
+    // Init log info
     udg::beginLogging();
-    // Marquem l'inici de l'aplicació al log
+    // We mark the start of the application in the log
     INFO_LOG("==================================================== BEGIN STARVIEWER ====================================================");
     INFO_LOG(QString("%1 Version %2 BuildID %3").arg(udg::ApplicationNameString).arg(udg::StarviewerVersionString).arg(udg::StarviewerBuildID));
     
-    // Redirigim els missatges de VTK cap al log.
+    // We redirect VTK messages to the log.
     udg::LoggingOutputWindow *loggingOutputWindow = udg::LoggingOutputWindow::New();
     vtkOutputWindow::SetInstance(loggingOutputWindow);
     loggingOutputWindow->Delete();
 
 
     QPixmap splashPixmap;
-    #ifdef STARVIEWER_LITE
-    splashPixmap.load(":/images/splash-lite.svg");
-    #else
-    splashPixmap.load(":/images/splash.svg");
-    #endif
-    // Note: We use Qt::Tool instead of Qt::SplashScreen because in Mac with the latter if a message box was shown it appeared under the splash.
+    bool bloadfile;
+#ifdef STARVIEWER_LITE
+    bloadfile = splashPixmap.load(":/images/splash-lite.svg");
+#else
+    bloadfile = splashPixmap.load(":/images/splash.svg");
+#endif
+    if (!bloadfile)
+    {
+        ERROR_LOG(" splashPixmap.load fail! (:/images/splash.svg)");
+    }
+    // Note: We use Qt::Tool instead of Qt::SplashScreen because in Mac with the latter
+    // if a message box was shown it appeared under the splash.
     QLabel splash(0, Qt::Tool|Qt::FramelessWindowHint);
     splash.setAttribute(Qt::WA_TranslucentBackground);
     splash.setPixmap(splashPixmap);
@@ -173,15 +182,15 @@ int main(int argc, char *argv[])
     app.setApplicationName(udg::ApplicationNameString);
 
 #ifndef NO_CRASH_REPORTER
-    // Inicialitzem el crash handler en el cas que ho suportem.
-    // Només cal crear l'objecte per què s'autoregistri automàticament, per això el marquem com no utilitzat per evitar un warning.
+    // We initialize the crash handler in case we support it.
+    // Just create the object so that it automatically auto-registers, so we mark it as unused to avoid a warning.
     CrashHandler *crashHandler = new CrashHandler();
     Q_UNUSED(crashHandler);
 #endif
 
 
 
-    // Inicialitzem els settings
+    // We initialize the settings
     udg::CoreSettings coreSettings;
     udg::InputOutputSettings inputoutputSettings;
     udg::InterfaceSettings interfaceSettings;
@@ -198,29 +207,30 @@ int main(int argc, char *argv[])
     // Registering the available sync actions
     udg::SyncActionsRegister::registerSyncActions();
 
-    // TODO aixo es necessari per, entre d'altres coses, poder crear thumbnails,
-    // dicomdirs, etc de dicoms comprimits i tractar-los correctament amb dcmtk
-    // aixo esta temporalment aqui, a la llarga anira a una classe de setup
-    // registrem els codecs decompressors JPEG i RLE
+    // ALL this is necessary to, among other things, be able to create thumbnails,
+    // dicomdirs, etc. of compressed dicoms and treat them correctly with dcmtk
+    // this is temporarily here, in the long run I will go to a setup class
+    // register the JPEG and RLE decompressor codecs
     DJDecoderRegistration::registerCodecs();
     DcmRLEDecoderRegistration::registerCodecs();
 
-    // Seguint les recomanacions de la documentació de Qt, guardem la llista d'arguments en una variable, ja que aquesta operació és costosa
+    // Following the recommendations of the Qt documentation,
+    // we save the list of arguments in a variable, as this operation is expensive
     // http://doc.trolltech.com/4.7/qcoreapplication.html#arguments
     QStringList commandLineArgumentsList = app.arguments();
 
     QString commandLineCall = commandLineArgumentsList.join(" ");
-    INFO_LOG("Iniciada nova instancia Starviewer amb el seguents arguments de linia de comandes " + commandLineCall);
+    INFO_LOG("Started new Starviewer instance with the following command line arguments " + commandLineCall);
 
     if (commandLineArgumentsList.count() > 1)
     {
-        // Només parsegem els arguments de línia de comandes per saber si són correctes, ens esperem més endavant a que tot estigui carregat per
-        // processar-los, si els arguments no són correctes mostre QMessagebox si hi ha una altra instància d'Starviewer finalitzem aquí.
+        // We just parse the command line arguments to see if they are correct, we'll wait until everything is loaded by
+        // process them, if the arguments are not correct show QMessagebox if there is another instance of Starviewer we end here.
         QString errorInvalidCommanLineArguments;
         if (!StarviewerSingleApplicationCommandLineSingleton::instance()->parse(commandLineArgumentsList, errorInvalidCommanLineArguments))
         {
             QString invalidCommandLine = QObject::tr("There were errors invoking %1 from the command line with the following call:\n\n%2")
-                                                     .arg(udg::ApplicationNameString).arg(commandLineCall) + "\n\n";
+                    .arg(udg::ApplicationNameString).arg(commandLineCall) + "\n\n";
             invalidCommandLine += QObject::tr("Detected errors: ") + errorInvalidCommanLineArguments + "\n";
             invalidCommandLine += StarviewerSingleApplicationCommandLineSingleton::instance()->getStarviewerApplicationCommandLineOptions().getSynopsis();
             QMessageBox::warning(NULL, udg::ApplicationNameString, invalidCommandLine);
@@ -248,14 +258,14 @@ int main(int argc, char *argv[])
     }
     else
     {
-        // Instància principal, no n'hi ha cap més executant-se
+        // Main instance, no more running
         try
         {
             udg::QApplicationMainWindow *mainWin = new udg::QApplicationMainWindow;
-            // Fem el connect per rebre els arguments de les altres instàncies
+            //We connect to receive arguments from other instances
             QObject::connect(&app, SIGNAL(messageReceived(QString)), StarviewerSingleApplicationCommandLineSingleton::instance(), SLOT(parseAndRun(QString)));
 
-            INFO_LOG("Creada finestra principal");
+            INFO_LOG("Created main window");
 
             mainWin->show();
             mainWin->checkNewVersionAndShowReleaseNotes();
@@ -264,8 +274,9 @@ int main(int argc, char *argv[])
                              &app, SLOT(quit()));
             splash.close();
 
-        // It is expected to have everything loaded to process the arguments received by command line, this way by exemoke if it throws any
-        // QMessageBox, already launched showing the MainWindow.
+            // It is expected to have everything loaded to process the arguments received by command line,
+            // this way by exemoke if it throws any
+            // QMessageBox, already launched showing the MainWindow.
             if (commandLineArgumentsList.count() > 1)
             {
                 QString errorInvalidCommanLineArguments;
@@ -274,7 +285,8 @@ int main(int argc, char *argv[])
 
             returnValue = app.exec();
         }
-        // Handle special case when the database is newer than expected and the users prefers to quit. In that case an int is thrown and catched here.
+        // Handle special case when the database is newer than expected and the users prefers to quit.
+        // In that case an int is thrown and catched here.
         // TODO Find a cleaner way to handle this case (this is already cleaner than the exit(0) that there was before).
         catch (int i)
         {
@@ -283,7 +295,7 @@ int main(int argc, char *argv[])
     }
 
 
-    // Marquem el final de l'aplicació al log
+    //We mark the end of the application in the log
     INFO_LOG(QString("%1 Version %2 BuildID %3, returnValue %4").arg(udg::ApplicationNameString).arg(udg::StarviewerVersionString)
              .arg(udg::StarviewerBuildID).arg(returnValue));
     INFO_LOG("===================================================== END STARVIEWER =====================================================");

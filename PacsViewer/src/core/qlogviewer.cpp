@@ -43,11 +43,12 @@ QLogViewer::~QLogViewer()
 void QLogViewer::updateData()
 {
     // \TODO aquest directori s'hauria de guardar en alguna mena de settings o similar
-    QFile logFile(udg::UserLogsFile);
+    //QFile logFile(udg::UserLogsFile);
+    QFile logFile(udg::UserCurrentAppPathLogsFile);// read current work dir logsfile
     if (!logFile.open(QFile::ReadOnly | QFile::Text))
     {
         ERROR_LOG("No s'ha pogut obrir l'arxiu de logs");
-        m_logBrowser->setPlainText(tr("ERROR: No Log file found at this path: %1\nEnvironment variable (logFilePath): %2").arg(udg::UserLogsFile).arg(
+        m_logBrowser->setPlainText(tr("ERROR: No Log file found at this path: %1\nEnvironment variable (logFilePath): %2").arg(udg::UserCurrentAppPathLogsFile).arg(
                                    QString::fromLocal8Bit(qgetenv("logFilePath"))));
     }
     else
