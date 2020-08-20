@@ -159,6 +159,8 @@ int SliceHandler::getNumberOfSlicesInSlabThickness() const
 {
     if (m_volume)
     {
+        if(m_volume->getVtkData() == nullptr)
+            return 0;
         int zIndex = this->getViewPlane().getZIndex();
         return qRound(m_slabThickness / m_volume->getSpacing()[zIndex]);
     }
