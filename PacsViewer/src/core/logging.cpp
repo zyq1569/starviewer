@@ -22,7 +22,7 @@ namespace udg {
 
 void beginLogging()
 {
-    // Primer comprovem que existeixi el direcotori ~/.starviewer/log/ on guradarem els logs
+    // First we check that the directory ~ / .starviewer / log / exists where we will look for the logs
     //QDir logDir = udg::UserLogsPath;
     QDir logDir = udg::UserCurrentAppPath;//use current work path
     if (!logDir.exists())
@@ -45,7 +45,8 @@ void beginLogging()
 
 QString getLogFilePath()
 {
-    return QDir::toNativeSeparators(udg::UserLogsFile);
+    //return QDir::toNativeSeparators(udg::UserLogsFile);
+    return QDir::toNativeSeparators(udg::UserCurrentAppPathLogsFile);
 }
 
 QString getLogConfFilePath()

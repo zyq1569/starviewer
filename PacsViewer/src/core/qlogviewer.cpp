@@ -28,7 +28,7 @@
 namespace udg {
 
 QLogViewer::QLogViewer(QWidget *parent)
- : QDialog(parent)
+    : QDialog(parent)
 {
     setupUi(this);
     readSettings();
@@ -47,13 +47,14 @@ void QLogViewer::updateData()
     QFile logFile(udg::UserCurrentAppPathLogsFile);// read current work dir logsfile
     if (!logFile.open(QFile::ReadOnly | QFile::Text))
     {
-        ERROR_LOG("No s'ha pogut obrir l'arxiu de logs");
-        m_logBrowser->setPlainText(tr("ERROR: No Log file found at this path: %1\nEnvironment variable (logFilePath): %2").arg(udg::UserCurrentAppPathLogsFile).arg(
-                                   QString::fromLocal8Bit(qgetenv("logFilePath"))));
+        ERROR_LOG("Could not open log file");
+        m_logBrowser->setPlainText(tr("ERROR: No Log file found at this path: %1\nEnvironment variable (logFilePath): %2").arg(
+                                       udg::UserCurrentAppPathLogsFile).arg(
+                                       QString::fromLocal8Bit(qgetenv("logFilePath"))));
     }
     else
     {
-        INFO_LOG("S'ha obert amb èxit l'arxiu de logs [" + udg::getLogFilePath() + "]");
+        INFO_LOG("The log file was successfully opened [" + udg::getLogFilePath() + "]");
         m_logBrowser->setPlainText(logFile.readAll());
         m_logBrowser->moveCursor(QTextCursor::End);
     }

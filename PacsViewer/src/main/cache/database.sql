@@ -1,16 +1,16 @@
--- ATENCIÓ IMPORTANT!!!!
--- CADA VEGADA QUE S'ACTUALITZI AQUEST SCRIPT, RECORDEU DE GENERAR UN SCRIPT PER ACTUALITZAR
--- LA BASE DE DADES EXISTENTS D'USUARIS D'STARVIEWER AMB ELS NOUS CANVIS I A ACTUALITZAR EL NUMERO 
--- DE REVISIO DE BASE DE DADES NECESSARIA PER LA COMPILACIÓ D'STARVIEWER ACTUA A core/starviewerapplication.h
--- A LA CONSTANT StarviewerDatabaseRevisionRequired
+-- IMPORTANT ATTENTION !!!!
+-- EVERY TIME THIS SCRIPT IS UPDATED, REMEMBER TO GENERATE A SCRIPT TO UPDATE
+-- THE EXISTING STARVIEWER USER DATABASE WITH NEW CHANGES AND UPDATING THE NUMBER
+-- DATABASE REVIEW NECESSARY FOR COMPILATION OF STARVIEWER ACTUA A core / starviewerapplication.h
+-- A CONSTANT StarviewerDatabaseRevisionRequired
 
 CREATE TABLE DatabaseRevision
 (
   Revision                      TEXT
 ); 
 
--- IMPORTANT!!! Cal canviar el número de revisió per un de superior cada vegada que es faci un canvi a aquest fitxer i calgui
--- que la BD s'actualitzi
+-- IMPORTANT !!! The revision number must be changed to a higher one each time a change is made to this file and if necessary
+-- that the database is updated
 
 INSERT INTO DatabaseRevision (Revision) VALUES ('9593');
 
@@ -133,7 +133,7 @@ CREATE TABLE DisplayShutter
   ImageFrameNumber              INTEGER,
   FOREIGN KEY (ImageInstanceUID, ImageFrameNumber) REFERENCES Image (SOPInstanceUID, FrameNumber)
 );
---TODO:Comprovar si s'utilitzarà l'index IndexImage_StudyInstanceUIDSeriesInstanceUID després dels canvis fets a la BD
+--TODO:Check if the IndexImage_StudyInstanceUIDSeriesInstanceUID index will be used after changes made to the database
 CREATE INDEX  IndexImage_StudyInstanceUIDSeriesInstanceUID ON Image (StudyInstanceUID,SeriesInstanceUID); 
 CREATE INDEX  IndexImage_SOPInstanceUIDOrderNumberInVolume ON Image (SOPInstanceUID, OrderNumberInVolume); 
 

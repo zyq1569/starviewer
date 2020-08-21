@@ -18,13 +18,13 @@
 #include <QHostInfo>
 #include <QRegExp>
 #include <QDir>
-// Pel systemEnvironment
+// For the systemEnvironment
 #include <QProcess>
 #include "logging.h"
 
 namespace udg {
 
-// Caràcter delimitador per les paraules clau
+// Delimiting character for keywords
 const QChar delimiterChar('%');
 
 SettingsParser::SettingsParser()
@@ -38,43 +38,43 @@ SettingsParser::~SettingsParser()
 
 QString SettingsParser::parse(const QString &stringToParse)
 {
-    // Construirem una expressió regular que trobarà les claus definides.
-    // També tindrà en compte si la clau va acompanyada d'un sufix de màscara
-    // i l'aplicarà en el cas que en tingui
+    // We will construct a regular expression that will find the defined keys.
+    // It will also take into account whether the key is accompanied by a mask suffix
+    // and will apply it in case you have one
     QRegExp regExp;
 
-    // Obtenim les claus existents i les juntem en un únic string per formar l'expressió regular %KEY1%|%KEY2%|...|%KEYN%
+    // We get the existing keys and put them together into a single string to form the regular expression% KEY1% |% KEY2% | ... |% KEYN%
     QStringList keys = m_parseableStringsTable.uniqueKeys();
     QString keysPattern = "(%" + keys.join("%|%") + "%)";
     // Màscara de truncatge [n:c], on 'c' pot ser qualsevol caràcter o res, excepte un whitespace (\S==non-whitespace character)
     QString maskPattern = "(\\[\\d+:\\S?\\])?";
-    // TODO l'aplicació de la màscara assumeix que trunquem de "dreta a esquerra" (right Justified) i que fem el padding com a prefix de
-    // la cadena truncada. Aquest comportament es podria fer més flexible afegint més paràmetres a l'expressió de truncatge per indicar
-    // si el truncatge i/o el padding es fan per la dreta o l'esquerra
+    // ALL the application of the mask assumes that we truncate from "right to left" (right Justified) and that we do the padding as a prefix of
+    // the truncated string. This behavior could be made more flexible by adding more parameters to the truncation expression to indicate
+    // if truncation and / or padding are done on the right or left
 
-    // Expressió regular: Qualsevol de les claus, que pot anar acompanyada opcionalment d'una mascara de truncatge
+    // Regular expression: Any of the keys, which can be optionally accompanied by a truncation mask
     regExp.setPattern(keysPattern + maskPattern);
 
     // String on anirem parsejant els resultats
     QString parsedString = stringToParse;
     // índex de l'string on comença el patró trobat
     int keyIndex = 0;
-    // Clau trobada
+    // Key found
     QString capturedKey;
-    // Màscara trobada
+    // Mask found
     QString capturedMask;
-    // Clau que voldrem substituir
+    // Key we want to replace
     QString keyToReplace;
-    // String que parseja la màscara
+    // String parsing the mask
     QString maskedString;
-    // Nombre de caràcters a truncar --->> en comptes de truncate, posar-li width
+    // Number of characters to truncate --- >> instead of truncate, put width
     int truncate = 0;
-    // Caràcter amb el que farem el padding
+    // Character with which we will paddle
     QChar paddingChar;
 
-    // Mentres hi hagi expressions, les capturem i parsejem
-    // Els "replace" es fan d'un en un, ja que podem tenir claus repetides i cal fer-ho pas a pas,
-    // tal com anem tractant cada expressió regular
+    // As long as there are expressions, we capture and parse them
+    // The "replace" is done one by one, as we can have repeated keys and it is necessary to do it step by step,
+    // as we treat each regular expression
     while ((keyIndex = regExp.indexIn(parsedString)) != -1)
     {
         // La clau trobada, 1a part de l'expressió regular
@@ -121,23 +121,24 @@ QString SettingsParser::parse(const QString &stringToParse)
 
 void SettingsParser::initializeParseableStringsTable()
 {
-    // Omplim els valors de les diferents paraules clau
+    // We fill in the values of the different keywords
     QString localHostName = QHostInfo::localHostName();
     m_parseableStringsTable["HOSTNAME"] = localHostName;
 
-    // Obtenció de la ip
+    // Obtaining the ip
     QStringList ipV4Addresses = getLocalHostIPv4Addresses();
     QString ip;
     if (!ipV4Addresses.isEmpty())
     {
-        // Assumim que la primera de la llista és la IP bona
+        // We assume that the first one in the list is the good IP
         ip = ipV4Addresses.first();
 
         m_parseableStringsTable["IP"] = ip;
 
-        // "Partim" els prefixos de la ip
+        // "Split" ip prefixes
         QStringList ipParts = ip.split(".");
-        // Això no hauria de fallar mai ja que la llista d'IPs ha de contenir valors correctament formatats ja que aquests han estat prèviament validats.
+        // This should never fail as the list of IPs must contain correctly
+        // formatted values as these have been previously validated..
         if (ipParts.count() == 4)
         {
             m_parseableStringsTable["IP.1"] = ipParts.at(0);
@@ -148,19 +149,19 @@ void SettingsParser::initializeParseableStringsTable()
     }
     else
     {
-        // No tenim cap adreça IP
+        // We have no IP address
         m_parseableStringsTable["IP"] = "N/A";
         m_parseableStringsTable["IP.1"] = "[N/A]";
         m_parseableStringsTable["IP.2"] = "[N/A]";
         m_parseableStringsTable["IP.3"] = "[N/A]";
         m_parseableStringsTable["IP.4"] = "[N/A]";
-        WARN_LOG("No s'ha recongeut cap adreça IPv4 en l'equip.");
+        WARN_LOG("No IPv4 address was recognized on the computer.");
     }
 
     // Home path
     m_parseableStringsTable["HOMEPATH"] = QDir::homePath();
 
-    // Nom d'usuari
+    // Username
     QStringList environmentList = QProcess::systemEnvironment();
     // Windows
     int index = environmentList.indexOf("USERNAME");
@@ -192,19 +193,20 @@ QStringList SettingsParser::getLocalHostIPv4Addresses()
     QStringList ipV4List;
 
     QHostInfo hostInfo = QHostInfo::fromName(QHostInfo::localHostName());
-    // TODO També es podria optar per fer servir QNetworkInterface::allAddresses(), tot i que ens retorna l'adreça 127.0.0.1 a més a més,
-    // en comptes de fer servir hostInfo.addresses()
+    /// TODO You could also choose to use QNetworkInterface :: allAddresses (),
+    /// although it returns the address 127.0.0.1 in addition,
+    /// instead of using hostInfo.addresses ()
     foreach (const QHostAddress &ip, hostInfo.addresses())
     {
         QString ipString = ip.toString();
         if (isIPv4Address(ipString))
         {
             ipV4List << ipString;
-            DEBUG_LOG(ipString + " -> És una adreça IPv4 vàlida");
+            DEBUG_LOG(ipString + " -> It is a valid IPv4 address");
         }
         else
         {
-            DEBUG_LOG(ipString + " -> NO és una adreça IPv4 vàlida");
+            DEBUG_LOG(ipString + " -> It is NOT a valid IPv4 address");
         }
     }
 

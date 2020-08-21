@@ -176,7 +176,8 @@ bool DatabaseInstallation::createDatabase(DatabaseConnection &databaseConnection
     {
         if (!query.exec(command))
         {
-            ERROR_LOG(QString("Database creation SQL command failed: %1. Error: %2").arg(query.lastQuery()).arg(query.lastError().text()));
+            ERROR_LOG(QString("Database creation SQL command failed: %1. Error: %2").arg(query.lastQuery())
+                      .arg(query.lastError().text()));
             m_errorMessage = QObject::tr("Database creation script failed.");
             return false;
         }

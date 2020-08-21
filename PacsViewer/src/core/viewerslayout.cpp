@@ -118,7 +118,7 @@ Q2DViewerWidget* ViewersLayout::getNewQ2DViewerWidget()
     connect(newViewer, SIGNAL(fusionLayout2x3SecondRequested(QList<Volume*>)), SIGNAL(fusionLayout2x3SecondRequested(QList<Volume*>)));
     connect(newViewer, SIGNAL(fusionLayout3x3Requested(QList<Volume*>)), SIGNAL(fusionLayout3x3Requested(QList<Volume*>)));
     connect(newViewer, SIGNAL(fusionLayoutMprRightRequested(QList<Volume*>)), SIGNAL(fusionLayoutMprRightRequested(QList<Volume*>)));
-    // Per defecte no li posem cap annotació
+    // By default we do not put any annotation
     newViewer->getViewer()->removeAnnotation(AllAnnotations);
     newViewer->getViewer()->getPatientBrowserMenu()->setShowFusionOptions(true);
 
@@ -128,10 +128,14 @@ Q2DViewerWidget* ViewersLayout::getNewQ2DViewerWidget()
 
 void ViewersLayout::deleteQ2DViewerWidget(Q2DViewerWidget *viewer)
 {
-    // EVERYTHING: Slap that needs to be done because if you do a "delete viewer" it directly crashes when you change HP and you need to do a deleteLater.
-    // If a deleteLater is done and enough viewers are not deleted until new ones have been created. That would make there a time when
-    // we would have the accumulated memory of the old and new viewers (this includes the texture memory that houses the renderer). That might prove it
-    // that we would be left without if they are large images. That's why we delete the viewer and then deleteLater so it doesn't ask.
+    // EVERYTHING: Slap that needs to be done because if you do a "delete viewer" it
+    // directly crashes when you change HP and you need to do a deleteLater.
+    // If a deleteLater is done and enough viewers are not deleted until new ones have been created.
+    // That would make there a time when
+    // we would have the accumulated memory of the old and new viewers (this includes the texture
+    // memory that houses the renderer). That might prove it
+    // that we would be left without if they are large images.
+    // That's why we delete the viewer and then deleteLater so it doesn't ask.
     emit viewerRemoved(viewer);
     delete viewer->getViewer();
     viewer->deleteLater();
