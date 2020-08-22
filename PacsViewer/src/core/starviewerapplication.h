@@ -32,28 +32,28 @@ const QString StarviewerBuildPlatform("Mac");
 const QString StarviewerBuildPlatform("Linux");
 #endif
 
-// Indica per aquesta versió d'starviewer quina és la revisió de bd necessària
+// Iindicates for this version of starviewer which bd revision is required
 const int StarviewerDatabaseRevisionRequired(9593);
 
 const QString OrganizationNameString("GILab");
 const QString OrganizationDomainString("starviewer.udg.edu");
 
 #ifdef STARVIEWER_LITE
-    const QString ApplicationNameString("Starviewer Lite");
+const QString ApplicationNameString("Starviewer Lite");
 #else
-    const QString ApplicationNameString("Starviewer");
+const QString ApplicationNameString("Starviewer");
 #endif
 
 const QString OrganizationEmailString("support@starviewer.udg.edu");
 const QString OrganizationWebURL("http://starviewer.udg.edu");
 
-// Paths per defecte on es guarden configuracions i arxius d'usuari
-/// Path base per a dades d'usuari
+// Default pathways where user configurations and files are saved
+/// Path base for user data
 const QString UserDataRootPath(QDir::homePath() + "/.starviewer/");
-/// Path del log
+/// People with path
 const QString UserLogsPath(UserDataRootPath + "log/");
 const QString UserCurrentAppPath(QDir::homePath() + "/log/");
-/// Ruta absoluta del fitxer de log
+/// Absolute log file path
 const QString UserLogsFile(UserLogsPath + "starviewer.log");
 const QString UserCurrentAppPathLogsFile(UserCurrentAppPath + "starviewer.log");
 // Note: the following two are methods because they depend on QApplication being initialized.
