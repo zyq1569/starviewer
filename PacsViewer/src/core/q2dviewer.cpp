@@ -1211,7 +1211,7 @@ void Q2DViewer::projectDICOMPointToCurrentDisplayedImage(const double pointToPro
         // First we project the point on the current image plane
         std::array<double, 3> planeProjectedPoint = currentPlane->projectPoint(pointToProject,
                                                                                getCurrentViewPlane() == OrthogonalPlane::YZPlane && vtkReconstructionHack);
-        
+
         //
         // VTK CORRECTION!
         //

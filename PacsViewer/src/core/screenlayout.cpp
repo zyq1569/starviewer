@@ -100,20 +100,20 @@ int ScreenLayout::getScreenOnTheRightOf(int screenID) const
     int rightScreenID = Screen::NullScreenID;
     Screen screen = getScreen(screenID);
     Screen screenToCompare;
-    // Buscar una pantalla a la dreta i a la mateixa altura + o -
+    // Find a screen on the right and at the same height + or -
     for (int i = 0; i < getNumberOfScreens(); ++i)
     {
         screenToCompare = getScreen(i);
-        // Si està a la dreta, però no està completament per sobre ni per sota
+        // If it is on the right, but it is not completely above or below
         if (screenToCompare.isOnRight(screen) && !screenToCompare.isOver(screen) && !screenToCompare.isUnder(screen))
         {
-            // Si encara no hem trobat cap pantalla
+            // If we have not found any screen yet
             if (rightScreenID == Screen::NullScreenID)
             {
                 rightScreenID = i;
             }
-            // De les pantalles de la dreta, volem la més pròxima
-            // Si la pantalla que hem trobat està més a l'esquerra que la que tenim
+            // From the screens on the right, we want the closest one
+            // If the screen we found is further to the left than the one we have
             else if (screenToCompare.isOnLeft(getScreen(rightScreenID)))
             {
                 rightScreenID = i;
@@ -129,20 +129,20 @@ int ScreenLayout::getScreenOnTheLeftOf(int screenID) const
     int leftScreenID = Screen::NullScreenID;
     Screen screen = getScreen(screenID);
     Screen screenToCompare;
-    // Buscar una pantalla a l'esquera i a la mateixa altura + o -
+    // Find a screen on the left and at the same height + or -
     for (int i = 0; i < getNumberOfScreens(); ++i)
     {
         screenToCompare = getScreen(i);
-        // Si està a l'esquera, però no està completament per sobre ni per sota
+        // Sand it’s on the left, but it’s not completely above or below
         if (screenToCompare.isOnLeft(screen) && !screenToCompare.isOver(screen) && !screenToCompare.isUnder(screen))
         {
-            // Si encara no hem trobat cap pantalla
+            // If we have not found any screen yet
             if (leftScreenID == Screen::NullScreenID)
             {
                 leftScreenID = i;
             }
-            // De les pantalles de l'esquera, volem la més pròxima
-            // Si la pantalla que hem trobat està més a la dreta que la que tenim
+            // From the screens on the left, we want the closest one
+            // If the screen we found is further to the right than the one we have
             else if (screenToCompare.isOnRight(getScreen(leftScreenID)))
             {
                 leftScreenID = i;
