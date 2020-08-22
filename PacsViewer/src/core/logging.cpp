@@ -31,22 +31,22 @@ void beginLogging()
         //logDir.mkpath(udg::UserLogsPath);
         logDir.mkpath(udg::UserCurrentAppPath);
     }
-    
     el::Configurations logConfig(getLogConfFilePath().toStdString());
     logConfig.setGlobally(el::ConfigurationType::Filename, getLogFilePath().toStdString());
-    
+
     //Disable logging to the standard output when compiled on release
-    #ifdef QT_NO_DEBUG
+#ifdef QT_NO_DEBUG
     logConfig.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
-    #endif
-    
+#endif
+
     el::Loggers::reconfigureAllLoggers(logConfig);
 }
 
 QString getLogFilePath()
 {
     //return QDir::toNativeSeparators(udg::UserLogsFile);
-    return QDir::toNativeSeparators(udg::UserCurrentAppPathLogsFile);
+    //return QDir::toNativeSeparators(udg::UserCurrentAppPathLogsFile);
+    return QDir::toNativeSeparators(installationPath()+"/log/starviewer.log");
 }
 
 QString getLogConfFilePath()

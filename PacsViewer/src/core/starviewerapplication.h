@@ -52,10 +52,10 @@ const QString OrganizationWebURL("http://starviewer.udg.edu");
 const QString UserDataRootPath(QDir::homePath() + "/.starviewer/");
 /// People with path
 const QString UserLogsPath(UserDataRootPath + "log/");
-const QString UserCurrentAppPath(QDir::homePath() + "/log/");
+
 /// Absolute log file path
 const QString UserLogsFile(UserLogsPath + "starviewer.log");
-const QString UserCurrentAppPathLogsFile(UserCurrentAppPath + "starviewer.log");
+
 // Note: the following two are methods because they depend on QApplication being initialized.
 
 /// Returns the base directory where the application is installed.
@@ -63,6 +63,10 @@ QString installationPath();
 /// Returns the root source directory (the one containing src).
 QString sourcePath();
 
+//new log path
+const QString UserCurrentAppPath(installationPath() + "/log/");
+/// new Absolute log file path
+const QString UserCurrentAppPathLogsFile(UserCurrentAppPath + "starviewer.log");
 }
 
 #endif

@@ -42,21 +42,25 @@ QLogViewer::~QLogViewer()
 
 void QLogViewer::updateData()
 {
-    // \TODO aquest directori s'hauria de guardar en alguna mena de settings o similar
+    // \TODO this directory should be saved in some sort of settings or similar
     //QFile logFile(udg::UserLogsFile);
-    QFile logFile(udg::UserCurrentAppPathLogsFile);// read current work dir logsfile
+    QString logfullpath = installationPath()+"/log/starviewer.log";
+    QFile logFile(logfullpath);// read current work dir logsfile
     if (!logFile.open(QFile::ReadOnly | QFile::Text))
     {
         ERROR_LOG("Could not open log file");
         m_logBrowser->setPlainText(tr("ERROR: No Log file found at this path: %1\nEnvironment variable (logFilePath): %2").arg(
-                                       udg::UserCurrentAppPathLogsFile).arg(
+                                       logfullpath).arg(
                                        QString::fromLocal8Bit(qgetenv("logFilePath"))));
     }
     else
     {
-        INFO_LOG("The log file was successfully opened [" + udg::getLogFilePath() + "]");
+        INFO_LOG("The log file was successfully opened [" + logfullpath + "]");
         m_logBrowser->setPlainText(logFile.readAll());
         m_logBrowser->moveCursor(QTextCursor::End);
+        //        INFO_LOG("The log file was successfully opened [" + udg::getLogFilePath() + "]");
+        //        m_logBrowser->setPlainText(logFile.readAll());
+        //        m_logBrowser->moveCursor(QTextCursor::End);
     }
 }
 
