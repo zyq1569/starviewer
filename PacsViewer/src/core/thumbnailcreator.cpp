@@ -151,7 +151,7 @@ QImage ThumbnailCreator::createThumbnail(DicomImage *dicomImage, int resolution)
     if (dicomImage == NULL)
     {
         ok = false;
-        DEBUG_LOG("Memòria insuficient per carregar l'imatge DICOM al fer el thumbnail o punter nul");
+        DEBUG_LOG("Insufficient memory to load DICOM image when making thumbnail or null pointer");
     }
     else if (dicomImage->getStatus() == EIS_Normal)
     {
@@ -175,14 +175,14 @@ QImage ThumbnailCreator::createThumbnail(DicomImage *dicomImage, int resolution)
         if (scaledImage == NULL)
         {
             ok = false;
-            DEBUG_LOG("La imatge escalada s'ha retornat com a nul");
+            DEBUG_LOG("Scaled image returned as null");
         }
         else if (scaledImage->getStatus() == EIS_Normal)
         {
             QPixmap pixmap = convertToQPixmap(scaledImage);
             if (pixmap.isNull())
             {
-                DEBUG_LOG("No s'ha pogut convertir la DicomImage a QImage. Es crea un thumbnail de Preview not available.");
+                DEBUG_LOG("Could not convert DicomImage to QImage. A Preview not available thumbnail is created.");
                 ok = false;
             }
             else
@@ -216,13 +216,13 @@ QImage ThumbnailCreator::createThumbnail(DicomImage *dicomImage, int resolution)
         else
         {
             ok = false;
-            DEBUG_LOG(QString("La imatge escalada té errors. Error: %1 ").arg(DicomImage::getString(scaledImage->getStatus())));
+            DEBUG_LOG(QString("The scaled image has errors. Error:% 1 ").arg(DicomImage::getString(scaledImage->getStatus())));
         }
     }
     else
     {
         ok = false;
-        DEBUG_LOG(QString("Error en carregar la DicomImage. Error: %1 ").arg(DicomImage::getString(dicomImage->getStatus())));
+        DEBUG_LOG(QString("Error loading the DicomImage. Error:% 1 ").arg(DicomImage::getString(dicomImage->getStatus())));
     }
 
     // Si no hem pogut generar el thumbnail, creem un de buit
@@ -238,13 +238,13 @@ bool ThumbnailCreator::isSuitableForThumbnailCreation(const DICOMTagReader *read
 {
     if (!reader)
     {
-        DEBUG_LOG("El DICOMTagReader donat és NUL!");
+        DEBUG_LOG("The given DICOMTagReader is NULL!");
         return false;
     }
 
     if (!reader->getDcmDataset())
     {
-        DEBUG_LOG("El DICOMTagReader no té cap DcmDataset assignat, no podem generar el thumbnail.");
+        DEBUG_LOG("DICOMTagReader has no DcmDataset assigned, we cannot generate the thumbnail.");
         return false;
     }
 
@@ -255,8 +255,8 @@ QPixmap ThumbnailCreator::convertToQPixmap(DicomImage *dicomImage)
 {
     Q_ASSERT(dicomImage);
 
-    // El següent codi crea una imatge PGM o PPM a memòria i carreguem aquest buffer directament a la QImage
-    // Basat en el codi de http://forum.dcmtk.org/viewtopic.php?t=120&highlight=qpixmap
+    // The following code creates a PGM or PPM image in memory and we load this buffer directly into the QImage
+    // Based on the code of http://forum.dcmtk.org/viewtopic.php?t=120&highlight=qpixmap
 
     int bytesPerComponent;
     QString imageFormat;

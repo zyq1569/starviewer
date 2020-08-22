@@ -19,7 +19,7 @@
 
 namespace udg {
 
-// Definició de les claus
+// Definition of the keys
 const QString OpenBase("Starviewer-App-ImportFile/");
 const QString InterfaceSettings::OpenFileLastPath(OpenBase + "workingDirectory");
 const QString InterfaceSettings::OpenDirectoryLastPath(OpenBase + "workingDicomDirectory");

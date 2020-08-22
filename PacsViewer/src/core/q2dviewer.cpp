@@ -627,7 +627,7 @@ void Q2DViewer::setNewVolumes(const QList<Volume*> &volumes, bool setViewerStatu
 
 void Q2DViewer::removeViewerBitmaps()
 {
-    // Eliminem els bitmaps que teníem fins ara
+    // We deleted the bitmaps we had so far
     foreach (DrawerBitmap *bitmap, m_viewerBitmaps)
     {
         bitmap->decreaseReferenceCount();
@@ -783,7 +783,7 @@ void Q2DViewer::resetView(const OrthogonalPlane &view)
     setCurrentViewPlane(view);
     m_annotationsHandler->updateAnnotations(VoiLutAnnotation);
     
-    // Reiniciem valors per defecte de la càmera
+    // We reset the camera to defaults
     m_rotateFactor = 0;
     setFlip(false);
     m_isImageFlipped = false;
@@ -798,7 +798,7 @@ void Q2DViewer::resetView(const OrthogonalPlane &view)
         getCurrentRenderedItemBounds(bounds);
         getRenderer()->ResetCamera(bounds);
 
-        // Calculem la llesca que cal mostrar segons la vista escollida
+        // We calculate the slice to be shown according to the chosen view
         int initialSliceIndex = this->getMinimumSlice();
         if (getCurrentViewPlane() == OrthogonalPlane::YZPlane || getCurrentViewPlane() == OrthogonalPlane::XZPlane)
         {
@@ -816,7 +816,8 @@ void Q2DViewer::resetView(const OrthogonalPlane &view)
     emit viewChanged(getCurrentViewPlane());
 }
 
-// This method needs to be redefined in Q2DViewer because the OrthogonalPlane version is redefined and it would hide this version otherwise
+// This method needs to be redefined in Q2DViewer because the
+// OrthogonalPlane version is redefined and it would hide this version otherwise
 // (see https://isocpp.org/wiki/faq/strange-inheritance#hiding-rule)
 void Q2DViewer::resetView(const AnatomicalPlane &anatomicalPlane)
 {
@@ -870,17 +871,17 @@ void Q2DViewer::updateCamera()
 
         if (m_applyFlip)
         {
-            // Alternativa 1)
-            // TODO Així movem la càmera, però faltaria que la imatge no es mogués de lloc
-            // potser implementant a la nostra manera el metode Azimuth i prenent com a centre
-            // el centre de la imatge. Una altra possibilitat es contrarestar el desplaçament de la
-            // camera en l'eix en que s'ha produit
+            // Alternative 1)
+            // EVERYTHING This is how we move the camera, but the image would not move
+            // perhaps implementing the Azimuth method in our own way and taking it as a center
+            // the center of the image. Another possibility is to counteract the displacement of the
+            // camera on the axis on which it occurred
             camera->Azimuth(180);
             switch (getCurrentViewPlane())
             {
-            // HACK Aquest hack esta relacionat amb els de getCurrentDisplayedImageOrientationLabels()
-            // és un petit truc perque la imatge quedi orientada correctament. Caldria
-            // veure si en el refactoring podem fer-ho d'una forma millor
+            // HACK This hack is related to getCurrentDisplayedImageOrientationLabels ()
+            // is a little trick for the image to be oriented correctly. It would be necessary
+            // see if in refactoring we can do it in a better way
             case OrthogonalPlane::YZPlane:
             case OrthogonalPlane::XZPlane:
                 rotate(-2);
@@ -899,7 +900,7 @@ void Q2DViewer::updateCamera()
     }
     else
     {
-        DEBUG_LOG("Intentant actualitzar rotació de càmera sense haver donat un input abans...");
+        DEBUG_LOG("Trying to update camera rotation without giving an input before...");
     }
 }
 
@@ -1143,17 +1144,17 @@ bool Q2DViewer::getDicomWorldCoordinates(const double xyz[3], double dicomWorldP
     ImagePlane *currentPlane = NULL;
     bool result = false;
 
-    // 2.- Trobar l'índex del vòxel en el DICOM
+    // 2.- Find the voxel index in the DICOM
     this->getMainInput()->computeCoordinateIndex(xyz, index);
 
-    // 3.- Necessitem la imatge la qual pertany el punt per tal de trobar la imatge del dicom que conté la informació del pla.
+    // 3.- We need the image to which the point belongs in order to find the dicom image that contains the plan information.
     double *spacing = this->getMainInput()->getSpacing();
 
     currentPlane = getCurrentImagePlane();
 
     if (currentPlane)
     {
-        // 3.- Construim la matiu per mapejar l'index del píxel del DICOM a un punt del món real
+        // 3.- We construct the mat to map the DICOM pixel index to a point in the real world
         std::array<double, 3> currentPlaneRowVector = Vector3(currentPlane->getImageOrientation().getRowVector());
         std::array<double, 3> currentPlaneColumnVector = Vector3(currentPlane->getImageOrientation().getColumnVector());
         std::array<double, 3> currentPlaneOrigin = currentPlane->getOrigin();
@@ -1171,7 +1172,7 @@ bool Q2DViewer::getDicomWorldCoordinates(const double xyz[3], double dicomWorldP
             projectionMatrix->SetElement(row, 3, currentPlaneOrigin[row]);
         }
 
-        // 3.- Mappeig de l'índex del píxel al món real
+        // 3.- Real-world pixel index mapping
         dicomWorldPosition[0] = (double)index[0];
         dicomWorldPosition[1] = (double)index[1];
         dicomWorldPosition[2] = (double)index[2];
@@ -1185,7 +1186,7 @@ bool Q2DViewer::getDicomWorldCoordinates(const double xyz[3], double dicomWorldP
     else
     {
         DEBUG_LOG("The requested plane is not available, maybe due to poor multiframe support.");
-        INFO_LOG("No es pot actualitzar la posició del cursor 3D perquè no podem obtenir el pla corresponent.");
+        INFO_LOG("The position of the 3D cursor cannot be updated because we cannot get the corresponding plane.");
     }
 
     delete currentPlane;
@@ -1195,14 +1196,14 @@ bool Q2DViewer::getDicomWorldCoordinates(const double xyz[3], double dicomWorldP
 
 void Q2DViewer::projectDICOMPointToCurrentDisplayedImage(const double pointToProject[3], double projectedPoint[3], bool vtkReconstructionHack)
 {
-    // AQUÍ SUMEM L'origen TAL CUAL + L'ERROR DE DESPLAÇAMENT VTK
+    // HERE WE ADD THE SOURCE AS IT IS + THE VTK DISPLACEMENT ERROR
     //
-    // La projecció es fa de la següent manera:
-    // Primer es fa una  una projecció convencional del punt sobre el pla actual (DICOM)
-    // Com que el mapeig de coordenades VTK va a la seva bola, necessitem corretgir el desplaçament
-    // introduit per VTK respecte a les coordenades "reals" de DICOM
-    // Aquest desplaçament consistirà en tornar a sumar l'origen del primer pla del volum
-    // en principi, fer-ho amb l'origen de m_mainVolume també seria correcte
+    // The projection is done as follows:
+    // First a conventional projection of the point on the current plan (DICOM) is made
+    // Since VTK coordinate mapping goes to its ball, we need to correct the displacement
+    // introduced by VTK with respect to the "real" coordinates of DICOM
+    // This shift will consist of re-adding the source of the foreground of the volume
+    // in principle, doing this with the m_mainVolume source would also be correct
 
     ImagePlane *currentPlane = getCurrentImagePlane(vtkReconstructionHack);
     if (currentPlane)
@@ -1212,12 +1213,12 @@ void Q2DViewer::projectDICOMPointToCurrentDisplayedImage(const double pointToPro
                                                                                getCurrentViewPlane() == OrthogonalPlane::YZPlane && vtkReconstructionHack);
         
         //
-        // CORRECIÓ VTK!
+        // VTK CORRECTION!
         //
-        // A partir d'aquí cal corretgir l'error introduit pel mapeig que fan les vtk
-        // cal sumar l'origen de la primera imatge, o el que seria el mateix, l'origen de m_mainVolume
+        // From here it is necessary to correct the error introduced by the mapping made by the vtk
+        // add the source of the first image, or what would be the same, the source of m_mainVolume
         //
-        // TODO provar si amb l'origen de m_mainVolume també funciona bé
+        // TODO test if with the source of m_mainVolume also works fine
         Image *firstImage = getMainInput()->getImage(0);
         const double *ori = firstImage->getImagePositionPatient();
         int xIndex, yIndex, zIndex;
@@ -1229,7 +1230,7 @@ void Q2DViewer::projectDICOMPointToCurrentDisplayedImage(const double pointToPro
     }
     else
     {
-        DEBUG_LOG("No hi ha cap pla actual valid");
+        DEBUG_LOG("There are no valid plans");
     }
 }
 
@@ -1293,9 +1294,9 @@ bool Q2DViewer::getCurrentCursorImageCoordinateOnInput(double xyz[3], int i)
         inside = true;
         // Calculem el pixel trobat
         picker->GetPickPosition(xyz);
-        // Calculem la profunditat correcta. S'ha de tenir en compte que en el cas que tinguem fases
-        // vtk no n'és conscient (cada fase es desplaça en la profunditat z com si fos una imatge més)
-        // i si no fèssim aquest càlcul, estaríem donant una coordenada Z incorrecta
+        // We calculate the correct depth. It should be borne in mind that in the event that we have phases
+        // vtk is not aware of it (each phase moves in depth z as if it were one more image)
+        // and if we didn't do this calculation, we would be giving an incorrect Z coordinate
         int zIndex = displayUnit->getViewPlane().getZIndex();
         xyz[zIndex] =  displayUnit->getCurrentDisplayedImageDepth();
     }
@@ -1368,7 +1369,7 @@ QChar Q2DViewer::getCurrentDisplayedImageLaterality() const
 
 void Q2DViewer::updateImageSlices()
 {
-    // Ens assegurem que tenim dades vàlides
+    // We make sure we have valid data
     if (!getMainInput()->isPixelDataLoaded())
     {
         return;
@@ -1377,7 +1378,7 @@ void Q2DViewer::updateImageSlices()
     // We only need to update the main vdu, since it will modify the camera and thus the others will also be updated
     getMainDisplayUnit()->updateImageSlice(m_renderer->GetActiveCamera());
 
-    // TODO Si separem els renderers potser caldria aplicar-ho a cada renderer?
+    // TODO If we separate the renderers maybe we should apply it to each renderer?
     getRenderer()->ResetCameraClippingRange();
 }
 
@@ -1454,7 +1455,8 @@ void Q2DViewer::printVolumeInformation()
     DEBUG_LOG(QString("Image Information: Bits Allocated: %1, Bits Stored: %2, Pixel Range %3 to %4, SIGNED?Pixel Representation: %5, Photometric interpretation: %6")
               .arg(getMainInput()->getImage(0)->getBitsAllocated()).arg(getMainInput()->getImage(0)->getBitsStored()).arg(range[0]).arg(range[1])
             .arg(getMainInput()->getImage(0)->getPixelRepresentation()).arg(getMainInput()->getImage(0)->getPhotometricInterpretation().getAsQString()));
-    // Fins que no implementem Presentation states aquest serà el cas que sempre s'executarà el 100% dels casos
+    // Until we implement Presentation states this will
+    // be the case that will always run 100% of the cases
 }
 
 void Q2DViewer::setSlabProjectionMode(VolumeDisplayUnit::SlabProjectionMode projectionMode)
@@ -1513,7 +1515,7 @@ void Q2DViewer::setSlabThickness(double thickness)
         double oldThickness = mainDisplayUnit->getSlabThickness();
         int oldSlice = getCurrentSlice();
 
-        // Primera aproximació per evitar error dades de primitives: a l'activar o desactivar l'slabthickness, esborrem primitives
+        // First approach to avoid error primitive data: when enabling or disabling slabthickness, we delete primitives
         getDrawer()->removeAllPrimitives();
 
         mainDisplayUnit->setSlabThickness(thickness);
@@ -1616,15 +1618,15 @@ void Q2DViewer::restore()
         return;
     }
 
-    // Si hi ha un volum carregant no fem el restore
+    // If there is a loading volume we do not restore
     if (m_volumeReaderManager->isReading())
     {
         return;
     }
 
     // HACK
-    // Desactivem el rendering per tal de millorar l'eficiència de tornar a executar el pipeline,
-    // ja que altrament es renderitza múltiples vegades i provoca efectes indesitjats com el flickering
+    // Disable rendering to improve the efficiency of running the pipeline again,
+    // since otherwise it renders multiple times and causes unwanted effects like flickering
     enableRendering(false);
     
     // Esborrem les anotacions
@@ -1638,10 +1640,10 @@ void Q2DViewer::restore()
     // Take into account this call disables thickslab
     resetViewToAcquisitionPlane();
     VoiLutHelper::selectDefaultPreset(getVoiLutData(), getMainInput());
-    
-    // HACK Restaurem el rendering
+
+    // HACK We will restore the rendering
     enableRendering(true);
-    // Apliquem el command
+    // We apply the command
     executeInputFinishedCommand();
 
     emit restored();
@@ -1673,15 +1675,15 @@ void Q2DViewer::setAlignPosition(AlignPosition alignPosition)
     
     if (alignPosition == AlignCenter)
     {
-        // No cal fer res més
+        // Nothing more needs to be done
         return;
     }
 
-    // Cas que sigui AlignRight o AlignLeft
+    // Whether it’s AlignRight or AlignLeft
     double bounds[6];
     getCurrentRenderedItemBounds(bounds);
     double motionVector[4] = { 0.0, 0.0, 0.0, 0.0 };
-    
+
     double alignmentPoint[3];
     if (alignPosition == AlignLeft)
     {
@@ -1692,13 +1694,13 @@ void Q2DViewer::setAlignPosition(AlignPosition alignPosition)
         computeDisplayToWorld((double)getRenderer()->GetSize()[0], 0.0, 0.0, alignmentPoint);
     }
     
-    // Càlcul del desplaçament
+    // Calculation of the displacement
     int boundIndex = 0;
     switch (getCurrentViewPlane())
     {
     case OrthogonalPlane::XYPlane:
-        // Si es dóna el cas que o bé està rotada 180º o bé està voltejada, cal agafar l'altre extrem
-        // L'operació realitzada és un XOR (!=)
+        // If it is the case that it is either rotated 180º or it is turned over, it is necessary to take the other end
+        // The operation performed is a XOR (! =)
         if (m_isImageFlipped != (qAbs(m_rotateFactor) == 2))
         {
             if (alignPosition == AlignLeft)
@@ -1788,13 +1790,13 @@ void Q2DViewer::showDisplayShutters(bool enable)
 
 void Q2DViewer::rotate(int times)
 {
-    // Si és zero no cal fer res
+    // If it is zero nothing needs to be done
     if (times == 0)
     {
         return;
     }
 
-    // Si la imatge està invertida per efecte mirall el sentit de les rotacions serà el contrari
+    // If the image is inverted by mirror effect the direction of the rotations will be the opposite
     if (m_isImageFlipped)
     {
         times = -times;
@@ -1812,7 +1814,7 @@ void Q2DViewer::applyImageOrientationChanges()
 {
     updateCamera();
     render();
-    
+
     emit imageOrientationChanged(getCurrentDisplayedImagePatientOrientation());
 }
 
@@ -1898,7 +1900,7 @@ void Q2DViewer::updateDisplayShutterMask()
             shutterData = image->getDisplayShutterForDisplayAsVtkImageData();
         }
     }
-    
+
     getMainDisplayUnit()->setShutterData(shutterData);
 }
 
