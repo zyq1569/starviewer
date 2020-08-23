@@ -46,7 +46,7 @@ class QViewerWorkInProgressWidget;
 class VoiLut;
 
 /**
-    Classe base per a totes les finestres de visualització
+     Base class for all display windows
   */
 class QViewer : public QWidget {
     Q_OBJECT
