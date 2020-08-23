@@ -1134,7 +1134,7 @@ ImagePlane* Q2DViewer::getCurrentImagePlane(bool vtkReconstructionHack)
     {
         return 0;
     }
-    
+
     return getMainInput()->getImagePlane(getCurrentSlice(), getCurrentViewPlane(), vtkReconstructionHack);
 }
 
@@ -1245,7 +1245,7 @@ void Q2DViewer::absolutePan(double motionVector[3])
     vtkCamera *camera = getActiveCamera();
     if (!camera)
     {
-        DEBUG_LOG("No hi ha càmera");
+        DEBUG_LOG("There is no camera");
         return;
     }
     camera->GetFocalPoint(currentPosition);
@@ -1292,7 +1292,7 @@ bool Q2DViewer::getCurrentCursorImageCoordinateOnInput(double xyz[3], int i)
     if (picker->Pick(position.x(), position.y(), 0.0, getRenderer()))
     {
         inside = true;
-        // Calculem el pixel trobat
+        // We calculate the pixel found
         picker->GetPickPosition(xyz);
         // We calculate the correct depth. It should be borne in mind that in the event that we have phases
         // vtk is not aware of it (each phase moves in depth z as if it were one more image)
