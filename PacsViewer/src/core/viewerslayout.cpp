@@ -351,8 +351,8 @@ void ViewersLayout::cleanUp(const QRectF &geometry)
 
     QList<Q2DViewerWidget*> viewers = getViewersInsideGeometry(geometry);
 
-    // Eliminem tots els widgets que contingui viewers layout
-    // i els propis widgets
+    // We remove all widgets that contain viewers layout
+    // and the widgets themselves
     while (viewers.size() > 0)
     {
         Q2DViewerWidget *viewer = viewers.takeFirst();
@@ -375,7 +375,7 @@ void ViewersLayout::setViewerGeometry(Q2DViewerWidget *viewer, const QRectF &geo
 {
     if (!viewer)
     {
-        DEBUG_LOG("El viewer proporcionat és nul! No s'aplicarà cap geometria.");
+        DEBUG_LOG("The viewer provided is null! No geometry will be applied.");
         return;
     }
 
