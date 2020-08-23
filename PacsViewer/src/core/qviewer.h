@@ -326,13 +326,13 @@ protected:
     /// Renderer per defecte
     vtkRenderer *m_renderer;
 
-    /// Indica si el menú de contexte està actiu o no. Per defecte sempre està actiu
+    /// Indicates whether the context menu is active or not. By default it is always active
     bool m_contextMenuActive;
 
     /// ToolProxy
     ToolProxy *m_toolProxy;
 
-    /// Ens servirà per controlar si entre event o event s'ha mogut el mouse
+    /// It will help us to control if the mouse has been moved between events
     bool m_mouseHasMoved;
 
     /// VOI LUT presets data for this viewer.
