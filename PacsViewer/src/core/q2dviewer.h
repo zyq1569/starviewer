@@ -207,7 +207,7 @@ public:
     /// Returns true if the current image of the selected input is visible, false otherwise
     bool isInputVisible(int i) const;
 
-    /// Ens indica si s'està aplicant o no thick slab
+    /// It tells us whether or not thick slab is being applied
     bool isThickSlabActive() const;
 
     /// Ask is thickslab is active on the i-th input. If i is out of range, false will be returned
