@@ -49,7 +49,7 @@ class VoiLut;
     Classe base per a totes les finestres de visualització
   */
 class QViewer : public QWidget {
-Q_OBJECT
+    Q_OBJECT
 public:
     QViewer(QWidget *parent = 0);
     ~QViewer();
@@ -90,8 +90,8 @@ public:
 
     QPoint getWheelAngleDelta() const;
     
-    /// Ens diu si el viewer és actiu en aquell moment
-    /// @return Cert si actiu, fals altrament
+    /// Tells us if the viewer is active at that time
+    /// @return True if active, false otherwise
     bool isActive() const;
 
     /// Ens retorna el ToolProxy del viewer
@@ -108,7 +108,8 @@ public:
     /// It captures the current view and saves it in an internal structure
     void grabCurrentView();
 
-    /// Save the list of captures in a file of various types with the filename base \ c baseName and in the format specified by \ c extension.
+    /// Save the list of captures in a file of various types with the
+    /// filename base \ c baseName and in the format specified by \ c extension.
     /// Returns TRUE if there were images to save, FALSE otherwise
     bool saveGrabbedViews(const QString &baseName, FileType extension);
 
@@ -118,24 +119,24 @@ public:
         return m_grabList.size();
     }
 
-    /// Fa zoom sobre l'escena amb el factor donat
-    /// @param factor Factor de zoom que volem aplicar a la càmera
+    /// Zoom in on the scene with the given factor
+    /// @param factor Zoom factor we want to apply to the camera
     void zoom(double factor);
 
     /// Absolute zoom to the scene based on the factor value
     void absoluteZoom(double factor);
 
-    /// Desplaça la càmera segons el vector de moviment que li passem
-    /// @param motionVector[] Vector de moviment que determina cap on i quant es mou la càmera
+    /// Move the camera according to the motion vector we pass to it
+    /// @param motionVector [] Motion vector that determines where and how far the camera moves
     void pan(double motionVector[3]);
 
-    /// Fem un zoom del requadre definit pels paràmetres topCorner i bottomCorner en coordenades de món
-    /// perquè s'ajusti a la mida de la finestra.
-    /// La determinació sobre quina coordenada es considera "superior" o "inferior" és relativa segons el punt de vista,
-    /// el realment important és que aquestes coordenades siguin dos vèrtexs oposats dins del requadre que es vol definir
-    /// @param topCorner Coordenada superior
-    /// @param bottomCorner Coordenada inferior oposada a la superior
-    /// @param marginRate valor en percentatge del marge que es vol deixar
+    /// Zoom in on the box defined by the topCorner and bottomCorner parameters in world coordinates
+    /// to fit the size of the window.
+    /// The determination of which coordinate is considered "upper" or "lower" is relative depending on the point of view,
+    /// the really important thing is that these coordinates are two opposite vertices within the box you want to define
+    /// @param topCorner Top coordinate
+    /// @param bottomCorner Lower coordinate opposite the upper
+    /// @param marginRate value as a percentage of the margin you want to leave
     /// @return True if scale could be performed, false otherwise
     bool scaleToFit3D(double topCorner[3], double bottomCorner[3], double marginRate = 0.0);
 
@@ -144,24 +145,24 @@ public:
     /// Sets the VOI LUT presets data for this viewer.
     void setVoiLutData(VoiLutPresetsToolData *voiLutData);
 
-    /// Habilita/deshabilita que els renderings es facin efectius
-    /// Útil en els casos en que necessitem fer diverses operacions de
-    /// visualització però no volem que aquestes es facin efectives fins que no ho indiquem
+    /// Enables / disables renderings to take effect
+    /// Useful in cases where we need to do several operations of
+    /// visualization but we do not want these to become effective until we indicate it
     void enableRendering(bool enable);
 
-    /// Ens retorna el menú de pacient amb el que s'escull l'input
+    ///It returns the patient menu with which the input is chosen
     PatientBrowserMenu* getPatientBrowserMenu() const;
 
-    /// Permet especificar si al seleccionar un input del menú de pacient aquest es carregarà automàticament
-    /// o, pel contrari, no es farà res. Per defecte està activat i es carregarà l'input al visor.
+    /// Specifies whether selecting an input from the patient menu will automatically load it
+    /// or, conversely, nothing will be done. By default it is enabled and the input will be loaded in the viewfinder.
     void setAutomaticallyLoadPatientBrowserMenuSelectedInput(bool load);
 
-    /// Retorna l'status del viewer. Útil per saber si el visor està visualitzant dades
-    /// o està carregant...
+    /// Returns viewer status. Useful for whether the viewer is viewing data
+    /// or loading ...
     ViewerStatus getViewerStatus() const;
     ViewerStatus getPreviousViewerStatus() const;
 
-    /// Canvia l'status del viewer
+    ///Change viewer status
     void setViewerStatus(ViewerStatus status);
 
     /// Returns a unique string identifier of all inputs
@@ -177,20 +178,20 @@ public:
     virtual VoiLut getCurrentVoiLut() const;
 
 public slots:
-    /// Indiquem les dades d'entrada
+    /// We indicate the input data
     virtual void setInput(Volume *volume) = 0;
 
-    /// Gestiona els events que rep de la finestra
+    /// Manage the events you receive from the window
     void eventHandler(vtkObject *object, unsigned long vtkEvent, void *clientData, void *callData, vtkCommand *command);
 
-    /// Força l'execució de la visualització
+    /// Force display execution
     void render();
 
-    /// Assignem si aquest visualitzador és actiu, és a dir, amb el que s'està interactuant
+    /// Assign whether this viewer is active, that is, what you are interacting with
     /// @param active
     void setActive(bool active);
 
-    /// Elimina totes les captures de pantalla
+    ///Delete all screenshots
     void clearGrabbedViews();
 
     /// Resets the view to a determined orthogonal plane
@@ -205,7 +206,7 @@ public slots:
     /// Resets the view to the original acquisition plane of the input volume
     void resetViewToAcquisitionPlane();
 
-    /// Activa o desactiva el menú de contexte
+    /// Activate or deactivate the context menu
     void enableContextMenu();
     void disableContextMenu();
 
@@ -216,25 +217,26 @@ public slots:
     void fitRenderingIntoViewport();
 
 signals:
-    /// Informem de l'event rebut. \TODO ara enviem el codi en vtkCommand, però podria (o hauria de) canviar per un mapeig nostre
+    /// We report the event received. \ TODO now we send the code in vtkCommand,
+    /// but it could (or should) change for a mapping of ours
     void eventReceived(unsigned long eventID);
 
-    /// Signal que s'emet quan s'escull una altra serie per l'input
+    /// Signal that is emitted when another series is chosen for the input
     void volumeChanged(Volume *volume);
 
-    /// S'emet quan els paràmetres de la càmera han canviat
+    /// It is broadcast when the camera settings have changed
     void cameraChanged();
 
-    /// Informa que el visualitzador ha rebut un event que es considera com que aquest s'ha seleccionat
+    /// Reports that the viewer has received an event that is considered to have been selected
     void selected(void);
 
-    /// Informa que s'ha canviat el zoom
+    /// Reports that the zoom has changed
     void zoomFactorChanged(double factor);
 
-    /// Informa que s'ha mogut la imatge
+    /// Reports that the image has been moved
     void panChanged(double *translation);
 
-    /// Indica que l'estat del visor ha canviat
+    /// Indicates that the viewfinder status has changed
     void viewerStatusChanged();
 
     /// Signal emitted when the anatomical view has changed
@@ -254,12 +256,12 @@ protected:
     /// Updates the VOI LUT data.
     void updateVoiLutData();
 
-    /// Fixem la orientació de la càmera del renderer principal
-    /// Si el paràmetre donat no és un dels valors enumerats vàlids, no farà res
-    /// @param orientation Orientació
+    /// We set the camera orientation of the main renderer
+    /// If the given parameter is not one of the valid listed values, it will do nothing
+    /// @param orientation Orientation
     void setCameraOrientation(const OrthogonalPlane &orientation);
 
-    /// Configura la orientació de la càmera donada
+    /// Sets the orientation of the given camera
     void setCameraViewPlane(const OrthogonalPlane &viewPlane);
 
     /// Adjusts camera scale factor. Returns false if no scale could be performed, true otherwise.
@@ -269,13 +271,13 @@ protected:
     /// Sets the default rendered item orientation for the given anatomical plane
     virtual void setDefaultOrientation(const AnatomicalPlane &anatomicalPlane);
     
-    /// Ens retorna la càmera activa pel renderer principal, si n'hi ha, NUL altrament.
+    ///It returns us the active camera by the main renderer, if any, NUL otherwise.
     vtkCamera* getActiveCamera();
 
-    /// Ens dóna la coordenada de món de l'últim (o previ a aquest) event capturat
-    /// @param worldCoordinate Variable on es retornarà la coordenada
-    /// @param current Si true, ens dóna la coordenada de l'event més recent,
-    /// si fals, ens dóna la coordenada anterior a l'event més recent
+    /// Gives us the world coordinate of the last (or previous) event captured
+    /// @param worldCoordinate Variable where the coordinate will be returned
+    /// @param current If true, it gives us the coordinate of the most recent event,
+    /// if false, gives us the previous coordinate to the most recent event
     void getRecentEventWorldCoordinate(double worldCoordinate[3], bool current);
 
     virtual void setupInteraction();
@@ -290,26 +292,26 @@ protected:
     void handleNotEnoughMemoryForVisualizationError();
 
 private slots:
-    /// Slot que s'utilitza quan s'ha seleccionat una sèrie amb el PatientBrowserMenu
-    /// Mètode que especifica un input seguit d'una crida al mètode render()
-    /// TODO: Convertit en virtual per tal de poder ser reimplementat per Q2DViewer per càrrega asíncrona
+    /// Slot used when a series has been selected with the PatientBrowserMenu
+    /// Method that specifies an input followed by a call to the render () method
+    /// TODO: Converted to virtual in order to be reimplemented by Q2DViewer by asynchronous upload
     virtual void setInputAndRender(Volume *volume);
 
 private:
-    /// Actualitza quin és el widget actual que es mostra per pantalla a partir de l'estat del viewer
+    /// Updates the current widget displayed on the screen from the viewer status
     void setCurrentWidgetByViewerStatus(ViewerStatus status);
 
-    /// Inicialitza el widget QWorkInProgress a partir de l'status
+    ///Initializes the QWorkInProgress widget from status
     void initializeWorkInProgressByViewerStatus(ViewerStatus status);
 
     /// Creates and configures the render window with the desired features.
     void setupRenderWindow();
 
 protected:
-    /// El volum a visualitzar
+    /// The volume to display
     Volume *m_mainVolume;
 
-    /// El widget per poder mostrar una finestra vtk amb qt
+    /// The widget to display a vtk window with qt
     QVTKWidget *m_vtkWidget;
 
     /// La llista de captures de pantalla
