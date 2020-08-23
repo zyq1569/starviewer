@@ -1,4 +1,4 @@
-# Aquí cal afegir les extensions que volem que s'incloguin a l'executable
+# Here we need to add the extensions we want to be included in the executable
 #
 
 # Exclude playground extensions from official releases
@@ -21,14 +21,14 @@ MAIN_EXTENSIONS = mpr \
                   pdf
 
 #
-# En cas que fem un build de la versió "lite" només tindrem l'estensió 2D i prou
+# In case we do a build of the "lite" version we will only have the 2D extension and that's it
 #
 lite_version {
-	PLAYGROUND_EXTENSIONS = ''
-	MAIN_EXTENSIONS = q2dviewer	
+    PLAYGROUND_EXTENSIONS = ''
+    MAIN_EXTENSIONS = q2dviewer
 }
 
-#No s'inclou l'extensió perquè a l'hora de fer el lincatge dóna error per duplicació de simbols
+#Extension is not included because it fails to duplicate symbols when linking
 macx {
         PLAYGROUND_EXTENSIONS -= perfusionmapreconstruction \
 }

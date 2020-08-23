@@ -30,12 +30,12 @@
 namespace udg {
 
 Q2DViewerWidget::Q2DViewerWidget(QWidget *parent)
- : QStackedWidget(parent)
+    : QStackedWidget(parent)
 {
     setupUi(this);
     setAutoFillBackground(true);
 
-    // Creació de l'acció del boto de sincronitzar.
+    // Creating the sync button action.
     m_synchronizeButtonAction = new QAction(0);
     m_synchronizeButtonAction->setIcon(QIcon(":/images/icons/emblem-symbolic-link.svg"));
     m_synchronizeButtonAction->setText(tr("Enable manual synchronization in this viewer"));
@@ -99,14 +99,14 @@ void Q2DViewerWidget::updateViewerSliceAccordingToSliderAction(int action)
 {
     switch (action)
     {
-        case QAbstractSlider::SliderMove:
-        case QAbstractSlider::SliderPageStepAdd:
-        case QAbstractSlider::SliderPageStepSub:
-            m_2DView->setSlice(m_slider->sliderPosition());
-            break;
+    case QAbstractSlider::SliderMove:
+    case QAbstractSlider::SliderPageStepAdd:
+    case QAbstractSlider::SliderPageStepSub:
+        m_2DView->setSlice(m_slider->sliderPosition());
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 }
 
@@ -119,7 +119,7 @@ void Q2DViewerWidget::createConnections()
     connect(m_2DView, SIGNAL(viewChanged(int)), SLOT(resetSliderRangeAndValue()));
     connect(m_2DView, &Q2DViewer::slabThicknessChanged, this, &Q2DViewerWidget::resetSliderRangeAndValue);
 
-    // Quan seleccionem l'slider, també volem que el viewer quedi com a actiu/seleccionat
+    // When we select the slider, we also want the viewer to remain as active / selected
     connect(m_slider, SIGNAL(sliderPressed()), SLOT(setAsActiveViewer()));
 
     connect(m_2DView, SIGNAL (selected()), SLOT(emitSelectedViewer()));
@@ -193,13 +193,13 @@ void Q2DViewerWidget::emitSelectedViewer()
 
 void Q2DViewerWidget::setSelected(bool option)
 {
-    // Per defecte li donem l'aspecte de background que té l'aplicació en general
-    // TODO podríem tenir a nivell d'aplicació centralitzat el tema de
-    // gestió de les diferents paletes de l'aplicació
+    // By default we give it the background look that the application has in general
+    // EVERYTHING we could have at the level of centralized application the topic of
+    // management of the different palettes of the application
     QBrush brush = QApplication::palette().window();
     if (option)
     {
-        // Si seleccionem el widget, li canviem el color de fons
+        // If we select the widget, we change the background color
         brush.setColor(QColor(85, 160, 255));
     }
     QPalette palette = this->palette();

@@ -1,4 +1,4 @@
-# Afegim dependències de les extensions
+# We add extensions dependencies
 
 include(../applicationstargetnames.pri)
 
@@ -38,9 +38,9 @@ macx {
     ICON = images/logo/logo.icns
 }
 
-# Definim que per sistemes de compilació windows basats en visual studio 
-# s'activi el flag /LARGEADDRESSAWARE, que permet que es puguin fer servir
-# més de 2Gb de memòria per procés. Això serà efectiu en sistemes de 64 bits
+# We define that for visual studio-based windows compilation systems
+# activate the flag / LARGEADDRESSAWARE, which allows them to be used
+# more than 2Gb of memory per process. This will be effective on 64-bit systems
 win32-msvc2013:QMAKE_LFLAGS += /LARGEADDRESSAWARE
 
 include(../../sourcelibsdependencies.pri)
@@ -55,5 +55,5 @@ include(installextensions.pri)
 
 QT += xml opengl network xmlpatterns qml concurrent quick quickwidgets sql webenginewidgets
 
-#TODO: Qt 4.5.3 no afegeix la informacio de UI_DIR com a include a l'hora de compilar el main.cpp
+#TODO: Qt 4.5.3 does not add UI_DIR information as include when compiling main.cpp
 INCLUDEPATH += ../../tmp/ui

@@ -22,9 +22,9 @@
 namespace udg {
 
 ExtensionWorkspace::ExtensionWorkspace(QWidget *parent)
- : QTabWidget(parent)
+    : QTabWidget(parent)
 {
-    // Fem que cada pestanya tingui el seu botonet de tancar
+    // We make each tab have its own close button
     setTabsClosable(true);
 
     // QTabWidget takes much less time to be painted when DocumentMode is enabled
@@ -66,7 +66,7 @@ void ExtensionWorkspace::setDarkBackgroundColorEnabled(bool enabled)
 
 void ExtensionWorkspace::addApplication(QWidget *application, QString caption, const QString &extensionIdentifier)
 {
-    INFO_LOG("Afegim l'extensió: " + caption + " al workspace");
+    INFO_LOG("We add the extension: " + caption + " al workspace");
     this->addTab(application, caption);
     this->setCurrentIndex(this->indexOf(application));
     // We add the extension to the list of active extensions

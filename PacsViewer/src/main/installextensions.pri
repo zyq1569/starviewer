@@ -1,7 +1,7 @@
-# Afegim dependències de les extensions
-# Include que ens serveix per tal de no haver d'afegir manualment els include's de les extensions perquè
-# compilin correctament.
-# Genera el fitxer extensions.h
+# We add extensions dependencies
+# Include that serves us in order not to have to manually add the include's of the extensions because
+# compile correctly.
+# Generate the extensions.h file
 #
 
 include(../extensions.pri)
@@ -9,7 +9,7 @@ include(../extensions.pri)
 extensionsFileName = $$OUT_PWD/extensions.h
 INCLUDEPATH += $$OUT_PWD
 
-# Funció per afegir una llibreria estàtica com a dependència
+# Function to add a static library as a dependency
 defineReplace(addExtensionInclude) {
     directoryName = $$1
     extensionName = $$2
@@ -38,7 +38,7 @@ unix:system(echo '"$${LITERAL_HASH}ifndef EXTENSIONS_H"'> $$extensionsFileName)
 unix:system(echo '"$${LITERAL_HASH}define EXTENSIONS_H"'>> $$extensionsFileName)
 
 
-# Afegim els include's
+# We add the include's
 for(extensionName, MAIN_EXTENSIONS) {
     DUMMY = $$addExtensionInclude(../extensions/main, $$extensionName)
 }
@@ -49,7 +49,7 @@ for(extensionName, PLAYGROUND_EXTENSIONS) {
     DUMMY = $$addExtensionInclude(../extensions/playground, $$extensionName)
 }
 
-# Afegim les inicialitzacions de resources
+# We add resource initializations
 
 win32:system(echo "void initExtensionsResources()">> $$extensionsFileName)
 unix:system(echo '"void initExtensionsResources()"'>> $$extensionsFileName)

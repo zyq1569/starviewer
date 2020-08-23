@@ -11,7 +11,7 @@ unix {
 }
 
 win32 {
-    # Per tenir glew integrada al codi. Només necessari a windows.
+    # To have glew built into the code. Only needed in windows.
     DEFINES += GLEW_STATIC
     # Avoid definition of min and max macros by windows.h
     DEFINES += NOMINMAX
@@ -29,11 +29,12 @@ win32 {
     # Required since Qt 5.6 by ITKCommon
     LIBS += gdi32.lib
 
-    # definim que per sistemes de compilació windows basats en visual studio
-    # la compilació es faci en tants cores com sigui possible
+    # we define that for visual studio-based windows compilation systems
+    # compilation is done in as many cores as possible
     QMAKE_CXXFLAGS += /MP
 
-    # Indiquem que per compil·lacions en debug, Runtime Library sigui Multi-threaded DLL (com en release) i no Multi-threaded Debug DLL
+    # We indicate that for debug compilations, Runtime Library
+    # is Multi-threaded DLL (as in release) and not Multi-threaded Debug DLL
     QMAKE_CXXFLAGS_DEBUG -= -MDd
     QMAKE_CXXFLAGS_DEBUG += -MD
 
@@ -47,7 +48,7 @@ macx {
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.11
 }
 
-# Definim variable per construir versió lite en temps de compilació
+# We define variable to build lite version at compile time
 lite_version:DEFINES += STARVIEWER_LITE
 
 # EasyLogging++ is set to be thread safe, to not have a default log file, and to not handle crashes
