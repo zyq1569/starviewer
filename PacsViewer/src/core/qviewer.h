@@ -78,13 +78,13 @@ public:
     /// Retorna el vtkRenderWindow
     vtkRenderWindow* getRenderWindow() const;
 
-    /// Retorna la mida en coordenades de pantalla (píxels?) de tot el viewport del viewer
-    /// amaga la crida vtkRenderWindow::GetSize()
+    /// Returns the size in screen coordinates (pixels?) Of the entire viewer viewport
+    /// hide the vtkRenderWindow call :: GetSize ()
     QSize getRenderWindowSize() const;
 
-    /// Mètodes per obtenir l'actual i/o l'anterior coordenada del cursor
-    /// del ratolí durant l'últim event
-    /// Les coordenades retornades estan en sistema de coordenades de Display
+    /// Methods for obtaining the current and / or previous cursor coordinate
+    /// of the mouse during the last event
+    /// The returned coordinates are in Display's coordinate system
     QPoint getEventPosition() const;
     QPoint getLastEventPosition() const;
 
@@ -97,19 +97,19 @@ public:
     /// Ens retorna el ToolProxy del viewer
     ToolProxy* getToolProxy() const;
 
-    /// Passa coordenades de display a coordenades de món i viceversa
+    ///Pass display coordinates to world coordinates and vice versa
     void computeDisplayToWorld(double x, double y, double z, double worldPoint[3]);
     void computeWorldToDisplay(double x, double y, double z, double displayPoint[3]);
 
-    /// Ens dóna la coordenada de món de l'últim (o previ a aquest) event capturat
+    ///It gives us the world coordinate of the last (or previous) event captured
     void getEventWorldCoordinate(double worldCoordinate[3]);
     void getLastEventWorldCoordinate(double worldCoordinate[3]);
 
-    /// Fa una captura de la vista actual i la guarda en una estructura interna
+    /// It captures the current view and saves it in an internal structure
     void grabCurrentView();
 
-    /// Desa la llista de captures en un arxiu de diversos tipus amb el nom de fitxer base \c baseName i en format especificat per \c extension.
-    /// Retorna TRUE si hi havia imatges per guardar, FALSE altrament
+    /// Save the list of captures in a file of various types with the filename base \ c baseName and in the format specified by \ c extension.
+    /// Returns TRUE if there were images to save, FALSE otherwise
     bool saveGrabbedViews(const QString &baseName, FileType extension);
 
     /// Retorna el nombre de vistes capturades que estan desades

@@ -537,6 +537,7 @@ private:
 
     /// Returns the VolumeDisplayUnit of the given index. Returns null if there's no display unit or index is out of range
     VolumeDisplayUnit* getDisplayUnit(int index) const;
+
     VolumeDisplayUnit* getMainDisplayUnit() const;
 
     /// Returns all the current display units. The list will be empty if we have no input.
