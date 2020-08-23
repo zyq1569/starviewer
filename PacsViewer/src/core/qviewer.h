@@ -338,13 +338,13 @@ protected:
     /// VOI LUT presets data for this viewer.
     VoiLutPresetsToolData *m_voiLutData;
 
-    /// Indica si hem de fer l'acció de renderitzar o no
+    /// Indicates whether we should perform the render action or not
     bool m_isRenderingEnabled;
 
-    /// Menú de pacient a través del qual podem escollir l'input del viewer
+    /// Patient menu through which we can choose the input of the viewer
     PatientBrowserMenu *m_patientBrowserMenu;
 
-    /// Widget que es mostra quan s'està realitzant algun treball asíncron
+    /// Widget that is displayed when an asynchronous job is being performed
     QViewerWorkInProgressWidget *m_workInProgressWidget;
 
     /// The default margin for fit into viewport. Should be between 0..1.
@@ -354,17 +354,17 @@ private:
     /// Current view plane: plane that is perpendicular to the camera pointing direction.
     OrthogonalPlane m_currentViewPlane;
 
-    /// Indica si el viewer és actiu o no
+    /// Indicates whether the viewer is active or not
     bool m_isActive;
     
     /// Last wheel scroll event angle delta.
     QPoint m_lastAngleDelta;
 
-    /// Estats actual i previ del visor actual
+    ///Current and previous states of the current viewer
     ViewerStatus m_viewerStatus;
     ViewerStatus m_previousViewerStatus;
 
-    /// Layout que ens permet crear widgets diferents per els estats diferents del visor.
+    /// Layout that allows us to create different widgets for different viewer states.
     QStackedLayout *m_stackedLayout;
 };
 
