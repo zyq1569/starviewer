@@ -306,6 +306,7 @@ public slots:
     /// You can specify a command to run once the volume has been loaded and is about to be displayed.
     /// Useful for specifying changes to the viewer (slice change, w / l, etc.) without worrying about when the volume has been loaded.
     void setInputAsynchronously(Volume *volume, QViewerCommand *inputFinishedCommand = 0);
+
     void setInputAsynchronously(const QList<Volume*> &volumes, QViewerCommand *inputFinishedCommand = 0);
 
     void resetView(const OrthogonalPlane &view);
@@ -345,6 +346,7 @@ public slots:
 
     /// Sets the transfer function of the main volume.
     void setTransferFunction(const TransferFunction &transferFunction);
+
     /// Clears the transfer function of the main volume.
     void clearTransferFunction();
 
@@ -363,6 +365,7 @@ public slots:
     ///Apply a horizontal / vertical flip to the image.
     /// The vertical flip will be done as a 180º rotation followed by a horizontal flip
     void horizontalFlip();
+
     void verticalFlip();
 
     // ALL of these methods should also be in QString version!
@@ -467,7 +470,7 @@ private:
     /// Adds/remove the image actors to/from the scene
     void addImageActors();
     void removeImageActors();
-    
+
     /// Updates the displayed images in the image slices.
     void updateImageSlices();
 
@@ -483,16 +486,17 @@ private:
     ///Resets the camera settings to the current view.
     void resetCamera();
 
-    /// Apply the appropriate rotation factor according to the turns we indicate. It doesn’t update the camera or the scene, simply
+    /// Apply the appropriate rotation factor according to the turns we indicate.
+    /// It doesn’t update the camera or the scene, simply
     /// is used to set the correct values to the internal variables that control how the image is rotated.
     void rotate(int times);
 
     /// Sets if image should be flipped (horizontally) or not. It does not update the camera nor renders the scene.
     void setFlip(bool flip);
-    
+
     /// Updates the camera, renders and emits the current image orientataion
     void applyImageOrientationChanges();
-    
+
     /// Loads an asynchronous volumet
     void loadVolumeAsynchronously(Volume *volume);
     void loadVolumesAsynchronously(const QList<Volume *> &volumes);
@@ -605,7 +609,7 @@ private:
 
     /// Controls whether overlays are enabled or not
     bool m_overlaysAreEnabled;
-    
+
     /// If true, display shutters are visible when they are available and it's possible to show them.
     bool m_showDisplayShutters;
 
@@ -615,7 +619,7 @@ private:
     /// Unit to be used when no input is present or an out of index unit have been requested.
     /// This way we can always return safe default values.
     VolumeDisplayUnit *m_dummyDisplayUnit;
-    
+
     /// VolumeDisplayUnits handler. Handles all the display units of the viewer.
     QSharedPointer<GenericVolumeDisplayUnitHandler> m_displayUnitsHandler;
 
