@@ -272,7 +272,7 @@ void Q2DViewerConfigurationScreen::updateMagnifyingGlassZoomFactorSetting()
     }
     else
     {
-        // Si no hi ha cap botó marcat, l'augment serà 4x per defecte. Tot i això, això no hauria de passar mai
+        // If no button is marked, the magnification will be 4x by default. Still, this should never happen
         zoomFactor = "4";
     }
 
