@@ -32,7 +32,7 @@ class Volume;
     amb diferents layouts i geometries de forma versàtil.
   */
 class ViewersLayout : public QWidget {
-Q_OBJECT
+    Q_OBJECT
 public:
     ViewersLayout(QWidget *parent = 0);
     ~ViewersLayout();
@@ -40,23 +40,23 @@ public:
     /// Obtenir el visualitzador seleccionat
     Q2DViewerWidget* getSelectedViewer() const;
 
-    /// Ens retorna en nombre de viewers totals que conté el gestor de layouts,
-    /// independentment de si són visibles o no.
+    /// Returns us in total number of viewers contained in the layout manager,
+    /// regardless of whether they are visible or not.
     int getNumberOfViewers() const;
 
-    /// Ens retorna el visor amb índex "number". Si number està fora de rang,
-    /// ens retornarà un punter nul.
+    /// Returns the viewer with "number" index. If number is out of range,
+    /// will return a null pointer.
     Q2DViewerWidget* getViewerWidget(int number) const;
 
-    /// Fa un layout regular amb les files i columnes indicades
+    ///Makes a regular layout with the indicated rows and columns
     void setGrid(int rows, int columns);
     void setGridInArea(int rows, int columns, const QRectF &geometry);
 
     /// Afegeix un nou visualitzador amb la geometria indicada
     Q2DViewerWidget* addViewer(const QRectF &geometry);
 
-    /// Neteja el layout, eliminant tots els visors i geometries,
-    /// deixant-lo en l'estat inicial, com si acabéssim de crear l'objecte
+    /// Clean the layout, removing all viewers and geometries,
+    /// leaving it in the initial state, as if we had just created the object
     void cleanUp();
     void cleanUp(const QRectF &geometry);
 
@@ -73,59 +73,65 @@ public:
     QList<Q2DViewerWidget *> getViewersInsideGeometry(const QRectF &geometry);
 
 public slots:
-    /// Marquem com a seleccionat el viewer passat per paràmetre
+    /// We mark as selected the viewer passed by parameter
     void setSelectedViewer(Q2DViewerWidget *viewer);
 
     /// Resizes the given viewer to change between normal (demaximized) and maximized states.
     void toggleMaximization(Q2DViewerWidget *viewer);
 
 signals:
-    /// Senyal que s'emet quan s'afegeix un visualitzador
+    /// Signal that is emitted when a viewer is added
     void viewerAdded(Q2DViewerWidget *viewer);
 
     /// Signal to be emitted just before the viewer widget is going to be deleted
     void viewerRemoved(Q2DViewerWidget *viewer);
 
-    /// Senyal que s'emet quan s'amaga un visualitzador, és a dir,
-    // deixa de ser visible però segueix existint
+    /// Signal that is emitted when a viewer is hidden, that is,
+    // is no longer visible but still exists
     void viewerHidden(Q2DViewerWidget *viewer);
 
     /// Emitted when a previously hid viewer is shown
     void viewerShown(Q2DViewerWidget *viewer);
 
-    /// Senyal que s'emet quan el visualitzador seleccionat canvia
+    /// Signal that is output when the selected viewer changes
     void selectedViewerChanged(Q2DViewerWidget *viewer);
 
     void manualSynchronizationStateChanged(bool enable);
 
     /// Propagation of the matching signal in Q2DViewerWidget.
     void fusionLayout2x1FirstRequested(const QList<Volume*> &volumes, const AnatomicalPlane &anatomicalPlane);
+
     /// Propagation of the matching signal in Q2DViewerWidget.
     void fusionLayout2x1SecondRequested(const QList<Volume*> &volumes, const AnatomicalPlane &anatomicalPlane);
+
     /// Propagation of the matching signal in Q2DViewerWidget.
     void fusionLayout3x1Requested(const QList<Volume*> &volumes, const AnatomicalPlane &anatomicalPlane);
+
     /// Propagation of the matching signal in Q2DViewerWidget.
     void fusionLayout2x3FirstRequested(const QList<Volume*> &volumes);
+
     /// Propagation of the matching signal in Q2DViewerWidget.
     void fusionLayout2x3SecondRequested(const QList<Volume*> &volumes);
+
     /// Propagation of the matching signal in Q2DViewerWidget.
     void fusionLayout3x3Requested(const QList<Volume*> &volumes);
+
     /// Propagation of the matching signal in Q2DViewerWidget.
     void fusionLayoutMprRightRequested(const QList<Volume*> &volumes);
 
 private:
-    /// Crea i retorna un nou visor configurat adequadament
+    /// Creates and returns a properly configured new viewer
     Q2DViewerWidget* getNewQ2DViewerWidget();
 
-    /// Mètode auxiliar per un problema que ens pot provar que ens quedem sense memòria per un bug no solucionat
+    /// Auxiliary method for a problem that can prove to us that we run out of memory due to an unresolved bug
     void deleteQ2DViewerWidget(Q2DViewerWidget *viewer);
 
-    /// Coloca el viewer donat en la posició i mides proporcionats
-    /// @param viewer Visor que volem posicionar i ajustar dins del layout
-    /// @param geometry amb les posicions i mides realitives corresponents al viewer
+    /// Place the given viewer in the position and sizes provided
+    /// @param viewer Viewer we want to position and adjust within the layout
+    /// @param geometry with the positions and realistic sizes corresponding to the viewer
     void setViewerGeometry(Q2DViewerWidget *viewer, const QRectF &geometry);
 
-    /// Fa les accions necessàries per amagar el viewer indicat del layout actual
+    /// Take the necessary actions to hide the indicated viewer from the current layout
     void hideViewer(Q2DViewerWidget *viewer);
 
     /// Performs the needed actions to show the given viewer of the current layout
@@ -137,7 +143,7 @@ private:
 private:
     RelativeGeometryLayout *m_layout;
 
-    /// Visualitzador selecciona. Sempre en tindrem un.
+    /// Viewer selected. We will always have one.
     Q2DViewerWidget *m_selectedViewer;
 
     /// This struct holds the information needed to demaximize a maximized viewer.
