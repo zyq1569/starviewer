@@ -153,8 +153,10 @@ private slots:
 
     /// Move the screen window
     void moveToDesktop(int screenIndex);
+
     /// Move the window to the previous screen
     void moveToPreviousDesktop();
+
     ///Move the window to the next screen
     void moveToNextDesktop();
 
