@@ -64,16 +64,18 @@
 
 namespace udg {
 
-// Minimum size in pixels of the unfolded combo box showing all the items. This is used for the window level and transfer function combos.
+// Minimum size in pixels of the unfolded combo box showing all the items.
+// This is used for the window level and transfer function combos.
 const int MinimumComboBoxViewWidth = 170;
 
 Q2DViewerExtension::Q2DViewerExtension(QWidget *parent)
- : QWidget(parent), m_patient(0), m_lastSelectedViewer(0)
+    : QWidget(parent), m_patient(0), m_lastSelectedViewer(0)
 {
     setupUi(this);
     Q2DViewerSettings().init();
 
-    // We set a minimum size in the .ui file to see the widget and unset it here to avoid the button being too small if the window doesn't fit in the screen
+    // We set a minimum size in the .ui file to see the widget and unset
+    // it here to avoid the button being too small if the window doesn't fit in the screen
     m_thickSlabWidget->setMinimumSize(0, 0);
 
 #ifdef STARVIEWER_LITE
@@ -203,18 +205,18 @@ void Q2DViewerExtension::createConnections()
     connect(m_hangingProtocolsMenuButton, SIGNAL(clicked(bool)), SLOT(showAvailableHangingProtocolsMenu()));
     connect(m_viewersLayoutGridButton, SIGNAL(clicked(bool)), SLOT(showViewersLayoutGridTable()));
 
-    // Connexions del menu
+    // Menu connections
     connect(m_viewersLayoutGrid, SIGNAL(selectedGrid(int, int)), SLOT(setGrid(int, int)));
 
-    // Per mostrar la informació DICOM de la imatge que s'està veient en aquell moment
+    //To display the DICOM information of the image being viewed at that time
     connect(m_dicomDumpToolButton, SIGNAL(clicked()), SLOT(showDicomDumpCurrentDisplayedImage()));
 
-    // Connexions necessaries amb els canvis al layout
+    // Necessary connections with layout changes
     connect(m_workingArea, SIGNAL(viewerAdded(Q2DViewerWidget*)), SLOT(activateNewViewer(Q2DViewerWidget*)));
     connect(m_workingArea, SIGNAL(selectedViewerChanged(Q2DViewerWidget*)), SLOT(changeSelectedViewer(Q2DViewerWidget*)));
 
 #ifndef STARVIEWER_LITE
-    // Per mostrar exportació
+    // To display export
     connect(m_screenshotsExporterToolButton, SIGNAL(clicked()), SLOT(showScreenshotsExporterDialog()));
 
     connect(m_relatedStudiesWidget, SIGNAL(downloadingStudies()), SLOT(changeToRelatedStudiesDownloadingIcon()));
@@ -443,14 +445,14 @@ void Q2DViewerExtension::initializeTools()
 #endif
 
     m_voxelInformationToolButton->setDefaultAction(m_toolManager->registerTool("VoxelInformationTool"));
-    // Registrem les eines de valors predefinits de window level, slicing per teclat i sincronització
+    // We register the tools of window level predefined values, keyboard slicing and synchronization
     m_toolManager->registerTool("VoiLutPresetsTool");
     m_toolManager->registerTool("SlicingKeyboardTool");
     m_toolManager->registerTool("SlicingWheelTool");
     m_toolManager->registerTool("SynchronizeTool");
-    // Cal marcar l'acció de la tool com a checked perquè sempre estigui disponible
-    // Si no ho féssim, cada cop que es canviés de tool, el toolmanager faria un refreshConections() i
-    // les finestres sincronitzades es desactivarien (ticket #1236)
+    // The action of the tool must be marked as checked so that it is always available
+    // If we didn't, every time the tool was changed, the toolmanager would refreshConections () and
+    // synced windows would be disabled (ticket # 1236)
     m_toolManager->getRegisteredToolAction("SynchronizeTool")->setChecked(true);
 
     // Registrem les "Action Tool"
@@ -467,7 +469,7 @@ void Q2DViewerExtension::initializeTools()
     m_flipVerticalToolButton->setDefaultAction(m_toolManager->registerActionTool("VerticalFlipActionTool"));
     m_restoreToolButton->setDefaultAction(m_toolManager->registerActionTool("RestoreActionTool"));
     m_invertToolButton->setDefaultAction(m_toolManager->registerActionTool("InvertVoiLutActionTool"));
-    // Afegim un menú al botó d'erase per incorporar l'acció d'esborrar tot el que hi ha al visor
+    // We add a menu to the erase button to incorporate the action of deleting everything in the viewer
     m_eraserToolButton->setPopupMode(QToolButton::MenuButtonPopup);
     QMenu *eraserToolMenu = new QMenu(this);
     m_eraserToolButton->setMenu(eraserToolMenu);
@@ -487,7 +489,7 @@ void Q2DViewerExtension::initializeTools()
 
     m_toolManager->addExclusiveToolsGroup("LeftButtonGroup", leftButtonExclusiveTools);
 
-    // Activem les tools que volem tenir per defecte, això és com si clickéssim a cadascun dels ToolButton
+    //We activate the tools we want to have by default, this is as if we clicked on each of the ToolButton
     QStringList defaultTools;
     defaultTools << "VoiLutPresetsTool" << "SlicingKeyboardTool" << "SlicingMouseTool" << "SlicingWheelTool" << "WindowLevelTool" << "TranslateTool";
     m_toolManager->triggerTools(defaultTools);
@@ -496,8 +498,8 @@ void Q2DViewerExtension::initializeTools()
     // Casos especials de Tools
     //
 #ifndef STARVIEWER_LITE
-    // TODO De moment fem exclusiu la tool de sincronització i la de cursor 3d manualment perque la
-    // sincronització no té el model de totes les tools
+    // TODO At the moment we make exclusive the synchronization tool and the 3d cursor tool manually because the
+    // synchronization does not have the model of all tools
     connect(m_toolManager->getRegisteredToolAction("Cursor3DTool"), SIGNAL(triggered()), SLOT(disableSynchronization()));
 
     // SYNCHRONIZE TOOLS
@@ -546,13 +548,14 @@ void Q2DViewerExtension::initializeTools()
 #endif
 
     // SCREEN SHOT TOOL
-    // Activem l'eina d'screen shot, que sempre estarà activa
-    // TODO Tot això es podria convertir més endavant en dues Action Tools en comptes d'aquesta Tool
+    // Activate the screen shot tool, which will always be active
+    // ALL of this could later become two Action Tools instead of this Tool
     m_screenShotTriggerAction = m_toolManager->registerTool("ScreenShotTool");
     m_toolManager->triggerTool("ScreenShotTool");
-    // Fem que l'screen shot sigui una mica més acessible afegint-li un menú en el que podem escollir quina acció realitzar
-    // d'alguna manera tot això són una mica uns HACKS ja que el mecanisme de funcionament d'aquesta tool és una mica diferent
-    // i caldria tenir en compte tools d'aquests tipus per donar-li cabuda en la infraestructura de tools.
+
+    // We make the screen shot a little more accessible by adding a menu in which we can choose which action to perform
+    // somehow all of this is a bit of a HACKS as the working mechanism of this tool is a bit different
+    // and such tools should be considered to accommodate the tools infrastructure.
     m_screenShotToolButton->setPopupMode(QToolButton::InstantPopup);
     m_screenShotToolButton->setCheckable(false);
     m_singleShotAction = new QAction(this);
@@ -580,21 +583,21 @@ void Q2DViewerExtension::activateNewViewer(Q2DViewerWidget *newViewerWidget)
 {
     connect(newViewerWidget, SIGNAL(doubleClicked(Q2DViewerWidget*)), SLOT(handleViewerDoubleClick(Q2DViewerWidget*)));
 
-    // Activem/Desactivem les capes d'annotacions segons l'estat del botó
-    // Informació de l'estudi
+    // Enable / Disable annotation layers according to the status of the button
+    // Study information
     newViewerWidget->getViewer()->enableAnnotation(AllAnnotations, m_showViewersTextualInformationAction->isChecked());
     // Overlays
     newViewerWidget->getViewer()->showImageOverlays(m_showOverlaysAction->isChecked());
     // Shutters
     newViewerWidget->getViewer()->showDisplayShutters(m_showDisplayShuttersAction->isChecked());
 
-    // Afegim l'eina de sincronització pel nou viewer
-    // Per defecte només configurem la sincronització a nivell d'scroll
+    // We add the sync tool for the new viewer
+    // By default we only configure scroll-level synchronization
     ToolConfiguration *synchronizeConfiguration = new ToolConfiguration();
     synchronizeConfiguration->addAttribute("Slicing", QVariant(true));
     m_toolManager->setViewerTool(newViewerWidget->getViewer(), "SynchronizeTool", synchronizeConfiguration);
 
-    // Li indiquem les tools que li hem configurat per defecte a tothom
+    // We tell everyone the tools we have configured by default
     m_toolManager->setupRegisteredTools(newViewerWidget->getViewer());
 }
 
@@ -602,8 +605,8 @@ void Q2DViewerExtension::changeSelectedViewer(Q2DViewerWidget *viewerWidget)
 {
     if (viewerWidget != m_lastSelectedViewer)
     {
-        // TODO Canviar aquestes connexions i desconnexions per dos mètodes el qual
-        // enviin el senyal al visualitzador que toca.
+        // TODO Change these connections and disconnections by two methods which
+        // send the signal to the touching viewer.
         if (m_lastSelectedViewer)
         {
             disconnect(m_lastSelectedViewer->getViewer(), SIGNAL(viewChanged(int)), this, SLOT(updateDICOMInformationButton()));
@@ -611,17 +614,17 @@ void Q2DViewerExtension::changeSelectedViewer(Q2DViewerWidget *viewerWidget)
             disconnect(m_lastSelectedViewer->getViewer(), SIGNAL(volumeChanged(Volume*)), this, SLOT(updateTransferFunctionComboBoxWithCurrentViewerModel()));
             disconnect(m_lastSelectedViewer->getViewer(), SIGNAL(volumeChanged(Volume*)), this, SLOT(updateExternalApplicationsWithCurrentView(Volume*)));
 
-            // És necessari associar cada cop al viewer actual les associacions del menú de la tool d'screen shot
+            //It is necessary to associate with the current viewer the associations of the menu of the screen shot tool
             ScreenShotTool *screenShotTool = dynamic_cast<ScreenShotTool*>(m_lastSelectedViewer->getViewer()->getToolProxy()->getTool("ScreenShotTool"));
             disconnect(m_singleShotAction, SIGNAL(triggered()), screenShotTool, SLOT(singleCapture()));
             disconnect(m_multipleShotAction, SIGNAL(triggered()), screenShotTool, SLOT(completeCapture()));
-            // Desactivem les "ActionTool" pel visor que acaba de deseleccionar-se
+            //We disable the "ActionTool" for the viewer that has just been deselected
             m_toolManager->disableRegisteredActionTools(m_lastSelectedViewer->getViewer());
         }
 
-        // Actualitzem l'últim viewer seleccionat
+        //We update the last selected viewer
         m_lastSelectedViewer = viewerWidget;
-        // Si el viewer seleccionat no és nul
+        // If the selected viewer is not null
         if (m_lastSelectedViewer)
         {
             Q2DViewer *selected2DViewer = viewerWidget->getViewer();
@@ -641,7 +644,7 @@ void Q2DViewerExtension::changeSelectedViewer(Q2DViewerWidget *viewerWidget)
                 ExternalApplicationsManager::instance()->cleanParameters();
             }
 
-            // És necessari associar cada cop al viewer actual les associacions del menú de la tool d'screen shot
+            // It is necessary to associate with the current viewer the associations of the menu of the screen shot tool
             ScreenShotTool *screenShotTool = dynamic_cast<ScreenShotTool*>(viewerWidget->getViewer()->getToolProxy()->getTool("ScreenShotTool"));
             if (screenShotTool)
             {
@@ -659,14 +662,14 @@ void Q2DViewerExtension::changeSelectedViewer(Q2DViewerWidget *viewerWidget)
             updateDICOMInformationButton();
             updateExporterToolButton();
 
-            // Activem les "ActionTool" pel visor seleccionat
+            //Activate the "ActionTool" for the selected viewer
             m_toolManager->enableRegisteredActionTools(selected2DViewer);
         }
         else
         {
-            // Si és nul vol dir que en aquell moment o bé no tenim cap
-            // visor seleccionat o bé no n'existeix cap. És per això que
-            // cal desvincular els widgets adients de qualsevol visor.
+            // If it's null it means that at that time we either don't have any
+            // selected viewer or none exists. That's why
+            // you need to unlink the appropriate widgets from any viewer.
             m_voiLutComboBox->clearPresets();
             m_cineController->setQViewer(0);
             m_thickSlabWidget->unlink();
@@ -811,9 +814,9 @@ void Q2DViewerExtension::writeSettings()
 
 void Q2DViewerExtension::disableSynchronization()
 {
-    // TODO Mètode per desactivar l'eina i el boto de sincronització dels visualitzadors quan
-    // es selecciona l'eina de cursor3D, per solucionar-ho de forma xapussa perquè l'eina de
-    // sincronització encara no té el mateix format que la resta
+    // TODO Method to disable the viewer sync tool and button when
+    // the cursor3D tool is selected, to solve it in a sloppy way because the cursor tool
+    // synchronization is not yet the same format as the rest
     Q2DViewerWidget *viewer;
 
     int numberOfViewers = m_workingArea->getNumberOfViewers();
@@ -840,7 +843,7 @@ void Q2DViewerExtension::enableAutomaticSynchronizationToViewer(bool enable)
 {
     if (enable)
     {
-        // Desactivem sincronització manual, però no el botó
+        // Disable manual sync, but not the button
         disableSynchronization();
     }
 }
@@ -874,7 +877,7 @@ void Q2DViewerExtension::deactivateManualSynchronizationInAllViewers()
         {
             widget->enableSynchronization(false);
         }
-    } 
+    }
 }
 
 void Q2DViewerExtension::manualSynchronizationActivated(bool activated)
@@ -904,7 +907,8 @@ void Q2DViewerExtension::setupPropagation()
             Settings settings;
             QSet<QString> modalitiesWithPropagation = settings.getValueAsQStringList(CoreSettings::ModalitiesWithPropagationEnabledByDefault).toSet();
 
-            // Propagation will be enabled if any of the configured modalities is present in the current patient modalities
+            // Propagation will be enabled if any of the configured
+            // modalities is present in the current patient modalities
             if (!modalitiesWithPropagation.intersect(study->getModalities().toSet()).isEmpty())
             {
                 m_propagateToolButton->defaultAction()->setChecked(true);
