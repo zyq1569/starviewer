@@ -45,7 +45,7 @@ bool Q2DViewerExtensionMediator::initializeExtension(QWidget *extension, const E
     }
 
     Volume *input = extensionContext.getDefaultVolume();
-    // Si no tenim cap volum, alertem a l'usuari
+    //If we have no volume, we alert the user
     if (!input)
     {
         QMessageBox::information(0, ApplicationNameString, tr("There is not any viewable or supported Series in the selected Studies"));
@@ -53,7 +53,7 @@ bool Q2DViewerExtensionMediator::initializeExtension(QWidget *extension, const E
 
     q2dviewerExtension->setPatient(extensionContext.getPatient());
 #ifdef STARVIEWER_LITE
-    // Assignem l'input per defecte al visor
+    //We assign the default input to the viewfinder
     q2dviewerExtension->setInput(input);
 #endif
 

@@ -131,7 +131,7 @@ private slots:
     /// @param progress value of load progress
     void updateVolumeLoadProgressNotification(int progress);
 
-    /// Mostra el diàleg on s'explica que és una versió beta.
+    /// Displays the dialog explaining that it is a beta version.
     void showBetaVersionDialog();
 
     /// Create a new window and display it. Returns a reference to the created window.
