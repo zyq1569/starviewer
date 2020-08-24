@@ -169,11 +169,11 @@ int PacsDevice::getStoreServicePort() const
 bool PacsDevice::isEmpty() const
 {
     if (m_AETitle.isEmpty() &&
-        m_address.isEmpty() &&
-        m_description.isEmpty() &&
-        m_institution.isEmpty() &&
-        m_location.isEmpty() &&
-        m_id.isEmpty())
+            m_address.isEmpty() &&
+            m_description.isEmpty() &&
+            m_institution.isEmpty() &&
+            m_location.isEmpty() &&
+            m_id.isEmpty())
     {
         return true;
     }
@@ -186,22 +186,22 @@ bool PacsDevice::isEmpty() const
 bool PacsDevice::isSamePacsDevice(const PacsDevice &pacsDevice) const
 {
     return m_AETitle == pacsDevice.getAETitle()
-        && m_address == pacsDevice.getAddress()
-        && m_queryRetrieveServicePort == pacsDevice.getQueryRetrieveServicePort();
+            && m_address == pacsDevice.getAddress()
+            && m_queryRetrieveServicePort == pacsDevice.getQueryRetrieveServicePort();
 }
 
 bool PacsDevice::operator ==(const PacsDevice &device) const
 {
     return m_AETitle == device.m_AETitle
-        && m_address == device.m_address
-        && m_description == device.m_description
-        && m_institution == device.m_institution
-        && m_location == device.m_location
-        && m_id == device.m_id
-        && m_isQueryRetrieveServiceEnabled == device.m_isQueryRetrieveServiceEnabled
-        && m_queryRetrieveServicePort == device.m_queryRetrieveServicePort
-        && m_isStoreServiceEnabled == device.m_isStoreServiceEnabled
-        && m_storeServicePort == device.m_storeServicePort;
+            && m_address == device.m_address
+            && m_description == device.m_description
+            && m_institution == device.m_institution
+            && m_location == device.m_location
+            && m_id == device.m_id
+            && m_isQueryRetrieveServiceEnabled == device.m_isQueryRetrieveServiceEnabled
+            && m_queryRetrieveServicePort == device.m_queryRetrieveServicePort
+            && m_isStoreServiceEnabled == device.m_isStoreServiceEnabled
+            && m_storeServicePort == device.m_storeServicePort;
 }
 
 QString PacsDevice::getKeyName() const
@@ -217,29 +217,29 @@ QStringList PacsDevice::getDefaultPACSKeyNamesList() const
 
     if (pacsList.isEmpty())
     {
-        // Migració de dades. Si encara no tenim definits els PACS per defecte en el nou format, obtenim els PACS per defecte
-        // del format antic, és a dir, a partir dels elements amb els valors "default" = "S" de la llista de PACS
-        // Un cop llegits, els escrivim en el nou format
+        // Data migration. If we have not yet defined the default PACS in the new format, we get the default PACS
+        // of the old format, that is, from the elements with the values "default" = "S" in the PACS list
+        // Once read, we write them in the new format
         Settings::SettingListType list = settings.getList(CoreSettings::PacsListConfigurationSectionName);
         foreach (Settings::SettingsListItemType item, list)
         {
-            // El camp "default" té aquesta clau
+            //The "default" field has this key
             if (item.contains("."))
             {
                 if (item.value(".").toString() == "S")
                 {
-                    // Hem de fer servir els mateixos camps i format que al mètode PacsDevice::getKeyName()
+                    // We need to use the same fields and format as in the PacsDevice :: getKeyName () method
                     pacsList << item.value("AETitle").toString() + item.value("PacsHostname").toString() + ":" + item.value("PacsPort").toString();
                 }
             }
         }
         if (pacsList.isEmpty())
         {
-            INFO_LOG("No hi ha PACS per defecte definits en el nou format i tampoc s'han trobat de definits en l'antic format");
+            INFO_LOG("There are no default PACS defined in the new format and neither have been found to be defined in the old format");
         }
         else
         {
-            INFO_LOG("No hi ha PACS per defecte definits en el nou format. Els obtenim del format antic i els migrem al nou format. Són aquests: " +
+            INFO_LOG("There are no default PACS defined in the new format. We get them from the old format and migrate them to the new format. These are: " +
                      pacsList.join("//") + "//");
             Settings settings;
             settings.setValue(CoreSettings::DefaultPACSListToQuery, pacsList.join("//") + "//");

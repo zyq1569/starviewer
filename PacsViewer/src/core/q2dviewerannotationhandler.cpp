@@ -435,7 +435,8 @@ Q2DViewerAnnotationHandler::CornerAnnotationIndexType Q2DViewerAnnotationHandler
     MammographyImageHelper mammographyImageHelper;
     Image *image = m_2DViewer->getCurrentDisplayedImage();
 
-    // #1349: If displaying a mammography and the posterior side is at the right, then swap annotation sides so that patient information doesn't cover the image
+    // #1349: If displaying a mammography and the posterior side is at the right,
+    // then swap annotation sides so that patient information doesn't cover the image
     if (mammographyImageHelper.isStandardMammographyImage(image) &&
             m_2DViewer->getCurrentDisplayedImagePatientOrientation().getRowDirectionLabel() == PatientOrientation::PosteriorLabel)
     {
