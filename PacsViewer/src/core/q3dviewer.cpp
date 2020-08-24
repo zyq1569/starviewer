@@ -64,15 +64,18 @@ Q3DViewer::Q3DViewer(QWidget *parent)
     m_orientationMarker = new Q3DOrientationMarker(this->getInteractor(), this);
 
     m_volumeMapper = vtkSmartVolumeMapper::New();
-    m_volumeMapper->InteractiveAdjustSampleDistancesOff();  // Workaround for vtkSmartVolumeMapper bug (https://gitlab.kitware.com/vtk/vtk/issues/17323)
+
+    // Workaround for vtkSmartVolumeMapper bug (https://gitlab.kitware.com/vtk/vtk/issues/17323)
+    m_volumeMapper->InteractiveAdjustSampleDistancesOff();
+
     m_volumeProperty = vtkVolumeProperty::New();
     m_volumeProperty->SetInterpolationTypeToLinear();
     m_vtkVolume = vtkVolume::New();
     m_vtkVolume->SetProperty(m_volumeProperty);
     m_vtkVolume->SetMapper(m_volumeMapper);
 
-    // Creem una funció de transferència per defecte TODO la tenim només per tenir alguna cosa per defecte
-    // Opacitat
+    // We create a default transfer function WE ALL have it just to have something by default
+    // Opacity
     m_transferFunction.setOpacity(20.0, 0.0);
     m_transferFunction.setOpacity(255.0, 0.2);
     // Colors
@@ -164,9 +167,13 @@ void Q3DViewer::setInput(Volume *volume)
     }
 
     m_mainVolume = volume;
-    m_mainVolume->getVtkData()->Modified(); // Workaround for vtkSmartVolumeMapper bug (https://gitlab.kitware.com/vtk/vtk/issues/17328)
+
+    // Workaround for vtkSmartVolumeMapper bug (https://gitlab.kitware.com/vtk/vtk/issues/17328)
+    m_mainVolume->getVtkData()->Modified();
     m_volumeMapper->SetInputData(m_mainVolume->getVtkData());
-    m_volumeMapper->SetSampleDistance(-1.0);    // force the mapper to compute a sample distance based on data spacing
+
+    // force the mapper to compute a sample distance based on data spacing
+    m_volumeMapper->SetSampleDistance(-1.0);
     m_isosurfaceFilter->SetInputData(m_mainVolume->getVtkData());
 
     setVolumeTransformation();
@@ -180,7 +187,7 @@ void Q3DViewer::setInput(Volume *volume)
 
     applyCurrentRenderingMethod();
 
-    // Indiquem el canvi de volum
+    // We indicate the change in volume
     emit volumeChanged(getMainInput());
 
     unsetCursor();
@@ -190,12 +197,12 @@ void Q3DViewer::setBlendMode(const BlendMode &mode)
 {
     switch (mode)
     {
-        case BlendMode::Composite: m_volumeMapper->SetBlendModeToComposite(); break;
-        case BlendMode::MaximumIntensity: m_volumeMapper->SetBlendModeToMaximumIntensity(); break;
-        case BlendMode::MinimumIntensity: m_volumeMapper->SetBlendModeToMinimumIntensity(); break;
-        case BlendMode::AverageIntensity: m_volumeMapper->SetBlendModeToAverageIntensity(); break;
-        case BlendMode::Additive: m_volumeMapper->SetBlendModeToAdditive(); break;
-        case BlendMode::Isosurface: break;
+    case BlendMode::Composite: m_volumeMapper->SetBlendModeToComposite(); break;
+    case BlendMode::MaximumIntensity: m_volumeMapper->SetBlendModeToMaximumIntensity(); break;
+    case BlendMode::MinimumIntensity: m_volumeMapper->SetBlendModeToMinimumIntensity(); break;
+    case BlendMode::AverageIntensity: m_volumeMapper->SetBlendModeToAverageIntensity(); break;
+    case BlendMode::Additive: m_volumeMapper->SetBlendModeToAdditive(); break;
+    case BlendMode::Isosurface: break;
     }
 
     if (mode == BlendMode::Isosurface)
@@ -214,9 +221,9 @@ void Q3DViewer::setRenderMode(const RenderMode &mode)
 {
     switch (mode)
     {
-        case RenderMode::SmartRayCasting: m_volumeMapper->SetRequestedRenderModeToDefault(); break;
-        case RenderMode::CpuRayCasting: m_volumeMapper->SetRequestedRenderModeToRayCast(); break;
-        case RenderMode::GpuRayCasting: m_volumeMapper->SetRequestedRenderModeToGPU(); break;
+    case RenderMode::SmartRayCasting: m_volumeMapper->SetRequestedRenderModeToDefault(); break;
+    case RenderMode::CpuRayCasting: m_volumeMapper->SetRequestedRenderModeToRayCast(); break;
+    case RenderMode::GpuRayCasting: m_volumeMapper->SetRequestedRenderModeToGPU(); break;
     }
 }
 
@@ -224,9 +231,9 @@ void Q3DViewer::setInterpolationMode(const InterpolationMode &mode)
 {
     switch (mode)
     {
-        case InterpolationMode::NearestNeighbor: m_volumeMapper->SetInterpolationModeToNearestNeighbor(); break;
-        case InterpolationMode::Linear: m_volumeMapper->SetInterpolationModeToLinear(); break;
-        case InterpolationMode::Cubic: m_volumeMapper->SetInterpolationModeToCubic(); break;
+    case InterpolationMode::NearestNeighbor: m_volumeMapper->SetInterpolationModeToNearestNeighbor(); break;
+    case InterpolationMode::Linear: m_volumeMapper->SetInterpolationModeToLinear(); break;
+    case InterpolationMode::Cubic: m_volumeMapper->SetInterpolationModeToCubic(); break;
     }
 }
 
@@ -353,8 +360,8 @@ void Q3DViewer::setVolumeTransformation()
     projectionMatrix->Identity();
 
     if ((   currentPlaneRowVector[0] == 0.0 &&    currentPlaneRowVector[1] == 0.0 &&    currentPlaneRowVector[2] == 0.0) ||
-        (currentPlaneColumnVector[0] == 0.0 && currentPlaneColumnVector[1] == 0.0 && currentPlaneColumnVector[2] == 0.0) ||
-        (          stackDirection[0] == 0.0 &&           stackDirection[1] == 0.0 &&           stackDirection[2] == 0.0))
+            (currentPlaneColumnVector[0] == 0.0 && currentPlaneColumnVector[1] == 0.0 && currentPlaneColumnVector[2] == 0.0) ||
+            (          stackDirection[0] == 0.0 &&           stackDirection[1] == 0.0 &&           stackDirection[2] == 0.0))
     {
         DEBUG_LOG("One of the vectors is null: setting an identity projection matrix.");
     }

@@ -1628,7 +1628,7 @@ void Q2DViewer::restore()
     // Disable rendering to improve the efficiency of running the pipeline again,
     // since otherwise it renders multiple times and causes unwanted effects like flickering
     enableRendering(false);
-    
+
     // Esborrem les anotacions
     if (hasInput())
     {
@@ -1672,7 +1672,7 @@ void Q2DViewer::alignRight()
 void Q2DViewer::setAlignPosition(AlignPosition alignPosition)
 {
     m_alignPosition = alignPosition;
-    
+
     if (alignPosition == AlignCenter)
     {
         // Nothing more needs to be done

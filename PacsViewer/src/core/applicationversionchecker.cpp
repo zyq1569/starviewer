@@ -214,8 +214,10 @@ void ApplicationVersionChecker::setCheckVersionInterval(int days)
 
 bool ApplicationVersionChecker::isNewerVersion(const QString &currentVersion, const QString &oldVersion)
 {
-    if (currentVersion.isEmpty()) return false;
-    if (oldVersion.isEmpty()) return true;
+    if (currentVersion.isEmpty())
+        return false;
+    if (oldVersion.isEmpty())
+        return true;
 
     // Initial: x.y.z-foo
     // Split by '-'. If there is no '-' it will return the whole string, so we are guaranteed to get a non-empty vector
@@ -235,32 +237,42 @@ bool ApplicationVersionChecker::isNewerVersion(const QString &currentVersion, co
         int current = currentVersionNumberParts[i].toInt();
         int old = oldVersionNumberParts[i].toInt();
 
-        if (current > old) return true;
-        if (current < old) return false;
+        if (current > old)
+            return true;
+        if (current < old)
+            return false;
     }
 
     // If we arrive here, it means that both versions have the same numbers at the beginning. Let's check if one of them has additional numbers
-    if (currentVersionNumberParts.size() > oldVersionNumberParts.size()) return true;
-    if (currentVersionNumberParts.size() < oldVersionNumberParts.size()) return false;
+    if (currentVersionNumberParts.size() > oldVersionNumberParts.size())
+        return true;
+    if (currentVersionNumberParts.size() < oldVersionNumberParts.size())
+        return false;
 
     // The version number is exactly equal. Let's compare if there is some suffix
-    if (currentVersionParts.size() == 1 && oldVersionParts.size() == 1) return false;   // neither has suffix, so they are equal
-    if (currentVersionParts.size() == 1 && oldVersionParts.size() > 1) return true;     // currentVersion = x.y.z, oldVersion = x.y.z-(devel|alpha|beta|RC)...
-    if (currentVersionParts.size() > 1 && oldVersionParts.size() == 1) return false;    // reverse of above
+    if (currentVersionParts.size() == 1 && oldVersionParts.size() == 1)
+        return false;   // neither has suffix, so they are equal
+    if (currentVersionParts.size() == 1 && oldVersionParts.size() > 1)
+        return true;     // currentVersion = x.y.z, oldVersion = x.y.z-(devel|alpha|beta|RC)...
+    if (currentVersionParts.size() > 1 && oldVersionParts.size() == 1)
+        return false;    // reverse of above
 
     // Both have suffix
     QRegularExpression suffixRegularExpression("(devel|alpha|beta|RC)(\\d*)", QRegularExpression::CaseInsensitiveOption);
     auto currentMatch = suffixRegularExpression.match(currentVersionParts[1]);
     auto oldMatch = suffixRegularExpression.match(oldVersionParts[1]);
 
-    if (!currentMatch.hasMatch() || !oldMatch.hasMatch()) return false; // unexpected suffix: we can't say that currentVersion is newer than oldVersion
+    if (!currentMatch.hasMatch() || !oldMatch.hasMatch())
+        return false; // unexpected suffix: we can't say that currentVersion is newer than oldVersion
 
     QVector<QString> suffixes{"devel", "alpha", "beta", "RC"};
     int currentSuffixIndex = suffixes.indexOf(currentMatch.captured(1));
     int oldSuffixIndex = suffixes.indexOf(oldMatch.captured(1));
 
-    if (currentSuffixIndex > oldSuffixIndex) return true;
-    if (currentSuffixIndex < oldSuffixIndex) return false;
+    if (currentSuffixIndex > oldSuffixIndex)
+        return true;
+    if (currentSuffixIndex < oldSuffixIndex)
+        return false;
 
     // Same suffix type. Let's compare the number
     int currentSuffixNumber = currentMatch.captured(2).toInt();

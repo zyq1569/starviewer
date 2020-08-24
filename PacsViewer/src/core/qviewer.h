@@ -174,7 +174,8 @@ public:
     /// Returns the current focal point of the active camera
     bool getCurrentFocalPoint(double focalPoint[3]);
 
-    /// Returns the VOI LUT that is currently applied to the image in this viewer. The default implementation returns a default VoiLut.
+    /// Returns the VOI LUT that is currently applied to the image in this viewer.
+    /// The default implementation returns a default VoiLut.
     virtual VoiLut getCurrentVoiLut() const;
 
 public slots:
@@ -217,7 +218,8 @@ public slots:
     void fitRenderingIntoViewport();
 
 signals:
-    /// We report the event received. \ TODO now we send the code in vtkCommand,
+    /// We report the event received.
+    /// \ TODO now we send the code in vtkCommand,
     /// but it could (or should) change for a mapping of ours
     void eventReceived(unsigned long eventID);
 
@@ -317,7 +319,8 @@ protected:
     /// La llista de captures de pantalla
     QList<vtkImageData*> m_grabList;
 
-    /// Filtre per connectar el que es visualitza pel renderer en un pipeline, epr guardar les imatges en un arxiu, per exemple
+    ///Filter to connect what is displayed by the renderer in a pipeline,
+    /// epr save the images in a file, for example
     vtkWindowToImageFilter *m_windowToImageFilter;
 
     /// Connector d'events vtk i slots qt
