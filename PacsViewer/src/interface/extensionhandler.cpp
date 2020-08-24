@@ -45,18 +45,18 @@ typedef SingletonPointer<QueryScreen> QueryScreenSingleton;
 typedef Singleton<PatientComparer> PatientComparerSingleton;
 
 ExtensionHandler::ExtensionHandler(QApplicationMainWindow *mainApp, QObject *parent)
- : QObject(parent)
+    : QObject(parent)
 {
     m_mainApp = mainApp;
 
     createConnections();
 
-    // Cada cop que creem una nova finestra tancarem qualsevol instància de QueryScreen. Així queda més clar que 
-    // la finestra que la invoca és la que rep el resultat d'aquesta
-    // TODO Cal millorar el disseny de la interacció amb la QueryScreen per tal de no tenir problemes com els que s'exposen als tickets
-    // #1858, #1018. De moment ho solventem amb aquests hacks, però no són una bona solució
-    // TODO:xapussa per a que l'starviewer escolti les peticions del RIS, com que tot el codi d'escoltar les peticions del ris està a la
-    // queryscreen l'hem d'instanciar ja a l'inici perquè ja escolti les peticions
+    // Each time we create a new window we will close any instance of QueryScreen. So it is clearer that
+    // the window that invokes it is the one that receives the result of this one
+    // EVERYTHING It is necessary to improve the design of the interaction with the QueryScreen in order not to have problems like those exposed in the tickets
+    // # 1858, # 1018. At the moment we solve it with these hacks, but they are not a good solution
+    // TODO: Slap for the starviewer to listen to RIS requests, as all the code to listen to RIS requests is in the
+    // queryscreen we have to instantiate it at the beginning so that it listens to the requests
     disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
     connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
 
@@ -66,9 +66,9 @@ ExtensionHandler::ExtensionHandler(QApplicationMainWindow *mainApp, QObject *par
 
 ExtensionHandler::~ExtensionHandler()
 {
-    // Cada cop que tanquem una finestra forçarem el tancament de la queryscreen. Això es fa perquè quedi clar que
-    // QueryScreen <-> finestra on s'obren els estudis, estan lligats segons qui l'ha invocat
-    // TODO Tot això precisa d'un millor disseny, però de moment evita problemes com els del ticket #1858
+    // Every time we close a window we will force the queryscreen to close. This is done to make it clear that
+    // QueryScreen <-> window where the studies are opened, are linked according to who invoked it
+    // TODO All this needs a better design, but for now it avoids problems like those in ticket # 1858
     if (m_haveToCloseQueryScreen)
     {
         QueryScreenSingleton::instance()->close();
@@ -82,49 +82,49 @@ void ExtensionHandler::queryScreenIsClosed()
 
 void ExtensionHandler::request(int who)
 {
-    // \TODO: crear l'extensió amb el factory ::createExtension, no com està ara
-    // \TODO la numeració és completament temporal!!! s'haurà de canviar aquest sistema
-    INFO_LOG("Request d'extensió amb ID: " + QString::number(who));
+    // \ TODO: create the extension with factory :: createExtension, not as it is now
+    // \ ALL numbering is completely temporary !!! this system will have to be changed
+    INFO_LOG("Extension request with ID: " + QString::number(who));
     switch (who)
     {
-        case 1:
-            m_importFileApp.open();
-            break;
+    case 1:
+        m_importFileApp.open();
+        break;
 
-        case 6:
-            m_importFileApp.openDirectory();
-            break;
+    case 6:
+        m_importFileApp.openDirectory();
+        break;
 
-        case 7:
-            // HACK degut a que la QueryScreen és un singleton, això provoca efectes colaterals quan teníem
-            // dues finestres (mirar ticket #542). Fem aquest petit hack perquè això no passi.
-            // Queda pendent resoldre-ho de la forma adequada
-            disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
-            QueryScreenSingleton::instance()->showPACSTab();
-            connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
-            m_haveToCloseQueryScreen = true;
-            break;
+    case 7:
+        // HACK because the QueryScreen is a singleton, this causes side effects when we had
+        // two windows (see ticket # 542). Let's do this little hack so that this doesn't happen.
+        // It remains to be resolved in the appropriate way
+        disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
+        QueryScreenSingleton::instance()->showPACSTab();
+        connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
+        m_haveToCloseQueryScreen = true;
+        break;
 
-        case 8:
-            // HACK degut a que la QueryScreen és un singleton, això provoca efectes colaterals quan teníem
-            // dues finestres (mirar ticket #542). Fem aquest petit hack perquè això no passi.
-            // Queda pendent resoldre-ho de la forma adequada
-            disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
-            QueryScreenSingleton::instance()->openDicomdir();
-            connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
-            m_haveToCloseQueryScreen = true;
-            break;
+    case 8:
+        // HACK because the QueryScreen is a singleton, this causes side effects when we had
+        // two windows (see ticket # 542). Let's do this little hack so that this doesn't happen.
+        // It remains to be resolved in the appropriate way
+        disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
+        QueryScreenSingleton::instance()->openDicomdir();
+        connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
+        m_haveToCloseQueryScreen = true;
+        break;
 
-        case 10:
-            // Mostrar local
-            // HACK degut a que la QueryScreen és un singleton, això provoca efectes colaterals quan teníem
-            // dues finestres (mirar ticket #542). Fem aquest petit hack perquè això no passi.
-            // Queda pendent resoldre-ho de la forma adequada
-            disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
-            QueryScreenSingleton::instance()->showLocalExams();
-            connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
-            m_haveToCloseQueryScreen = true;
-            break;
+    case 10:
+        // Show location
+        // HACK because the QueryScreen is a singleton, this causes side effects when we had
+        // two windows (see ticket # 542). Let's do this little hack so that this doesn't happen.
+        // It remains to be resolved in the appropriate way
+        disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
+        QueryScreenSingleton::instance()->showLocalExams();
+        connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
+        m_haveToCloseQueryScreen = true;
+        break;
     }
 }
 
@@ -499,9 +499,11 @@ QApplicationMainWindow* ExtensionHandler::addPatientToWindow(Patient *patient, b
             }
             else
             {
-                // \ TODO Given the problems explained in ticket # 1087, deleting objects here can make the application crash if you request studies
+                // \ TODO Given the problems explained in ticket # 1087,
+                // deleting objects here can make the application crash if you request studies
                 // without explicitly going through the QueryScreen. Since no volume has been loaded into memory at this point,
-                // therefore there will be no major memory leaks if we do not delete it, we get to not delete any object and thus minimize the problem.
+                // therefore there will be no major memory leaks if we do not delete it,
+                // we get to not delete any object and thus minimize the problem.
             }
         }
     }
@@ -512,7 +514,8 @@ void ExtensionHandler::openDefaultExtension()
 {
     if (m_mainApp->getCurrentPatient())
     {
-        // TODO If there are no images nor documents it would be better to inform the user than to open an extension, but a message box doesn't let the tests
+        // TODO If there are no images nor documents it would be better to inform the
+        // user than to open an extension, but a message box doesn't let the tests
         // continue, so for the moment we keep the old behaviour for this scenario.
         if (m_extensionContext.hasImages() || !m_extensionContext.hasEncapsulatedDocuments())
         {
@@ -520,7 +523,7 @@ void ExtensionHandler::openDefaultExtension()
             QString defaultExtension = settings.getValue(InterfaceSettings::DefaultExtension).toString();
             if (!request(defaultExtension))
             {
-                WARN_LOG("The request for the default extension called failed: " + defaultExtension + ". Engeguem extensió 2D per defecte(hardcoded)");
+                WARN_LOG("The request for the default extension called failed: " + defaultExtension + ". We start default 2D extension (hardcoded)");
                 request("Q2DViewerExtension");
             }
         }
