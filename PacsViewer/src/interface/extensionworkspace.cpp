@@ -79,7 +79,7 @@ void ExtensionWorkspace::removeApplication(QWidget *application)
 {
     if (application)
     {
-        INFO_LOG("Tancant extensió: " + application->objectName());
+        INFO_LOG("Closing extension: " + application->objectName());
         this->removeTab(this->indexOf(application));
         // We removed the extension from the list of active extensions
         m_activeExtensions.remove(application);

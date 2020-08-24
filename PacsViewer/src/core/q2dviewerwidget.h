@@ -30,7 +30,7 @@ class QViewerCommand;
 /**
 This class is the generic interface of a Q2DViewer along with its
 corresponding slider and spinbox. It contains the method to put such an input
-     as the methods for modifying the value of the slider and spinbox.
+as the methods for modifying the value of the slider and spinbox.
  */
 class Q2DViewerWidget : public QStackedWidget, private ::Ui::Q2DViewerWidgetBase {
     Q_OBJECT
@@ -152,10 +152,10 @@ private slots:
     void requestFusionLayoutMprRight();
 
 private:
-    /// Acció del boto de sincronitzar
+    /// Sync button action
     QAction *m_synchronizeButtonAction;
 
-    /// Per fer estadístiques
+    /// To make statistics
     StatsWatcher *m_statsWatcher;
 
     /// Widget to adjust the fusion balance. Will be shown as the menu of the fusion balance tool button.
