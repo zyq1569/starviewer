@@ -43,7 +43,8 @@ class ExternalApplication;
 class QApplicationMainWindow : public QMainWindow {
     Q_OBJECT
 public:
-    /// The builder of the Mainwindow. This is where the entire interface skeleton is created: Menus, Toolbars, toolbox, working area, etc.
+    /// The builder of the Mainwindow. This is where the entire interface skeleton is created: Menus,
+    ///  Toolbars, toolbox, working area, etc.
     QApplicationMainWindow(QWidget *parent = 0);
 
     ~QApplicationMainWindow();
@@ -79,7 +80,8 @@ public:
     void connectPatientVolumesToNotifier(Patient *patient);
 
 protected:
-    /// This event occurs when you close the window. It is the time when some tasks like performing the configuration are performed
+    /// This event occurs when you close the window.
+    /// It is the time when some tasks like performing the configuration are performed
     virtual void closeEvent(QCloseEvent *event);
 
     virtual void resizeEvent(QResizeEvent *event);
@@ -94,7 +96,8 @@ private:
     /// Create the menu to choose the language of the application
     void createLanguageMenu();
 
-    /// Create an action to change the language by passing the language (eg Catalan) and the locale to be changed (eg ca_ES)
+    /// Create an action to change the language by passing
+    /// the language (eg Catalan) and the locale to be changed (eg ca_ES)
     QAction* createLanguageAction(const QString &language, const QString &locale);
 
     /// Removes all extensions contained in the workspace and removes the volumes of the current patient
