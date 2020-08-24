@@ -153,7 +153,7 @@ Q2DViewerExtension::Q2DViewerExtension(QWidget *parent)
     createConnections();
     initializeTools();
 
-    // Incorporem estadístiques
+    // We incorporate statistics
     m_statsWatcher = new StatsWatcher("2D Extension", this);
     m_statsWatcher->addClicksCounter(m_slicingToolButton);
     m_statsWatcher->addClicksCounter(m_zoomToolButton);
@@ -269,7 +269,8 @@ void Q2DViewerExtension::setupDefaultToolsForModalities(const QStringList &modal
     bool enableAutomaticSynchronizationForMR = settings.getValue(CoreSettings::EnableQ2DViewerAutomaticSynchronizationForMR).toBool();
     bool enableAutomaticSynchronizationForCT = settings.getValue(CoreSettings::EnableQ2DViewerAutomaticSynchronizationForCT).toBool();
 
-    if ((modalities.contains("MR") && enableAutomaticSynchronizationForMR) || (modalities.contains("CT") && enableAutomaticSynchronizationForCT))
+    if ((modalities.contains("MR") && enableAutomaticSynchronizationForMR) ||
+            (modalities.contains("CT") && enableAutomaticSynchronizationForCT))
     {
         m_automaticSynchronizationToolButton->defaultAction()->setChecked(true);
     }
@@ -397,7 +398,7 @@ void Q2DViewerExtension::setPatient(Patient *patient)
 
 #ifndef STARVIEWER_LITE
     setupPropagation();
-    // Habilitem la possibilitat de buscar estudis relacionats.
+    // We enable the possibility of searching for related studies.
     m_relatedStudiesToolButton->setEnabled(true);
     m_relatedStudiesWidget->searchStudiesOf(m_patient);
     connect(m_patient, SIGNAL(studyAdded(Study*)), m_relatedStudiesWidget, SLOT(updateList()));
@@ -411,9 +412,9 @@ void Q2DViewerExtension::setCurrentStudy(const QString &studyUID)
 
 void Q2DViewerExtension::initializeTools()
 {
-    // Creem el tool manager
+    // We create the tool manager
     m_toolManager = new ToolManager(this);
-    // Obtenim les accions de cada tool que volem
+    // We get the actions of each tool we want
     m_zoomToolButton->setDefaultAction(m_toolManager->registerTool("ZoomTool"));
     m_slicingToolButton->setDefaultAction(m_toolManager->registerTool("SlicingMouseTool"));
     m_slicingToolButton->addAction(m_toolManager->registerTool("TranslateLeftTool"));
@@ -475,7 +476,7 @@ void Q2DViewerExtension::initializeTools()
     m_eraserToolButton->setMenu(eraserToolMenu);
     eraserToolMenu->addAction(m_toolManager->registerActionTool("ClearCurrentViewAnnotationsActionTool"));
 
-    // Definim els grups exclusius
+    // We define exclusive groups
     QStringList leftButtonExclusiveTools;
 
 #ifdef STARVIEWER_LITE
@@ -495,7 +496,7 @@ void Q2DViewerExtension::initializeTools()
     m_toolManager->triggerTools(defaultTools);
 
     //
-    // Casos especials de Tools
+    // Special cases of Tools
     //
 #ifndef STARVIEWER_LITE
     // TODO At the moment we make exclusive the synchronization tool and the 3d cursor tool manually because the
@@ -528,7 +529,8 @@ void Q2DViewerExtension::initializeTools()
 
     m_desynchronizeAllViewersButton->setDefaultAction(m_desynchronizeAllAction);
     connect(m_desynchronizeAllAction, SIGNAL(triggered()), SLOT(deactivateManualSynchronizationInAllViewers()));
-    // Must use the button directly instead of the action because the button's toogled signal is emitted before the action's triggered signal.
+    // Must use the button directly instead of the action because the button's
+    // toogled signal is emitted before the action's triggered signal.
     // This way we make sure that this slot, which turns off manual sync, is called before auto-sync is turned on.
     connect(m_automaticSynchronizationToolButton, SIGNAL(toggled(bool)), SLOT(enableAutomaticSynchronizationToViewer(bool)));
 

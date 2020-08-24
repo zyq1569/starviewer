@@ -29,60 +29,60 @@ namespace udg {
 class ItemMenu;
 
 /**
-    Classe per implementar el menu per seleccionar els grids com si es crees una taula.
+    Class to implement the menu to select the grids as if creating a table.
   */
 class TableMenu : public QWidget {
-Q_OBJECT
+    Q_OBJECT
 public:
     TableMenu(QWidget *parent = 0);
 
     ~TableMenu();
 
-    /// Inicialitza la taula amb un únic element no seleccionat
+    ///Initializes the table with a single unselected item
     void initializeTable();
 
-    /// Buida tots els elements de la taula
+    /// Empty all table items
     void dropTable();
 
 public slots:
-    /// Mètode que cada vegada que el mouse es situi sobre items comprova si cal afegir files o columnes
+    ///Method that every time the mouse is placed on items checks if it is necessary to add rows or columns
     void verifySelected(ItemMenu *selected);
 
-    /// Mètode que cada vegada que es seleccioni un dels items emet el grid resultat
+    /// Method that each time one of the items is selected emits the resulting grid
     void emitSelected(ItemMenu *selected);
 
 signals:
-    /// Emet que s'ha escollit un grid
+    /// It emits that a grid has been chosen
     void selectedGrid(int, int);
 
 protected:
-    /// Sobrecàrrega del mètode que tracta tots els events
+    /// Overloading the method that handles all events
     bool event(QEvent *event);
 
-    /// Sobrecàrrega del mètode que tracta els events del mouse
+    /// Overloading the method that handles mouse events
     void mouseMoveEvent (QMouseEvent *event);
 
 private:
-    /// Afegir una columna a la taula
+    ///Add a column to the table
     void addColumn();
 
-    /// Afegir una fila a la taula
+    ///Add a row to the table
     void addRow();
 
 private:
-    /// Nombre de columnes actuals
+    /// Number of current columns
     int m_columns;
 
-    /// Nombre de files actuals
+    ///Number of current rows
     int m_rows;
 
-    /// Grid per mostrar els elements de la taula
+    ///Grid to display table items
     QGridLayout *m_gridLayout;
 
-    /// Label que informa de les files i columnes seleccionades
+    ///Label that reports the selected rows and columns
     QLabel *m_information;
 
-    /// Llista dels items
+    /// List of items
     QList<ItemMenu*> m_itemList;
 
 };
