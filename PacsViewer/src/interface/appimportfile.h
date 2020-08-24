@@ -21,36 +21,36 @@
 namespace udg {
 
 /**
-    Mini-aplicació encarregada de permetre carregar un model des del sistema de fitxers al repositori de volums
-  */
+     Mini-application responsible for loading a model from the file system to the volume repository
+*/
 class AppImportFile : public QObject {
 Q_OBJECT
 public:
     AppImportFile(QObject *parent = 0);
     ~AppImportFile();
 
-    /// Obre el diàleg per poder obrir arxius
+    ///Opens the dialog to be able to open files
     void open();
 
-    /// Obre el diàleg per poder obrir arxius d'un directori DICOM
-    /// Per defecte explora els continguts de forma recursiva, cercant en els subdirectoris
+    /// Opens the dialog to be able to open files from a DICOM directory
+    /// By default it explores the contents recursively, searching the subdirectories
     void openDirectory(bool recursively = true);
 
 signals:
-    /// Senyal que s'emet quan s'han escollit un o més arxius que seran processats externament
+    ///Signal that is emitted when one or more files have been chosen that will be processed externally
     void selectedFiles(QStringList);
 
 private:
-    /// Ens retorna la llista d'arxius DICOM agrupables en series d'un directori
-    /// @param directory Nom del directori on es troben els arxius
-    /// @return La llista de noms de fitxers ordenada
+    /// Returns the list of DICOM files groupable in series in a directory
+    /// @param directory Name of the directory where the files are located
+    /// @return The sorted filename list
     QStringList generateFilenames(const QString &dirPath);
 
-    /// Donat un path arrel, escaneja tots els subdirectoris recursivament i ens els retorna en una llista incloent el path arrel
-    /// Tots els paths retornats, són absoluts
+    /// Given a root path, it scans all subdirectories recursively and returns them to us in a list including the root path
+    /// All paths returned are absolute
     void scanDirectories(const QString &rootPath, QStringList &dirsList);
 
-    /// Llegeix escriu configuracions
+    ///Read write settings
     void readSettings();
     void writeSettings();
 
@@ -61,7 +61,7 @@ private:
     /// Directori de treball per directoris dicom
     QString m_workingDicomDirectory;
 
-    /// Última Extenció seleccionada per l'usuari
+    ///Last User Selected Extension
     QString m_lastExtension;
 };
 
