@@ -37,7 +37,7 @@
 namespace udg {
 
 HangingProtocolManager::HangingProtocolManager(QObject *parent)
- : QObject(parent)
+    : QObject(parent)
 {
     m_hangingProtocolsDownloading = new QHash<HangingProtocol*, QMultiHash<QString, StructPreviousStudyDownloading*>*>();
     m_relatedStudiesManager = new RelatedStudiesManager();
@@ -175,7 +175,7 @@ void HangingProtocolManager::applyHangingProtocol(HangingProtocol *hangingProtoc
 
 void HangingProtocolManager::applyHangingProtocol(HangingProtocol *hangingProtocol, ViewersLayout *layout, Patient *patient, const QRectF &geometry)
 {
-    // Si hi havia algun estudi descarregant, es treu de la llista d'espera
+    // If there was any studio downloading, it is removed from the waiting list
     cancelAllHangingProtocolsDownloading();
 
     // Clean up viewer of the working area
@@ -219,10 +219,10 @@ void HangingProtocolManager::applyHangingProtocol(HangingProtocol *hangingProtoc
 
             if (!isDownloading && hangingProtocolImageSet->getPreviousStudyToDisplay()->getDICOMSource().getRetrievePACS().count() > 0)
             {
-                //En principi sempre hauríem de tenir algun PACS al DICOMSource
+                //In principle we should always have some PACS in DICOMSource
                 connect(patient, SIGNAL(studyAdded(Study*)), SLOT(previousStudyDownloaded(Study*)));
                 m_relatedStudiesManager->retrieveAndLoad(hangingProtocolImageSet->getPreviousStudyToDisplay(),
-                    hangingProtocolImageSet->getPreviousStudyToDisplay()->getDICOMSource().getRetrievePACS().at(0));
+                                                         hangingProtocolImageSet->getPreviousStudyToDisplay()->getDICOMSource().getRetrievePACS().at(0));
             }
         }
         else
@@ -288,11 +288,11 @@ void HangingProtocolManager::previousStudyDownloaded(Study *study)
 
         for (int i = previousDownloadingList.size() - 1; i >= 0; --i)
         {
-            // Per cada estudi que esperàvem que es descarregués
-            // Agafem l'estructura amb les dades que s'havien guardat per poder aplicar-ho
+            // For each study we waited for it to download
+            // We take the structure with the data that had been saved to be able to apply it
             StructPreviousStudyDownloading *structPreviousStudyDownloading = previousDownloadingList[i];
 
-            // Busquem la millor serie de l'estudi que ho satisfa
+            // We are looking for the best series in the studio that satisfies you
             HangingProtocolFiller hangingProtocolFiller;
             hangingProtocolFiller.fillImageSetWithStudy(structPreviousStudyDownloading->displaySet->getImageSet(), study);
 
@@ -321,11 +321,11 @@ void HangingProtocolManager::errorDownloadingPreviousStudies(const QString &stud
         QMultiHash<QString, StructPreviousStudyDownloading*> *studiesDownloading = m_hangingProtocolsDownloading->value(hangingProtocol);
         if (studiesDownloading->contains(studyUID))
         {
-            // Si és un element que estavem esperant
+            // If it is an item we were waiting for
             int count = studiesDownloading->count(studyUID);
             for (int i = 0; i < count; ++i)
             {
-                // S'agafa i es treu de la llista
+                // It is grabbed and removed from the list
                 StructPreviousStudyDownloading *element = studiesDownloading->take(studyUID);
                 element->widgetToDisplay->getViewer()->setViewerStatus(QViewer::DownloadingError);
                 delete element;
@@ -353,8 +353,8 @@ void HangingProtocolManager::cancelHangingProtocolDownloading(HangingProtocol *h
     QMultiHash<QString, StructPreviousStudyDownloading*> *studiesDownloading = m_hangingProtocolsDownloading->take(hangingProtocol);
     foreach (const QString &key, studiesDownloading->keys())
     {
-        // S'agafa i es treu de la llista l'element que s'està esperant
-        // i es treu el label de downloading
+        // The expected item is grabbed and removed from the list
+        // and the downloading label is removed
         StructPreviousStudyDownloading *element = studiesDownloading->take(key);
         // The widget may have been destroyed before calling this method, so we must check that it's still valid
         if (element->widgetToDisplay)
@@ -378,7 +378,7 @@ void HangingProtocolManager::setInputToViewer(Q2DViewerWidget *viewerWidget, Han
             if ((displaySet->getSlice() > -1 && series->getVolumesList().size() > 1) || displaySet->getImageSet()->getTypeOfItem() == "image")
             {
                 Image *image;
-                // TODO En el cas de fases no funcionaria, perquè l'índex no és correcte
+                // TODO /In the case of phases it would not work, because the index is incorrect
                 if (displaySet->getSlice() > -1)
                 {
                     image = series->getImageByIndex(displaySet->getSlice());
@@ -392,12 +392,12 @@ void HangingProtocolManager::setInputToViewer(Q2DViewerWidget *viewerWidget, Han
 
                 if (!volumeContainsImage)
                 {
-                    // No existeix cap imatge al tall corresponent, agafem el volum per defecte
+                    // There is no image in the corresponding cut, we take the default volume
                     inputVolume = series->getFirstVolume();
                 }
                 else
                 {
-                    // Tenim nou volum, i per tant, cal calcular el nou número de llesca
+                    // We have new volume, and therefore the new slice number needs to be calculated
                     int slice = volumeContainsImage->getImages().indexOf(image);
                     displaySet->setSliceModifiedForVolumes(slice);
 
