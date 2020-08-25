@@ -79,8 +79,8 @@ QList<HangingProtocol*> HangingProtocolManager::searchHangingProtocols(Study *st
 {
     QList<HangingProtocol*> outputHangingProtocolList;
 
-    // Buscar el hangingProtocol que s'ajusta millor a l'estudi del pacient
-    // Aprofitem per assignar ja les series, per millorar el rendiment
+    // Find the hangingProtocol that best fits the patient's study
+    // We take the opportunity to assign the series, to improve performance
     foreach (HangingProtocol *hangingProtocolBase, m_availableHangingProtocols)
     {
         HangingProtocol *hangingProtocol = new HangingProtocol(*hangingProtocolBase);
@@ -142,7 +142,7 @@ QList<HangingProtocol*> HangingProtocolManager::searchHangingProtocols(Study *st
     }
     else
     {
-        INFO_LOG(QString("No s'ha trobat cap hanging protocol"));
+        INFO_LOG(QString("No hanging protocol found"));
     }
 
     return outputHangingProtocolList;
@@ -161,7 +161,7 @@ HangingProtocol* HangingProtocolManager::setBestHangingProtocol(Patient *patient
 
     if (bestHangingProtocol)
     {
-        DEBUG_LOG(QString("Hanging protocol que s'aplica: %1").arg(bestHangingProtocol->getName()));
+        DEBUG_LOG(QString("Hanging protocol that applies:% 1").arg(bestHangingProtocol->getName()));
         applyHangingProtocol(bestHangingProtocol, layout, patient, geometry);
     }
 
@@ -175,7 +175,7 @@ void HangingProtocolManager::applyHangingProtocol(HangingProtocol *hangingProtoc
 
 void HangingProtocolManager::applyHangingProtocol(HangingProtocol *hangingProtocol, ViewersLayout *layout, Patient *patient, const QRectF &geometry)
 {
-    // If there was any studio downloading, it is removed from the waiting list
+    // If there was any dicom downloading, it is removed from the waiting list
     cancelAllHangingProtocolsDownloading();
 
     // Clean up viewer of the working area
