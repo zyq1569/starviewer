@@ -29,7 +29,7 @@ namespace udg {
 const int QScreenDistribution::WidgetMargin = 20;
 
 QScreenDistribution::QScreenDistribution(QWidget *parent)
- : QWidget(parent)
+    : QWidget(parent)
 {
     setMouseTracking(true);
     m_mouseInScreen = -1;
@@ -49,7 +49,7 @@ void QScreenDistribution::mouseMoveEvent(QMouseEvent *event)
 {
     bool outside = true;
     int i = 0;
-    // Per cada icona de finestra, comprobar si el ratolí hi és dins
+    // For each window icon, check if the mouse is inside
     while (outside && i < m_screens.size())
     {
         if (m_screens[i].contains(event->pos()))
@@ -64,7 +64,7 @@ void QScreenDistribution::mouseMoveEvent(QMouseEvent *event)
         }
         i++;
     }
-    // Si no se n'hi ha trobat cap, llavors està a fora
+    //If none have been found, then it is out
     if (outside)
     {
         unsetCursor();
@@ -80,7 +80,7 @@ void QScreenDistribution::mousePressEvent(QMouseEvent *event)
 {
     bool outside = true;
     int i = 0;
-    // Per cada icona de finestra, comprobar si s'ha fet un clic dins
+    // For each window icon, check if it has been clicked inside
     while (outside && i < m_screens.size())
     {
         if (m_screens[i].contains(event->pos()))
@@ -188,16 +188,16 @@ void QScreenDistribution::computeSizesAndPositions()
     int maximumX = 0;
     int maximumY = 0;
 
-    // Per cada pantalla
+    // For each screen
     for (int i = 0; i < desktop->screenCount(); i++)
     {
-        // Agafem les seves coordenades
+        //We take their coordinates
         QPoint topLeft = desktop->screenGeometry(i).topLeft();
         QPoint bottomRight = desktop->screenGeometry(i).bottomRight();
 
         m_screens.append(QRect(topLeft, bottomRight));
 
-        // I calculem el tamany màxim que ocupa tot el conjunt de pantalles
+        // And we calculate the maximum size occupied by the whole set of screens
         if (topLeft.x() < minimumX)
         {
             minimumX = topLeft.x();
@@ -219,7 +219,7 @@ void QScreenDistribution::computeSizesAndPositions()
     int totalWidth = maximumX - minimumX;
     int totalHeight = maximumY - minimumY;
 
-    // Calculem la proporció en que s'ha de dividir per que no es deformi el dibuix
+    //We calculate the proportion in which it must be divided so that the drawing is not deformed
     float widthDivisor = (float)totalWidth / ((float)width() - WidgetMargin * 2);
     float heightDivisor = (float)totalHeight / ((float)height() - WidgetMargin * 2);
 
@@ -240,7 +240,7 @@ void QScreenDistribution::computeSizesAndPositions()
         offsetY = -1 * minimumY / divisor + WidgetMargin;
     }
 
-    // Adaptem les posicións a les posicions de dibuix escalades i centrades
+    // We adapt the positions to the scaled and centered drawing oppositions
     int minimumScreenHeight = 0;
     int minimumScreenWidth = 0;
     for (int i = 0; i < m_screens.count(); i++)
@@ -255,7 +255,7 @@ void QScreenDistribution::computeSizesAndPositions()
 
         if (i == 0 || screen.height() < minimumScreenHeight)
         {
-           minimumScreenHeight = screen.height();
+            minimumScreenHeight = screen.height();
         }
         if (i == 0 || screen.height() < minimumScreenWidth)
         {

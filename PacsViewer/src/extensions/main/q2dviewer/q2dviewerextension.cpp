@@ -890,7 +890,7 @@ void Q2DViewerExtension::manualSynchronizationActivated(bool activated)
         m_toolManager->deactivateTool("AutomaticSynchronizationTool");
 
         // WORKAROUND: Cursor 3D is incompatible with manual synchronization, so if cursor 3D is enabled when manual sync is enabled,
-        //             we enable the slicing tool to disable cursor 3D.
+        // we enable the slicing tool to disable cursor 3D.
         if (m_cursor3DToolButton->isChecked())
         {
             m_toolManager->triggerTool("SlicingMouseTool");
