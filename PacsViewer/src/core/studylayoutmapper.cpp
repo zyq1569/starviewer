@@ -41,7 +41,8 @@ QPair<int, int> StudyLayoutMapper::getOptimalViewersGrid(const StudyLayoutConfig
 {
     int numberOfMinimumViewersRequired = candidateImages.count();
 
-    // Si el nombre màxim de visors per configuració és menor al nombre mínim de visors requerits, haurem d'actualitzar aquest paràmetre abans de crear el grid
+    // If the maximum number of viewers per configuration is less than the minimum number of viewers required,
+    // we will need to update this setting before creating the grid
     int maxNumbersOfViewersByConfig = config.getMaximumNumberOfViewers();
     if (maxNumbersOfViewersByConfig > 0)
     {
@@ -50,7 +51,7 @@ QPair<int, int> StudyLayoutMapper::getOptimalViewersGrid(const StudyLayoutConfig
             numberOfMinimumViewersRequired = maxNumbersOfViewersByConfig;
         }
     }
-    // Ara ja sabem el nombre mínim de visors requerits, ara cal calcular quina és la distribució idònia en graella
+    // We now know the minimum number of viewers required, now we need to calculate the ideal grid distribution
     OptimalViewersGridEstimator gridEstimator;
     QPair<int, int> grid = gridEstimator.getOptimalGrid(numberOfMinimumViewersRequired);
 
@@ -64,7 +65,7 @@ void StudyLayoutMapper::applyConfig(const StudyLayoutConfig &config, ViewersLayo
         return;
     }
 
-    // Primer trobem els estudis que compleixin amb els requisits
+    // First we find the studies that meet the requirements
     QString configModality = config.getModality();
     QList<Study*> matchingStudies;
     if (configModality.isEmpty() || study->getModalities().contains(configModality))
@@ -78,10 +79,10 @@ void StudyLayoutMapper::applyConfig(const StudyLayoutConfig &config, ViewersLayo
         return;
     }
 
-    // Procedim a aplicar el layout sobre els estudis que han coincidit
+    // We proceed to apply the layout on the studies that have matched
     layout->cleanUp(geometry);
     
-    // Un cop tenim els estudis, ara necessitem filtrar a nivell dels volums/imatges que necessitem
+    //Once we have the studies, we now need to filter at the level of the volumes / images we need
     QList<QPair<Volume*, int> > candidateImages = getImagesToPlace(config, matchingStudies);
 
     if (rows < 1 || columns < 1)
@@ -92,7 +93,7 @@ void StudyLayoutMapper::applyConfig(const StudyLayoutConfig &config, ViewersLayo
         columns = grid.second;
     }
     layout->setGridInArea(rows, columns, geometry);
-    // Col·loquem les imatges en el layout donat
+    // We place the images in the given layout
     placeImagesInCurrentLayout(candidateImages, config.getUnfoldDirection(), layout, rows, columns, geometry);
     // Make the first viewer selected
     layout->setSelectedViewer(layout->getViewersInsideGeometry(geometry).at(0));
@@ -102,7 +103,7 @@ QList<QPair<Volume*, int> > StudyLayoutMapper::getImagesToPlace(const StudyLayou
 {
     QList<StudyLayoutConfig::ExclusionCriteriaType> exclusionCriteria = config.getExclusionCriteria();
     QList<QPair<Volume*, int> > candidateImages;
-    // Primer calculem el nombre total de sèries o imatges
+    // We first calculate the total number of series or images
     foreach (Study *study, matchingStudies)
     {
         foreach (Series *series, study->getViewableSeries())
@@ -138,7 +139,7 @@ QList<QPair<Volume*, int> > StudyLayoutMapper::getImagesToPlace(const StudyLayou
                     Volume *currentVolume = series->getVolumesList().at(i);
                     if (config.getUnfoldType() == StudyLayoutConfig::UnfoldImages)
                     {
-                        // TODO Cal pensar què fer en el cas que tinguem fases. Ara mateix no les estem contemplant.
+                        // TODO/We need to think about what to do in case we have phases. Right now we are not contemplating them.
                         for (int slice = 0; slice < currentVolume->getNumberOfSlicesPerPhase(); ++slice)
                         {
                             candidateImages << QPair<Volume*, int>(currentVolume, slice);
@@ -146,7 +147,7 @@ QList<QPair<Volume*, int> > StudyLayoutMapper::getImagesToPlace(const StudyLayou
                     }
                     else
                     {
-                        // StudyLayoutConfig::UnfoldSeries, col·loquem la primera imatge de cada sèrie
+                        // Study LayoutConfig :: Unfold Series, we place the first image of each series
                         candidateImages << QPair<Volume*, int>(currentVolume, 0);
                     }
                 }
@@ -162,15 +163,15 @@ void StudyLayoutMapper::placeImagesInCurrentLayout(const QList<QPair<Volume*, in
 {
     int numberOfVolumesToPlace = volumesToPlace.count();
 
-    // Comprovem que tinguem el nombre suficient de files i columnes pel nombre de volums
+    //We check that we have enough rows and columns for the number of volumes
     if (numberOfVolumesToPlace > rows * columns)
     {
-        DEBUG_LOG(QString("No hi ha suficients visors pel nombre passat de volums/imatges. #Volums/imatges: %1. Files: %2, Columnes: %3. "
-            "Limitem el nombre de volums a col·locar a files * columnes = %4").arg(numberOfVolumesToPlace).arg(rows).arg(columns).arg(rows * columns));
-        // Limitem el nombre de volums al nombre total de visors disponibles
+        DEBUG_LOG(QString("Not enough viewers for the last number of volumes / images. # Volumes / images:% 1. Rows:% 2, Columns:% 3."
+            "We limit the number of volumes to be placed in rows * columns =% 4").arg(numberOfVolumesToPlace).arg(rows).arg(columns).arg(rows * columns));
+        //We limit the number of volumes to the total number of available viewers
         numberOfVolumesToPlace = rows * columns;
     }
-    // Ara toca assignar els inputs
+    // Now it's time to assign the inputs
     int numberOfPlacedVolumes = 0;
 
     QList<Q2DViewerWidget*> viewerWidgetList = layout->getViewersInsideGeometry(geometry);

@@ -132,7 +132,6 @@ void LayoutManager::applyProperLayoutChoice(bool changeCurrentStudyLayout, bool 
     else
     {
         setCombinedHangingProtocolApplied(0);
-
         // We only change current study layout if there is no hanging protocol applied
         if (changeCurrentStudyLayout)
         {
@@ -249,10 +248,10 @@ QList<StudyLayoutConfig> LayoutManager::getLayoutCandidates(Study *study)
     {
         return configurationCandidates;
     }
-    
+
     QStringList studyModalities = study->getModalities();
     StudyLayoutConfigSettingsManager settingsManager;
-    
+
     foreach (const StudyLayoutConfig &currentConfig, settingsManager.getConfigList())
     {
         if (studyModalities.contains(currentConfig.getModality(), Qt::CaseInsensitive))
