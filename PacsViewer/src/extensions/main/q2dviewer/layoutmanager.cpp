@@ -285,7 +285,7 @@ StudyLayoutConfig LayoutManager::getBestLayoutCandidate(const QList<StudyLayoutC
         if (candidates.count() > 1)
         {
             // If we different modalities/candidates we take the simple choice of apply a default generic layout
-            // TODO This could be enhanced making smarter decisions, which can include decisions based on user settings i.e.
+            // TODO /This could be enhanced making smarter decisions, which can include decisions based on user settings i.e.
             bestLayout = getMergedStudyLayoutConfig(candidates);
         }
         else

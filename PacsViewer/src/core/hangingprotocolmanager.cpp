@@ -281,7 +281,7 @@ void HangingProtocolManager::previousStudyDownloaded(Study *study)
     {
         QMultiHash<QString, StructPreviousStudyDownloading*> *studiesDownloading = m_hangingProtocolsDownloading->value(hangingProtocol);
 
-        // Es busca quins estudis nous hi ha
+        // It looks for what new studies there are
         // List is sorted in reverse insertion order
         QList<StructPreviousStudyDownloading*> previousDownloadingList = studiesDownloading->values(study->getInstanceUID());
         studiesDownloading->remove(study->getInstanceUID());

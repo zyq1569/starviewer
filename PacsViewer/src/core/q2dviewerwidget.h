@@ -120,8 +120,8 @@ private slots:
 
     /// We make the viewer active
     void setAsActiveViewer();
-    
-    /// Quan el visualitzador s'ha seleccionat, emet el senyal amb aquest widget
+
+    /// When the viewer is selected, it emits the signal with this widget
     void emitSelectedViewer();
 
     /// Assigns the corresponding range and value of the slider according to the viewer's input
@@ -131,7 +131,7 @@ private slots:
     /// projection of the plan we are seeing
     void updateProjectionLabel();
 
-    /// Actualitza l'estat d'habilitat dels widgets de la barra amb l'slider a partir de l'estat del viewer
+    /// Updates the skill status of the bar widgets with the slider from the viewer status
     void setSliderBarWidgetsEnabledFromViewerStatus();
 
     /// If the viewer has 2 inputs shows the fusion balance and fusion layout tool buttons
