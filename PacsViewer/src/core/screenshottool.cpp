@@ -39,7 +39,7 @@ const QString ScreenShotTool::BmpFileFilter = tr("BMP (*.bmp)");
 const QString ScreenShotTool::TiffFileFilter = tr("TIFF (*.tiff)");
 
 ScreenShotTool::ScreenShotTool(QViewer *viewer, QObject *parent)
- : Tool(viewer, parent)
+    : Tool(viewer, parent)
 {
     m_toolName = "ScreenShotTool";
     readSettings();
@@ -58,25 +58,25 @@ void ScreenShotTool::handleEvent(unsigned long eventID)
 {
     switch (eventID)
     {
-        case vtkCommand::KeyPressEvent:
+    case vtkCommand::KeyPressEvent:
+    {
+        int key = m_viewer->getInteractor()->GetKeyCode();
+        // EVERYTHING You need to look at the proper way to handle the Ctrl + key with vtk
+        // CTRL + s = key code 19
+        // CTRL + a = key code 1
+        switch (key)
         {
-            int key = m_viewer->getInteractor()->GetKeyCode();
-            // TODO Cal mirar quina és la manera adequada de com gestionar el Ctrl+tecla amb vtk
-            // CTRL+s = key code 19
-            // CTRL+a = key code 1
-            switch (key)
-            {
-                // Ctrl+s, "single shot"
-                case 19:
-                    this->screenShot();
-                    break;
+        // Ctrl+s, "single shot"
+        case 19:
+            this->screenShot();
+            break;
 
-                // Ctrl+a, "multiple shot"
-                case 1:
-                    this->screenShot(false);
-                    break;
-            }
+            // Ctrl+a, "multiple shot"
+        case 1:
+            this->screenShot(false);
+            break;
         }
+    }
         break;
     }
 }
@@ -111,7 +111,7 @@ void ScreenShotTool::screenShot(bool singleShot)
 
     if (!filename.isEmpty())
     {
-        // Mirem que el nom del fitxer no contingui coses com: nom.png, és a dir, que no es mostri l'extensió
+        // Let's see that the file name does not contain things like: name.png, that is, the extension is not displayed
         QString selectedExtension = m_lastScreenShotExtensionFilter.mid(m_lastScreenShotExtensionFilter.lastIndexOf("."));
         selectedExtension.remove(")");
 
@@ -120,12 +120,12 @@ void ScreenShotTool::screenShot(bool singleShot)
             filename.remove(filename.lastIndexOf(selectedExtension), selectedExtension.size() + 1);
         }
 
-        // Guardem l'últim path de la imatge per a saber on hem d'obrir per defecte l'explorador per a guardar el fitxer
+        //We save the last path of the image to know where we have to open the browser by default to save the file
         m_lastScreenShotPath = QFileInfo(filename).absolutePath();
-        // Guardem el nom de l'ultim fitxer
+        //Save the name of the last file
         m_lastScreenShotFileName = QFileInfo(filename).fileName();
 
-        // Pel que pugui trigar el procés
+        // So it may take the process
         QApplication::setOverrideCursor(Qt::WaitCursor);
         if (singleShot)
         {
@@ -136,13 +136,12 @@ void ScreenShotTool::screenShot(bool singleShot)
             Q2DViewer *viewer2D = Q2DViewer::castFromQViewer(m_viewer);
             if (viewer2D)
             {
-                // Tenim un  Q2DViewer, llavors podem guardar totes les imatges
-
-                // Guardem la llesca i fase actual per restaurar
+                // We have a Q2DViewer, then we can save all the images
+                // Save the current slice and phase to restore
                 int currentSlice = viewer2D->getCurrentSlice();
                 int currentPhase = viewer2D->getCurrentPhase();
                 int maxSlice = viewer2D->getMaximumSlice() + 1;
-                // En cas que tinguem fases farem tantes passades com fases
+                // In case we have phases we will do as many passes as phases
                 int phases = viewer2D->getNumberOfPhases();
                 for (int i = 0; i < maxSlice; i++)
                 {
@@ -157,13 +156,13 @@ void ScreenShotTool::screenShot(bool singleShot)
                 viewer2D->setSlice(currentSlice);
                 viewer2D->setPhase(currentPhase);
             }
-            // Tenim un visor que no és 2D, per tant fem un "single shot"
+            //We have a viewfinder that is not 2D, so we make a "single shot"
             else
             {
                 m_viewer->grabCurrentView();
             }
         }
-        // Determinem l'extensió del fitxer
+        // We determine the file extension
         QViewer::FileType fileExtension;
         if (m_lastScreenShotExtensionFilter == PngFileFilter)
         {
@@ -183,11 +182,11 @@ void ScreenShotTool::screenShot(bool singleShot)
         }
         else
         {
-            DEBUG_LOG("No coincideix cap patró, no es pot desar la imatge! Assignem PNG, per defecte. Aquest error no hauria de passar MAI! ");
+            DEBUG_LOG("No pattern matches, image cannot be saved! We assign PNG, by default. This mistake should NEVER happen! ");
             fileExtension = QViewer::PNG;
             m_lastScreenShotExtensionFilter = PngFileFilter;
         }
-        // Guardem totes les imatges capturades
+        // We save all the captured images
         m_viewer->saveGrabbedViews(filename, fileExtension);
         QApplication::restoreOverrideCursor();
 
@@ -195,15 +194,15 @@ void ScreenShotTool::screenShot(bool singleShot)
     }
     else
     {
-        // Cal fer alguna cosa?
-        // Si està "empty" és que o bé ha cancelat o bé no ha introduit res
+        // Do I have to do anything?
+        // If it is "empty" it is because it has either canceled or entered nothing
     }
 }
 
 QString ScreenShotTool::compoundSelectedName()
 {
-    // TODO Això estaria millor si es fes amb la classe QRegExp,
-    // produint un codi molt més net i clar
+    // EVERYTHING This would be better if done with the QRegExp class,
+    // producing a much cleaner and clearer code
     QString compoundFile = "";
 
     if (!m_lastScreenShotFileName.isEmpty())
