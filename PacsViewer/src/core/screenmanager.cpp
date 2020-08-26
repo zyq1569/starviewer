@@ -124,9 +124,11 @@ void ScreenManager::moveToNextDesktop(QWidget *window)
 
 void ScreenManager::restoreFromMinimized(QWidget *window)
 {
-    //WindowState accepta una combinació dels Enums Qt::WindowState, el que fem amb aquest mètode es treure l'estat de minimitzat i li indiquem torna a està activa
-    //Imaginem que teníem la finestra maximitzada, si la minimitzem WindowState tindrà el valor Qt::WindowMinimized | QtWindowMaximized, i aplicant aquest codi treurem l'estat Qt:WindowMinimized
-    //i li afegeix el WindowActive restaurant la finestra al seu estat original
+    // WindowState accepts a combination of Enums Qt :: WindowState, what we do with this method is
+    // remove the minimized state and tell it back to active
+    // Suppose we had the window maximized, if we minimize it WindowState will have the value
+    // Qt :: WindowMinimized | QtWindowMaximized, and applying this code we will remove the state Qt: WindowMinimized
+    // and the WindowActive restores the window to its original state
     window->setWindowState(window->windowState() & ~Qt::WindowMinimized | Qt::WindowActive);
 }
 
@@ -144,7 +146,7 @@ DynamicMatrix ScreenManager::computeScreenMatrix(QWidget *window) const
 {
     int desktopIAm = getScreenID(window);
 
-    // Primer de tot buscar les pantalles de la mateixa fila
+    //First of all look for the screens in the same row
     DynamicMatrix dynamicMatrix;
     int indexLeft = 0;
     int indexRight = 0;
@@ -178,17 +180,17 @@ DynamicMatrix ScreenManager::computeScreenMatrix(QWidget *window) const
             }
         }
     }
-    // Ara anar mirant si tota la fila te pantalles a sobre o a sota
+    // Now go see if the whole row has screens above or below
     changes = true;
     bool keepLookingUp = true;
     bool keepLookingDown = true;
     while (changes)
     {
         changes = false;
-        // Mirar si es pot afegir la fila de sobre
+        // See if you can add the row above
         QList<int> topRow;
         int index = indexLeft;
-        // Si hem de mirar la fila de sobre true altrament false
+        // If we have to look at the row above true otherwise false
         bool rowFound = keepLookingUp;
         while (keepLookingUp && index <= indexRight)
         {
@@ -217,7 +219,7 @@ DynamicMatrix ScreenManager::computeScreenMatrix(QWidget *window) const
                 index = indexRight + 1;
             }
         }
-        // Si s'ha pogut afegir TOTA la fila de sobre
+        //If ALL of the row above could be added
         if (rowFound)
         {
             indexTop++;
@@ -228,10 +230,10 @@ DynamicMatrix ScreenManager::computeScreenMatrix(QWidget *window) const
             changes = true;
         }
 
-        // Mirar si es pot afegir la fila de sota
+        //See if you can add the row below
         QList<int> bottomRow;
         index = indexLeft;
-        // Si em de mirar la fila de sota true, altrament false
+        //If I look at the row below true, otherwise false
         rowFound = keepLookingDown;
         while (keepLookingDown && index <= indexRight)
         {
@@ -260,7 +262,7 @@ DynamicMatrix ScreenManager::computeScreenMatrix(QWidget *window) const
                 index = indexRight + 1;
             }
         }
-        // Si s'ha pogut afegir TOTA la fila de sobre
+        // If ALL row above could be added
         if (rowFound)
         {
             indexBottom--;
@@ -279,7 +281,7 @@ bool ScreenManager::doesItFitInto(QWidget *window, int IdDesktop)
 {
     QRect newDesktopAvailableGeometry = m_screenLayout.getScreen(IdDesktop).getAvailableGeometry();
 
-    // Si és massa ampla o massa alt, no hi cap.
+    // If it’s too wide or too high, it doesn’t fit.
     return !(newDesktopAvailableGeometry.width() < window->minimumWidth() || newDesktopAvailableGeometry.height() < window->minimumHeight());
 }
 
@@ -294,42 +296,42 @@ void ScreenManager::fitInto(QWidget *window, int IdDesktop)
     int x = newDesktopAvailableGeometry.topLeft().x();
     int y = newDesktopAvailableGeometry.topLeft().y();
 
-    // Buscar la mida del frame i de la finestra
+    //Find the size of the frame and window
     QRect frameSize = window->frameGeometry();
     QRect windowSize = window->geometry();
 
-    // Trobar el tamany real de les cantonades i la title bar
+    //Find the actual size of the corners and the title bar
     int topBorder = windowSize.top() - frameSize.top();
     int bottomBorder = frameSize.bottom() - windowSize.bottom();
     int leftBorder = windowSize.left() - frameSize.left();
     int rightBorder = frameSize.right() - windowSize.right();
 
-    // Si la finestra és més ample que la pantalla
+    //If the window is wider than the screen
     if (width > newDesktopWidth)
     {
         width = newDesktopWidth;
         x += leftBorder;
     }
-    // Altrament centrar
+    // Otherwise focus
     else
     {
         x = x + newDesktopWidth / 2 - width / 2 + leftBorder;
     }
 
-    // Si la finestra és més alta que la pantalla
+    //If the window is higher than the screen
     if (height > newDesktopHeight)
     {
         height = newDesktopHeight;
         y += topBorder;
     }
-    // Altrament centrar
+    // Otherwise focus
     else
     {
         y = y + newDesktopHeight / 2 - height / 2 + topBorder;
     }
 
-    // La mida de la finestra l'hem agafat del frame, per tant li hem de treure
-    // les cantonades per que la mida sigui la mateixa
+    // We took the size of the window from the frame, so we have to remove it
+    // the corners so that the size is the same
     window->setGeometry(x,
                         y,
                         width - leftBorder - rightBorder,
@@ -338,15 +340,15 @@ void ScreenManager::fitInto(QWidget *window, int IdDesktop)
 
 QPoint ScreenManager::getTopLeft(const DynamicMatrix &dynamicMatrix) const
 {
-    // Primer de tot buscar la cantonada esquerra, a partir de la llista de monitors a l'esquerra,
-    // agafar el màxim, per si la barra de windows esta a l'esquerra en algun d'ells
+    // First of all look for the left corner, from the list of monitors on the left,
+    // take the maximum, in case the windows bar is on the left in any of them
     QList<int> screens = dynamicMatrix.getLeftColumn();
     int x = m_screenLayout.getScreen(screens[0]).getAvailableGeometry().left();
     for (int i = 1; i < screens.count(); i++)
     {
         x = std::max(x, m_screenLayout.getScreen(screens[i]).getAvailableGeometry().left());
     }
-    // El mateix per la part superior
+    //The same for the top
     screens = dynamicMatrix.getTopRow();
     int y = m_screenLayout.getScreen(screens[0]).getAvailableGeometry().top();
     for (int i = 1; i < screens.count(); i++)
@@ -360,15 +362,15 @@ QPoint ScreenManager::getTopLeft(const DynamicMatrix &dynamicMatrix) const
 QPoint ScreenManager::getBottomRight(const DynamicMatrix &dynamicMatrix) const
 {
 
-    // Primer de tot buscar la cantonada dreta, a partir de la llista de monitors a lla dreta,
-    // agafar el mínim, per si la barra de windows esta a la dreta en algun d'ells
+    // First of all look for the right corner, from the list of monitors on the right,
+    // take the minimum, in case the windows bar is on the right in any of them
     QList<int> screens = dynamicMatrix.getRightColumn();
     int x = m_screenLayout.getScreen(screens[0]).getAvailableGeometry().right();
     for (int i = 1; i < screens.count(); i++)
     {
         x = std::min(x, m_screenLayout.getScreen(screens[i]).getAvailableGeometry().right());
     }
-    // El mateix per la part de baix
+    // The same for the bottom
     screens = dynamicMatrix.getBottomRow();
     int y = m_screenLayout.getScreen(screens[0]).getAvailableGeometry().bottom();
     for (int i = 1; i < screens.count(); i++)
@@ -376,8 +378,10 @@ QPoint ScreenManager::getBottomRight(const DynamicMatrix &dynamicMatrix) const
         y = std::min(y, m_screenLayout.getScreen(screens[i]).getAvailableGeometry().bottom());
     }
 
-    // Add 1 to compensate for the fact that right() and bottom() don't return the true right and the true bottom. From QRect documentation:
-    // "Note that for historical reasons the values returned by the bottom() and right() functions deviate from the true bottom-right corner of the rectangle:
+    // Add 1 to compensate for the fact that right() and bottom() don't return
+    // the true right and the true bottom. From QRect documentation:
+    // "Note that for historical reasons the values returned by the bottom()
+    // and right() functions deviate from the true bottom-right corner of the rectangle:
     // The right() function returns left() + width() - 1 and the bottom() function returns top() + height() - 1."
     return QPoint(x + 1, y + 1);
 }
@@ -393,22 +397,22 @@ QRect ScreenManager::getGeometryToMaximizeToMulipleScreens(QWidget *window)
             window->showNormal();
         }
 
-        // Buscar la mida del frame i de la finestra
+        //Find the size of the frame and window
         QRect frameSize = window->frameGeometry();
         QRect windowSize = window->geometry();
 
-        // Trobar el tamany real de les cantonades i la title bar
+        //Find the actual size of the corners and the title bar
         int topBorder = windowSize.top() - frameSize.top();
         int bottomBorder = frameSize.bottom() - windowSize.bottom();
         int leftBorder = windowSize.left() - frameSize.left();
         int rightBorder = frameSize.right() - windowSize.right();
 
-        // Agafa el top left i el bottomright per determinar les dimensions de la finestra
+        // Grab the top left and bottomright to determine the dimensions of the window
         QPoint topLeft = getTopLeft(dynamicMatrix);
         QPoint bottomRight = getBottomRight(dynamicMatrix);
 
-        // Calcular quin és el tamany que ha de tenir.
-        // Se li ha de passar la geometria de la finestra, sense cantonades.
+        // Calculate what size it should be.
+        // The geometry of the window must be passed to it, without corners.
         int x = topLeft.x() + leftBorder;
         int y = topLeft.y() + topBorder;
         // x val x + leftBorder
