@@ -27,7 +27,7 @@
 namespace udg {
 
 Series::Series(QObject *parent)
- : QObject(parent), m_modality("OT"), m_selected(false), m_parentStudy(NULL), m_numberOfImages(0), m_numberOfEncapsulatedDocuments(0)
+    : QObject(parent), m_modality("OT"), m_selected(false), m_parentStudy(NULL), m_numberOfImages(0), m_numberOfEncapsulatedDocuments(0)
 {
 }
 
@@ -63,12 +63,12 @@ bool Series::addImage(Image *image)
     if (imageIdentifierKey.isEmpty())
     {
         ok = false;
-        DEBUG_LOG("L'identificador de la imatge està buit! No la podem insertar per inconsistent");
+        DEBUG_LOG("Image ID is empty! We cannot insert it as inconsistent");
     }
     else if (this->imageExists(imageIdentifierKey))
     {
         ok = false;
-        DEBUG_LOG("Ja existeix una imatge amb aquest mateix identificador:: " + imageIdentifierKey);
+        DEBUG_LOG("An image with this same identifier already exists:: " + imageIdentifierKey);
     }
     else
     {
@@ -99,7 +99,7 @@ QList<Image*> Series::getImages() const
 
 void Series::setImages(QList<Image*> imageSet)
 {
-    // Buidar la llista abans d'afegir-hi la nova
+    //Empty the list before adding the new one
     m_imageSet.clear();
     m_imageSet = imageSet;
     m_numberOfImages = m_imageSet.count();
@@ -299,7 +299,7 @@ bool Series::setDate(int day, int month, int year)
 
 bool Series::setDate(QString date)
 {
-    // Seguim la suggerència de la taula 6.2-1 de la Part 5 del DICOM standard de tenir en compte el format yyyy.MM.dd
+    // We follow the suggestion in Table 6.2-1 of Part 5 of the DICOM standard to consider the format yyyy.MM.dd
     return this->setDate(QDate::fromString(date.remove("."), "yyyyMMdd"));
 }
 
@@ -312,7 +312,7 @@ bool Series::setDate(QDate date)
     }
     else
     {
-        DEBUG_LOG("La data està en un mal format: " + date.toString(Qt::LocaleDate));
+        DEBUG_LOG("The date is in a bad format: " + date.toString(Qt::LocaleDate));
         return false;
     }
 }
@@ -324,16 +324,16 @@ bool Series::setTime(int hour, int minute, int second)
 
 bool Series::setTime(QString time)
 {
-    // Seguim la suggerència de la taula 6.2-1 de la Part 5 del DICOM standard de tenir en compte el format hh:mm:ss.frac
+    //We follow the suggestion in Table 6.2-1 of Part 5 of the DICOM standard to consider the format hh: mm: ss.frac
     time = time.remove(":");
 
     QStringList split = time.split(".");
     QTime convertedTime = QTime::fromString(split[0], "hhmmss");
 
-    // Té fracció al final
+    //It has fraction at the end
     if (split.size() == 2)
     {
-        // Trunquem a milisegons i no a milionèssimes de segons
+        //We truncate to milliseconds and not to millionths of a second
         convertedTime = convertedTime.addMSecs(split[1].leftJustified(3, '0', true).toInt());
     }
 
@@ -349,7 +349,7 @@ bool Series::setTime(QTime time)
     }
     else
     {
-        DEBUG_LOG("El time està en un mal format");
+        DEBUG_LOG("The time is in a bad format");
         return false;
     }
 }
@@ -547,7 +547,7 @@ QString Series::toString(bool verbose)
             result += "            - Image " + image->getPath() + "\n";
         }
     }
-    // TODO Idem per PS, KIN....
+    // TODO Ditto for PS, KIN ....
 
     return result;
 }
@@ -581,7 +581,7 @@ QPixmap Series::getThumbnail()
 Image* Series::getImageByIndex(int index) const
 {
     Image *resultImage = 0;
-    // Està dins del rang
+    //It is within range
     if (index >= 0 && index < m_imageSet.count())
     {
         resultImage = m_imageSet.at(index);
@@ -610,10 +610,11 @@ bool Series::isViewable() const
 
 bool Series::isCTLocalizer() const
 {
-    // \TODO Ara estem considerant que un volume serà localizer si la primera imatge ho és, però res ens indica que els localizers no puguin estar barretjats
-    // amb la resta.
+    // \ TODO We are now considering that a volume will be localizer if the first image is localizer,
+    // but nothing tells us that the localizers cannot be barred
+    // with the rest.
+
     bool isLocalizer = false;
-    
     if (getModality() == "CT")
     {
         Image *currentImage = getImageByIndex(0);
@@ -628,10 +629,10 @@ bool Series::isCTLocalizer() const
         }
         else
         {
-            // TODO aquesta comprovació s'ha afegit perquè hem trobat un cas en que aquestes dades apareixen incoherents
-            // tot i així, lo seu seria disposar d'alguna eina que comprovés si les dades són consistents o no.
-            DEBUG_LOG("ERROR: Inconsistència DICOM: La imatge " + currentImage->getSOPInstanceUID() + " de la serie " + getInstanceUID() +
-                        " té el camp ImageType que és tipus 1, amb un nombre incorrecte d'elements: Valor del camp:: [" + value + "]");
+            // ALL this check has been added because we have found a case where this data appears inconsistent
+            // however, yours would be to have some tool to check if the data is consistent or not.
+            DEBUG_LOG("ERROR: DICOM inconsistency: The image" + currentImage->getSOPInstanceUID() + " of the series " + getInstanceUID() +
+                      " has the ImageType field which is type 1, with an incorrect number of elements: Field value ::[" + value + "]");
         }
     }
     return isLocalizer;
@@ -645,8 +646,8 @@ bool Series::isMRSurvey() const
     {
         foreach (const QString &string, getDescription().split("\\"))
         {
-            // TODO Estudiar si considerar com a surveys també aquells que continguin "localizer" o "SURV" a la descripció.
-            // S'han trobat casos, tot i que no és tant habitual.
+            // TODO Study whether to consider as surveys also those that contain "localizer" or "SURV" in the description.
+            // Cases have been found, although not as common.
             if (string.contains("SURVEY", Qt::CaseInsensitive))
             {
                 isSurvey = true;
