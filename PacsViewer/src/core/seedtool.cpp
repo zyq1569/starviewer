@@ -25,7 +25,7 @@
 namespace udg {
 
 SeedTool::SeedTool(QViewer *viewer, QObject *parent)
- : Tool(viewer, parent)
+    : Tool(viewer, parent)
 {
     m_toolName = "SeedTool";
     m_hasSharedData = false;
@@ -48,43 +48,43 @@ void SeedTool::handleEvent(unsigned long eventID)
 {
     switch (eventID)
     {
-        case vtkCommand::LeftButtonPressEvent:
-            setSeed();
-            break;
+    case vtkCommand::LeftButtonPressEvent:
+        setSeed();
+        break;
 
-        case vtkCommand::MouseMoveEvent:
-            doSeeding();
-            break;
+    case vtkCommand::MouseMoveEvent:
+        doSeeding();
+        break;
 
-        case vtkCommand::LeftButtonReleaseEvent:
-            endSeeding();
-            break;
+    case vtkCommand::LeftButtonReleaseEvent:
+        endSeeding();
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 }
 
 void SeedTool::setToolData(ToolData *data)
 {
-    // Fem aquesta comparació perquè a vegades ens passa la data que ja tenim a m_myData
+    // We make this comparison because sometimes the date we already have on m_myData happens to us
     if (m_myData != data)
     {
-        // Creem de nou les dades
+        //We create the data again
         m_toolData = data;
         m_myData = qobject_cast<SeedToolData*>(data);
-        // Si tenim dades vol dir que ja hem pintat abans la seed si el volume ha canviat
+        //If we have data it means that we have already painted the seed before if the volume has changed
         if (m_2DViewer->getMainInput() != m_myData->getVolume())
         {
-            // Canvi de input
+            // Input change
             m_drawn = false;
             m_myData->setVolume(m_2DViewer->getMainInput());
-            // Si tenim dades vol dir que el viewer ha eliminat el punt pel que el posem a 0 perquè es torni a crear
+            // If we have data it means that the viewer has deleted the point so we set it to 0 to be recreated
             m_myData->setPoint(NULL);
         }
         else
         {
-            // Canvi de tool
+            // Tool change
             m_drawn = true;
             m_2DViewer->getDrawer()->erasePrimitive(m_myData->getPoint());
             m_myData->setPoint(NULL);
@@ -132,8 +132,8 @@ void SeedTool::updateSeedPosition()
         //DEBUG_LOG(QString("Seed Pos: [%1,%2,%3]").arg(seedPosition[0]).arg(seedPosition[1]).arg(seedPosition[2]));
 
         m_myData->setSeedPosition(seedPosition);
-        // TODO Apanyo perquè funcioni de moment, però s'ha d'arreglar
-        // S'hauria d'emetre únicament "seedChanged()" i prou
+        // TODO I'm trying to make it work for now, but it has to be fixed
+        // Only "seedChanged ()" should be issued and that's it
         m_2DViewer->setSeedPosition(xyz);
         emit seedChanged(seedPosition[0], seedPosition[1], seedPosition[2]);
 
