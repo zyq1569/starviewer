@@ -27,14 +27,14 @@ public:
     ~QLogViewer();
 
 public slots:
-    /// Obre un diàleg per guardar el fitxer de log en una altre ubicació
+    ///Opens a dialog to save the log file to another location
     void saveLogFileAs();
 
-    /// Actualitza les dades del fitxer de log que mostra
+    ///Updates the data in the log file it displays
     void updateData();
 
 private slots:
-    /// Crea les connexions entre signals i slots
+    /// Creates connections between signals and slots
     void createConnections();
 
 private:
