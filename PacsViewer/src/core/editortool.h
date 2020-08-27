@@ -26,12 +26,12 @@ class Volume;
 class EditorToolData;
 
 /**
-    Tool que serveix per editar el volum sobreposat en un visor 2D
+    Tool used to edit the superimposed volume in a 2D viewer
   */
 class EditorTool : public Tool {
-Q_OBJECT
+    Q_OBJECT
 public:
-    /// Estats de la tool
+    ///Tool states
     enum { NoEditor, Paint, Erase, EraseSlice, EraseRegion };
 
     EditorTool(QViewer *viewer, QObject *parent = 0);
@@ -39,75 +39,75 @@ public:
 
     void handleEvent(unsigned long eventID);
 
-    /// Retorna les dades de la tool
+    /// Returns tool data
     ToolData* getToolData() const;
 
 private:
-    /// Pinta el quadrat vert si fa falta (estats Paint i Erase) a la posició del cursor
-    /// si el botó esquerre està premut també es fa l'acció de pintar
+    /// Paint the green square if necessary (Paint and Erase states) at the cursor position
+    /// if the left button is pressed the action of painting is also done
     void setPaintCursor();
 
-    /// Canvia l'estat a Erase
+    /// Change the status to Erase
     void setErase();
 
-    /// Canvia l'estat a Paint
+    ///Change the status to Paint
     void setPaint();
 
-    /// Canvia l'estat a Erase Slice
+    ///Change the status to Erase Slice
     void setEraseSlice();
 
-    /// Canvia l'estat a Erase Region
+    ///Change the status to Erase Region
     void setEraseRegion();
 
-    /// Crida a l'acció que convingui seegons l'estat
+    ///It calls for action as appropriate according to the state
     void setEditorPoint();
 
-    /// Esborra una porció quadrada de la màscara de mida m_editorSize
+    ///Delete a square portion of the m_editorSize size mask
     void eraseMask();
 
-    /// Pinta una porció quadrada de la màscara de mida m_editorSize
+    /// Paint a square portion of the m_editorSize size mask
     void paintMask();
 
-    /// Esborra una llesca de la màscara
+    ///Erase a slice of the mask
     void eraseSliceMask();
 
-    /// Esborra una porció conectada de la màscara (en 2D)
+    ///Delete a connected portion of the mask (2D)
     void eraseRegionMask();
 
-    /// Crida recursiva de la funció eraseRegionMask
-    /// @param a, @param b, @param c índex del volum de la màscara que estem mirant en cada crida
+    /// Recursive call of the function eraseRegionMask
+    /// @param a, @param b, @param c index of the volume of the mask we are looking at in each call
     void eraseRegionMaskRecursive(int a, int b, int c);
 
-    /// Decrementa un estat de la tool. Ordre: Paint, Erase, EraseRegion, EraseSlice
+    /// Decreases a state of the tool. Order: Paint, Erase, EraseRegion, EraseSlice
     void decreaseState();
 
-    /// Incrementa un estat de la tool. Ordre: Paint, Erase, EraseRegion, EraseSlice
+    ///Increases the status of the tool. Order: Paint, Erase, EraseRegion, EraseSlice
     void increaseState();
 
-    /// Incrementa la mida de l'editor
+    ///Increases the size of the editor
     void increaseEditorSize();
 
-    /// Decrementa la mida de l'editor
+    /// Decreases the size of the editor
     void decreaseEditorSize();
 
 private slots:
-    /// Inicialitza diverses dades necessàries per la tool: Valors de m_insideValue, m_outsideValue i m_volumeCont
+    /// Initialize several data required by the tool: Values of m_insideValue, m_outsideValue and m_volumeCont
     void initialize();
 
 private:
-    /// Ens guardem aquest punter per ser més còmode
+    ///We save this pointer to be more comfortable
     Q2DViewer *m_2DViewer;
 
-    /// El mode en que editem l'overlay.
-    /// De moment podrà tenir 4 tipus: escriure, esborrar, esborrar regió i esborrar llesca, per defecte escriure
+    /// The way we edit the overlay.
+    /// At the moment you can have 4 types: write, delete, delete region and delete slice, by default write
     int m_editorState;
 
-    /// Mida de la tool
+    /// mid Adela tool
     int m_editorSize;
 
     vtkActor *m_squareActor;
 
-    // \TODO:Aquesta variable no caldria, ja que hauria d'estar només al ToolData
+    //\ TODO: This variable should not be needed, as it should only be in ToolData
     int m_volumeCont;
     EditorToolData* m_myData;
     int m_insideValue;
