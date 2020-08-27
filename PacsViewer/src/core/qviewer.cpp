@@ -946,7 +946,8 @@ void QViewer::handleNotEnoughMemoryForVisualizationError()
 void QViewer::setupRenderWindow()
 {
     vtkSmartPointer<vtkRenderWindow> renderWindow = vtkSmartPointer<vtkRenderWindow>::New();
-    // TODO getInteractor() forces m_vtkWiget to create a render window the first time just to return the interactor, that render window is unused afterwards.
+    // TODO getInteractor() forces m_vtkWiget to create a render window the first time just to return the interactor,
+    // that render window is unused afterwards.
     //      Could this be improved?
     renderWindow->SetInteractor(getInteractor());
     renderWindow->AddRenderer(getRenderer());
