@@ -32,7 +32,7 @@ Q2DViewerExtensionMediator::~Q2DViewerExtensionMediator()
 
 DisplayableID Q2DViewerExtensionMediator::getExtensionID() const
 {
-    return DisplayableID("Q2DViewerExtension", tr("2D Viewer"));
+    return DisplayableID("Q2DViewerExtension", tr("2D-Viewer"));
 }
 
 bool Q2DViewerExtensionMediator::initializeExtension(QWidget *extension, const ExtensionContext &extensionContext)
