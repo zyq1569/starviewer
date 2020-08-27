@@ -29,98 +29,98 @@ class DrawerPrimitive;
     Classe encarregada de pintar els objectes de primitiva gràfica en el viewer assignat
   */
 class Drawer : public QObject {
-Q_OBJECT
+    Q_OBJECT
 public:
     Drawer(Q2DViewer *viewer, QObject *parent = 0);
     ~Drawer();
 
-    /// Dibuixa la primitiva donada sobre el pla i llesca indicats
+    /// Draw the given primitive on the indicated plan and slice
     /// @param primitive Primitiva a pintar
-    /// @param plane Pla sobre el qual volem pintar la primitiva
-    /// @param slice Llesca a la que adjuntem la primitiva
+    /// @param plane Plan on which we want to paint the primitive
+    /// @param slice Slice to which we attach the primitive
     void draw(DrawerPrimitive *primitive, const OrthogonalPlane &plane, int slice);
 
-    /// Dibuixa la primitiva sempre al cim sense importar en quin pla o llesca ens trobem. 
-    /// La visibilitat dependrà només de la propietat isVisible() de la primitiva
+    /// Always draw the primitive at the top no matter what plane or slice we are on.
+    /// Visibility will depend only on the isVisible () property of the primitive
     void draw(DrawerPrimitive *primitive);
 
-    /// Esborra totes les primitives esborrables que es veuen al visor, és a dir, en el pla i llesques actuals.
+    /// Deletes all erasable primitives that are seen in the viewfinder, that is, in the current plan and slices.
     void clearViewer();
 
-    /// Afegim una primitiva al grup indicat.
-    /// @param primitive Primitiva que volem afegir
-    /// @param groupName nom del grup on la volem incloure
+    /// We add a primitive to the indicated group.
+    /// @param primitive Primitive that we want to add
+    /// @param groupName name of the group where we want to include it
     void addToGroup(DrawerPrimitive *primitive, const QString &groupName);
 
-    /// Deshabilita les primitives que hi ha en un determinat grup, fent que mai siguin visibles, sota cap condició
-    /// @param groupName Nom del grup de primitives que volem deshabilitar
+    /// Disable primitives in a given group, making them never visible, under any conditions
+    /// @param groupName Name of the group of primitives we want to disable
     void disableGroup(const QString &groupName);
 
-    /// Habilita les primitives que hi ha en un determinat grup, fent que tornin a tenir el comportament habitual 
-    /// on el Drawer decidirà si han de ser visibles o no segons el pla i llesca assignats
-    /// @param groupName Nom del grup de primitives que volem habilitar
+    /// Enables primitives in a certain group, making them return to their usual behavior
+    /// where the Drawer will decide whether or not they should be visible according to the assigned plan and slice
+    /// @param groupName Name of the group of primitives we want to enable
     void enableGroup(const QString &groupName);
 
-    /// Retorna la primitiva esborrable més propera al punt donat, dins de la vista i llesca proporcionats
-    /// Aquest mètode no té en compte cap llindar de proximitat, és a dir, ens retorna la primitiva que en termes
-    /// absoluts és més propera al punt donat. En cas que no hi hagi cap primitiva per aquella vista i llesca, es retornarà nul.
+    /// Returns the erasable primitive closest to the given point, within the provided view and slice
+    /// This method does not take into account any proximity threshold, that is, it returns the primitive that in terms
+    /// absolute is closer to the given point. In case there is no primitive for that sight and slice, it will be returned null.
     DrawerPrimitive* getNearestErasablePrimitiveToPoint(double point[3], const OrthogonalPlane &view, int slice, double closestPoint[3]);
 
-    /// Ens esborra les primitives esborrables que estiguin dins de la zona delimitada pels punts passats per paràmetre.
+    ///It deletes the erasable primitives that are within the area bounded by the points passed by parameter.
     void erasePrimitivesInsideBounds(double bounds[6], const OrthogonalPlane &view, int slice);
 
-    /// Ens diu el total de primitives dibuixades en totes les vistes
+    ///It tells us the total of primitives drawn in all views
     int getNumberOfDrawnPrimitives();
 
 public slots:
-    /// Deixa de mantenir la primitiva dins de la seva estructura interna
-    /// i l'elimina de l'escena on s'estava pintant
-    /// @param primitive Primitiva que volem deixar de controlar
+    /// It stops keeping the primitive within its internal structure
+    /// and removes it from the scene where it was being painted
+    /// @param primitive Primitive that we want to stop controlling
     void erasePrimitive(DrawerPrimitive *primitive);
 
-    /// Esborra totes les primitives registrades al drawer (inclou les primitives no esborrables).
+    ///Deletes all primitives registered in the drawer (includes non-erasable primitives).
     void removeAllPrimitives();
 
 private:
-    /// Mostra/amaga les primitives que hi ha en un pla i llesca determinats
-    /// @param plane Pla sobre que volem mostrar/amagar les primitives
-    /// @param slice Llesca dins d'aquell pla.
+    /// Shows / hides the primitives in a given plane and slice
+    /// @param plane Plan on which we want to show / hide the primitives
+    /// @param slice Slice inside that plane.
     void hide(const OrthogonalPlane &plane, int slice);
     void show(const OrthogonalPlane &plane, int slice);
 
-    /// Ens diu si la primitiva donada, que es troba a la vista view, està dins dels bounds indicats
+    ///It tells us if the given primitive, which is in the view view, is within the indicated bounds
     bool isPrimitiveInside(DrawerPrimitive *primitive, const OrthogonalPlane &view, double bounds[6]);
 
-    /// Esborra la primitiva donada del contenidor de primitives especificat.
-    /// Si la troba l'esborra. Retorna cert si la troba, fals altrament.
+    /// Deletes the given primitive from the specified primitive container.
+    /// If you find it delete it. Returns true if found, false otherwise.
     bool erasePrimitiveFromContainer(DrawerPrimitive *primitive, QMultiMap<int, DrawerPrimitive*> &primitiveContainer);
 
-    /// Fa que la primitiva es pugui visualitzar al visor associat
+    ///Makes the primitive visible in the associated viewer
     void renderPrimitive(DrawerPrimitive *primitive);
 
 private slots:
-    /// Refresca les primitives que s'han de veure pel viewer segons el seu estat
+    ///Refreshes the primitives to be viewed by the viewer according to their status
     void refresh();
 
 private:
-    /// Viewer sobre el qual pintarem les primitives
+    ///Viewer on which we will paint the primitives
     Q2DViewer *m_2DViewer;
 
-    /// Contenidors de primitives per cada pla possible
+    /// Containers of primitives for each possible plan
     QMultiMap<int, DrawerPrimitive*> m_XYPlanePrimitives;
     QMultiMap<int, DrawerPrimitive*> m_YZPlanePrimitives;
     QMultiMap<int, DrawerPrimitive*> m_XZPlanePrimitives;
     QList<DrawerPrimitive*> m_top2DPlanePrimitives;
 
-    /// Pla i llesca en el que es troba en aquell moment el 2D Viewer. Serveix per controlar
-    /// els canvis de llesca i de pla, per saber quines primitives hem de netejar
+    /// Flat and slice in what is currently the 2D Viewer. It serves to control
+    /// the slices and plan changes, to know which primitives we need to clean
     OrthogonalPlane m_currentPlane;
     int m_currentSlice;
 
-    /// Grups de primitives. Les agrupem per nom
+    /// Groups of primitives. We group them by name
     QMultiMap<QString, DrawerPrimitive*> m_primitiveGroups;
 
-    /// Conjunt de primitives en estat disabled
+    ///Set of primitives in disabled state
     QSet<DrawerPrimitive*> m_disabledPrimitives;
 };
 
