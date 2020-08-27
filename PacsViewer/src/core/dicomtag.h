@@ -20,8 +20,8 @@
 namespace udg {
 
 /**
-    Classe per representar un tag DICOM.
-    Un tag està format per enters, el group i l'element. Ex: (0020,0022)
+Class to represent a DICOM tag.
+     A tag consists of integers, the group, and the element. Ex: (0020,0022)
   */
 class DICOMTag {
 
@@ -32,19 +32,19 @@ public:
 
     ~DICOMTag();
 
-    /// Assignar/Obtenir el valor del group
+    ///Assign / Obtain the group value
     void setGroup(unsigned int group);
     unsigned int getGroup() const;
 
-    /// Assignar/Obtenir el valor de element
+    /// Assign / Obtain the item value
     void setElement(unsigned int element);
     unsigned int getElement() const;
 
-    /// Assignar/Obtenir el nom del tag.
+    /// Assign / Get tag name.
     void setName(const QString &name);
     QString getName() const;
 
-    /// Retorna el tag en forma de text.
+    /// Returns the tag as text.
     QString getKeyAsQString() const;
 
     /// Returns true if group and element are equal.

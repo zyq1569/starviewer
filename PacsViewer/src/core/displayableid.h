@@ -21,21 +21,21 @@
 namespace udg {
 
 /**
-    Identificador que es fa servir en llocs on es necessita un identificador que l'usuari podrà veure per pantalla. Aquest té una part fixa, invariable, que és la
-    que realment es fa servir com a identificador, internament. També té una part que serveix per poder-la mostrar a l'interfície i que es pugui traduir.
-    Per exemple, els noms de les Extensions.
+Identifier used in places where an identifier is needed that the user can see on the screen. This one has a fixed, invariable part, which is the
+     which is actually used as an identifier, internally. It also has a part that serves to be able to show it in the interface and that can be translated.
+     For example, the names of the Extensions.
 
-    No té "setters" expressament.
-    Exemple d'assignacions i creació d'id's nuls:
-    @code
-    DisplayableID id(QString::null);
+     It has no "setters" expressly.
+     Example of assignments and creation of null id's:
+     @code
+     DisplayableID id (QString :: null);
 
-    DisplayableID id2("test", tr("test"));
+     DisplayableID id2 ("test", tr ("test"));
 
-    id = DisplayableID("nouValor",tr("nouValor"));
+     id = DisplayableID ("newValue", tr ("newValue"));
 
-    id = id2;
-    @endcode
+     id = id2;
+     @endcode
 
   */
 class DisplayableID {
