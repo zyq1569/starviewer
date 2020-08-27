@@ -20,29 +20,29 @@
 namespace udg {
 
 /**
-    Eina per mesurar distàncies en un visor 2D.
-    Ens permet fixar dos punts a la pantalla i calcular la distància que els separa.
+    Tool for measuring distances in a 2D viewfinder.
+    It allows us to fix two points on the screen and calculate the distance between them.
 
-    Per marcar cadascun dels punts es farà amb un clic o doble-clic amb el botó esquerre
-    del ratolí.
-    Un cop marcat el primer punt de la distància a calcular, es mostrarà una línia que unirà
-    el primer punt marcat amb el punt on es trobi el punter del mouse. Mentres l'usuari no
-    hagi marcat el segon punt, no es mostrarà cap informació respecte a la distància en aquell moment.
+    To mark each of the points will be done with a click or double-click with the left button
+    of the mouse.
+    Once the first point of the distance to be calculated is marked, a line will be displayed that will join
+    the first point marked with the point where the mouse pointer is. While the user does not
+    marked the second point, no distance information will be displayed at that time.
 
-    Un cop marcat el segon punt, la mesura es mostrarà en mil·límetres, si existeix informació
-    d'espaiat, en píxels altrament.
+    Once the second point is marked, the measurement will be displayed in millimeters, if information exists
+    of spacing, in pixels otherwise.
 
-    Un cop acabada la mesura, es poden annotar successivament tantes mesures com es desitji.
+    Once the measurement is completed, as many measurements as desired can be recorded successively.
 
-    Les mesures annotades només apareixeran sobre les imatges sobre les que s'han realitzat,
-    però no s'esborren si canviem d'imatge. Si canviem d'imatge però tornem a mostrar-la més endavant
-    les annotacions fetes sobre aquesta anteriorment, tornaran a aparèixer.
+    The annotated measurements will only appear on the images on which they were taken,
+    but they are not erased if we change image. If we change the image but show it again later
+    the annotations made on this previously, will reappear.
 
-    Quan es canvïi l'input del visor, les annotacions fetes fins aquell moment s'esborraran.
-    Quan es desactivi l'eina, les annotacions fetes fins aquell moment es mantindran.
+    When the viewfinder input is changed, the entries made up to that point will be deleted.
+    When the tool is deactivated, the annotations made up to that point will be maintained.
   */
 class DistanceTool : public GenericDistanceTool {
-Q_OBJECT
+    Q_OBJECT
 public:
     DistanceTool(QViewer *viewer, QObject *parent = 0);
     ~DistanceTool();
@@ -53,32 +53,32 @@ protected:
     void abortDrawing();
 
 private:
-    /// Gestiona quin punt de la distància estem dibuixant. Es cridarà cada cop que
-    /// haguem fet un clic amb el botó esquerre del mouse.
+    /// Manage what point of distance we are drawing. It will be called every time
+    /// we have left clicked with the left mouse button.
     void handlePointAddition();
 
-    /// Marca un nou punt de la distància. Si la corresponent primitiva
-    /// no s'ha creat es crea abans d'afegir el nou punt.
+    /// Marks a new distance point. If the corresponding primitive
+    /// not created is created before adding the new point.
     void annotateNewPoint();
 
-    /// Simula la línia quan es mou el ratolí i tenim el primer punt marcat.
+    ///Simulate the line when the mouse moves and we have the first point marked.
     void simulateLine();
 
-    /// Elimina la representacio temporal de la tool
+    ///Removes the temporary representation from the tool
     void deleteTemporalRepresentation();
 
-    /// Equalitza la profunditat dels elements que formen la distància final.
+    ///Equalizes the depth of the elements that make up the final distance.
     void equalizeDepth();
 
 private slots:
-    /// Inicialitza l'estat de la tool.
+    /// Initializes the status of the tool.
     void initialize();
 
 private:
-    /// Estats possibles de la línia dibuixada.
+    /// Possible states of the drawn line.
     enum { NoPointFixed, FirstPointFixed };
 
-    /// Estat de la línia.
+    ///Line status.
     int m_lineState;
 };
 
