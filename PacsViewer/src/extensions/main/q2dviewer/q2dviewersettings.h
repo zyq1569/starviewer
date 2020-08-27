@@ -26,7 +26,7 @@ public:
 
     void init();
 
-    /// Declaració de claus
+    ///Key statement
     static const QString KeyPrefix;
     static const QString UserProfile;
 };

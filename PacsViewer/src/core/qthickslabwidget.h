@@ -22,7 +22,8 @@ namespace udg {
 class Q2DViewer;
 
 /**
- * @brief The QThickSlabWidget class creates a tool button with a dropdown panel with the controls to change the thick slab properties of a Q2DViewer.
+ * @brief The QThickSlabWidget class creates a tool button with a dropdown panel
+ * with the controls to change the thick slab properties of a Q2DViewer.
  */
 class QThickSlabWidget : public QWidget, private Ui::QThickSlabWidgetBase {
 
@@ -49,7 +50,8 @@ private:
     /// Removes the signal-slot connections.
     void removeConnections();
 
-    /// Updates the maximum thickness allowed by the slider to match the number of slices of the linked viewer in the current direction of projection.
+    /// Updates the maximum thickness allowed by the slider to match the number
+    ///  of slices of the linked viewer in the current direction of projection.
     void updateMaximumThickness();
 
     /// Returns true if thick slab is enabled by this widget.

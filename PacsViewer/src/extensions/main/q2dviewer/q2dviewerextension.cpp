@@ -31,7 +31,7 @@
 #include "automaticsynchronizationtool.h"
 #include "automaticsynchronizationtooldata.h"
 #include "coresettings.h"
-// Per poder fer screenshots desde menú
+//To be able to take screenshots from the menu
 #include "screenshottool.h"
 #include "toolproxy.h"
 #include "q2dviewersettings.h"
