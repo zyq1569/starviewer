@@ -336,7 +336,7 @@ void QViewer::setupInteraction()
 {
     Q_ASSERT(m_renderer);
 
-    // TODO Fer això aquí? o fer-ho en el tool manager?
+    // TODO Do this here? or do it in the tool manager?
     this->getInteractor()->RemoveObservers(vtkCommand::LeftButtonPressEvent);
     this->getInteractor()->RemoveObservers(vtkCommand::RightButtonPressEvent);
     this->getInteractor()->RemoveObservers(vtkCommand::MouseWheelForwardEvent);
@@ -534,7 +534,7 @@ bool QViewer::getCurrentFocalPoint(double focalPoint[3])
     vtkCamera *camera = getActiveCamera();
     if (!camera)
     {
-        DEBUG_LOG("No hi ha càmera");
+        DEBUG_LOG("There is no camera");
         return false;
     }
 
@@ -687,7 +687,7 @@ void QViewer::contextMenuRelease()
 {
     // Extret dels exemples de vtkEventQtSlotConnect
 
-    // Obtenim la posició de l'event
+    // We get the position of the event
     QPoint point = this->getEventPosition();
     point /= this->devicePixelRatioF(); // Vtk pixels are real pixels, Qt wants logical pixels.
 
