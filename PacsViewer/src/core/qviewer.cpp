@@ -18,7 +18,7 @@
 #include "image.h"
 #include "toolproxy.h"
 #include "patientbrowsermenu.h"
-// Per poder afegir i modificar els presets que visualitzem
+//To be able to add and modify the presets we display
 #include "voilutpresetstooldata.h"
 #include "qviewerworkinprogresswidget.h"
 #include "voiluthelper.h"
@@ -27,8 +27,9 @@
 #include "starviewerapplication.h"
 #include "coresettings.h"
 
-// TODO: Ouch! SuperGuarrada (tm). Per poder fer sortir el menú i tenir accés al Patient principal. S'ha d'arreglar en quan es tregui les dependències de
-// interface, pacs, etc.etc.!!
+// TODO:  EVERYTHING: Ouch! SuperGuarrada (tm). To be able to bring out
+// the menu and have access to the Main Patient. Must be fixed when removing dependencies from
+// interface, pacs, etc.etc. !!
 #include "../interface/qapplicationmainwindow.h"
 
 // Qt
@@ -49,14 +50,14 @@
 #include <vtkTIFFWriter.h>
 #include <vtkWindowToImageFilter.h>
 #include <vtkEventQtSlotConnect.h>
-// Necessari pel zoom
+//Required for zooming
 #include <vtkCamera.h>
 
 namespace udg {
 
 QViewer::QViewer(QWidget *parent)
- : QWidget(parent), m_mainVolume(0), m_contextMenuActive(true), m_mouseHasMoved(false), m_voiLutData(0),
-   m_isRenderingEnabled(true), m_isActive(false)
+    : QWidget(parent), m_mainVolume(0), m_contextMenuActive(true), m_mouseHasMoved(false), m_voiLutData(0),
+      m_isRenderingEnabled(true), m_isActive(false)
 {
     m_lastAngleDelta = QPoint();
     m_defaultFitIntoViewportMarginRate = 0.0;
@@ -70,39 +71,40 @@ QViewer::QViewer(QWidget *parent)
 
     this->setCurrentViewPlane(OrthogonalPlane::XYPlane);
 
-    // Connectem els events
+    // We connect the events
     setupInteraction();
 
     m_toolProxy = new ToolProxy(this);
     connect(this, SIGNAL(eventReceived(unsigned long)), m_toolProxy, SLOT(forwardEvent(unsigned long)));
 
-    // Inicialitzem el window level data
+    // We initialize the window level data
     setVoiLutData(new VoiLutPresetsToolData(this));
 
     m_workInProgressWidget = new QViewerWorkInProgressWidget(this);
 
-    // Afegim el layout
+    // We add the layout
     m_stackedLayout = new QStackedLayout(this);
     m_stackedLayout->setSpacing(0);
     m_stackedLayout->setMargin(0);
     m_stackedLayout->addWidget(m_vtkWidget);
     m_stackedLayout->addWidget(m_workInProgressWidget);
 
-    // Inicialitzem l'status del viewer
+    // We initialize the viewer status
     m_previousViewerStatus = m_viewerStatus = NoVolumeInput;
     this->setCurrentWidgetByViewerStatus(m_viewerStatus);
     this->initializeWorkInProgressByViewerStatus(m_viewerStatus);
 
     this->setMouseTracking(false);
     m_patientBrowserMenu = new PatientBrowserMenu(0);
-    // Ara mateix el comportament per defecte serà que un cop seleccionat un volum li assignem immediatament com a input
+    //Right now the default behavior will be that once a
+    // volume is selected we immediately assign it as input
     this->setAutomaticallyLoadPatientBrowserMenuSelectedInput(true);
 }
 
 QViewer::~QViewer()
 {
-    // Cal que la eliminació del vtkWidget sigui al final ja que els altres
-    // objectes que eliminem en poden fer ús durant la seva destrucció
+    // The removal of the vtkWidget must be at the end as the others
+    // objects that we remove can be used during their destruction
     delete m_toolProxy;
     m_patientBrowserMenu->deleteLater();
     m_windowToImageFilter->Delete();
@@ -202,18 +204,18 @@ void QViewer::eventHandler(vtkObject *object, unsigned long vtkEvent, void *clie
     // orientation movements. Only vertical events with a delta different to 0 are captured.
     switch (vtkEvent)
     {
-        case vtkCommand::MouseWheelForwardEvent:
-        case vtkCommand::MouseWheelBackwardEvent:
+    case vtkCommand::MouseWheelForwardEvent:
+    case vtkCommand::MouseWheelBackwardEvent:
+    {
+        QWheelEvent *e = (QWheelEvent*)callData; //WARNING: I don't like that casting here, may become dangerous.
+        if (e)
         {
-            QWheelEvent *e = (QWheelEvent*)callData; //WARNING: I don't like that casting here, may become dangerous.
-            if (e)
+            if (e->delta() == 0 || e->orientation() == Qt::Horizontal)
             {
-                if (e->delta() == 0 || e->orientation() == Qt::Horizontal)
-                {
-                    return;
-                }
+                return;
             }
         }
+    }
     }
 #endif
 
@@ -226,34 +228,35 @@ void QViewer::eventHandler(vtkObject *object, unsigned long vtkEvent, void *clie
         }
     }
 
-    // Quan la finestra sigui "seleccionada" s'emetrà un senyal indicant-ho. Entenem seleccionada quan s'ha clicat o mogut la rodeta per sobre del visor.
-    // TODO Ara resulta ineficient perquè un cop seleccionat no caldria re-enviar aquesta senyal. Cal millorar el sistema
+    // When the window is "selected" a signal will be issued indicating this.
+    // We understand selected when the wheel has been clicked or moved over the viewfinder.
+    // TODO It is now inefficient because once selected it would not be necessary to re-send this signal. The system needs to be improved
     switch (vtkEvent)
     {
-        case QVTKWidget::ContextMenuEvent:
-        case vtkCommand::LeftButtonPressEvent:
-        case vtkCommand::RightButtonPressEvent:
-        case vtkCommand::MiddleButtonPressEvent:
-        case vtkCommand::MouseWheelForwardEvent:
-        case vtkCommand::MouseWheelBackwardEvent:
-            m_mouseHasMoved = false;
-            setActive(true);
-            if (vtkEvent == vtkCommand::LeftButtonPressEvent && getInteractor()->GetRepeatCount() == 1)
-            {
-                emit doubleClicked();
-            }
-            break;
+    case QVTKWidget::ContextMenuEvent:
+    case vtkCommand::LeftButtonPressEvent:
+    case vtkCommand::RightButtonPressEvent:
+    case vtkCommand::MiddleButtonPressEvent:
+    case vtkCommand::MouseWheelForwardEvent:
+    case vtkCommand::MouseWheelBackwardEvent:
+        m_mouseHasMoved = false;
+        setActive(true);
+        if (vtkEvent == vtkCommand::LeftButtonPressEvent && getInteractor()->GetRepeatCount() == 1)
+        {
+            emit doubleClicked();
+        }
+        break;
 
-        case vtkCommand::MouseMoveEvent:
-            m_mouseHasMoved = true;
-            break;
+    case vtkCommand::MouseMoveEvent:
+        m_mouseHasMoved = true;
+        break;
 
-        case vtkCommand::RightButtonReleaseEvent:
-            if (!m_mouseHasMoved)
-            {
-                contextMenuRelease();
-            }
-            break;
+    case vtkCommand::RightButtonReleaseEvent:
+        if (!m_mouseHasMoved)
+        {
+            contextMenuRelease();
+        }
+        break;
     }
     emit eventReceived(vtkEvent);
 }
@@ -359,53 +362,53 @@ bool QViewer::saveGrabbedViews(const QString &baseName, FileType extension)
         QString fileExtension;
         switch (extension)
         {
-            case PNG:
-                writer = vtkPNGWriter::New();
-                fileExtension = "png";
-                break;
+        case PNG:
+            writer = vtkPNGWriter::New();
+            fileExtension = "png";
+            break;
 
-            case JPEG:
-                writer = vtkJPEGWriter::New();
-                fileExtension = "jpg";
-                break;
+        case JPEG:
+            writer = vtkJPEGWriter::New();
+            fileExtension = "jpg";
+            break;
 
-            case TIFF:
-                writer = vtkTIFFWriter::New();
-                fileExtension = "tiff";
-                break;
+        case TIFF:
+            writer = vtkTIFFWriter::New();
+            fileExtension = "tiff";
+            break;
 
-            case PNM:
-                writer = vtkPNMWriter::New();
-                fileExtension = "pnm";
-                break;
+        case PNM:
+            writer = vtkPNMWriter::New();
+            fileExtension = "pnm";
+            break;
 
-            case BMP:
-                writer = vtkBMPWriter::New();
-                fileExtension = "bmp";
-                break;
+        case BMP:
+            writer = vtkBMPWriter::New();
+            fileExtension = "bmp";
+            break;
 
-            case DICOM:
-                // TODO A suportar
-                DEBUG_LOG("El format DICOM encara no està suportat per guardar imatges");
-                return false;
+        case DICOM:
+            // TODO A suportar
+            DEBUG_LOG("DICOM format is not yet supported for saving images");
+            return false;
 
-            case META:
-                // TODO A suportar
-                DEBUG_LOG("El format META encara no està suportat per guardar imatges");
-                return false;
+        case META:
+            // TODO A suportar
+            DEBUG_LOG("The META format is not yet supported for saving images");
+            return false;
         }
         int count = m_grabList.count();
         if (count == 1)
         {
-            // Només grabem una sola imatge
+            //We only record a single image
             writer->SetInputData(m_grabList.at(0));
             writer->SetFileName(qPrintable(QString("%1.%2").arg(baseName).arg(fileExtension)));
             writer->Write();
         }
         else if (count > 1)
         {
-            // Tenim més d'una imatge, per tant li afegim
-            // un índex adicional per cada imatge automàticament
+            // We have more than one image, so we add it
+            // an additional index for each image automatically
             int i = 0;
             int padding = QString::number(count).size();
             foreach (vtkImageData *image, m_grabList)
@@ -438,9 +441,9 @@ void QViewer::clearGrabbedViews()
 
 void QViewer::render()
 {
-    // ATENCIO És important que només es faci render quan estem en estat VisualizingVolume
-    // ja que sinó pot provocar que en alguns casos es presentin problemes de rendering
-    // al no obtenir-se el context de rendering openGL adequat
+    // ATTENTION It is important that it is only rendered when we are in VisualizingVolume state
+    // because otherwise it can cause rendering problems in some cases
+    // when the appropriate openGL rendering context is not obtained
     if (m_isRenderingEnabled && getViewerStatus() == VisualizingVolume)
     {
         try
@@ -500,7 +503,7 @@ void QViewer::pan(double motionVector[3])
     vtkCamera *camera = getActiveCamera();
     if (!camera)
     {
-        DEBUG_LOG("No hi ha càmera");
+        DEBUG_LOG("There is no camera");
         return;
     }
 
@@ -510,7 +513,7 @@ void QViewer::pan(double motionVector[3])
     camera->SetFocalPoint(motionVector[0] + viewFocus[0], motionVector[1] + viewFocus[1], motionVector[2] + viewFocus[2]);
     camera->SetPosition(motionVector[0] + viewPoint[0], motionVector[1] + viewPoint[1], motionVector[2] + viewPoint[2]);
 
-    // Nosaltres en principi no fem ús d'aquesta característica
+    //We in principle do not make use of this feature
     if (this->getInteractor()->GetLightFollowCamera())
     {
         vtkRenderer *renderer = getRenderer();
@@ -557,13 +560,13 @@ bool QViewer::scaleToFit3D(double topCorner[3], double bottomCorner[3], double m
     this->computeWorldToDisplay(topCorner[0], topCorner[1], topCorner[2], displayTopLeft);
     this->computeWorldToDisplay(bottomCorner[0], bottomCorner[1], bottomCorner[2], displayBottomRight);
 
-    // Recalculem tenint en compte el display
+    //We recalculate taking into account the display
     double width, height;
     width = fabs(displayTopLeft[0] - displayBottomRight[0]);
     height = fabs(displayTopLeft[1] - displayBottomRight[1]);
 
-    // Ajustem la imatge segons si la finestra és més estreta per ample o per alçada. Si volem que es vegi tota la regió que em escollit, ajustarem per el que
-    // sigui més estret, si ajustèssim pel més ample perderiem imatge per l'altre part
+    // We adjust the image according to whether the window is narrower in width or height. If we want to see the whole region I chose, we will adjust for what
+    // be narrower, if we adjusted for the widest we would lose image on the other side
     QSize size = this->getRenderWindowSize();
     double ratio = qMin(size.width() / width, size.height() / height);
     double factor = ratio * (1.0 - marginRate);
@@ -732,24 +735,24 @@ void QViewer::setCameraViewPlane(const OrthogonalPlane &viewPlane)
 
     this->setCurrentViewPlane(viewPlane);
 
-    // Ajustem els paràmetres de la càmera segons la vista
+    //We adjust the camera settings according to the view
     camera->SetFocalPoint(0.0, 0.0, 0.0);
     switch (this->getCurrentViewPlane())
     {
-        case OrthogonalPlane::XYPlane:
-            camera->SetViewUp(0.0, -1.0, 0.0);
-            camera->SetPosition(0.0, 0.0, -1.0);
-            break;
+    case OrthogonalPlane::XYPlane:
+        camera->SetViewUp(0.0, -1.0, 0.0);
+        camera->SetPosition(0.0, 0.0, -1.0);
+        break;
 
-        case OrthogonalPlane::YZPlane:
-            camera->SetViewUp(0.0, 0.0, 1.0);
-            camera->SetPosition(1.0, 0.0, 0.0);
-            break;
+    case OrthogonalPlane::YZPlane:
+        camera->SetViewUp(0.0, 0.0, 1.0);
+        camera->SetPosition(1.0, 0.0, 0.0);
+        break;
 
-        case OrthogonalPlane::XZPlane:
-            camera->SetViewUp(0.0, 0.0, 1.0);
-            camera->SetPosition(0.0, -1.0, 0.0);
-            break;
+    case OrthogonalPlane::XZPlane:
+        camera->SetViewUp(0.0, 0.0, 1.0);
+        camera->SetPosition(0.0, -1.0, 0.0);
+        break;
     }
 }
 
@@ -798,17 +801,17 @@ void QViewer::contextMenuEvent(QContextMenuEvent *menuEvent)
 {
     if (m_contextMenuActive)
     {
-        // És possible que en alguns moments (quan es carrega el pacient i surten altres diàlegs)
-        // no hi hagi window activa o que aquesta ni sigui una QApplicationMainWindow i ho sigui un diàleg,
-        // per tant, ens pot tornar NULL i en algunes ocasions ens feia petar l'aplicació. Així ens curem en salut
-        // TODO Estaria bé comprovar
+        // It is possible that in some moments (when the patient is loaded and other dialogs leave)
+        // no window is active or this is not a QApplicationMainWindow and it is a dialog,
+        // so it can return us to NULL and sometimes it made us crack the app. This is how we heal ourselves in health
+        // EVERYTHING It would be nice to check
         QApplicationMainWindow *mainWindow = QApplicationMainWindow::getActiveApplicationMainWindow();
         if (!mainWindow)
         {
             return;
         }
 
-        // Li actualitzem l'input perquè mostri els estudis actuals
+        // We update the input to show current studies
         m_patientBrowserMenu->setPatient(mainWindow->getCurrentPatient());
 
         QString selectedItem = getInputIdentifier();
@@ -877,31 +880,31 @@ void QViewer::initializeWorkInProgressByViewerStatus(ViewerStatus status)
     m_workInProgressWidget->reset();
     switch (status)
     {
-        case NoVolumeInput:
-        case VisualizingVolume:
-            // Do nothing
-            break;
+    case NoVolumeInput:
+    case VisualizingVolume:
+        // Do nothing
+        break;
         
-        case DownloadingVolume:
-            m_workInProgressWidget->setTitle(tr("Downloading related study..."));
-            break;
+    case DownloadingVolume:
+        m_workInProgressWidget->setTitle(tr("Downloading related study..."));
+        break;
         
-        case LoadingVolume:
-            m_workInProgressWidget->setTitle(tr("Loading data..."));
-            break;
+    case LoadingVolume:
+        m_workInProgressWidget->setTitle(tr("Loading data..."));
+        break;
         
-        case DownloadingError:
-            m_workInProgressWidget->setTitle(tr("Error downloading related study"));
-            m_workInProgressWidget->showError(QString());
-            break;
+    case DownloadingError:
+        m_workInProgressWidget->setTitle(tr("Error downloading related study"));
+        m_workInProgressWidget->showError(QString());
+        break;
         
-        case LoadingError:
-            m_workInProgressWidget->setTitle(tr("Error loading data"));
-            break;
+    case LoadingError:
+        m_workInProgressWidget->setTitle(tr("Error loading data"));
+        break;
 
-        case VisualizingError:
-            m_workInProgressWidget->setTitle(tr("Error visualizing data"));
-            break;
+    case VisualizingError:
+        m_workInProgressWidget->setTitle(tr("Error visualizing data"));
+        break;
     }
 }
 
@@ -930,8 +933,8 @@ void QViewer::handleNotEnoughMemoryForVisualizationError()
 {
     setViewerStatus(VisualizingError);
     m_workInProgressWidget->showError(tr("There's not enough memory for the rendering process. Try to close all the open %1 windows, restart the application "
-        "and try again. If the problem persists, adding more RAM memory or switching to a 64-bit operating system may solve the problem.")
-        .arg(ApplicationNameString));
+                                         "and try again. If the problem persists, adding more RAM memory or switching to a 64-bit operating system may solve the problem.")
+                                      .arg(ApplicationNameString));
     // The cursor may have been changed by a tool that hasn't finished its operation and won't receive a mouse button release event,
     // thus the cursor is reset to its default form here
     // TODO Tools should be able to handle this situation by themselves

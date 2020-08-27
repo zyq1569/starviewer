@@ -22,8 +22,10 @@ class QSignalMapper;
 namespace udg {
 
 /**
- * @brief The QMruSortedToolButtonWithMenu class is a QToolButton with a menu that keeps all its actions sorted in most recently used order, with the first one
- *        being the default action and the rest in the menu. When an action in the menu is triggered it becomes the new default action and the previous default
+ * @brief The QMruSortedToolButtonWithMenu class is a QToolButton with a
+ * menu that keeps all its actions sorted in most recently used order, with the first one
+ *        being the default action and the rest in the menu.
+ * When an action in the menu is triggered it becomes the new default action and the previous default
  *        becomes the first in the menu.
  */
 class QMruSortedToolButtonWithMenu : public QToolButton

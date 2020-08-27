@@ -24,7 +24,8 @@ namespace udg {
 class Q2DViewer;
 
 /**
- * @brief The ResetViewToAnatomicalPlaneQViewerCommand class is a QViewerCommand that resets the viewer to a specific anatomical plane.
+ * @brief The ResetViewToAnatomicalPlaneQViewerCommand class is a
+ * QViewerCommand that resets the viewer to a specific anatomical plane.
  */
 class ResetViewToAnatomicalPlaneQViewerCommand : public QViewerCommand
 {
