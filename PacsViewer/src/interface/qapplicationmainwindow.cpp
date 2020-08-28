@@ -622,7 +622,7 @@ void QApplicationMainWindow::setPatient(Patient *patient)
     connectPatientVolumesToNotifier(patient);
 
     ///set mainwindows Title (info of patient)
-    this->setWindowTitle(m_patient->getID() + " : " + m_patient->getFullName());
+    this->setWindowTitle("patientID:"+m_patient->getID() + " : PatientName " + m_patient->getFullName() +"/"+m_patient->getSex());
     enableExtensions();
     m_extensionHandler->getContext().setPatient(patient);
     m_extensionHandler->openDefaultExtension();

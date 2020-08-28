@@ -499,11 +499,12 @@ QApplicationMainWindow* ExtensionHandler::addPatientToWindow(Patient *patient, b
             }
             else
             {
-                // \ TODO Given the problems explained in ticket # 1087,
-                // deleting objects here can make the application crash if you request studies
-                // without explicitly going through the QueryScreen. Since no volume has been loaded into memory at this point,
-                // therefore there will be no major memory leaks if we do not delete it,
-                // we get to not delete any object and thus minimize the problem.
+                /// \ TODO Given the problems explained in ticket # 1087,
+                /// deleting objects here can make the application crash if you request studies
+                /// without explicitly going through the QueryScreen. Since no volume has
+                /// been loaded into memory at this point,
+                /// therefore there will be no major memory leaks if we do not delete it,
+                /// we get to not delete any object and thus minimize the problem.
             }
         }
     }
