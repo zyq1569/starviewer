@@ -69,22 +69,33 @@
 
 namespace udg {
 
-// To process the options entered by command line we have to use a Singleton of StarviewerApplicationCommandLine, this comes because
-// of QApplicationMainWindow instances we have as many as Starviewer open windows we have. Instances of QApplicationMainWindow are created
-// and are destroyed as a new window opens or a Starviewer window closes so we can't hold anyone responsible
-// QApplicationMainWindow to handle requests received via arguments or received from other instances of Starviewer via
-// from QtSingleApplication, because we can't guarantee that no QApplicationMainWindow will be alive throughout the execution of Starviewer, to take care of
-// to process command line arugments.
+/// To process the options entered by command line we have to use a Singleton of
+/// StarviewerApplicationCommandLine, this comes because
+/// of QApplicationMainWindow instances we have as many as Starviewer open
+/// windows we have. Instances of QApplicationMainWindow are created
+/// and are destroyed as a new window opens or a Starviewer window closes
+/// so we can't hold anyone responsible
+/// QApplicationMainWindow to handle requests received via arguments or
+/// received from other instances of Starviewer via
+/// from QtSingleApplication, because we can't guarantee that no QApplicationMainWindow
+/// will be alive throughout the execution of Starviewer, to take care of
+/// to process command line arugments.
 
-// That's why all QApplicationMainWindow is connected to a signal from the same instance of
-// StarviewerSingleApplicationCommandLineSingleton, this signal is newOptionsToRun () that is output each time new arguments are received
-// proceed from the same instance at startup or from other instances via QtSingleApplication. Once the signal has been issued the instances
-// from QApplicationMainWindow as they respond to the signal with the takeOptionToRun () method they process all the arguments until they don't
-// there is none left to process.
+/// That's why all QApplicationMainWindow is connected to a signal from the same instance of
+/// StarviewerSingleApplicationCommandLineSingleton, this signal is newOptionsToRun ()
+/// that is output each time new arguments are received
+/// proceed from the same instance at startup or from other instances via QtSingleApplication.
+/// Once the signal has been issued the instances
+/// from QApplicationMainWindow as they respond to the signal with the takeOptionToRun ()
+/// method they process all the arguments until they don't
+/// there is none left to process.
 
-// The option that processes an instance of QApplicationMainWindow obtained through the takeOptionToRun () method disappears from the list of options
-// to process StarviewerApplicationCommandLine, so even though all instances of QApplicationMainWindow can process
-// options received, each option will only be processed by the first instance that takes it through the takeOptionToRun () method.
+/// The option that processes an instance of QApplicationMainWindow obtained through the
+/// takeOptionToRun () method disappears from the list of options
+/// to process StarviewerApplicationCommandLine, so even though all instances
+///  of QApplicationMainWindow can process
+/// options received, each option will only be processed by the first instance
+///  that takes it through the takeOptionToRun () method.
 typedef SingletonPointer<StarviewerApplicationCommandLine> StarviewerSingleApplicationCommandLineSingleton;
 
 QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
@@ -469,7 +480,8 @@ void QApplicationMainWindow::createExternalApplicationsMenu()
     QList<ExternalApplication> externalApplications = ExternalApplicationsManager::instance()->getApplications();
     delete m_externalApplicationsMenu;
 
-    if (externalApplications.length() == 0) //If no external applications are defined, do not create the menu;
+    ///If no external applications are defined, do not create the menu;
+    if (externalApplications.length() == 0)
     {
         m_externalApplicationsMenu = 0;
         return;
@@ -500,7 +512,8 @@ void QApplicationMainWindow::createExternalApplicationsMenu()
     while (i.hasNext())
     {
         const ExternalApplication& extApp = i.next();
-        QAction* action = new QAction(extApp.getName(),0); //When added to a QMenu, that menu becomes the parent.
+        ///When added to a QMenu, that menu becomes the parent.
+        QAction* action = new QAction(extApp.getName(),0);
         if (position < shortcutVector.size())
         {
             action->setShortcuts(shortcutVector[position]);
@@ -598,7 +611,7 @@ void QApplicationMainWindow::setPatient(Patient *patient)
 
     if (this->getCurrentPatient())
     {
-        // Primer ens carreguem el pacient
+        //First we charge the patient
         this->killBill();
         delete m_patient;
         m_patient = NULL;
@@ -608,6 +621,7 @@ void QApplicationMainWindow::setPatient(Patient *patient)
     m_patient = patient;
     connectPatientVolumesToNotifier(patient);
 
+    ///set mainwindows Title (info of patient)
     this->setWindowTitle(m_patient->getID() + " : " + m_patient->getFullName());
     enableExtensions();
     m_extensionHandler->getContext().setPatient(patient);
@@ -662,9 +676,10 @@ ExtensionWorkspace* QApplicationMainWindow::getExtensionWorkspace()
 
 void QApplicationMainWindow::closeEvent(QCloseEvent *event)
 {
-    // \ TODO here we should check if the application is doing other pending tasks that should be completed before closing
-    // the application such as downloaded images from PACS or similar.
-    // It should be done centrally.
+    /// \ TODO here we should check if the application is doing
+    /// other pending tasks that should be completed before closing
+    /// the application such as downloaded images from PACS or similar.
+    /// It should be done centrally.
     event->accept();
 }
 
