@@ -642,6 +642,9 @@ QList<QApplicationMainWindow*> QApplicationMainWindow::getQApplicationMainWindow
         if (window)
         {
             mainApps << window;
+            /// debug test
+            QSize size = window->size();
+            DEBUG_LOG("window:height-"+QString("%1").arg(size.height())+"-width-"+QString("%1").arg(size.width()));
         }
     }
     return mainApps;

@@ -24,7 +24,7 @@
 namespace udg {
 
 TemporalDimensionFillerStep::TemporalDimensionFillerStep()
-: PatientFillerStep()
+    : PatientFillerStep()
 {
 }
 
@@ -58,14 +58,14 @@ bool TemporalDimensionFillerStep::fillIndividually()
         acquisitionNumber = m_input->getCurrentImages().first()->getAcquisitionNumber();
     }
 
-    // Obtenim el VolumeInfo. Si no existeix en generem un de nou i l'afegim a l'estructura.
+    ///We get the VolumeInfo. If it does not exist, we generate a new one and add it to the structure.
     if (TemporalDimensionInternalInfo.contains(m_input->getCurrentSeries()))
     {
         QHash<int, VolumeInfo*> *volumeHash = TemporalDimensionInternalInfo.value(m_input->getCurrentSeries());
 
         if (volumeHash->contains(m_input->getCurrentVolumeNumber()))
         {
-            // Ja tenim el un VolumeInfo existent pel número de volum que estem processant actualment
+            ///We already have the existing VolumeInfo for the volume number we are currently processing
             volumeInfoInitialized = true;
             volumeInfo = volumeHash->value(m_input->getCurrentVolumeNumber());
 
@@ -79,7 +79,8 @@ bool TemporalDimensionFillerStep::fillIndividually()
         }
         else
         {
-            // El número de volum actual és nou, per tant cal crear un nou VolumeInfo associat a aquest nou volum
+            /// The current volume number is new, so you need to
+            ///  create a new VolumeInfo associated with this new volume
             volumeInfo = new VolumeInfo;
             volumeHash->insert(m_input->getCurrentVolumeNumber(), volumeInfo);
         }
@@ -92,7 +93,7 @@ bool TemporalDimensionFillerStep::fillIndividually()
         TemporalDimensionInternalInfo.insert(m_input->getCurrentSeries(), volumeHash);
     }
 
-    // Si el VolumeInfo és nou, l'inicialitzem.
+    //If the VolumeInfo is new, we initialize it.
     if (!volumeInfoInitialized)
     {
         volumeInfo->numberOfPhases = 1;
@@ -102,15 +103,16 @@ bool TemporalDimensionFillerStep::fillIndividually()
         volumeInfo->firstAcquisitionNumber = acquisitionNumber;
         volumeInfo->multipleAcquisitionNumber = false;
 
-        // En el cas del CT ens interessa saber si és localizer
+        // In the case of CT we are interested to know if it is localizer
         if (m_input->getCurrentSeries()->isCTLocalizer())
         {
-            DEBUG_LOG("La serie amb uid " + m_input->getCurrentSeries()->getInstanceUID() + " no és dinàmica (És un CT LOCALIZER)");
+            DEBUG_LOG("The series with uid" + m_input->getCurrentSeries()->getInstanceUID() + " it is not dynamic (It is a CT LOCALIZER)");
             volumeInfo->isCTLocalizer = true;
         }
     }
 
-    // Si és CTLocalizer no cal recorre totes les imatges ja que només ens interessa saber quantes n'hem d'afegir al VolumeInfo.
+    ///If it is CTLocalizer it is not necessary to go through
+    /// all the images as we are only interested in knowing how many we need to add to the VolumeInfo.
     if (volumeInfo->isCTLocalizer)
     {
         volumeInfo->numberOfImages += m_input->getCurrentImages().count();
@@ -124,8 +126,8 @@ bool TemporalDimensionFillerStep::fillIndividually()
             if (!(imagePositionPatient[0] == 0. && imagePositionPatient[1] == 0. && imagePositionPatient[2] == 0.))
             {
                 QString imagePositionPatientString = QString("%1\\%2\\%3").arg(imagePositionPatient[0])
-                                                                          .arg(imagePositionPatient[1])
-                                                                          .arg(imagePositionPatient[2]);
+                        .arg(imagePositionPatient[1])
+                        .arg(imagePositionPatient[2]);
 
                 if (volumeInfo->firstImagePosition.isEmpty())
                 {
@@ -141,12 +143,12 @@ bool TemporalDimensionFillerStep::fillIndividually()
 
                 if (volumeInfo->phasesPerPositionHash.contains(imagePositionPatientString))
                 {
-                    // Ja el tenim, augmentem el nombre de fases per aquella posició
+                    //We already have it, we increase the number of phases by that position
                     volumeInfo->phasesPerPositionHash.insert(imagePositionPatientString, volumeInfo->phasesPerPositionHash.value(imagePositionPatientString) + 1);
                 }
                 else
                 {
-                    // Creem la nova entrada, inicialment seria la primera fase
+                    // We create the new entry, initially it would be the first phase
                     volumeInfo->phasesPerPositionHash.insert(imagePositionPatientString, 1);
                 }
             }
@@ -180,17 +182,19 @@ void TemporalDimensionFillerStep::postProcessing()
                     if (volumeInfo->multipleAcquisitionNumber)
                     {
                         numberOfPhases = 1;
-                        DEBUG_LOG(QString("No totes les imatges tenen el mateix AcquisitionNumber. Considerem que el volume %1 de la sèrie %2 no és dinàmic.")
-                                     .arg(currentVolume).arg(key->getInstanceUID()));
-                        INFO_LOG(QString("No totes les imatges tenen el mateix AcquisitionNumber. Considerem que el volume %1 de la sèrie %2 no és dinàmic.")
-                                    .arg(currentVolume).arg(key->getInstanceUID()));
+                        DEBUG_LOG(QString("Not all images have the same AcquisitionNumber. We consider that volume% 1 of series% 2 is not dynamic.")
+                                  .arg(currentVolume).arg(key->getInstanceUID()));
+                        INFO_LOG(QString("Not all images have the same AcquisitionNumber. We consider that volume% 1 of series% 2 is not dynamic.")
+                                 .arg(currentVolume).arg(key->getInstanceUID()));
                     }
                     else
                     {
-                        // Inicialment donem per fet que el càlcul de fases és correcte
+                        ///Initially we assume that the phase calculation is correct
                         numberOfPhases = volumeInfo->numberOfPhases;
-                        // Si passem la llista de valors a un QSet i aquest té mida 1, vol dir que totes les posicions tenen el mateix nombre de fases
-                        // (Un QSet no admet duplicats). S'ha de tenir en compte que si només hi ha una posició amb diferents fases no cal fer res ja que serà correcte
+                        /// If we pass the list of values to a QSet and this one has size 1,
+                        ///it means that all the positions have the same number of phases
+                        /// (A QSet does not support duplicates). It should be noted that
+                        /// if there is only one position with different phases there is no need to do anything as it will be correct
                         QList<int> phasesList = volumeInfo->phasesPerPositionHash.values();
                         int listSize = phasesList.count();
                         if (listSize > 1 && phasesList.toSet().count() > 1)
@@ -199,7 +203,7 @@ void TemporalDimensionFillerStep::postProcessing()
                         }
                         // TODO Si el càlcul no ha sigut correcte, caldria dividir en volums?
                     }
-                    // L'esborrem perquè ja no el necessitarem més
+                    //We will delete it because we will no longer need it
                     if (volumeInfo)
                     {
                         delete volumeInfo;
@@ -209,17 +213,17 @@ void TemporalDimensionFillerStep::postProcessing()
                 {
                     numberOfPhases = 1;
 
-                    ERROR_LOG(QString("El volume %1 de la sèrie %2 no ha estat processat! Considerem que no és dinàmic")
-                                 .arg(currentVolume).arg(key->getInstanceUID()));
-                    DEBUG_LOG(QString("El volume %1 de la sèrie %2 no ha estat processat! Considerem que no és dinàmic")
-                                 .arg(currentVolume).arg(key->getInstanceUID()));
+                    ERROR_LOG(QString("Volume% 1 of series% 2 has not been processed! We consider it not dynamic")
+                              .arg(currentVolume).arg(key->getInstanceUID()));
+                    DEBUG_LOG(QString("Volume% 1 of series% 2 has not been processed! We consider it not dynamic")
+                              .arg(currentVolume).arg(key->getInstanceUID()));
                 }
 
                 currentPhase = 0;
 
                 if (numberOfPhases > 1)
                 {
-                    DEBUG_LOG(QString("El volume %1 de la serie %2 és dinamic").arg(currentVolume).arg(key->getInstanceUID()));
+                    DEBUG_LOG(QString("Volume% 1 in series% 2 is dynamic").arg(currentVolume).arg(key->getInstanceUID()));
                 }
 
             }
