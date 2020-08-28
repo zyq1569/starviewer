@@ -331,7 +331,8 @@ void Q2DViewerExtension::setupLayoutManager()
     connect(m_hangingProtocolsMenu, &QHangingProtocolsWidget::selectedCombined, m_layoutManager, &LayoutManager::setCombinedHangingProtocol);
     connect(m_relatedStudiesWidget, SIGNAL(workingStudiesChanged(QString, QString)), this, SLOT(setWorkingStudies(QString, QString)));
 
-    // Actions to show the next o previous hanging protocol of the list. Currently, it can only be carried out through keyboard
+    /// Actions to show the next o previous hanging protocol of the list.
+    /// Currently, it can only be carried out through keyboard
     QAction *nextHangingProtocolAction = new QAction(this);
     nextHangingProtocolAction->setText("Next Hanging Protocol");
     nextHangingProtocolAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::NextHangingProtocol));
