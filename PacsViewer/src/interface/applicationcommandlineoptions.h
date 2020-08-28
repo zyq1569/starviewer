@@ -26,78 +26,84 @@ class QString;
 namespace udg {
 
 /**
-    Classe que ens parseja els arguments que ens entren per línia de comandes al executar l'aplicació.
-    Els arguments de comandes de línia es composen de dos parts, la primera part s'anomena l'opció que indica quina comanda
-    i la segona part s'anomena argument que indica amb quin valor s'ha d'executar la comanda, per exemple per -accessionnumber 1234
-    accessionnumber és l'opció i 1234 l'argument.
+Class that parses the arguments we enter by command line when running the application.
+Line command arguments consist of two parts,
+the first part is called the option that indicates which command
+and the second part is called argument which
+indicates with what value the command should be executed, for example by -accessionnumber 1234
+accessionnumber is the option and 1234 the argument.
 
-    Podem especificar opcions sense necessitar que continguin un argument
-        -version
+We can specify options without having to contain an argument
+-version
 
-    Podem especificar opcions amb un argument, si conté més d'un argument s'ignorarà i s'agafarà el primer
-        -accessionnumber 1234
+We can specify options with an argument, if it contains more
+than one argument it will be ignored and the first one will be taken
+-accessionnumber 1234
 
-    Aquesta classe és case sensitive
-  */
-class ApplicationCommandLineOptions {
+This class is case sensitive
+ */
+        class ApplicationCommandLineOptions {
 
 public:
-    /// Constructor per defecte en el que cal indicar el nom de l'aplicació
+    /// Default constructor in which to specify the name of the application
     ApplicationCommandLineOptions(const QString &applicationName);
 
-    /// Retorna el nom de l'aplicació
+    /// Returns the name of the application
     QString getApplicationName() const;
     
-    /// Permet afegir un argument que acceptarem com a vàlid per la comanda de línies. Retorna fals si ja existeix l'argument
+    /// Allows you to add an argument that we will accept
+    /// as valid for the line command. Returns false if the argument already exists
     bool addOption(const CommandLineOption &option);
 
-    /// Especifica la llista d'arguments a parsejar, si hi ha alguna opció de més que no s'ha definit o alguna opció té
-    /// més d'un valor es retorna fals indicant que no s'ha parsejat correctament l'argument
+    /// Specifies the list of arguments to parse,
+    /// if there are any more options that have not been defined or have some options
+    /// more than one value returns false indicating that the argument was not parsed correctly
     bool parseArgumentList(QStringList argumentList);
 
-    /// Retorna la llista d'arguments
+    /// Returns the list of arguments
     QStringList getArgumentList();
 
-    /// Retorna cert si ens han especificat aquella opció al la línia d'arguments
+    /// Returns true if we have specified that option in the argument line
     bool isSet(QString optionName);
 
-    /// Retorna el valor que han especificat per aquella opció
-    /// Si optionName no ha estat definit com a una opció vàlida retorna NULL
-    /// Si han especificat l'opció però no li han donat cap argument retorna buit
+    /// Returns the value they specified for that option
+    /// If optionName has not been set as a valid option it returns NULL
+    /// If you have specified the option but have not given any argument it returns empty
     QString getOptionArgument(QString optionName);
 
-    /// Retorna l'error de parsejar una una llista d'arguments
+    ///Returns the error of parsing a list of arguments
     QString getParserErrorMessage();
 
-    /// Retorna el número d'opcions que s'han trobat correctes al parserjar
+    ///Returns the number of options that were found correct when parsing
     int getNumberOfParsedOptions();
 
-    /// Retorna un text amb la siniopsis d'ús d'aquestes opcions de comandes
+    /// Returns a text with the synopsis of using these command options
     QString getSynopsis() const;
     
-    /// Ens retorna la llista de comandes possibles que hi ha registrades
+    /// Returns the list of possible orders that are registered
     QList<CommandLineOption> getCommandLineOptionsList() const;
 
 private:
-    /// Nom de l'aplicació per la qual s'aplica aquestes opcions
+    /// Name of the application for which these options apply
     QString m_applicationName;
     
-    // Conté les opcions possibles que ens poden entrar des de la línia de comandes, i conté associada la descripció del que fa aquella opció
+    // It contains the possible options that can enter us from the command line,
+    // and contains associated the description of what that option does
     QMap<QString, CommandLineOption> m_commandLineOptions;
-    // Conté les opcions parsejades entrades per comandes de línia amb el seu valor
+    // Contains the parsed options entered by line commands with their value
     QHash<QString, QString> m_parsedOptions;
-    // Argumens de la línia de comandes a persajar
+    //Walkthrough arguments
     QStringList m_argumentList;
-    // Conté un text d'error si al parsejar la línia de comandes trobem opcions no vàlides
+    // Contains an error text if when parsing the command line we find invalid options
     QString m_parserErrorMessage;
 
-    /// Parseja els paràmetres en funció de les opcions que s'han especificat
+    /// Parse the parameters according to the options that have been specified
     bool parse();
 
-    /// Indica si l'string és una opció, és una opció si és una comanda amb format -versions
+    ///Indicates whether the string is an option, an option if it is a -versions formatted command
     bool isAnOption(QString command);
 
-    /// Indica si l'string és un argument d'una opció
+    /// Indicates whether the string is an argument of an option
     bool isAnArgument(QString argument);
 };
 

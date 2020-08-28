@@ -55,13 +55,13 @@ private:
     void writeSettings();
 
 private:
-    /// Directori de treball per fitxers ordinaris
+    ///Working directory for ordinary files
     QString m_workingDirectory;
 
-    /// Directori de treball per directoris dicom
+   /// Working directory by dicom directories
     QString m_workingDicomDirectory;
 
-    ///Last User Selected Extension
+  ///Last User Selected Extension
     QString m_lastExtension;
 };
 
