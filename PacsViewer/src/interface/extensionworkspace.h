@@ -25,45 +25,46 @@ class QToolButton;
 namespace udg {
 
 class ExtensionWorkspace : public QTabWidget {
-Q_OBJECT
+    Q_OBJECT
 public:
     ExtensionWorkspace(QWidget *parent = 0);
 
     ~ExtensionWorkspace();
 
-    /// Afegeix una nova aplicació
-    /// Li indiquem el widget, títol visible per l'usuari i nom intern de l'aplicació
-    // \TODO: paràmetre de recursos?, afegir un id d'aplicació per poder-la referenciar, afegir una label/nom, +altres possibles paràmetres
+    /// Add a new application
+    /// We indicate the widget, title visible to the user and internal name of the application
+    // \ TODO: resource parameter ?, add an application id to be able to reference it,
+    /// add a label / name, + other possible parameters
     void addApplication(QWidget *application, QString caption, const QString &extensionIdentifier);
 
-    /// Treu una aplicació de l'espai de mini-aplicacions i l'elimina de memòria
+    ///Remove an application from the mini-application space and delete it from memory
     void removeApplication(QWidget *application);
 
-    /// Elimina per complet totes les extensions que hi hagi al workspace
+    ///Completely remove all extensions in the workspace
     void killThemAll();
 
-    /// Ens retorna el mapa que conté les extensions obertes associades al seu nom
+    ///It returns the map that contains the open extensions associated with its name
     QMap<QWidget *, QString> getActiveExtensions() const;
 
 public slots:
-    /// Per tancar l'aplicació que està oberta en aquell moment
+    /// To close the application that is currently open
     void closeCurrentApplication();
 
 private:
-    /// Crea les connexions de signals i slots
+    /// Creates signal and slot connections
     void createConnections();
 
-    /// Especifica si es fa servir o no el color de fons fosc
-    /// Útil perquè l'usuari no s'enlluerni al estar en habitacions fosques i aparegui l'aplicació per primera vegada
-    /// si es té un theme del SO amb colors clars (surt tota una finestra amb 2 pantalles de diagnòstic blanques)
+    /// Specifies whether or not to use the dark background color
+    /// Useful so that the user does not dazzle when being in dark rooms and the application appears for the first time
+    /// if you have an OS theme with light colors (a whole window comes out with 2 white diagnostic screens)
     void setDarkBackgroundColorEnabled(bool value);
 
 private slots:
-    /// Tanca la aplicació amb índex "index". Pensat per connectar-ho al signal de tancar pestanya
+    /// Close the application with "index". Designed to connect to the tab close signal
     void closeApplicationByTabIndex(int index);
 
 private:
-    /// Mapa que conté les extensions que tenim obertes, associades al seu nom
+    ///Map containing the extensions we have open, associated with their name
     QMap<QWidget *, QString> m_activeExtensions;
 };
 
