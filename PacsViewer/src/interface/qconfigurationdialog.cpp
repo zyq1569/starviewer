@@ -31,37 +31,37 @@
 namespace udg {
 
 QConfigurationDialog::QConfigurationDialog(QWidget *parent, Qt::WindowFlags f)
- : QDialog(parent, f)
+    : QDialog(parent, f)
 {
     setupUi(this);
     setWindowTitle(tr("%1 Configuration").arg(ApplicationNameString));
     setWindowFlags((this->windowFlags() | Qt::WindowMaximizeButtonHint) ^ Qt::WindowContextHelpButtonHint);
 
-    // Configuració del visor 2D
+    //2D viewer settings
     Q2DViewerConfigurationScreen *q2dviewerScreen = new Q2DViewerConfigurationScreen(this);
     this->addConfigurationWidget(q2dviewerScreen, tr("2D Viewer"), BasicConfiguration);
 
-    // Configuració del layout del visor 2D
+    //2D viewer layout settings
     Q2DViewerLayoutConfigurationScreen *q2dviewerLayoutScreen = new Q2DViewerLayoutConfigurationScreen(this);
     this->addConfigurationWidget(q2dviewerLayoutScreen, tr("2D Viewer Layout"), BasicConfiguration);
 
 #ifndef STARVIEWER_LITE
-    // No mostrem configuració del PACS
+    // We do not show PACS settings
     QConfigurationScreen *pacsConfigurationScreen = new QConfigurationScreen(this);
     this->addConfigurationWidget(pacsConfigurationScreen, tr("PACS"), AdvancedConfiguration);
 #endif
 
-    // Configuracions de la base de dades local
+    // Local database settings
     QLocalDatabaseConfigurationScreen *localDatabaseScreen = new QLocalDatabaseConfigurationScreen(this);
     this->addConfigurationWidget(localDatabaseScreen, tr("Local Database"), AdvancedConfiguration);
 
 #ifndef STARVIEWER_LITE
-    // No mostrem configuració del servei que escolta les peticions del RIS
+    //We do not show service settings that listen to RIS requests
     QListenRisRequestsConfigurationScreen *qListenRisRequestsConfigurationScreen = new QListenRisRequestsConfigurationScreen(this);
     this->addConfigurationWidget(qListenRisRequestsConfigurationScreen, tr("RIS Listener"), AdvancedConfiguration);
 #endif
 
-    // Configuració del programa de gravació
+    // Recording program settings
     QDICOMDIRConfigurationScreen *dicomdirScreen = new QDICOMDIRConfigurationScreen(this);
     this->addConfigurationWidget(dicomdirScreen, tr("DICOMDIR"), AdvancedConfiguration);
 
