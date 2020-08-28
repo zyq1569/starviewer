@@ -23,32 +23,33 @@
 namespace udg {
 
 /**
-    Classe que implementa el diàleg de configuració de l'aplicació.
+   Class that implements the application configuration dialog.
   */
 class QConfigurationDialog : public QDialog, private ::Ui::QConfigurationDialogBase {
-Q_OBJECT
+    Q_OBJECT
 public:
     QConfigurationDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
     ~QConfigurationDialog();
 
 protected:
-    /// @brief Calls .close() on each configuration subdialog.
+    ///@brief Calls .close() on each configuration subdialog.
     void closeEvent(QCloseEvent* event);
 
 private slots:
-    /// S'encarrega d'amagar/mostrar les opcions de configuració depenent si s'ha seleccionat o no l'opció
-    /// de mostrar opcions avançades.
+    /// It is responsible for hiding /
+    /// showing configuration options depending on whether or not the option has been selected
+    /// to show advanced options.
     void setViewAdvancedConfiguration();
 
     /// Puts scroll on top and resizes widgets
     void sectionChanged(int index);
 
 private:
-    /// Ens serveix per diferenciar entre configuració avançada i configuració bàsica
+    /// It helps us to differentiate between advanced configuration and basic configuration
     enum ConfigurationType { BasicConfiguration, AdvancedConfiguration };
 
-    /// Afegeix un nou widget de configuració al diàleg.
+    /// Adds a new configuration widget to the dialog.
     void addConfigurationWidget(QWidget *widget, const QString &name, ConfigurationType type);
 
 private:

@@ -31,9 +31,9 @@ public:
     static const QString OpenDirectoryLastPath;
     static const QString OpenFileLastFileExtension;
     static const QString ApplicationMainWindowGeometry;
-    // Indicarà si permetem tenir més d'una instància de cada extensió (true) o únicament una (false)
+    // Indicate if we allow to have more than one instance of each extension (true) or only one (false)
     static const QString AllowMultipleInstancesPerExtension;
-    // Defineix quina és l'extensió que s'obrirà per defecte
+    // Defines which extension will open by default
     static const QString DefaultExtension;
 };
 
