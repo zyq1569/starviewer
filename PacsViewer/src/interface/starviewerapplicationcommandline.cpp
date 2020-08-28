@@ -30,11 +30,11 @@ ApplicationCommandLineOptions StarviewerApplicationCommandLine::getStarviewerApp
 {
     ApplicationCommandLineOptions starviewerCommandLineOptions(ApplicationNameString);
 
-    // Configurem les opcions que Starviewer accepta des de línia de comandes
-    #ifndef STARVIEWER_LITE
-    // Opció no disponible Starviewer Lite
+    // We configure the options that Starviewer accepts from the command line
+#ifndef STARVIEWER_LITE
+    // Option not available Starviewer Lite
     starviewerCommandLineOptions.addOption(CommandLineOption(accessionNumberOption, true, QObject::tr("Retrieve the study with the given accession number from the query default PACS.")));
-    #endif
+#endif
 
     return starviewerCommandLineOptions;
 }
@@ -70,7 +70,7 @@ bool StarviewerApplicationCommandLine::parseAndRun(const QString &argumentsListA
 
     if (!ok)
     {
-        ERROR_LOG("Arguments de linia de comandes invalids: " + errorInvalidCommanLineArguments);
+        ERROR_LOG("Invalid command line arguments: " + errorInvalidCommanLineArguments);
     }
 
     return ok;
@@ -84,8 +84,9 @@ bool StarviewerApplicationCommandLine::parseAndRun(QStringList arguments, QStrin
     {
         if (commandLineOptions.getNumberOfParsedOptions() == 0)
         {
-            // Vol dir que han executat una nova instància del Starviewer que ha detectat que hi havia una altra instància executant-se
-            // i ens ha enviat un missatge en blanc perquè obrim un nova finestra d'Starviewer
+            // Means that they have run a new instance of Starviewer
+            /// that has detected that another instance was running
+            // and sent us a blank message for us to open a new Starviewer window
             QPair<StarviewerCommandLineOption, QString> commandLineOptionValue(openBlankWindow, "");
             AddOptionToCommandLineOptionListToProcess(commandLineOptionValue);
         }
@@ -94,7 +95,7 @@ bool StarviewerApplicationCommandLine::parseAndRun(QStringList arguments, QStrin
             if (commandLineOptions.isSet(accessionNumberOption))
             {
                 QPair<StarviewerCommandLineOption, QString>
-                    commandLineOptionValue(retrieveStudyFromAccessioNumber, commandLineOptions.getOptionArgument(accessionNumberOption));
+                        commandLineOptionValue(retrieveStudyFromAccessioNumber, commandLineOptions.getOptionArgument(accessionNumberOption));
 
                 AddOptionToCommandLineOptionListToProcess(commandLineOptionValue);
             }
