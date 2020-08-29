@@ -105,16 +105,16 @@ public:
     ///Assign whether the method is strict or not
     void setStrictness(bool strictness);
 
-    /// Retorna si el hanging protocol ha de tenir totes les series diferents
+    /// Returns if the hanging protocol must have all different series
     bool getAllDifferent() const;
 
-    /// Assigna si el hanging protocol ha de tenir totes les series diferents
+    ///Assigns whether the hanging protocol should have all different series
     void setAllDifferent(bool allDifferent);
 
-    /// Assigna el tipus d'icona per representar-lo
+    ///Assigns the icon type to represent it
     void setIconType(const QString &iconType);
 
-    /// Obté el tipus d'icona per representar-lo
+    ///Gets the icon type to represent it
     QString getIconType() const;
 
     /// Sets the number of priors.
@@ -123,37 +123,37 @@ public:
     /// Returns the number of priors.
     int getNumberOfPriors() const;
 
-    /// Assigna una prioritat al hanging protocol
+    /// Assigns a priority to the hanging protocol
     void setPriority(double priority);
 
-    /// Retorna la prioritat del hanging protocol
+    /// Returns the priority of the hanging protocol
     double getPriority() const;
 
-    /// Compara si dos hanging protocols son iguals
+    /// Compare whether two hanging protocols are the same
     bool compareTo(const HangingProtocol &hangingProtocol) const;
 
-    /// Retorna el número de ImageSets que tenen una sèrie assignada
+    /// Returns the number of ImageSets that have a series assigned
     int countFilledImageSets() const;
     /// Return the number of filled ImageSets that its AbstractPriorValue is different to 0
     int countFilledImageSetsWithPriors() const;
 
-    /// Retorna el número de DisplaySets que tenen una sèrie o imatge assignada
+    /// Returns the number of DisplaySets that have a series or image assigned
     int countFilledDisplaySets() const;
 private:
-    // Private copy assignment operator so it can't be used accidentally
+    //Private copy assignment operator so it can't be used accidentally
     HangingProtocol& operator=(const HangingProtocol&);
 
 private:
     /// Identificador
     int m_identifier;
 
-    /// Nom del hanging protocol
+    /// Name of the hanging protocol
     QString m_name;
 
-    /// Definició de layouts
+    ///Definition of layouts
     HangingProtocolLayout *m_layout;
 
-    /// Definició de la màscara
+    /// Definition of the mask
     HangingProtocolMask *m_mask;
 
     QRegExp m_institutionsRegularExpression;
