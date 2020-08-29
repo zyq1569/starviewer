@@ -51,9 +51,9 @@ Volume *ExtensionContext::getDefaultVolume() const
     }
     else
     {
-        // TODO de moment només agafem la primera de les possibles seleccionades
+        // EVERYTHING at the moment we only take the first of the possible ones selected
         defaultSeries = selectedSeries.at(0);
-        // Necessitem que les sèries siguin visualitzables
+        // We need the series to be viewable
         if (!defaultSeries->isViewable())
         {
             searchForDefaultSeries = true;
@@ -63,8 +63,8 @@ Volume *ExtensionContext::getDefaultVolume() const
             defaultVolume = defaultSeries->getFirstVolume();
         }
     }
-    // En comptes de searchForDefaultSeries podríem fer servir
-    // defaultVolume, però amb la var. booleana el codi és més llegible
+    // Instead of searchForDefaultSeries we could use
+    // defaultVolume, but with var. boolean code is more readable
     if (searchForDefaultSeries)
     {
         bool ok = false;
@@ -80,8 +80,8 @@ Volume *ExtensionContext::getDefaultVolume() const
         }
         if (!ok)
         {
-            DEBUG_LOG("No hi ha cap serie de l'actual pacient que sigui visualitzable. Retornem volum NUL.");
-            ERROR_LOG("No hi ha cap serie de l'actual pacient que sigui visualitzable. Retornem volum NUL.");
+            DEBUG_LOG("There is no current patient series that is viewable. Return volume NULL.");
+            ERROR_LOG("There is no current patient series that is viewable. Return volume NULL.");
         }
     }
 
