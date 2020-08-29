@@ -52,10 +52,10 @@ class SyncActionsConfigurationHandler;
 #endif
 
 /**
-    Extensió que s'executarà per defecte a l'obrir un model
+   Extension that will run by default when opening a model
   */
 class Q2DViewerExtension : public QWidget, private Ui::Q2DViewerExtensionBase {
-Q_OBJECT
+    Q_OBJECT
 public:
     Q2DViewerExtension(QWidget *parent = 0);
     ~Q2DViewerExtension();
@@ -65,30 +65,31 @@ public:
     void setInput(Volume *input);
 #endif
 
-    /// Mètode per assignar un pacient
+    /// Method for assigning a patient
     void setPatient(Patient *patient);
 
-    /// Mètode per obtenir el pacient
+    ///Method for obtaining the patient
     Patient* getPatient() const;
 
     /// Sets the study from the current patient with the given studyUID as the current patient.
     void setCurrentStudy(const QString &studyUID);
 
 private:
-    /// Crea les connexions entre signals i slots
+    ///Creates connections between signals and slots
     void createConnections();
 
-    /// Llegir/Escriure la configuració de l'aplicació
+    ///Read / Write the application settings
     void readSettings();
     void writeSettings();
 
-    /// Inicialitza les tools que tindrà l'extensió
+    ///Initialize the tools that the extension will have
     void initializeTools();
 
-    /// Configura les tools que cal activar per defecte segons la llista de modalitats donada
+    /// Configure the tools to be activated by default according to the given list of modes
     void setupDefaultToolsForModalities(const QStringList &modalities);
     
-    /// Segons les dades del pacient carregat escollirà quina és l'eina del botó esquerre més adient que cal activar per defecte 
+    ///Depending on the data of the loaded patient will choose which
+    /// is the most appropriate left button tool to be activated by default
     void setupDefaultLeftButtonTool();
 
     /// Sets up layout manager and its connections properly
@@ -97,24 +98,25 @@ private:
     /// Shows the given widget below the button, as if it was the button's menu
     void showWidgetBelowButton(QWidget *widget, QAbstractButton *button);
 
-    /// Sets the given transfer function model to the transfer function combo box and selects the index of the transfer function applied in the current viewer.
+    /// Sets the given transfer function model to the transfer function combo
+    ///  box and selects the index of the transfer function applied in the current viewer.
     void updateTransferFunctionComboBox(TransferFunctionModel *transferFunctionModel);
 
 private slots:
-    /// Habilita o deshabilita el botó de Dump d'info DICOM segons en la vista en la que es trobi
-    /// l'actual visor seleccionat. Si no hi ha cap visor actiu, dehsabilitarà el botó.
+    /// Enable or disable the DICOM info info Dump button in the view it is in
+    /// the currently selected viewer. If no viewfinder is active, it will disable the button.
     void updateDICOMInformationButton();
 
     /// Enables or disables the exporter tool button according to the status of the selected viewer.
     void updateExporterToolButton();
 
-    /// Mètode que tracta el nou visualitzador afegit
+    ///Method that treats the new viewer added
     void activateNewViewer(Q2DViewerWidget *newViewerWidget);
 
-    /// Mètode que tracta el canvi de visualitzador seleccionat
+    /// Method that handles the selected viewer change
     void changeSelectedViewer(Q2DViewerWidget *viewerWidget);
 
-    /// Si enable és true, activa el gruix màxim a tots els visors on hi hagi algun mode de thickslab actiu
+    /// If enable is true, enable maximum thickness in all viewers where some thickslab mode is active
     void enableMaximumThicknessMode(bool enable);
 
     /// Shows a widget with the available Hanging Protocols for the current Patient below its button
@@ -123,56 +125,59 @@ private slots:
     /// Shows a widget with an interactive grid table to select the desired viewers layout below its corresponding button
     void showViewersLayoutGridTable();
 
-    /// Mostra o amaga els overlays de cada visualitzador
+    /// Show or hide the overlays in each viewer
     void showImageOverlays(bool show);
 
-    /// Mostra o amaga els display shutters de cada visualitzador
+    ///Shows or hides the display shutters of each viewer
     void showDisplayShutters(bool show);
 
-    /// Mostra o amaga la informació textual de cada visualitzador
+    ///Shows or hides the textual information of each viewer
     void showViewersTextualInformation(bool show);
     
-    /// Mostrar la pantalla de Dicom dump, amb informació de la imatge que es visualitza en aquell moment
+    ///Display the Dicom dump screen, with
+    ///  information from the image currently displayed
     void showDicomDumpCurrentDisplayedImage();
 
 #ifndef STARVIEWER_LITE
-    /// Mostrar el diàleg per exportar la sèrie del visor seleccionat.
+    /// Display the dialog to export the selected viewer series.
     void showScreenshotsExporterDialog();
 #endif
 
-    /// TODO Mètode per solucionar problemes perquè la sincronització
-    /// encara no està adaptada a la resta de les tools
-    /// Desactiva l'eina de sincronització.
+    /// TODO Method to troubleshoot for synchronization
+    /// is not yet adapted to the rest of the tools
+    /// Disable the sync tool.
     void disableSynchronization();
 
 #ifndef STARVIEWER_LITE
-    /// Inicialitza la sincronització automàtica agafant de referència el visor que tenim actiu (seleccionat)
+    ///Initialize automatic synchronization by reference to the viewer we have active (selected)
     void enableAutomaticSynchronizationToViewer(bool enable);
 
-    /// Mètodes utilitzats per modificar la icona del botó d'estudis relacionats per saber si s'estan descarregat estudis sense haver d'obrir el widget.
+    /// Methods used to modify the related studies button icon to
+    /// see if studies are being downloaded without having to open the widget.
     void changeToRelatedStudiesDownloadingIcon();
     void changeToRelatedStudiesDefaultIcon();
 
-    /// Mostra el widget per poder descarregar els estudis relacionats amb l'estudi actual
+    ///Displays the widget to download studies related to the current study
     void showRelatedStudiesWidget();
     
-    /// Activa la sincronització manual a tots els visors
+    /// Enable manual synchronization in all viewers
     void activateManualSynchronizationInAllViewers();
 
-    // Desactiva la sincronització manual de tots els visors
+    //Disables manual synchronization of all viewers
     void deactivateManualSynchronizationInAllViewers();
 
-    // Tracta l'event de quan s'ha seleccionat/desactivat la sincronització manual en qualsevol dels visors
+    //Treats the event when manual synchronization has been selected / disabled in any of the viewers
     void manualSynchronizationActivated(bool enable);
 
-    /// Sets up if propagation must be enabled or not depending on the current patient modalities
+    ///Sets up if propagation must be enabled or not depending on the current patient modalities
     void setupPropagation();
 #endif
 
-    /// Aplica un grid regular al layout, i elimina l'etiqueta si algun estudi relacionat està en descàrrega
+    /// Apply a regular grid to the layout, and remove the label if any related studies are in download
     void setGrid(int rows, int columns);
 
-    /// Sets the transfer function model of the current viewer to the transfer function combo box and selects the index of the transfer function applied in the
+    /// Sets the transfer function model of the current viewer to
+    /// the transfer function combo box and selects the index of the transfer function applied in the
     /// current viewer.
     void updateTransferFunctionComboBoxWithCurrentViewerModel();
 
@@ -221,41 +226,41 @@ private:
     QAction *m_coronalViewAction;
 #endif
 
-    /// El diàleg per escollir un window level ajustat per l'usuari
+    /// The dialog to choose a user-adjusted window level
     QCustomWindowLevelDialog *m_customWindowLevelDialog;
 
-    /// Obre la finestra de dicomdump per la imatge que tenim seleccionada en aquests moments
+    /// Opens the dicomdump window for the image we have currently selected
     QDICOMDumpBrowser *m_dicomDumpCurrentDisplayedImage;
 
-    /// Pacient que estem tractant
+    ///Patient we are treating
     Patient *m_patient;
 
-    /// Menú per seleccionar es hanging protocols
+    /// Menu to select hanging protocols
     QHangingProtocolsWidget *m_hangingProtocolsMenu;
 
-    /// Widget per escollir una distribució de visors definida per l'usuari
+    /// Widget to choose a user-defined viewer distribution
     TableMenu *m_viewersLayoutGrid;
 
-    /// ToolManager per configurar l'entorn deToolConfiguration * configuration = getConfiguration();
+    /// ToolManager to configure the environment of ToolConfiguration * configuration = getConfiguration ();
     ToolManager *m_toolManager;
 
-    /// Perfil a mostrar la interficie
+    /// Profile to display the interface
     QString m_profile;
 
-    /// Últim visualitzador seleccionat
+    /// Last viewer selected
     Q2DViewerWidget *m_lastSelectedViewer;
 
-    /// Per fer estadístiques d'usabilitat
+    /// To make usability statistics
     StatsWatcher *m_statsWatcher;
     
-    /// Handles hanging protocols and automatic layouts
+    ///Handles hanging protocols and automatic layouts
     LayoutManager *m_layoutManager;
 
 #ifndef STARVIEWER_LITE
-    /// Widget per poder seleccionar estudis relacionats
+    /// Widget to be able to select related studies
     QRelatedStudiesWidget *m_relatedStudiesWidget;
 
-    /// Manager per estudis relacionats
+    /// Manager for related studies
     RelatedStudiesManager *m_relatedStudiesManager;
 
     SyncActionsConfigurationHandler *m_syncActionsConfigurationHandler;
