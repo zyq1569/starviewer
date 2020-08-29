@@ -164,13 +164,13 @@ private:
     /// Map from identifier to display set.
     QMap<int, HangingProtocolDisplaySet*> m_displaySets;
 
-    /// Boolea que indica si és estricte o no. Si és estricte vol dir que per ser correcte tots els image sets han d'estar assignats.
+    /// Boolea indicating whether it is strict or not. If it is strict it means that to be correct all image sets must be assigned.
     bool m_strictness;
 
-    /// Boolea que indica si les sèries han de ser totes diferents entre elles.
+    /// Boolea which indicates whether the series should all be different from each other.
     bool m_allDifferent;
 
-    /// Indica el tipus d'icona per representar el hanging protocol
+    ///Indicates the type of icon to represent the hanging protocol
     QString m_iconType;
 
     /// The number of priors in this hanging protocol (based on DICOM Number of Priors Referenced (0072,0014)).
