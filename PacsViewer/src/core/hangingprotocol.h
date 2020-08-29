@@ -74,35 +74,35 @@ public:
     /// Gets the list of image sets
     QList<HangingProtocolImageSet*> getImageSets() const;
 
-    /// Obté la llista de display sets
+    ///Gets the list of display sets
     QList<HangingProtocolDisplaySet*> getDisplaySets() const;
 
-    /// Obté l'image set amb identificador "identifier"
+    /// Get image set with identifier "identifier"
     HangingProtocolImageSet* getImageSet(int identifier) const;
 
-    /// Obté el display set amb identificador "identifier"
+    /// Get the display set with "identifier"
     HangingProtocolDisplaySet* getDisplaySet(int identifier) const;
 
-    /// Assigna/Obté l'expressió regular del nom de les institucions al que han de pertànyer les imatges
+    ///Assigns / Gets the regular expression of the name of the institutions to which the images must belong
     void setInstitutionsRegularExpression(const QRegExp &institutionRegularExpression);
     QRegExp getInstitutionsRegularExpression() const;
 
-    /// Mètode per mostrar els valors
+    ///Method for displaying values
     void show() const;
 
-    /// Posar l'identificador al hanging protocol
+    /// Put the identifier in the hanging protocol
     void setIdentifier(int id);
 
-    /// Obtenir l'identificador del hanging protocol
+    ///Obtain the hanging protocol identifier
     int getIdentifier() const;
 
-    /// Mètode per comparar hanging protocols
+    /// Method for comparing hanging protocols
     bool isBetterThan(const HangingProtocol *hangingToCompare) const;
 
-    /// Retorna si el mètode és estricte o no ho hes
+    /// Returns whether the method is strict or not
     bool isStrict() const;
 
-    /// Assigna si el mètode és estricte o no ho hes
+    ///Assign whether the method is strict or not
     void setStrictness(bool strictness);
 
     /// Retorna si el hanging protocol ha de tenir totes les series diferents
