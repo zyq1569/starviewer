@@ -65,13 +65,13 @@ public:
     /// Obtenir el nom del hanging protocol
     QString getName() const;
 
-    /// Obté el nombre total d'image sets
+    ///Gets the total number of image sets
     int getNumberOfImageSets() const;
 
-    /// Obté el nombre total d'image sets
+    /// Gets the total number of image sets
     int getNumberOfDisplaySets() const;
 
-    /// Obté la llista d'image sets
+    /// Gets the list of image sets
     QList<HangingProtocolImageSet*> getImageSets() const;
 
     /// Obté la llista de display sets

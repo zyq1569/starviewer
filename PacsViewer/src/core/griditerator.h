@@ -20,12 +20,14 @@ namespace udg {
 /**
  * @brief The GridIterator class allows easy iteration over the cells of a grid.
  *
- * Given the grid size in rows and columns, it starts at the first cell (0,0) and iterates from left to right and from top to bottom.
+ * Given the grid size in rows and columns, it starts at the first cell (0,0)
+ * and iterates from left to right and from top to bottom.
  */
 class GridIterator
 {
 public:
-    /// Creates an iterator for a grid with the given number of rows and columns, and pointing to the first cell (0,0).
+    /// Creates an iterator for a grid with the given number of rows and columns,
+    /// and pointing to the first cell (0,0).
     GridIterator(int rows, int columns);
 
     /// Returns the number of rows.
@@ -41,7 +43,8 @@ public:
     /// Advances the iterator to the next cell.
     void next();
 
-    /// Returns true if the iterator has reached the end, i.e. if it is pointing to an invalid cell.
+    /// Returns true if the iterator has reached the end, i.e.
+    /// if it is pointing to an invalid cell.
     bool isAtEnd() const;
 
 private:
