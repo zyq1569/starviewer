@@ -35,28 +35,28 @@ public:
 
     ~HangingProtocol();
 
-    /// Posar el nom al hanging protocol
+    ///Put the name on the hanging protocol
     void setName(const QString &name);
 
-    /// Definició dels diferents nivells que pot tenir un Hanging Protocol
+    ///Definition of the different levels that a Hanging Protocol can have
     enum HangingProtocolLevel { Manufacturer, Site, UserGroup, SingleUser };
 
-    /// Obtenir el layout
+    /// Get the layout
     HangingProtocolLayout* getHangingProtocolLayout() const;
 
-    /// Obtenir la mascara
+    ///Get the mascara
     HangingProtocolMask* getHangingProtocolMask() const;
 
-    /// Assigna el nombre de screens
+    /// Assign the number of screens
     void setNumberOfScreens(int screens);
 
-    /// Assigna els protocols que tracta el hanging protocol
+    ///Assigns the protocols that the hanging protocol handles
     void setProtocolsList(const QStringList &protocols);
 
-    /// Assigna les posicions de les finestres
+    ///Assign window positions
     void setDisplayEnvironmentSpatialPositionList(const QStringList &positions);
 
-    /// Afegeix un image set
+    ///Add an image set
     void addImageSet(HangingProtocolImageSet *imageSet);
 
     /// Afegeix un display set

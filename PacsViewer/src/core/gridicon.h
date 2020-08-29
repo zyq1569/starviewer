@@ -20,8 +20,9 @@
 namespace udg {
 
 /**
-    Classe que representa un element del tipus icona per poder crear un menu per escollir una graella de visualitzadors
-  */
+Class that represents an element of the icon type to be able to create
+a menu to choose a grid of viewers
+*/
 class GridIcon : public QFrame {
 Q_OBJECT
 public:
