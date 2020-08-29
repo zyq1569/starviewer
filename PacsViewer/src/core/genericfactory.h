@@ -23,43 +23,43 @@ namespace udg {
 
 /**
 Class that serves as the basis for implementing the Factory pattern.
-    The use of this class is internal to the platform and should not be used unless it is being developed by the core.
-    Its utility, along with GenericFactoryRegister, is to provide a generic implementation of the Factory pattern.
+The use of this class is internal to the platform and should not be used unless it is being developed by the core.
+Its utility, along with GenericFactoryRegister, is to provide a generic implementation of the Factory pattern.
 
-    This class is useful when generating classes in the same class hierarchy. For example, if we had
-    the Vehicle class as an abstract class and the Truck, Car, Motorcycle classes as inheriting classes from Vehicle,
-    we could use the GenericFactory to instantiate objects such as Truck, Car or Motorcycle but that were returned
-    as Vehicles.
+This class is useful when generating classes in the same class hierarchy. For example, if we had
+the Vehicle class as an abstract class and the Truck, Car, Motorcycle classes as inheriting classes from Vehicle,
+we could use the GenericFactory to instantiate objects such as Truck, Car or Motorcycle but that were returned
+as Vehicles.
 
-    The current implementation assumes that all objects to be created will inherit from QObject and therefore its constructor.
-    has a parameter that is the relative of this one.
+The current implementation assumes that all objects to be created will inherit from QObject and therefore its constructor.
+has a parameter that is the relative of this one.
 
-    Usage example:
-    @code
-     // We create a Vehicle Factory that will be identified by a string. Vehicles and their children are subclasses of QObject
-     typedef GenericFactory <Vehicle, std :: string> VehicleFactory;
+Usage example:
+@code
+ // We create a Vehicle Factory that will be identified by a string. Vehicles and their children are subclasses of QObject
+ typedef GenericFactory <Vehicle, std :: string> VehicleFactory;
 
-     VehicleFactory vehicles;
+ VehicleFactory vehicles;
 
-     // .. Here we should register the different classes with the Factory.
-     // See GenericFactoryRegister for a simple way
+ // .. Here we should register the different classes with the Factory.
+ // See GenericFactoryRegister for a simple way
 
-     Vehicle * vehicle = vehicles-> create ("car");
-     Vehicle * vehicle2 = vehicles-> create ("motorcycle");
+ Vehicle * vehicle = vehicles-> create ("car");
+ Vehicle * vehicle2 = vehicles-> create ("motorcycle");
 
-     std :: cout << "Total wheels =" << vehicle-> getNumeroRodes () + vehicle2-> getNumeroRodes () << std :: endl;
+ std :: cout << "Total wheels =" << vehicle-> getNumeroRodes () + vehicle2-> getNumeroRodes () << std :: endl;
 
-     // .. This would print "Total Wheels = 6" assuming car returns 4 and motorcycle 2.
-    @endcode
-    Although this is not done in the example, it would be necessary to look at whether the returned object is NULL or not.
+ // .. This would print "Total Wheels = 6" assuming car returns 4 and motorcycle 2.
+@endcode
+Although this is not done in the example, it would be necessary to look at whether the returned object is NULL or not.
 
-    This class will be used, most of the time, with a singleton to facilitate registration and access but it does not have to.
+This class will be used, most of the time, with a singleton to facilitate registration and access but it does not have to.
 
-    @TODO If this class is used in conjunction with a singleton, only one object of each type can be used.
-    @TODO If necessary, the most generic implementation should be made to allow 0 to n parameters in the constructor and not
-          do not force created objects to inherit from QObject.
-    @see GenericSingletonFactoryRegister
-    @see ExtensionFactory
+@TODO If this class is used in conjunction with a singleton, only one object of each type can be used.
+@TODO If necessary, the most generic implementation should be made to allow 0 to n parameters in the constructor and not
+      do not force created objects to inherit from QObject.
+@see GenericSingletonFactoryRegister
+@see ExtensionFactory
   */
 template <class BaseClass, typename ClassIdentifier, class ParentType = QObject>
 class GenericFactory {

@@ -25,18 +25,18 @@
 namespace udg {
 
 /**
-    Classe que ens permet registrar una Extension en el ExtensionFactory. Per tal de poder registrar una extensió hem de declarar
-    un objecte del tipus ExtensionFactoryRegister.
-    Exemple:
-    @code
-    ExtensionFactoryRegister<ExtensionName> registerAs("Extension Identifier");
-    @endcode
-    Amb aquesta simple línia de codi ja tenim registrada la nostra extensió en el factory.
-  */
+Class that allows us to register an Extension in the ExtensionFactory. In order to be able to register an extension we have to declare
+an object of type ExtensionFactoryRegister.
+Example:
+@code
+ExtensionFactoryRegister <ExtensionName> registerAs ("Extension Identifier");
+@endcode
+With this simple line of code we have already registered our extension in the factory.
+**/
 template <class FactoryType>
 class ExtensionFactoryRegister : public GenericSingletonFactoryRegister<QWidget, FactoryType, QString, ExtensionFactory, QWidget> {
 public:
-    /// Mètode
+    /// Methods
     ExtensionFactoryRegister(const QString &identifier)
         :GenericSingletonFactoryRegister<QWidget, FactoryType, QString, ExtensionFactory, QWidget>(identifier)
     {
