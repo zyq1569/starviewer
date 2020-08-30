@@ -23,14 +23,14 @@ class QViewer;
 class SyncAction;
 
 /**
-    This is an abstract class to map viewer signals to an specific SyncAction.
-    The inherited classes have to map a signal from the given viewer in setViewer() method into a SyncAction.
-    mapSignal() should establish the connection between the viewer signal and the specific slot that creates the intended SyncAction and 
-    and eventually emit it through actionMapped() signal
-    unmapSignal() should undo the connection created on mapSignal()
+This is an abstract class to map viewer signals to an specific SyncAction.
+The inherited classes have to map a signal from the given viewer in setViewer() method into a SyncAction.
+mapSignal() should establish the connection between the viewer signal and the specific slot that creates the intended SyncAction and
+and eventually emit it through actionMapped() signal
+unmapSignal() should undo the connection created on mapSignal()
  */
 class SignalToSyncActionMapper : public QObject {
-Q_OBJECT
+    Q_OBJECT
 public:
     SignalToSyncActionMapper(QObject *parent = 0);
     ~SignalToSyncActionMapper();

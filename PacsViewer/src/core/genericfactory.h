@@ -36,20 +36,20 @@ has a parameter that is the relative of this one.
 
 Usage example:
 @code
- // We create a Vehicle Factory that will be identified by a string. Vehicles and their children are subclasses of QObject
- typedef GenericFactory <Vehicle, std :: string> VehicleFactory;
+// We create a Vehicle Factory that will be identified by a string. Vehicles and their children are subclasses of QObject
+typedef GenericFactory <Vehicle, std :: string> VehicleFactory;
 
- VehicleFactory vehicles;
+VehicleFactory vehicles;
 
- // .. Here we should register the different classes with the Factory.
- // See GenericFactoryRegister for a simple way
+// .. Here we should register the different classes with the Factory.
+// See GenericFactoryRegister for a simple way
 
- Vehicle * vehicle = vehicles-> create ("car");
- Vehicle * vehicle2 = vehicles-> create ("motorcycle");
+Vehicle * vehicle = vehicles-> create ("car");
+Vehicle * vehicle2 = vehicles-> create ("motorcycle");
 
- std :: cout << "Total wheels =" << vehicle-> getNumeroRodes () + vehicle2-> getNumeroRodes () << std :: endl;
+std :: cout << "Total wheels =" << vehicle-> getNumeroRodes () + vehicle2-> getNumeroRodes () << std :: endl;
 
- // .. This would print "Total Wheels = 6" assuming car returns 4 and motorcycle 2.
+// .. This would print "Total Wheels = 6" assuming car returns 4 and motorcycle 2.
 @endcode
 Although this is not done in the example, it would be necessary to look at whether the returned object is NULL or not.
 
@@ -57,10 +57,10 @@ This class will be used, most of the time, with a singleton to facilitate regist
 
 @TODO If this class is used in conjunction with a singleton, only one object of each type can be used.
 @TODO If necessary, the most generic implementation should be made to allow 0 to n parameters in the constructor and not
-      do not force created objects to inherit from QObject.
+do not force created objects to inherit from QObject.
 @see GenericSingletonFactoryRegister
 @see ExtensionFactory
-  */
+*/
 template <class BaseClass, typename ClassIdentifier, class ParentType = QObject>
 class GenericFactory {
     typedef BaseClass* (*BaseClassCreateFunction)(ParentType*);

@@ -164,7 +164,8 @@ private:
     /// Map from identifier to display set.
     QMap<int, HangingProtocolDisplaySet*> m_displaySets;
 
-    /// Boolea indicating whether it is strict or not. If it is strict it means that to be correct all image sets must be assigned.
+    /// Boolea indicating whether it is strict or not.
+    /// If it is strict it means that to be correct all image sets must be assigned.
     bool m_strictness;
 
     /// Boolea which indicates whether the series should all be different from each other.
