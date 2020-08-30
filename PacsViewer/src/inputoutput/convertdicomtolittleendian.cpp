@@ -45,7 +45,7 @@ Status ConvertDicomToLittleEndian::convert(QString inputFile, QString outputFile
     DcmDataset *dataset = fileformat.getDataset();
     OFCondition error;
     Status state;
-    // Transfer Syntax del fitxer d'entrada
+    // Transfer Syntax of the input file
     E_TransferSyntax opt_ixfer = EXS_Unknown;
     E_FileReadMode opt_readMode = ERM_autoDetect;
     E_TransferSyntax opt_oxfer = EXS_LittleEndianExplicit;
@@ -61,7 +61,7 @@ Status ConvertDicomToLittleEndian::convert(QString inputFile, QString outputFile
 
     if (error.bad())
     {
-        ERROR_LOG(QString("No s'ha pogut obrir el fitxer a convertir LittleEndian %1, descripcio error: %2").arg(inputFile, error.text()));
+        ERROR_LOG(QString("Could not open file to convert LittleEndian% 1, description error: %2").arg(inputFile, error.text()));
         return state.setStatus(error);
     }
     dataset->loadAllDataIntoMemory();
@@ -83,8 +83,8 @@ Status ConvertDicomToLittleEndian::convert(QString inputFile, QString outputFile
 
     if (!error.good())
     {
-        ERROR_LOG(QString("S'ha produit un error al intentar gravar la imatge %1 convertida a LittleEndian al path %2, descripcio error: %3")
-                     .arg(inputFile, outputFile, error.text()));
+        ERROR_LOG(QString("Error trying to save image% 1 converted to LittleEndian on path% 2, error description: %3")
+                  .arg(inputFile, outputFile, error.text()));
     }
 
     return state.setStatus(error);

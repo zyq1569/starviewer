@@ -23,7 +23,7 @@
 namespace udg {
 
 CacheTest::CacheTest(QObject *parent)
- : DiagnosisTest(parent)
+    : DiagnosisTest(parent)
 {
 }
 
@@ -36,9 +36,9 @@ DiagnosisTestResult CacheTest::run()
     DiagnosisTestResult problems;
 
     Settings settings;
-    QString cachePath = settings.getValue(InputOutputSettings::CachePath).toString();    
+    QString cachePath = settings.getValue(InputOutputSettings::CachePath).toString();
     
-    /// Comprovar l'espai lliure al disc dur on hi ha la cache
+    /// Check the free space on the hard disk where the cache is
     unsigned int freeSpace = getFreeSpace(cachePath);
     unsigned int minimumFreeSpace = getMinimumFreeSpace();
     if (freeSpace / 1024.0f < minimumFreeSpace)
@@ -50,7 +50,7 @@ DiagnosisTestResult CacheTest::run()
         problems.addError(problem);
     }
 
-    /// Comprovar els permisos de lectura i escriptura a la carpeta de la cache
+    /// Check read and write permissions on the cache folder
     if (!doesCacheDirectoryHaveReadWritePermissions(cachePath))
     {
         DiagnosisTestProblem problem;
@@ -60,8 +60,8 @@ DiagnosisTestResult CacheTest::run()
         problems.addError(problem);
     }
 
-    /// De moment, en el cas de que no hi hagi error, mirarem lo del warning
-    /// Comprovar si la caché està, o no, al path per defecte
+    /// For now, in case there is no error, we will look at the warning
+    /// Check if the cache is, or not, in the default path
     if (!isCacheOnDefaultPath())
     {
         DiagnosisTestProblem problem;
@@ -102,7 +102,7 @@ bool CacheTest::isCacheOnDefaultPath()
 unsigned int CacheTest::getMinimumFreeSpace()
 {
     Settings settings;
-    return settings.getValue(InputOutputSettings::MinimumFreeGigaBytesForCache).toUInt(); 
+    return settings.getValue(InputOutputSettings::MinimumFreeGigaBytesForCache).toUInt();
 }
 
 } // end namespace udg

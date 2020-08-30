@@ -168,11 +168,11 @@ static bool launchCrashReporter(const wchar_t *dumpDirPath, const wchar_t *minid
 CrashHandler::CrashHandler()
 {
 #ifndef NO_CRASH_REPORTER
-    // Primer comprovem que existeixi el directori ~/.starviewer/dumps/ on guradarem els dumps
+    // First we check that the directory ~ / .starviewer / dumps / exists where we will look for the dumps
     QDir dumpsDir = udg::UserDataRootPath + "dumps/";
     if (!dumpsDir.exists())
     {
-        // Creem el directori
+        // We create the directory
         dumpsDir.mkpath(dumpsDir.absolutePath());
     }
 

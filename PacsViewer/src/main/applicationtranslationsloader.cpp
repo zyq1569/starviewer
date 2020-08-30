@@ -36,9 +36,9 @@ QLocale ApplicationTranslationsLoader::getDefaultLocale()
     Settings settings;
     QString defaultLocale = settings.getValue(CoreSettings::LanguageLocale).toString();
 
-    // Configurem les locales de l'aplicació
-    // TODO ara està simplificat només als idiomes que nosaltres
-    // suportem. Mirar si es pot millorar i fer més genèric
+    // Configure the application locations
+    // EVERYTHING is now simplified only to the languages that we
+    // support. See if it can be improved and made more generic
     QLocale::Language language;
     QLocale::Country country;
 
@@ -56,7 +56,7 @@ QLocale ApplicationTranslationsLoader::getDefaultLocale()
     }
     else
     {
-        // TODO no hauria de ser anglès per defecte?
+        // TODO: shouldn't it be English by default?
         language = QLocale::C;
     }
 
@@ -70,7 +70,7 @@ QLocale ApplicationTranslationsLoader::getDefaultLocale()
     }
     else
     {
-        // TODO no hauria de ser EEUU/UK per defecte?
+        // TODO: shouldn't it be US / UK by default?
         country = QLocale::AnyCountry;
     }
 
