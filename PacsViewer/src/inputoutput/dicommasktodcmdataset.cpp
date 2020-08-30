@@ -27,24 +27,24 @@ DcmDataset* DicomMaskToDcmDataset::getDicomMaskAsDcmDataset(const DicomMask &dic
 {
     DcmDataset *maskDcmDataset = new DcmDataset();
 
-    // Especifiquem que per defecte l'Specific character set utilitzat per fer les consultes cap al PACS serà ISO_IR 100, és a dir Latin 1, ja que els PACS
-    // que utilitza l'IDI utilitzen aquesta codificació (és el que suporta dcm4chee), a més amb Latin1 és la codificació que utilitzen
-    // la majoria de països europeus. Per dubtes consultar C.12.1.1.2 on s'especifiquen quins Specific characters set, també és important
-    // consultar el conformance statement del PACS contra el que consultem per saber quin Specific character set suporta. Com que el character set és Latin1
-    // haurem de transformar tots el tags dicom que siguin string (SH, LO, ST, PN, LT, UT) a Latin1
+    /// We specify that by default the Specific character set used to make queries to the PACS will be ISO_IR 100, ie Latin 1, since the PACS
+    /// that uses the IDI use this coding (it is the one that supports dcm4chee), in addition with Latin1 is the coding that uses
+    /// most European countries. For questions see C.12.1.1.2 where you specify which Specific characters set, is also important
+    /// consult the conformance statement of the PACS against which we consult to know which Specific character set it supports. Because the character set is Latin1
+    /// we will have to transform all dicom tags that are string (SH, LO, ST, PN, LT, UT) to Latin1
     addTagToDcmDatasetAsString(maskDcmDataset, DCM_SpecificCharacterSet, "ISO_IR 100");
 
-    // Especifiquem a quin nivell es fa el QueryRetrieve
+    /// We specify at what level the QueryRetrieve is done
     addTagToDcmDatasetAsString(maskDcmDataset, DCM_QueryRetrieveLevel, getQueryLevelFromDICOMMask(dicomMask));
 
-    //Afegim els tags d'estudi
+    ///We add the study tags
     addTagToDcmDatasetAsString(maskDcmDataset, DCM_PatientID, dicomMask.getPatientID());
     addTagToDcmDatasetAsString(maskDcmDataset, DCM_PatientName, dicomMask.getPatientName());
     addTagToDcmDatasetAsString(maskDcmDataset, DCM_PatientBirthDate, dicomMask.getPatientBirthRangeAsDICOMFormat());
     addTagToDcmDatasetAsString(maskDcmDataset, DCM_PatientSex, dicomMask.getPatientSex());
     addTagToDcmDatasetAsString(maskDcmDataset, DCM_PatientAge, dicomMask.getPatientAge());
 
-    //Afegim els tags de sèrie
+    ///We add the serial tags
     addTagToDcmDatasetAsString(maskDcmDataset, DCM_StudyInstanceUID, dicomMask.getStudyInstanceUID());
     addTagToDcmDatasetAsString(maskDcmDataset, DCM_StudyID, dicomMask.getStudyID());
     addTagToDcmDatasetAsString(maskDcmDataset, DCM_StudyDescription, dicomMask.getStudyDescription());
@@ -74,7 +74,7 @@ DcmDataset* DicomMaskToDcmDataset::getDicomMaskAsDcmDataset(const DicomMask &dic
         maskDcmDataset->insert(requestedAttributeSequence, OFTrue);
     }
 
-    //Afegim els tags d'imatges
+    ///We add image tags
     addTagToDcmDatasetAsString(maskDcmDataset, DCM_SOPInstanceUID, dicomMask.getSOPInstanceUID());
     addTagToDcmDatasetAsString(maskDcmDataset, DCM_InstanceNumber, dicomMask.getImageNumber());
 
@@ -95,9 +95,9 @@ QString DicomMaskToDcmDataset::getQueryLevelFromDICOMMask(const DicomMask &dicom
 {
     bool isImageLevel = !dicomMask.getSOPInstanceUID().isNull() || !dicomMask.getImageNumber().isNull();
     bool isSeriesLevel = !dicomMask.getSeriesDescription().isNull() || !dicomMask.getSeriesDateRangeAsDICOMFormat().isNull() || !dicomMask.getSeriesModality().isNull() ||
-                         !dicomMask.getSeriesNumber().isNull() || !dicomMask.getSeriesProtocolName().isNull() || !dicomMask.getSeriesTimeRangeAsDICOMFormat().isNull() ||
-                         !dicomMask.getSeriesInstanceUID().isNull() || !dicomMask.getRequestedProcedureID().isNull() || !dicomMask.getScheduledProcedureStepID().isNull() ||
-                         !dicomMask.getPPSStartDateAsRangeDICOMFormat().isNull() || !dicomMask.getPPSStartTimeAsRangeDICOMFormat().isNull();
+            !dicomMask.getSeriesNumber().isNull() || !dicomMask.getSeriesProtocolName().isNull() || !dicomMask.getSeriesTimeRangeAsDICOMFormat().isNull() ||
+            !dicomMask.getSeriesInstanceUID().isNull() || !dicomMask.getRequestedProcedureID().isNull() || !dicomMask.getScheduledProcedureStepID().isNull() ||
+            !dicomMask.getPPSStartDateAsRangeDICOMFormat().isNull() || !dicomMask.getPPSStartTimeAsRangeDICOMFormat().isNull();
 
     if (isImageLevel)
     {
@@ -109,7 +109,7 @@ QString DicomMaskToDcmDataset::getQueryLevelFromDICOMMask(const DicomMask &dicom
     }
     else
     {
-        //Per defecte com a mínim són a nivell d'estudi
+        ///By default they are at least study level
         return "STUDY";
     }
 }
