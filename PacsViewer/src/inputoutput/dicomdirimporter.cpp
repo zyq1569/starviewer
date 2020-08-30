@@ -41,7 +41,7 @@ void DICOMDIRImporter::import(QString dicomdirPath, QString studyUID, QString se
     PatientFiller patientFiller;
     QThread fillersThread;
 
-    // Comprovem si hi ha suficient espai lliure per importar l'estudi
+    /// We check if there is enough free space to import the study
     if (!localDatabaseManager.thereIsAvailableSpaceOnHardDisk())
     {
         if (localDatabaseManager.getLastError() != LocalDatabaseManager::Ok)
@@ -56,7 +56,7 @@ void DICOMDIRImporter::import(QString dicomdirPath, QString studyUID, QString se
         return;
     }
 
-    // Obrim el dicomdir
+    /// We open the dicomdir
     Status state = m_readDicomdir.open(QDir::toNativeSeparators(dicomdirPath));
 
     if (!state.good())
@@ -73,7 +73,7 @@ void DICOMDIRImporter::import(QString dicomdirPath, QString studyUID, QString se
 
     patientFiller.moveToThread(&fillersThread);
 
-    // Creem les connexions necessàries per importar dicomdirs
+    ///We create the necessary connections to import dicomdirs
     createConnections(&patientFiller, &localDatabaseManager, &fillersThread);
 
     fillersThread.start();
@@ -89,18 +89,18 @@ void DICOMDIRImporter::import(QString dicomdirPath, QString studyUID, QString se
         emit importAborted();
     }
 
-    // Esperem que el processat i l'insersió a la base de dades acabin
+    /// We expect the processing and insertion into the database to complete
     fillersThread.wait();
 
-    // Comprovem que s'hagi importat correctament el nou estudi
+    /// We check that the new study has been successfully imported
     if (getLastError() != Ok)
     {
-        // Si hi hagut un error borrem els fitxers importats de l'estudi de la cache local
+        /// If there was an error we deleted the imported files from the local cache studio
         deleteFailedImportedStudy(studyUID);
     }
     else
     {
-        // Comprovem que s'hagi inserit correctament el nou estudi a la base de dades
+        ///We check that the new study has been successfully inserted in the database
         if (localDatabaseManager.getLastError() == LocalDatabaseManager::Ok)
         {
             INFO_LOG("Estudi " + studyUID + " importat");
@@ -110,7 +110,8 @@ void DICOMDIRImporter::import(QString dicomdirPath, QString studyUID, QString se
         {
             if (localDatabaseManager.getLastError() == LocalDatabaseManager::PatientInconsistent)
             {
-                // No s'ha pogut inserir el patient, perquè patientfiller no ha pogut emplenar l'informació de patient correctament
+                /// No s'ha pogut inserir el patient, perquè patientfiller
+                /// no ha pogut emplenar l'informació de patient correctament
                 m_lastError = PatientInconsistent;
             }
             else
@@ -118,7 +119,7 @@ void DICOMDIRImporter::import(QString dicomdirPath, QString studyUID, QString se
                 m_lastError = DatabaseError;
             }
 
-            // Si hi hagut un error borrem els fitxers importats de l'estudi de la cache local
+            ///If there was an error we deleted the imported files from the local cache studio
             deleteFailedImportedStudy(studyUID);
         }
     }
@@ -138,7 +139,7 @@ void DICOMDIRImporter::importStudy(QString studyUID, QString seriesUID, QString 
 
     m_readDicomdir.readStudies(patientStudyListToImport, mask);
 
-    // Comprovem que s'hagin trobat estudis per importar
+    ///We check that studies have been found to import
     if (!patientStudyListToImport.isEmpty())
     {
         QList<Series*> seriesListToImport;
@@ -149,7 +150,7 @@ void DICOMDIRImporter::importStudy(QString studyUID, QString seriesUID, QString 
 
         if (seriesListToImport.isEmpty())
         {
-            ERROR_LOG("No s'han trobat series per l'estudi");
+            ERROR_LOG("No series were found for the study");
             m_lastError = DicomdirInconsistent;
             return;
         }
@@ -165,7 +166,7 @@ void DICOMDIRImporter::importStudy(QString studyUID, QString seriesUID, QString 
     }
     else
     {
-        ERROR_LOG("No s'ha trobat estudi per importar");
+        ERROR_LOG("No study found to import");
         m_lastError = DicomdirInconsistent;
     }
 }
@@ -181,7 +182,7 @@ void DICOMDIRImporter::importSeries(QString studyUID, QString seriesUID, QString
 
     if (imageListToImport.isEmpty())
     {
-        ERROR_LOG("No s'han trobat imatges per la serie");
+        ERROR_LOG("No images found for the series");
         m_lastError = DicomdirInconsistent;
         return;
     }
@@ -210,31 +211,31 @@ void DICOMDIRImporter::importImage(Image *image, QString pathToImportImage)
 
     if (!copyDicomdirImageToLocal(dicomdirImagePath, cacheImagePath))
     {
-        // No s'ha pogut copiar comprovem, si és que el fitxer ja existeix
+        ///Could not copy check, if the file already exists
         if (QFile::exists(cacheImagePath))
         {
-            // El fitxer ja existeix l'itentem esborrar
+            /// The file already exists and we want to delete it
             if (QFile::remove(cacheImagePath))
             {
-                // Hem esborrar el fitxer que ja existia, ara l'intentem copiar
+                /// We deleted the file that already existed, now we are trying to copy it
                 if (!copyDicomdirImageToLocal(dicomdirImagePath, cacheImagePath))
                 {
-                    ERROR_LOG("El fitxer: <" + dicomdirImagePath + "> no s'ha pogut copiar a <" + cacheImagePath +
-                              ">, el fitxer ja existia al destí, s'ha esborrat amb èxit, però alhora de copiar-lo ha fallat l'operació");
+                    ERROR_LOG("The file: <" + dicomdirImagePath + "> could not copy to <" + cacheImagePath +
+                              ">,the file already existed on the destination, it was deleted successfully, but at the same time the operation failed to copy it");
                     m_lastError = ErrorCopyingFiles;
                 }
             }
             else
             {
-                ERROR_LOG("El fitxer: <" + dicomdirImagePath + "> no s'ha pogut copiar a <" + cacheImagePath + ">, ja que el fitxer ja existeix al destí, " +
-                          "s'ha intentat esborrar el fitxer local però ha fallat, podria ser que no tinguis permisos d'escriptura al direcctori destí");
+                ERROR_LOG("The file: <" + dicomdirImagePath + ">could not copy to<" + cacheImagePath + ">, since the file already exists at the destination, " +
+                          "tried to delete local file but failed, you might not have write permissions to the destination directory");
                 m_lastError = ErrorCopyingFiles;
             }
         }
         else
         {
-            ERROR_LOG("El fitxer: <" + dicomdirImagePath + "> no s'ha pogut copiar a <" + cacheImagePath +
-                      ">, podria ser que no tinguis permisos en el directori destí");
+            ERROR_LOG("The file: <" + dicomdirImagePath + "> could not copy to <" + cacheImagePath +
+                      ">,you may not have permissions on the destination directory");
             m_lastError = ErrorCopyingFiles;
         }
     }
@@ -244,12 +245,12 @@ bool DICOMDIRImporter::copyDicomdirImageToLocal(QString dicomdirImagePath, QStri
 {
     if (QFile::copy(dicomdirImagePath, localImagePath))
     {
-        // Donem permisos per si l'arxiu encara és read only al provenir d'un CD
+        // We give permissions in case the file is still read only when coming from a CD
         if (!QFile::setPermissions(localImagePath, QFile::WriteOwner | QFile::ReadOwner | QFile::ReadGroup | QFile::ReadOther))
         {
-                WARN_LOG("No hem pogut canviar els permisos de lectura/escriptura pel fitxer importat [" + localImagePath + "]");
+            WARN_LOG("We were unable to change the read / write permissions for the imported file[" + localImagePath + "]");
         }
-        // TODO perquè cal fer aquest DICOMTagReader? Encara es fa servir la cache de dicom tag reader????
+        // TODO: why do I need to make this DICOMTagReader? Is the dicom tag reader cache still used ????
         DICOMTagReader *dicomTagReader = new DICOMTagReader(localImagePath);
         emit imageImportedToDisk(dicomTagReader);
 
@@ -265,21 +266,21 @@ bool DICOMDIRImporter::copyDicomdirImageToLocal(QString dicomdirImagePath, QStri
 
 QString DICOMDIRImporter::getDicomdirImagePath(Image *image)
 {
-    // Comprovem si la imatge a importar existeix
+    /// We check if the image to be imported exists
     if (QFile::exists(image->getPath()))
     {
         return image->getPath();
     }
     else if (QFile::exists(image->getPath().toLower()))
     {
-        // Linux per defecte en les unitats vfat, mostra els noms de fitxer que són shortname (8 o menys caràcters) en minúscules
-        // com que en el fitxer de dicomdir les rutes del fitxer es guarden en majúscules, si fem un exist del nom del fitxer sobre
-        // unitats vfat falla, per això el que fem es convertir el nom del fitxer a minúscules
+        /// Default Linux on vfat drives, show filenames that are shortname (8 or less characters) in lower case
+        /// because in the dicomdir file the file paths are saved in uppercase, if we make an exist of the file name on
+        /// vfat drives fail, so what we do is convert the file name to lowercase
         return image->getPath().toLower();
     }
     else
     {
-        ERROR_LOG("DICOMDIR inconsistent: La imatge [" + image->getPath() + "] no existeix");
+        ERROR_LOG("DICOMDIR inconsistent: The image [" + image->getPath() + "] no existeix");
         return "";
     }
 
@@ -287,19 +288,21 @@ QString DICOMDIRImporter::getDicomdirImagePath(Image *image)
 
 void DICOMDIRImporter::createConnections(PatientFiller *patientFiller, LocalDatabaseManager *localDatabaseManager, QThread *fillersThread)
 {
-    // Connexions entre la descarrega i el processat dels fitxers
+    // Connections between downloading and processing files
     connect(this, &DICOMDIRImporter::imageImportedToDisk, patientFiller, &PatientFiller::processDICOMFile);
     connect(this, SIGNAL(importFinished()), patientFiller, SLOT(finishDICOMFilesProcess()));
 
-    // Connexió entre el processat dels fitxers DICOM i l'inserció al a BD, és important que aquest signal sigui un Qt:DirectConnection perquè així el
-    // el processa els thread dels fillers, d'aquesta manera el thread de descarrega que està esperant a fillersThread.wait() quan en surt
-    // perquè els thread dels fillers ja ha finalitzat, ja  s'ha inserit el pacient a la base de dades.
+    /// Connection between the processing of DICOM files and the insertion in the BD,
+    ///  it is important that this signal is a Qt: DirectConnection so that the
+    /// it processes the threads of the fillers, this way the download thread that
+    /// is waiting in fillersThread.wait () when it leaves
+    /// because the filler threads have already ended, the patient has already been inserted into the database.
     connect(patientFiller, SIGNAL(patientProcessed(Patient*)), localDatabaseManager, SLOT(save(Patient*)), Qt::DirectConnection);
 
-    // Connexions per finalitzar els threads
+    ///Connections to end threads
     connect(patientFiller, SIGNAL(patientProcessed(Patient*)), fillersThread, SLOT(quit()), Qt::DirectConnection);
 
-    // Connexions d'abortament
+    /// Abortion connections
     connect(this, SIGNAL(importAborted()), fillersThread, SLOT(quit()), Qt::DirectConnection);
 }
 
@@ -308,7 +311,7 @@ void DICOMDIRImporter::deleteFailedImportedStudy(QString studyInstanceUID)
     DirectoryUtilities delDirectory;
     LocalDatabaseManager localDatabaseManager;
 
-    INFO_LOG("S'esborrarà de la caché les imatges importades de l'estudi " + studyInstanceUID + " ja que la seva importació ha fallat");
+    INFO_LOG("Images imported from the studio will be deleted from the cache " + studyInstanceUID + " since its import has failed");
     delDirectory.deleteDirectory(localDatabaseManager.getStudyPath(studyInstanceUID), true);
 }
 
@@ -358,7 +361,7 @@ QString DICOMDIRImporter::getDescriptionForQProgressDialog(QString studyInstance
     }
     else
     {
-        //No hauria de passar mai que arribés aquí
+        //// It should never happen that I got here
         description = tr("Importing images from DICOMDIR");
     }
 
