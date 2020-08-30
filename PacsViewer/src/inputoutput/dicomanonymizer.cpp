@@ -44,7 +44,7 @@ DICOMAnonymizer::~DICOMAnonymizer()
 
 void DICOMAnonymizer::setPatientNameAnonymized(const QString &patientNameAnonymized)
 {
-    // Segons el DICOM un tag de tipus PN (PersonName) no pot tenir més de 64 caràcters
+    ///According to DICOM a PN (PersonName) tag cannot be longer than 64 characters
     m_patientNameAnonymized = patientNameAnonymized.left(64);
 }
 
@@ -88,22 +88,22 @@ void DICOMAnonymizer::initializeGDCM()
     m_gdcmAnonymizer = new gdcm::gdcmAnonymizerStarviewer();
     gdcm::Global *gdcmGlobalInstance = &gdcm::Global::GetInstance();
 
-    // Indiquem el directori on pot trobar el fitxer part3.xml que és un diccionari DICOM.
-    // TODO: On posem el fitxer part3.xml
+    // We indicate the directory where you can find the part3.xml file which is a DICOM dictionary.
+    // TODO: Where we put the part3.xml file
     gdcmGlobalInstance->Prepend(qPrintable(QCoreApplication::applicationDirPath()));
 
-    // Carrega el fitxer part3.xml
+    // Upload the part3.xml file
     if (!gdcmGlobalInstance->LoadResourcesFiles())
     {
-        ERROR_LOG("No s'ha trobat el fitxer part3.xml a " + QCoreApplication::applicationDirPath());
+        ERROR_LOG("Part3.xml file not found in" + QCoreApplication::applicationDirPath());
     }
 
     const gdcm::Defs &defs = gdcmGlobalInstance->GetDefs();
     (void)defs;
-    // TODO:utilitzem el UID de dcmtk hauríem de tenir el nostre propi això també passa a VolumeBuilderFromCaptures
+    /// TODO:we use the dcmtk UID we should have our own this also happens in VolumeBuilderFromCaptures
     if (!gdcm::UIDGenerator::IsValid(SITE_UID_ROOT))
     {
-        ERROR_LOG(QString("No es pot anonimitzar els fitxers DICOM perquè el UID arrel per crear els nous fitxers no es valid %1").arg(SITE_UID_ROOT));
+        ERROR_LOG(QString("DICOM files cannot be anonymized because the root UID to create the new files is invalid %1").arg(SITE_UID_ROOT));
     }
 
     gdcm::UIDGenerator::SetRoot(SITE_UID_ROOT);
@@ -142,7 +142,7 @@ bool DICOMAnonymizer::anonymizeDICOMFile(const QString &inputPathFile, const QSt
 
     if (!gdcmReader.Read())
     {
-        ERROR_LOG("No s'ha trobat el fitxer a anonimitzar " + inputPathFile);
+        ERROR_LOG("The file to be anonymized was not found " + inputPathFile);
         return false;
     }
 
@@ -151,7 +151,7 @@ bool DICOMAnonymizer::anonymizeDICOMFile(const QString &inputPathFile, const QSt
     gdcmMediaStorage.SetFromFile(gdcmFile);
     if (!gdcm::Defs::GetIODNameFromMediaStorage(gdcmMediaStorage))
     {
-        ERROR_LOG(QString("Media storage type del fitxer no suportat: %1").arg(gdcmMediaStorage.GetString()));
+        ERROR_LOG(QString("Media storage type of unsupported file: %1").arg(gdcmMediaStorage.GetString()));
         return false;
     }
 
@@ -161,7 +161,7 @@ bool DICOMAnonymizer::anonymizeDICOMFile(const QString &inputPathFile, const QSt
     m_gdcmAnonymizer->SetFile(gdcmFile);
     if (!m_gdcmAnonymizer->BasicApplicationLevelConfidentialityProfile(true))
     {
-        ERROR_LOG("No s'ha pogut anonimitzar el fitxer " + inputPathFile);
+        ERROR_LOG("Could not anonymize file" + inputPathFile);
         return false;
     }
 
@@ -184,12 +184,12 @@ bool DICOMAnonymizer::anonymizeDICOMFile(const QString &inputPathFile, const QSt
     {
         if (!m_gdcmAnonymizer->RemovePrivateTags())
         {
-            ERROR_LOG("No s'ha pogut treure els tags privats del fitxer " + inputPathFile);
+            ERROR_LOG("Could not remove private tags from file " + inputPathFile);
             return false;
         }
     }
 
-    // Regenerem la capçalera DICOM amb el nou SOP Instance UID
+    ///We will regenerate the DICOM header with the new SOP Instance UID
     gdcm::FileMetaInformation gdcmFileMetaInformation = gdcmFile.GetHeader();
     gdcmFileMetaInformation.Clear();
 
@@ -198,7 +198,7 @@ bool DICOMAnonymizer::anonymizeDICOMFile(const QString &inputPathFile, const QSt
     gdcmWriter.SetFile(gdcmFile);
     if (!gdcmWriter.Write())
     {
-        ERROR_LOG("No s'ha pogut generar el fitxer anonimitzat de " + inputPathFile + " a " + outputPathFile);
+        ERROR_LOG("Could not generate anonymized file from " + inputPathFile + " a " + outputPathFile);
         return false;
     }
 
