@@ -40,7 +40,7 @@ namespace udg {
 
 namespace {
 
-/// Returns a text codec suitable for the given directory record.
+///Returns a text codec suitable for the given directory record.
 QTextCodec* getTextCodec(DcmDirectoryRecord *directoryRecord)
 {
     QTextCodec *codec = 0;
@@ -80,34 +80,36 @@ Status DICOMDIRReader::open(const QString &dicomdirFilePath)
 {
     Status state;
 
-    // No existeix cap comanda per tancar un dicomdir, quan en volem obrir un de nou, l'única manera d'obrir un nou dicomdir, és a través del construtor de
-    // DcmDicomDir, passant el path per paràmetre, per això si ja existia un Dicomdir ober, fem un delete, per tancar-lo
+    /// There is no command to close a dicomdir, when we want to open a new one,
+    ///  the only way to open a new dicomdir, is through the constructor of
+    /// DcmDicomDir, passing the path by parameter, so if an open Dicomdir already existed,
+    ///  we do a delete, to close it
     if (m_dicomdir != NULL)
     {
         delete m_dicomdir;
     }
 
-    // Guardem el directori on es troba el dicomdir
+    // // Save the directory where the dicomdir is located
     QFileInfo dicomdirFileInfo(dicomdirFilePath);
     m_dicomdirAbsolutePath = dicomdirFileInfo.absolutePath();
 
-    // L'estàndard del dicom indica que l'estructura del dicomdir ha d'estar guardada en un fitxer anomeant "DICOMDIR". En linux per
-    // defecte en les unitats vfat, mostra els noms de fitxer que són shortname (8 o menys caràcters) en minúscules, per tant
-    // quan el dicomdir estigui guardat en unitats vfat i el volguem obrir trobarem que el fitxer ones guarda la informació del
-    // dicomdir es dirà "dicomdir" en minúscules, per aquest motiu busquem el fitxer dicomdir tan en majúscules com minúscules
+    /// The dicom standard indicates that the dicomdir structure must be saved in a file named "DICOMDIR". In linux by
+    /// default in vfat drives, shows filenames that are shortname (8 or less characters) in lower case, so
+    /// when the dicomdir is saved in vfat units and we want to open it we will find that the file waves saves the information of the
+    /// dicomdir will be called "dicomdir" in lower case, for this reason we look for the dicomdir file in both uppercase and lowercase
 
-    // Busquem el nom del fitxer que conté les dades del dicomdir
+    /// We look for the name of the file that contains the dicomdir data
     m_dicomdirFileName = dicomdirFileInfo.fileName();
 
-    // Comprovem si el sistema de fitxers treballa amb nom en minúscules o majúscules
+    /// We check if the file system works with lowercase or uppercase name
     if (m_dicomdirFileName == m_dicomdirFileName.toUpper())
     {
         m_dicomFilesInLowerCase = false;
     }
     else
     {
-        // Està montat en una vfat
-        // indiquem que els fitxers estan en minúscules
+        /// It is mounted on a vfat
+        /// indicate that the files are lowercase
         m_dicomFilesInLowerCase = true;
     }
 
@@ -116,41 +118,41 @@ Status DICOMDIRReader::open(const QString &dicomdirFilePath)
     return state.setStatus(m_dicomdir->error());
 }
 
-// El dicomdir segueix una estructura d'abre on tenim n pacients, que tenen n estudis, que conté n series, i que conté n imatges, per llegir la informació
-// hem d'accedir a través d'aquesta estructura d'arbre, primer llegim el primer pacient, amb el primer pacient, podem accedir el segon nivell de l'arbre, els
-// estudis del pacient, i anar fent així fins arribar al nivell de baix de tot, les imatges,
+// The dicomdir follows an open structure where we have n patients, who have n studies, which contains n series, and which contains n images, to read the information
+// we have to access through this tree structure, first we read the first patient, with the first patient, we can access the second level of the tree, the
+// patient studies, and keep doing so until you get to the bottom of everything, the images,
 Status DICOMDIRReader::readStudies(QList<Patient*> &outResultsStudyList, DicomMask studyMask)
 {
     Status state;
 
     if (m_dicomdir == NULL)
     {
-        // FER RETORNAR STATUS AMB ERROR
+        // MAKE STATUS RETURN WITH ERROR
         return state.setStatus("Error: Not open dicomfile", false, 1302);
     }
 
-    // Accedim a l'estructura d'arbres del dicomdir
+    //We access the tree structure of the dicomdir
     DcmDirectoryRecord *root = &(m_dicomdir->getRootRecord());
-    // Accedim al primer pacient
+    //We access the first patient
     DcmDirectoryRecord *patientRecord = root->getSub(0);
 
-    // En aquest primer while accedim al patient Record a nivell de dades de pacient
+    /// In this first while we access the patient Record at the patient data level
     while (patientRecord != NULL)
     {
         Patient *patient = fillPatient(patientRecord);
 
-        // Si no compleix a nivelld de pacient ja no accedim als seus estudis
+        /// If he does not comply at the patient level, we will no longer have access to his studies
         if (matchPatientToDicomMask(patient, &studyMask))
         {
-            // Indiquem que volem el primer estudi del pacient
+            /// We indicate that we want the first study of the patient
             DcmDirectoryRecord *studyRecord = patientRecord->getSub(0);
 
-            // En aquest while accedim a les dades de l'estudi
+            ///In this while we access the data of the study
             while (studyRecord != NULL)
             {
                 Study *study = fillStudy(studyRecord);
 
-                // Comprovem si l'estudi compleix la màscara de cerca que ens han passat
+                /// We check if the study meets the search mask they have passed us
                 if (matchStudyToDicomMask(study, &studyMask))
                 {
                     patient->addStudy(study);
@@ -160,11 +162,11 @@ Status DICOMDIRReader::readStudies(QList<Patient*> &outResultsStudyList, DicomMa
                     delete study;
                 }
 
-                // Accedim al següent estudi del pacient
+                /// We access the following patient study
                 studyRecord = patientRecord->nextSub(studyRecord);
             }
 
-            // Si cap estudi ha complert la màscara de cerca ja no afegim el pacient
+            /// If no study has completed the search mask we no longer add the patient
             if (patient->getNumberOfStudies() > 0)
             {
                 outResultsStudyList.append(patient);
@@ -179,70 +181,71 @@ Status DICOMDIRReader::readStudies(QList<Patient*> &outResultsStudyList, DicomMa
             delete patient;
         }
 
-        // Accedim al següent pacient del dicomdir
+        /// We access the next patient of the dicomdir
         patientRecord = root->nextSub(patientRecord);
     }
 
     return state.setStatus(m_dicomdir->error());
 }
 
-// Per trobar les sèries d'une estudi haurem de recorre tots els estudis dels pacients, que hi hagi en el dicomdir, fins que obtinguem l'estudi amb el UID
-// sol·licitat una vegada found, podrem accedir a la seva informacio de la sèrie
+/// To find the series of a study we will have to go through all the studies of the patients,
+/// that are in the dicomdir, until we obtain the study with the UID
+/// requested once found, we will be able to access its information of the series
 Status DICOMDIRReader::readSeries(const QString &studyUID, const QString &seriesUID, QList<Series*> &outResultsSeriesList)
 {
     Status state;
 
     if (m_dicomdir == NULL)
     {
-        // FER
+        // DO
         return state.setStatus("Error: Not open dicomfile", false, 1302);
     }
 
-    // Accedim a l'estructura d'abres del dicomdir
+    // We access the open structure of the dicomdir
     DcmDirectoryRecord *root = &(m_dicomdir->getRootRecord());
-    // Accedim al primer pacient
+    //We access the first patient
     DcmDirectoryRecord *patientRecord = root->getSub(0);
     DcmDirectoryRecord *studyRecord;
     OFString text;
     QString studyUIDRecord, seriesPath;
     bool found = false;
 
-    // Accedim a nivell de pacient
+    // We access at the patient level
     while (patientRecord != NULL && !found)
     {
-        // Indiquem que volem el primer estudi del pacient
+        // We indicate that we want the first study of the patient
         studyRecord = patientRecord->getSub(0);
 
         while (studyRecord != NULL && !found)
         {
             text.clear();
             studyUIDRecord.clear();
-            // Obtenim el UID de l'estudi al qual estem posicionats
+            // We obtain the UID of the study in which we are positioned
             studyRecord->findAndGetOFStringArray(DCM_StudyInstanceUID, text);
             studyUIDRecord = text.c_str();
-            // Busquem l'estudi que continguin el mateix UID
+            // We look for the study that contains the same UID
             if (studyUIDRecord == studyUID)
             {
                 found = true;
             }
             else
             {
-                // Si no trobem accedim al seguent estudi del pacient
+                /// If we do not find it we access the following study of the patient
                 studyRecord = patientRecord->nextSub(studyRecord);
             }
         }
 
         if (!found)
         {
-            // Accedim al següent pacient
+            /// We access the next patient
             patientRecord = root->nextSub(patientRecord);
         }
     }
 
-    // Si hem found l'estudi amb el UID que cercàvem
+    /// If we found the study with the UID we were looking for
     if (found)
     {
-        // Seleccionem la serie de l'estudi que conté el studyUID que cercàvem
+        /// Select the study series that contains the studyUID we were looking for
         DcmDirectoryRecord *seriesRecord = studyRecord->getSub(0);
 
         while (seriesRecord != NULL)
@@ -258,7 +261,7 @@ Status DICOMDIRReader::readSeries(const QString &studyUID, const QString &series
                 delete series;
             }
 
-            // Accedim a la següent sèrie de l'estudi
+            /// We access the next series of the study
             seriesRecord = studyRecord->nextSub(seriesRecord);
         }
     }
@@ -272,74 +275,74 @@ Status DICOMDIRReader::readImages(const QString &seriesUID, const QString &sopIn
 
     if (m_dicomdir == NULL)
     {
-        // FER
+        // do
         return state.setStatus("Error: Not open dicomfile", false, 1302);
     }
 
-    // Accedim a l'estructura d'abres del dicomdir
+    ///We access the open structure of the dicomdir
     DcmDirectoryRecord *root = &(m_dicomdir->getRootRecord());
-    // Accedim al primer pacient
+    /// We access the first patient
     DcmDirectoryRecord *patientRecord = root->getSub(0);
     DcmDirectoryRecord *studyRecord, *seriesRecord;
     OFString text;
     QString studyUIDRecord, seriesUIDRecord, imagePath;
     bool found = false;
 
-    // Accedim a nivell de pacient
+    /// We access at the patient level
     while (patientRecord != NULL && !found)
     {
-        // Indiquem que volem el primer estudi del pacient
+        /// We indicate that we want the first study of the patient
         studyRecord = patientRecord->getSub(0);
 
-        // Accedim a nivell estudi
+        /// We access the study level
         while (studyRecord != NULL && !found)
         {
-            // Seleccionem la serie de l'estudi que conté el studyUID que cercàvem
+            /// We selected the study series that contains the studyUID we were looking for
             seriesRecord = studyRecord->getSub(0);
-            // Accedim a nivell
+            /// We access level
             while (seriesRecord != NULL && !found)
             {
-                // UID Serie
+                /// UID Series
                 text.clear();
                 seriesUIDRecord.clear();
                 seriesRecord->findAndGetOFStringArray(DCM_SeriesInstanceUID, text);
                 seriesUIDRecord.insert(0, text.c_str());
-                // Busquem la sèrie amb les imatges
+                /// We look for the series with the images
                 if (seriesUIDRecord == seriesUID)
                 {
                     found = true;
                 }
                 else
                 {
-                    // Accedim a la següent sèrie de l'estudi
+                    /// We access the next series of the study
                     seriesRecord = studyRecord->nextSub(seriesRecord);
                 }
             }
-            // Si no trobem accedim al seguent estudi del pacient
+            ///If we do not find it we access the following study of the patient
             studyRecord = patientRecord->nextSub(studyRecord);
         }
 
         if (!found)
         {
-            // Accedim al següent pacient
+            ///We access the next patient
             patientRecord = root->nextSub(patientRecord);
         }
     }
 
-    // Si hem found la sèrie amb el UID que cercàvem
+    ///If we found the series with the UID we were looking for
     if (found)
     {
-        // Seleccionem la serie de l'estudi que conté el studyUID que cercàvem
+        /// We selected the study series that contains the studyUID we were looking for
         DcmDirectoryRecord *imageRecord = seriesRecord->getSub(0);
 
         while (imageRecord != NULL)
         {
-            // SopUid Image
+            /// SopUid Image
             Image *image = fillImage(imageRecord);
 
             if (sopInstanceUID.length() == 0 || sopInstanceUID == image->getSOPInstanceUID())
             {
-                // Inserim a la llista la imatge
+                /// We insert the image in the list
                 outResultsImageList.append(image);
             }
             else
@@ -347,7 +350,7 @@ Status DICOMDIRReader::readImages(const QString &seriesUID, const QString &sopIn
                 delete image;
             }
 
-            // Accedim a la següent imatge de la sèrie
+            /// We access the following image in the series
             imageRecord = seriesRecord->nextSub(imageRecord);
         }
     }
@@ -360,7 +363,8 @@ QString DICOMDIRReader::getDicomdirFilePath()
     return m_dicomdirAbsolutePath + "/" + m_dicomdirFileName;
 }
 
-// TODO s'haurai de mirar si es pot fer servir les funcions de readimage, readseries i readstudy, perquè aquest mètode, són els tres anteriors mètodes en un
+/// TODO you will need to see if you can use the readimage, readseries and readstudy functions,
+/// because this method is the above three methods in a
 QStringList DICOMDIRReader::getFiles(const QString &studyUID)
 {
     QStringList files;
@@ -372,75 +376,75 @@ QStringList DICOMDIRReader::getFiles(const QString &studyUID)
         return files;
     }
 
-    // Accedim a l'estructura d'abres del dicomdir
+    /// We access the open structure of the dicomdir
     DcmDirectoryRecord *root = &(m_dicomdir->getRootRecord());
-    // Accedim al primer pacient
+    /// We access the first patient
     DcmDirectoryRecord *patientRecord = root->getSub(0);
     DcmDirectoryRecord *studyRecord, *seriesRecord, *imageRecord;
 
     QString studyUIDRecord, seriesUIDRecord, imagePath;
     bool found = false;
 
-    // Trobem primer l'estudi que volem
+    /// We first find the study we want
     while (patientRecord != NULL && !found)
     {
-        // Indiquem que volem el primer estudi del pacient
+        /// We indicate that we want the first study of the patient
         studyRecord = patientRecord->getSub(0);
-        // Accedim a nivell estudi
+        /// We access the study level
         while (studyRecord != NULL && !found)
         {
             OFString text;
             studyUIDRecord.clear();
             studyRecord->findAndGetOFStringArray(DCM_StudyInstanceUID, text);
             studyUIDRecord = text.c_str();
-            // És l'estudi que volem?
+            ///Is this the studio we want?
             if (studyUIDRecord == studyUID)
             {
                 found = true;
             }
             else
             {
-                // Si no trobem accedim al seguent estudi del pacient
+                ///If we do not find it we access the following study of the patient
                 studyRecord = patientRecord->nextSub(studyRecord);
             }
         }
         if (!found)
         {
-            // Accedim al següent pacient
+            ///We access the next patient
             patientRecord = root->nextSub(patientRecord);
         }
     }
 
-    // Si hem trobat l'uid que es demanava podem continuar amb la cerca dels arxius
+    //// If we have found the requested uid we can continue with the search for the files
     if (found)
     {
         found = false;
-        // Seleccionem la serie de l'estudi que conté el studyUID que cercàvem
+        //// Select the study series that contains the studyUID we were looking for
         seriesRecord = studyRecord->getSub(0);
-        // Llegim totes les seves sèries
+        //// We read all his series
         while (seriesRecord != NULL && !found)
         {
-            // Seleccionem cada imatge de la series
+            /// We select each image in the series
             imageRecord = seriesRecord->getSub(0);
             while (imageRecord != NULL)
             {
                 OFString text;
-                // Path de la imatge ens retorna el path relatiu respecte el dicomdir DirectoriEstudi/DirectoriSeries/NomImatge. Atencio retorna els directoris
-                // separats per '\' (format windows)
-                // Obtenim el path relatiu de la imatge
+                /// Path of the image returns to us the relative path with respect to the dicomdir StudioDirectory / SeriesDirectory / ImageName. Attention returns the directories
+                /// separated by '\' (windows format)
+                /// We get the relative path of the image
                 imageRecord->findAndGetOFStringArray(DCM_ReferencedFileID, text);
 
                 files << m_dicomdirAbsolutePath + "/" + buildImageRelativePath(text.c_str());
-                // Accedim a la següent imatge de la sèrie
+                /// We access the following image in the series
                 imageRecord = seriesRecord->nextSub(imageRecord);
             }
-            // Accedim a la següent sèrie de l'estudi
+            //// We access the next series of the study
             seriesRecord = studyRecord->nextSub(seriesRecord);
         }
     }
     else
     {
-        DEBUG_LOG("No s'ha trobat cap estudi amb aquest uid: " + studyUID + " al dicomdir");
+        DEBUG_LOG("No study was found with this uid: " + studyUID + " when dicomdir");
     }
     return files;
 }
@@ -462,7 +466,7 @@ Patient* DICOMDIRReader::retrieve(DicomMask maskToRetrieve)
     }
 }
 
-// Per fer el match seguirem els criteris del PACS
+// To make the match we will follow the PACS criteria
 bool DICOMDIRReader::matchPatientToDicomMask(Patient *patient, DicomMask *mask)
 {
     if (!matchDicomMaskToPatientId(mask, patient))
@@ -478,7 +482,7 @@ bool DICOMDIRReader::matchPatientToDicomMask(Patient *patient, DicomMask *mask)
     return true;
 }
 
-// Per fer el match seguirem els criteris del PACS
+// To make the match we will follow the PACS criteria
 bool DICOMDIRReader::matchStudyToDicomMask(Study *study, DicomMask *mask)
 {
     if (!matchDicomMaskToStudyDate(mask, study))
@@ -501,7 +505,7 @@ bool DICOMDIRReader::matchDicomMaskToStudyUID(DicomMask *mask, Study *study)
 
 bool DICOMDIRReader::matchDicomMaskToPatientId(DicomMask *mask, Patient *patient)
 {
-    // Si la màscara és buida rebem  '', si té valor es rep *ID_PACIENT*
+    ///If the mask is empty we receive '', if it has value we receive * Patient_ID *
     if (mask->getPatientID().length() > 1)
     {
         QString clearedMaskPatientID = mask->getPatientID().remove("*");
@@ -534,7 +538,7 @@ bool DICOMDIRReader::matchDicomMaskToStudyDate(DicomMask *mask, Study *study)
 
 bool DICOMDIRReader::matchDicomMaskToPatientName(DicomMask *mask, Patient *patient)
 {
-    // Si la màscara és buida rebem  '' , si té valor és rep *NOM_A_CERCAR*
+    ///If the mask is empty we receive '', if it has value it is received * NAME_FIND SEARCH *
     if (mask->getPatientName().length() > 1)
     {
         QString clearedPatientNameMask = mask->getPatientName().remove("*");
@@ -553,10 +557,10 @@ Patient* DICOMDIRReader::fillPatient(DcmDirectoryRecord *dcmDirectoryRecordPatie
     OFString tagValue;
     Patient *patient = new Patient();
 
-    // Nom pacient
+    // Patient name
     dcmDirectoryRecordPatient->findAndGetOFStringArray(DCM_PatientName, tagValue);
     patient->setFullName(codec->toUnicode(tagValue.c_str()));
-    // Id pacient
+    // Id patient
     dcmDirectoryRecordPatient->findAndGetOFStringArray(DCM_PatientID, tagValue);
     patient->setID(codec->toUnicode(tagValue.c_str()));
 
@@ -569,19 +573,19 @@ Study* DICOMDIRReader::fillStudy(DcmDirectoryRecord *dcmDirectoryRecordStudy)
     OFString tagValue;
 
     Study *study = new Study();
-    // Id estudi
+    // Id study
     dcmDirectoryRecordStudy->findAndGetOFStringArray(DCM_StudyID, tagValue);
     study->setID(codec->toUnicode(tagValue.c_str()));
 
-    // Hora estudi
+    // Study time
     dcmDirectoryRecordStudy->findAndGetOFStringArray(DCM_StudyTime, tagValue);
     study->setTime(tagValue.c_str());
 
-    // Data estudi
+    // Study date
     dcmDirectoryRecordStudy->findAndGetOFStringArray(DCM_StudyDate, tagValue);
     study->setDate(tagValue.c_str());
 
-    // Descripció estudi
+    // Study description
     dcmDirectoryRecordStudy->findAndGetOFStringArray(DCM_StudyDescription, tagValue);
     study->setDescription(codec->toUnicode(tagValue.c_str()));
 
@@ -589,7 +593,7 @@ Study* DICOMDIRReader::fillStudy(DcmDirectoryRecord *dcmDirectoryRecordStudy)
     dcmDirectoryRecordStudy->findAndGetOFStringArray(DCM_AccessionNumber, tagValue);
     study->setAccessionNumber(codec->toUnicode(tagValue.c_str()));
 
-    // Obtenim el UID de l'estudi
+    // We get the UID of the study
     dcmDirectoryRecordStudy->findAndGetOFStringArray(DCM_StudyInstanceUID, tagValue);
     study->setInstanceUID(tagValue.c_str());
 
@@ -605,15 +609,15 @@ Series* DICOMDIRReader::fillSeries(DcmDirectoryRecord *dcmDirectoryRecordSeries)
     dcmDirectoryRecordSeries->findAndGetOFStringArray(DCM_SeriesInstanceUID, tagValue);
     series->setInstanceUID(tagValue.c_str());
 
-    // Número de sèrie
+    //// Serial Number
     dcmDirectoryRecordSeries->findAndGetOFStringArray(DCM_SeriesNumber, tagValue);
     series->setSeriesNumber(tagValue.c_str());
 
-    // Modalitat sèrie
+    //// Series mode
     dcmDirectoryRecordSeries->findAndGetOFStringArray(DCM_Modality, tagValue);
     series->setModality(tagValue.c_str());
 
-    // Protocol Name
+    /// Protocol Name
     dcmDirectoryRecordSeries->findAndGetOFStringArray(DCM_ProtocolName, tagValue);
     series->setProtocolName(codec->toUnicode(tagValue.c_str()));
 
@@ -629,13 +633,13 @@ Image* DICOMDIRReader::fillImage(DcmDirectoryRecord *dcmDirectoryRecordImage)
     dcmDirectoryRecordImage->findAndGetOFStringArray(DCM_ReferencedSOPInstanceUIDInFile, tagValue);
     image->setSOPInstanceUID(tagValue.c_str());
 
-    // Instance Number (Número d'imatge
+    /// Instance Number
     dcmDirectoryRecordImage->findAndGetOFStringArray(DCM_InstanceNumber, tagValue);
     image->setInstanceNumber(tagValue.c_str());
 
-    // Path de la imatge ens retorna el path relatiu respecte el dicomdir DirectoriEstudi/DirectoriSeries/NomImatge. Atencio retorna els directoris separats
-    // per '/', per linux s'ha de transformar a '\'
-    // Obtenim el path relatiu de la imatge
+    // Path of the image returns to us the relative path with respect to the dicomdir StudioDirectory / SeriesDirectory / ImageName. Attention returns the separate directories
+    // for '/', for linux should be transformed to '\'
+    // We get the relative path of the image
     dcmDirectoryRecordImage->findAndGetOFStringArray(DCM_ReferencedFileID, tagValue);
     image->setPath(m_dicomdirAbsolutePath + "/" + buildImageRelativePath(tagValue.c_str()));
 
@@ -658,10 +662,10 @@ QString DICOMDIRReader::backSlashToSlash(const QString &original)
 
 QString DICOMDIRReader::buildImageRelativePath(const QString &imageRelativePath)
 {
-    // Linux per defecte en les unitats vfat, mostra els noms de fitxer que són shortname (8 o menys caràcters) en
-    // minúscules com que en el fitxer de dicomdir les rutes del fitxer es guarden en majúscules, m_dicomFilesInLowerCase
-    // és true si s'ha troba tel fitxer dicomdir en minúscules, si és consistent el dicomdir els noms de les imatges i
-    // rutes també serà en minúscules
+    // Default Linux on vfat drives, shows filenames that are shortname (8 or fewer characters) in
+    // lowercase because in the dicomdir file the file paths are saved in uppercase, m_dicomFilesInLowerCase
+    // is true if tel dicomdir file is found in lowercase, if dicomdir is consistent with the names of the images and
+    // routes will also be lowercase
 
     if (m_dicomFilesInLowerCase)
     {
