@@ -637,7 +637,8 @@ Image* DICOMDIRReader::fillImage(DcmDirectoryRecord *dcmDirectoryRecordImage)
     dcmDirectoryRecordImage->findAndGetOFStringArray(DCM_InstanceNumber, tagValue);
     image->setInstanceNumber(tagValue.c_str());
 
-    // Path of the image returns to us the relative path with respect to the dicomdir StudioDirectory / SeriesDirectory / ImageName. Attention returns the separate directories
+    // Path of the image returns to us the relative path with respect to the dicomdir
+    // StudioDirectory / SeriesDirectory / ImageName. Attention returns the separate directories
     // for '/', for linux should be transformed to '\'
     // We get the relative path of the image
     dcmDirectoryRecordImage->findAndGetOFStringArray(DCM_ReferencedFileID, tagValue);

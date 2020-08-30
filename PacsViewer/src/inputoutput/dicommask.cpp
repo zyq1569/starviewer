@@ -447,38 +447,38 @@ QString DicomMask::getSOPInstanceUID() const
 bool DicomMask::operator ==(const DicomMask &mask)
 {
     if (getStudyInstanceUID() == mask.getStudyInstanceUID()
-        && getPatientID() == mask.getPatientID()
-        && getPatientName() == mask.getPatientName()
-        && getPatientBirthMinimum() == mask.getPatientBirthMinimum()
-        && getPatientBirthMaximum() == mask.getPatientBirthMaximum()
-        && getPatientAge() == mask.getPatientAge()
-        && getPatientSex() == mask.getPatientSex()
-        && getStudyID() == mask.getStudyID()
-        && getStudyDateMaximum() == mask.getStudyDateMaximum()
-        && getStudyDateMinimum() == mask.getStudyDateMinimum()
-        && getStudyDescription() == mask.getStudyDescription()
-        && getStudyModality() == mask.getStudyModality()
-        && getStudyTimeMinimum() == mask.getStudyTimeMinimum()
-        && getStudyTimeMaximum() == mask.getStudyTimeMaximum()
-        && getAccessionNumber() == mask.getAccessionNumber()
-        && getReferringPhysiciansName() == mask.getReferringPhysiciansName()
-        && getSeriesNumber() == mask.getSeriesNumber()
-        && getSeriesDateMinimum() == mask.getSeriesDateMinimum()
-        && getSeriesDateMaximum() == mask.getSeriesDateMaximum()
-        && getSeriesTimeMinimum() == mask.getSeriesTimeMinimum()
-        && getSeriesTimeMaximum() == mask.getSeriesTimeMaximum()
-        && getSeriesDescription() == mask.getSeriesDescription()
-        && getSeriesModality() == mask.getSeriesModality()
-        && getSeriesProtocolName() == mask.getSeriesProtocolName()
-        && getSeriesInstanceUID() == mask.getSeriesInstanceUID()
-        && getRequestedProcedureID() == mask.getRequestedProcedureID()
-        && getScheduledProcedureStepID() == mask.getScheduledProcedureStepID()
-        && getPPSStartDateMinimum() == mask.getPPSStartDateMinimum()
-        && getPPSStartDateMaximum() == mask.getPPSStartDateMaximum()
-        && getPPSStartTimeMinimum() == mask.getPPSStartTimeMinimum()
-        && getPPSStartTimeMaximum() == mask.getPPSStartTimeMaximum()
-        && getImageNumber() == mask.getImageNumber()
-        && getSOPInstanceUID() == mask.getSOPInstanceUID())
+            && getPatientID() == mask.getPatientID()
+            && getPatientName() == mask.getPatientName()
+            && getPatientBirthMinimum() == mask.getPatientBirthMinimum()
+            && getPatientBirthMaximum() == mask.getPatientBirthMaximum()
+            && getPatientAge() == mask.getPatientAge()
+            && getPatientSex() == mask.getPatientSex()
+            && getStudyID() == mask.getStudyID()
+            && getStudyDateMaximum() == mask.getStudyDateMaximum()
+            && getStudyDateMinimum() == mask.getStudyDateMinimum()
+            && getStudyDescription() == mask.getStudyDescription()
+            && getStudyModality() == mask.getStudyModality()
+            && getStudyTimeMinimum() == mask.getStudyTimeMinimum()
+            && getStudyTimeMaximum() == mask.getStudyTimeMaximum()
+            && getAccessionNumber() == mask.getAccessionNumber()
+            && getReferringPhysiciansName() == mask.getReferringPhysiciansName()
+            && getSeriesNumber() == mask.getSeriesNumber()
+            && getSeriesDateMinimum() == mask.getSeriesDateMinimum()
+            && getSeriesDateMaximum() == mask.getSeriesDateMaximum()
+            && getSeriesTimeMinimum() == mask.getSeriesTimeMinimum()
+            && getSeriesTimeMaximum() == mask.getSeriesTimeMaximum()
+            && getSeriesDescription() == mask.getSeriesDescription()
+            && getSeriesModality() == mask.getSeriesModality()
+            && getSeriesProtocolName() == mask.getSeriesProtocolName()
+            && getSeriesInstanceUID() == mask.getSeriesInstanceUID()
+            && getRequestedProcedureID() == mask.getRequestedProcedureID()
+            && getScheduledProcedureStepID() == mask.getScheduledProcedureStepID()
+            && getPPSStartDateMinimum() == mask.getPPSStartDateMinimum()
+            && getPPSStartDateMaximum() == mask.getPPSStartDateMaximum()
+            && getPPSStartTimeMinimum() == mask.getPPSStartTimeMinimum()
+            && getPPSStartTimeMaximum() == mask.getPPSStartTimeMaximum()
+            && getImageNumber() == mask.getImageNumber()
+            && getSOPInstanceUID() == mask.getSOPInstanceUID())
     {
         return true;
     }
@@ -492,8 +492,8 @@ DicomMask DicomMask::operator +(const DicomMask &mask)
 {
     DicomMask returnDicomMask = * this;
 
-    // L'operador + no fa que cerquem pels dos valors, sinó que per la màscara this, totes les seves propietats que siguin empties,
-    // s'emplenaran amb el valor de la màscara passada per paràmetre
+    // The + operator does not make us look for the two values, but for the mask this, all its properties that are empties,
+    // will be filled with the value of the mask passed by parameter
 
     if (!mask.getPatientAge().isNull() && getPatientAge().isEmpty())
     {
@@ -576,7 +576,7 @@ DicomMask DicomMask::operator +(const DicomMask &mask)
         returnDicomMask.setSeriesInstanceUID(mask.getSeriesInstanceUID());
     }
     if (!mask.getRequestedProcedureID().isNull() && getRequestedProcedureID().isEmpty() &&
-        !mask.getScheduledProcedureStepID().isNull() && getScheduledProcedureStepID().isEmpty())
+            !mask.getScheduledProcedureStepID().isNull() && getScheduledProcedureStepID().isEmpty())
     {
         returnDicomMask.setRequestAttributeSequence(mask.getRequestedProcedureID(), mask.getScheduledProcedureStepID());
     }
@@ -606,13 +606,13 @@ DicomMask DicomMask::operator +(const DicomMask &mask)
 bool DicomMask::isEmpty()
 {
     bool empty = m_patientID.isEmpty() && m_patientName.isEmpty() && m_patientBirthMinimum.isEmpty() && m_patientBirthMaximum.isEmpty() && m_patientSex.isEmpty() &&
-                 m_patientAge.isEmpty() && m_studyID.isEmpty() && m_studyDateMinimum.isEmpty() && m_studyDateMaximum.isEmpty() && m_studyTimeMinimum.isEmpty() &&
-                 m_studyTimeMaximum.isEmpty() && m_studyDescription.isEmpty() && m_studyModality.isEmpty() && m_studyInstanceUID.isEmpty() && 
-                 m_accessionNumber.isEmpty() && m_referringPhysiciansName.isEmpty() && m_seriesNumber.isEmpty() && m_seriesDateMinimum.isEmpty() && 
-                 m_seriesDateMaximum.isEmpty() && m_seriesTimeMinimum.isEmpty() && m_seriesTimeMaximum.isEmpty() && m_seriesModality.isEmpty() && 
-                 m_seriesDescription.isEmpty() && m_seriesProtocolName.isEmpty() && m_seriesInstanceUID.isEmpty()  && m_requestedProcedureID.isEmpty() && 
-                 m_scheduledProcedureStepID.isEmpty() && m_PPSStartDateMinimum.isEmpty() && m_PPSStartDateMaximum.isEmpty() && m_PPSStartTimeMinimum.isEmpty() && 
-                 m_PPSStartTimeMaximum.isEmpty() && m_SOPInstanceUID.isEmpty() && m_imageNumber.isEmpty();
+            m_patientAge.isEmpty() && m_studyID.isEmpty() && m_studyDateMinimum.isEmpty() && m_studyDateMaximum.isEmpty() && m_studyTimeMinimum.isEmpty() &&
+            m_studyTimeMaximum.isEmpty() && m_studyDescription.isEmpty() && m_studyModality.isEmpty() && m_studyInstanceUID.isEmpty() &&
+            m_accessionNumber.isEmpty() && m_referringPhysiciansName.isEmpty() && m_seriesNumber.isEmpty() && m_seriesDateMinimum.isEmpty() &&
+            m_seriesDateMaximum.isEmpty() && m_seriesTimeMinimum.isEmpty() && m_seriesTimeMaximum.isEmpty() && m_seriesModality.isEmpty() &&
+            m_seriesDescription.isEmpty() && m_seriesProtocolName.isEmpty() && m_seriesInstanceUID.isEmpty()  && m_requestedProcedureID.isEmpty() &&
+            m_scheduledProcedureStepID.isEmpty() && m_PPSStartDateMinimum.isEmpty() && m_PPSStartDateMaximum.isEmpty() && m_PPSStartTimeMinimum.isEmpty() &&
+            m_PPSStartTimeMaximum.isEmpty() && m_SOPInstanceUID.isEmpty() && m_imageNumber.isEmpty();
 
     return empty;
 }
@@ -708,7 +708,7 @@ QString DicomMask::getFilledMaskFields() const
     {
         maskFields += "Study_ID=[#*#] ";
     }
-    // En el cas de la data fem un tractament especial per fer-ho més llegible i amb més informació
+    //In the case of the date we do a special treatment to make it more readable and with more information
     if (!getStudyDateRangeAsDICOMFormat().isEmpty())
     {
         QDate date;
@@ -717,11 +717,11 @@ QString DicomMask::getFilledMaskFields() const
         QStringList formattedDates;
         maskFields += "Study_Date=[";
 
-        // Si tenim un rang de dates estaran separades per el guió "-"
-        // TODO encara no sabem traduir si el rang és només "desde" o "fins" una data
-        // per exemple [20090512-] (desde), [-20090611] (fins), i ens ho mostrarà com una data única
+        // If we have a range of dates they will be separated by the hyphen "-"
+        // EVERYTHING we still don't know how to translate if the range is only "from" or "to" a date
+        // for example [20090512-] (from), [-20090611] (until), and it will show it to us as a unique date
         QStringList datesList = getStudyDateRangeAsDICOMFormat().split("-", QString::SkipEmptyParts);
-        // "traduim" less dates a un format mé llegible
+        /// "translate" less dates to a more readable format
         foreach (const QString &dateString, datesList)
         {
             date = QDate::fromString(dateString, DateFormatAsString);
@@ -832,22 +832,22 @@ QString DicomMask::getFilledMaskFields() const
 
 QString DicomMask::getDateOrTimeRangeAsDICOMFormat(const QString &minimumDateOrTime, const QString &maximumDateOrTime) const
 {
-    //El format DICOM per cercar entre dates o hores, el format és Hora/Data mínima + "-" + Hora/Data màxima, per exemple 20110602-20110702
+    /// The DICOM format to search between dates or times, the format is Time / Minimum Date + "-" + Time / Maximum Date, for example 20110602-20110702
     if (minimumDateOrTime.isNull() && maximumDateOrTime.isNull())
     {
-        //No ens han indicat cap filtre, ni que volen que es retorni aquest camp per això retornem un QString Null
+        /// They haven't given us any filters, nor do they want this field to be returned so we return a QString Null
         return QString();
     }
     else if (!minimumDateOrTime.isEmpty() && !maximumDateOrTime.isEmpty())
     {
         if (minimumDateOrTime == maximumDateOrTime)
         {
-            //Ens han indicat filtrar per un dia o hora concreta, no un rang
+            ///We have been told to filter by a specific day or time, not a range
             return minimumDateOrTime;
         }
         else
         {
-            //hem de filtrar per un rang
+            ///we have to filter by a range
             return minimumDateOrTime + "-" + maximumDateOrTime;
         }
     }
@@ -861,7 +861,8 @@ QString DicomMask::getDateOrTimeRangeAsDICOMFormat(const QString &minimumDateOrT
     }
     else
     {
-        //Els dos strings són buits, en aquest cas l'usuari ens han indicat que vol que el PACS retorni aquest camp en els resultats de la consulta, sense filtrar
+        ///Both strings are empty, in this case the user has
+        /// indicated that he wants the PACS to return this field in the query results, without filtering
         return "";
     }
 }
