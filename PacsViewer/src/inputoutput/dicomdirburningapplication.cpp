@@ -69,7 +69,7 @@ QString DICOMDIRBurningApplication::getLastErrorDescription() const
 
 bool DICOMDIRBurningApplication::burnIsoImageFile()
 {
-    // Es comprova que el fitxer iso que es vol gravar en CD o DVD existeixi
+    /// Check that the iso file you want to burn to CD or DVD exists
     if (!QFile::exists(m_isoPath))
     {
         m_lastErrorDescription = QObject::tr("The ISO image \"%1\" to burn does not exist.").arg(m_isoPath);
@@ -80,7 +80,8 @@ bool DICOMDIRBurningApplication::burnIsoImageFile()
     Settings settings;
     QString burningApplicationPath = (settings.getValue(InputOutputSettings::DICOMDIRBurningApplicationPathKey)).toString();
 
-    // Es comprova que el path de l'aplicació de gravar sigui correcte, tot i que en principi s'ha validat en la configuració del DICOMDIR
+    /// It is verified that the path of the recording application is correct,
+    /// although in principle it has been validated in the DICOMDIR configuration
     if (!QFile::exists(burningApplicationPath))
     {
         m_lastErrorDescription = QObject::tr("The burn application path \"%1\" does not exist.").arg(burningApplicationPath);
@@ -91,21 +92,22 @@ bool DICOMDIRBurningApplication::burnIsoImageFile()
     QProcess process;
     QStringList processParameters;
 
-    // Si està activada la opció d'entrar diferents paràmetres segons si es vol gravar un CD o un DVD caldrà afegir-los al processParameters
+    /// If the option to enter different parameters is activated depending on whether you want
+    /// to burn a CD or a DVD you will need to add them to the processParameters
     if ((settings.getValue(InputOutputSettings::DICOMDIRBurningApplicationHasDifferentCDDVDParametersKey)).toBool())
     {
         switch (m_currentDevice)
         {
-            case CreateDicomdir::CdRom:
-                processParameters << (settings.getValue(InputOutputSettings::DICOMDIRBurningApplicationCDParametersKey)).toString()
-                                     .arg(QDir::toNativeSeparators(m_isoPath)).split(" ");
-                break;
-            case CreateDicomdir::DvdRom:
-                processParameters << (settings.getValue(InputOutputSettings::DICOMDIRBurningApplicationDVDParametersKey)).toString()
-                                     .arg(QDir::toNativeSeparators(m_isoPath)).split(" ");
-                break;
-            default:
-                break;
+        case CreateDicomdir::CdRom:
+            processParameters << (settings.getValue(InputOutputSettings::DICOMDIRBurningApplicationCDParametersKey)).toString()
+                                 .arg(QDir::toNativeSeparators(m_isoPath)).split(" ");
+            break;
+        case CreateDicomdir::DvdRom:
+            processParameters << (settings.getValue(InputOutputSettings::DICOMDIRBurningApplicationDVDParametersKey)).toString()
+                                 .arg(QDir::toNativeSeparators(m_isoPath)).split(" ");
+            break;
+        default:
+            break;
         }
     }
     else
@@ -122,7 +124,7 @@ bool DICOMDIRBurningApplication::burnIsoImageFile()
         m_lastErrorDescription = QObject::tr("An error occurred during the ISO image file burn process.");
         m_lastError = InternalError;
 
-        ERROR_LOG("Error al gravar la imatge ISO amb comanda: " + burningApplicationPath + "; Amb paràmetres: " + processParameters.join(" ") +
+        ERROR_LOG("Error recording ISO image with order: " + burningApplicationPath + "; With parameters: " + processParameters.join(" ") +
                   "; Exit code qprocess: " + process.exitCode());
         return false;
     }
