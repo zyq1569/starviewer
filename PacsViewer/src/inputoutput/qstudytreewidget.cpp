@@ -28,20 +28,20 @@ namespace udg {
 const QString QStudyTreeWidget::TypeTextForDummyExpandableItems("DUMMY_EXPANDABLE_ITEM");
 
 QStudyTreeWidget::QStudyTreeWidget(QWidget *parent)
- : QWidget(parent)
+    : QWidget(parent)
 {
     setupUi(this);
 
     m_studyTreeView->setColumnHidden(Type, true);
     m_studyTreeView->setColumnHidden(DICOMItemID, true);
-    // Amaguem la columna Hora, ja que ara es mostra la data i hora en un mateix columna per poder ordenar per data i hora els estudis
+    //// Hide the Time column, as the date and time are now displayed in the same column so you can sort the studies by date and time
     m_studyTreeView->setColumnHidden(Time, true);
-    //Hack: Degut a que es guarden als settings l'amplada de les columnes per IndexColumna, si afegim una nova columna, l'hem d'afegir al final no la podem afegir al seu lloc corresponent 
-    //ja que sinó l'amplada de les columnes guardades als settings s'aplicaria malament. Imaginem que tenim les columnes PatientName, StudyID StudyDescription,  si afegim una nova columna al costat
-    //de PatientName en aquesta nova columna se li aplicarà l'amplada que tenia StudyID, a StudyID la de StudyDescription i així successivament, per això el que fem si afegim una nova columna
-    //s'afegeix al final del QTreeWidget i llavors la movem al seu lloc natural
+    // Hack: Because the width of the columns for IndexColumn is saved in the settings, if we add a new column, we have to add it at the end we can't add it to its corresponding place
+    // since otherwise the width of the columns saved in the settings would be applied incorrectly. Suppose we have the columns PatientName, StudyID StudyDescription, if we add a new column next to it
+    // of PatientName in this new column will be applied the width that had StudyID, to StudyID the one of StudyDescription and so on, for that reason what we do if we add a new column
+    // is added to the end of the QTreeWidget and then we move it to its natural place
     m_studyTreeView->header()->moveSection(PatientBirth, PatientAge);
-    // Reordering the columns. We are using the column identifier just to point out wich column we are moving. We have to add a number to the original index 
+    // Reordering the columns. We are using the column identifier just to point out wich column we are moving. We have to add a number to the original index
     // because of the prior column moves. The column identifier is not bound to the actual column index.
     // TODO This should be the default column order in the .ui file. The problem with the saved columns width stated before should be solved in another way.
     m_studyTreeView->header()->moveSection(Date + 1, 2);
@@ -59,7 +59,7 @@ QStudyTreeWidget::QStudyTreeWidget(QWidget *parent)
 
     m_studyTreeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-    // Indiquem que el nivell màxim que per defecte es pot expedir l'arbre Study/Series/Image és fins a nivell d'Image
+    // We indicate that the maximum level at which the Study / Series / Image tree can be issued by default is up to Image level
     m_maximumExpandTreeItemsLevel = ImageLevel;
 
     initialize();
@@ -105,7 +105,7 @@ void QStudyTreeWidget::insertPatient(Patient *patient)
         m_studyTreeView->addTopLevelItems(fillPatient(patient));
         m_studyTreeView->clearSelection();
 
-        //Hi ha estudis que poden compartir el mateix objecte pacient, per exemple en DICOMDIR on un mateix pacient hi tingui més d'un estudi
+        // There are studies that can share the same patient object, for example in DICOMDIR where the same patient has more than one study
         m_addedPatients.append(patient);
     }
 }
@@ -122,9 +122,9 @@ void QStudyTreeWidget::insertSeriesList(const QString &studyInstanceUID, QList<S
     foreach (Series *series, seriesList)
     {
         studyItem->addChild(fillSeries(series));
-        //FIXME: L'objecte Series hereda de QObject, quan se li fa un setParentStudy, com a parent del QObject de Series se li assigna l'objecte study
-        //aquesta assignació falla si series i study han estat creat en threads diferents com podria ser la cerca el PACS. Dos QObjects per ser pare i fill han
-        //de ser del mateix thread
+        // FIXME: The Series object inherits from QObject, when a setParentStudy is done to it, as a parent of the Series QObject it is assigned the study object
+        // this assignment fails if series and study have been created in different threads such as PACS search. Two QObjects to be father and son have
+        // of being of the same thread
         series->setParentStudy(getStudyByDICOMItemID(studyItem->text(DICOMItemID).toInt()));
     }
 }
@@ -143,15 +143,15 @@ void QStudyTreeWidget::insertImageList(const QString &studyInstanceUID, const QS
     {
         m_addedImagesByDICOMItemID[m_nextDICOMItemIDOfImage] = image;
         //FIXME: L'objecte Image hereda de QObject, quan se li fa un setParentSeries, com a parent del QObject d'Image se li assigna l'objecte series
-        //aquesta assignació falla si series i image han estat creat en threads diferents com podria ser la cerca el PACS. Dos QObjects per ser pare i fill han
-        //de ser del mateix thread
+        // this assignment fails if series and image have been created in different threads such as PACS search. Two QObjects to be father and son have
+        // of being of the same thread
         image->setParentSeries(getSeriesByDICOMItemID(seriesItem->text(DICOMItemID).toInt()));
 
         QTreeWidgetItem *newImageItem = new QTreeWidgetItem();
 
         newImageItem->setText(DICOMItemID, QString::number(m_nextDICOMItemIDOfImage++));
         newImageItem->setIcon(ObjectName, m_iconDicomFile);
-        // Li fem un padding per poder ordenar la columna, ja que s'ordena per String
+        /// We paddle it so we can sort the column, as it is sorted by String
         newImageItem->setText(ObjectName, tr("File %1").arg(image->getInstanceNumber().rightJustified(4, ' ')));
         newImageItem->setText(UID, image->getSOPInstanceUID());
         newImageItem->setText(Type, "IMAGE");
@@ -170,7 +170,7 @@ void QStudyTreeWidget::removeStudy(const QString &studyInstanceUIDToRemove, cons
     }
 
     m_studyTreeView->clearSelection();
-    //No esborrem l'estudi del HashTable ja s'esborrarà quan netegem la HashTable
+    // We do not delete the HashTable studio will already be deleted when we clean the HashTable
 }
 
 void QStudyTreeWidget::removeSeries(const QString &studyInstanceUID, const QString &seriesInstanceUID, const DICOMSource &dicomSourceSeriesToRemove)
@@ -181,7 +181,7 @@ void QStudyTreeWidget::removeSeries(const QString &studyInstanceUID, const QStri
     {
         if (seriesItem->parent()->childCount() == 1)
         {
-            //Si l'estudi només té aquesta sèrie esborrem tot l'estudi
+            // If the studio only has this series we delete the entire studio
             Study *studyToRemove = getStudyByDICOMItemID(seriesItem->parent()->text(DICOMItemID).toInt());
             removeStudy(studyToRemove->getInstanceUID(), studyToRemove->getDICOMSource());
         }
@@ -205,7 +205,7 @@ QList<QPair<DicomMask, DICOMSource> > QStudyTreeWidget::getDicomMaskOfSelectedIt
 
         if (isItemStudy(item))
         {
-            // És un estudi
+            // It's a study
             Study *selectedStudy = getStudyByDICOMItemID(item->text(DICOMItemID).toInt());
 
             qpairDicomMaskDICOMSource.first = DicomMask::fromStudy(selectedStudy, ok);
@@ -215,7 +215,7 @@ QList<QPair<DicomMask, DICOMSource> > QStudyTreeWidget::getDicomMaskOfSelectedIt
         }
         else if (isItemSeries(item))
         {
-            //Si l'estudi pare no està seleccionat
+            // If the parent studio is not selected
             if (!item->parent()->isSelected())
             {
                 Series *selectedSeries = getSeriesByDICOMItemID(item->text(DICOMItemID).toInt());
@@ -228,7 +228,7 @@ QList<QPair<DicomMask, DICOMSource> > QStudyTreeWidget::getDicomMaskOfSelectedIt
         }
         else if (isItemImage(item))
         {
-            //Si la sèrie pare i l'estudi pare no està seleccionat
+            // If the parent series and the parent studio are not selected
             if (!item->parent()->isSelected() && !item->parent()->parent()->isSelected())
             {
                 Image *selectedImage = getImageByDICOMItemID(item->text(DICOMItemID).toInt());
@@ -330,7 +330,7 @@ void QStudyTreeWidget::setCurrentSeries(const QString &studyInstanceUID, const Q
 
     if (seriesItem->parent()->isExpanded())
     {
-        //Comprovem que l'element pare estigui desplegat perquè sinó Qt peta si assignem com a element actual un element no visible
+        // We check that the parent element is deployed because otherwise Qt pops up if we assign as a current element an invisible element
         m_studyTreeView->setCurrentItem (seriesItem);
     }
 }
@@ -370,7 +370,7 @@ QTreeWidgetItem* QStudyTreeWidget::getStudyQTreeWidgetItem(const QString &studyU
     foreach(QTreeWidgetItem *studyItem, qTreeWidgetItemsStudy)
     {
         if (isItemStudy(studyItem) &&
-            (getStudyByDICOMItemID(studyItem->text(DICOMItemID).toInt())->getDICOMSource() == studyDICOMSource || !m_useDICOMSourceToDiscriminateStudies))
+                (getStudyByDICOMItemID(studyItem->text(DICOMItemID).toInt())->getDICOMSource() == studyDICOMSource || !m_useDICOMSourceToDiscriminateStudies))
         {
             return studyItem;
         }
@@ -420,10 +420,10 @@ QList<QTreeWidgetItem*> QStudyTreeWidget::fillPatient(Patient *patient)
 
     foreach (Study *studyToInsert, patient->getStudies())
     {
-        // Si l'estudi ja hi existeix a StudyTreeView l'esborrem
+        //// If the study already exists in StudyTreeView we delete it
         removeStudy(patient->getStudies().at(0)->getInstanceUID(), patient->getStudies().at(0)->getDICOMSource());
 
-        // Inserim l'estudi a la llista d'estudis
+        // We insert the study in the list of studies
         m_addedStudiesByDICOMItemID[m_nextIDICOMItemIDOfStudy] = studyToInsert;
 
         QTreeWidgetItem *item = new QTreeWidgetItem();
@@ -436,22 +436,22 @@ QList<QTreeWidgetItem*> QStudyTreeWidget::fillPatient(Patient *patient)
         item->setText(PatientAge, formatAge(studyToInsert->getPatientAge()));
         item->setText(Modality, studyToInsert->getModalitiesAsSingleString());
         item->setText(Description, studyToInsert->getDescription());
-        // TODO:No hauria de ser l'estudi que tornés la data formatada? Problema necessitem que la data estigui en format yyyy/mm/dd per poder ordenar per data
+        /// EVERYTHING: Shouldn't the studio return the formatted date? Problem we need the date to be in yyyy / mm / dd format to be able to sort by date
         item->setText(Date, formatDateTime(studyToInsert->getDate(), studyToInsert->getTime()));
         item->setText(StudyID, tr("Study %1").arg(studyToInsert->getID()));
         item->setText(Institution, studyToInsert->getInstitutionName());
         item->setText(AccNumber, studyToInsert->getAccessionNumber());
         item->setText(UID, studyToInsert->getInstanceUID());
-        // Indiquem de que es tracta d'un estudi
+        // We indicate that this is a study
         item->setText(Type, "STUDY");
         item->setText(RefPhysName, studyToInsert->getReferringPhysiciansName());
 
-        // Comprovem si el TreeItem s'ha d'expandir en funció del nivell màxim que ens han indicat que ens podem expandir
+        // Check if the TreeItem should expand based on the maximum level they have told us we can expand
         if (m_maximumExpandTreeItemsLevel > StudyLevel)
         {
-            // Degut que per cada item estudi tenim items fills que són series, i que consultar les series per cada estudi és
-            // una operació costosa (per exemple quan es consulta al pacs) només inserirem les sèries per a que les pugui
-            // consultar l'usuari quan es facin un expand d'estudi, però per a que apareixi el botó "+" de desplegar l'estudi inserim un item en blanc
+            // Because for each study item we have child items that are series, and that consulting the series for each study is
+            // an expensive operation (for example when consulting the pacs) we will only insert the series so that you can
+            // consult the user when making a study expansion, but for the "+" button to display the study to appear we insert a blank item
             item->addChild(createDummyQTreeWidgetItem());
         }
         qtreeWidgetItemList.append(item);
@@ -468,11 +468,11 @@ QTreeWidgetItem* QStudyTreeWidget::fillSeries(Series *series)
 
     seriesItem->setText(DICOMItemID, QString::number(m_nextDICOMItemIDOfSeries++));
     seriesItem->setIcon(ObjectName, m_iconCloseSeries);
-    // Li fem un padding per poder ordenar la columna, ja que s'ordena per String
+    // We paddle it so we can sort the column, as it is sorted by String
     seriesItem->setText(ObjectName, tr("Series %1").arg(series->getSeriesNumber().rightJustified(4, ' ')));
     seriesItem->setText(Modality, series->getModality());
 
-    // Treiem els espaics en blanc del davant i darrera
+    // We remove the blank spaces from the front and back
     seriesItem->setText(Description, series->getDescription().simplified());
 
     seriesItem->setText(Date, formatDateTime(series->getDate(), series->getTime()));
@@ -486,12 +486,12 @@ QTreeWidgetItem* QStudyTreeWidget::fillSeries(Series *series)
     seriesItem->setText(ReqProcID, series->getRequestedProcedureID());
     seriesItem->setText(SchedProcStep, series->getScheduledProcedureStepID());
 
-    // Comprovem si el TreeItem s'ha d'expandir en funció del nivell màxim que ens han indicat que ens podem expandir
+    //// Check if the TreeItem should expand based on the maximum level they have told us we can expand
     if (m_maximumExpandTreeItemsLevel > SeriesLevel)
     {
-        // Degut que per cada item serie tenim items fills que són imatges, i que consultar les imatges per cada sèrie és
-        // una operació costosa (per exemple quan es consulta al pacs) només inserirem les sèries per a que les pugui
-        // consultar l'usuari quan es facin un expand de la sèrie, però per a que apareixi el botó "+" de desplegar la sèrie inserim un item en blanc
+        // Because for each item series we have child items that are images, and that consulting the images for each series is
+        // an expensive operation (for example when consulting the pacs) we will only insert the series so that you can
+        // consult the user when expanding the series, but for the "+" button to unfold the series to appear we insert a blank item
         seriesItem->addChild(createDummyQTreeWidgetItem());
     }
     return seriesItem;
@@ -596,7 +596,7 @@ QString QStudyTreeWidget::formatAge(const QString &age) const
 
     if (text.length() > 0)
     {
-        // Treiem el 0 de davant els anys, el PACS envia per ex: 047Y nosaltes tornem 47Y
+        /// We subtract the 0 from before the years, the PACS sends for example: 047Y we return 47Y
         if (text.at(0) == '0')
         {
             text.replace(0, 1, " ");
@@ -662,16 +662,16 @@ bool QStudyTreeWidget::isDummyQTreeWidgetItem(QTreeWidgetItem *dummyQTreeWidgetI
 
 void QStudyTreeWidget::itemExpanded(QTreeWidgetItem *itemExpanded)
 {
-    // En el cas de que ens arribi l'item amb el text buit, no fem res
-    // Això passa en situacions molt puntuals quan s'utilitza la tecla '*' per expandir l'item
+    // In case the item arrives with the empty text, we do nothing
+    // This happens in very specific situations when the '*' key is used to expand the item
     if (isDummyQTreeWidgetItem(itemExpanded))
     {
         return;
     }
 
-    // El QTreeWidget després de fer doble click expandeix o col·lapsa l'item en funció del seu estat, a nosaltres no ens interessa
-    // que es faci això, per aquest motiu en cas d'un signal de collapse o expand, el que fem és comprovar si per aquell item s'acaba
-    // de fer doble click, si és així anul·lem l'acció d'expandir
+    // The QTreeWidget after double clicking expands or collapses the item depending on its status, we are not interested
+    // to do this, for this reason in case of a collapse or expand signal, what we do is check if that item ends
+    // to double click, if so we cancel the action of expanding
     if (!m_qTreeWidgetItemHasBeenDoubleClicked)
     {
         // Com que inserim un item en blanc per simular fills dels estudis i de les sèries cada vegada que ens fan un expand hem d'eliminar l'item en blanc i
@@ -698,9 +698,9 @@ void QStudyTreeWidget::itemExpanded(QTreeWidgetItem *itemExpanded)
 
 void QStudyTreeWidget::itemCollapsed(QTreeWidgetItem *itemCollapsed)
 {
-    // El QTreeWidget després de fer doble click expandeix o col·lapsa l'item en funció del seu estat, a nosaltres no ens interessa
-    // que es faci això, per aquest motiu en cas d'un signal de collapse o expand, el que fem és comprovar si per aquell item s'acaba
-    // de fer doble click, si és així anul·lem l'acció de col·lapsar
+    // The QTreeWidget after double clicking expands or collapses the item depending on its status, we are not interested
+    // to do this, for this reason in case of a collapse or expand signal, what we do is check if that item ends
+    // to double click, if so we cancel the action of collapsing
 
     if (!m_qTreeWidgetItemHasBeenDoubleClicked)
     {
@@ -723,7 +723,7 @@ void QStudyTreeWidget::itemCollapsed(QTreeWidgetItem *itemCollapsed)
 
 void QStudyTreeWidget::doubleClicked(QTreeWidgetItem *item, int)
 {
-    // Al fer doblec click al QTreeWidget ja expandeix o amaga automàticament l'objecte
+    // Double-clicking on the QTreeWidget automatically expands or hides the object
     if (item == NULL)
     {
         return;
@@ -742,9 +742,9 @@ void QStudyTreeWidget::doubleClicked(QTreeWidgetItem *item, int)
         emit(imageDoubleClicked());
     }
 
-    // Pel comportament del tree widget quan es fa un un doble click es col·lapsa o expandeix l'item en funció del seu estat, com que
-    // nosaltres pel doble click no volem que s'expendeixi o es col·lapsi, guardem per quin element s'ha fet el doble click, per anul·laro quan es detecti
-    // un signal d'expand o collapse item
+    // Due to the behavior of the tree widget when a double click is made, the item collapses or expands depending on its status, as
+    // we do not want the double click to expand or collapse, we save for which element the double click has been made, to cancel it when it is detected
+    // an expand signal or collapse item
     m_qTreeWidgetItemHasBeenDoubleClicked = true;
 }
 
