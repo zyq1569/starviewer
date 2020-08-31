@@ -23,15 +23,15 @@
 namespace udg {
 
 QPacsList::QPacsList(QWidget *parent)
- : QWidget(parent)
+    : QWidget(parent)
 {
     setupUi(this);
 
-    // La columna PacsId està amagada
+    // The PacsId column is hidden
     m_PacsTreeView->setColumnHidden(0, true);
-    // La columna PACSAddress està amagada
+    // The PACSAddress column is hidden
     m_PacsTreeView->setColumnHidden(4, true);
-    // Ordenem per la columna AETitle
+    // Sort by the AETitle column
     m_PacsTreeView->sortByColumn(1, Qt::AscendingOrder);
 
     m_filterPacsByService = PacsDeviceManager::PacsWithQueryRetrieveServiceEnabled;
@@ -85,7 +85,7 @@ QList<PacsDevice> QPacsList::getSelectedPacs()
         item = qPacsList.at(i);
         // Fem el query per cercar la informació del PACS
         pacs = pacsDeviceManager.getPACSDeviceByID(item->text(0));
-        // Inserim a la llista
+        // Insert in the list
         selectedPacsList.append(pacs);
     }
 
