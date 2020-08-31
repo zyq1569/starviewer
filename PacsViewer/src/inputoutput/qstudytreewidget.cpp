@@ -674,8 +674,10 @@ void QStudyTreeWidget::itemExpanded(QTreeWidgetItem *itemExpanded)
     // to double click, if so we cancel the action of expanding
     if (!m_qTreeWidgetItemHasBeenDoubleClicked)
     {
-        // Com que inserim un item en blanc per simular fills dels estudis i de les sèries cada vegada que ens fan un expand hem d'eliminar l'item en blanc i
-        // emetem un signal per a que qui el reculli s'encarregui de fer els passos corresponents per expandir l'estudi o imatge amb el seus fills pertinents
+        /// Because we insert a blank item to simulate children from studies
+        /// and series every time they expand we have to remove the blank item and
+        /// we emit a signal so that whoever collects it is in charge of taking the corresponding
+        /// steps to expand the study or image with their relevant children
         qDeleteAll(itemExpanded->takeChildren());
 
         if (isItemStudy(itemExpanded))
@@ -698,9 +700,10 @@ void QStudyTreeWidget::itemExpanded(QTreeWidgetItem *itemExpanded)
 
 void QStudyTreeWidget::itemCollapsed(QTreeWidgetItem *itemCollapsed)
 {
-    // The QTreeWidget after double clicking expands or collapses the item depending on its status, we are not interested
-    // to do this, for this reason in case of a collapse or expand signal, what we do is check if that item ends
-    // to double click, if so we cancel the action of collapsing
+    /// The QTreeWidget after double clicking expands or collapses the item
+    /// depending on its status, we are not interested
+    /// to do this, for this reason in case of a collapse or expand signal, what we do is check if that item ends
+    /// to double click, if so we cancel the action of collapsing
 
     if (!m_qTreeWidgetItemHasBeenDoubleClicked)
     {
@@ -742,17 +745,19 @@ void QStudyTreeWidget::doubleClicked(QTreeWidgetItem *item, int)
         emit(imageDoubleClicked());
     }
 
-    // Due to the behavior of the tree widget when a double click is made, the item collapses or expands depending on its status, as
-    // we do not want the double click to expand or collapse, we save for which element the double click has been made, to cancel it when it is detected
-    // an expand signal or collapse item
+    /// Due to the behavior of the tree widget when a double click is made,
+    /// the item collapses or expands depending on its status, as
+    /// we do not want the double click to expand or collapse, we save for which element
+    /// the double click has been made, to cancel it when it is detected
+    /// an expand signal or collapse item
     m_qTreeWidgetItemHasBeenDoubleClicked = true;
 }
 
 void QStudyTreeWidget::keyPressEvent(QKeyEvent*)
 {
-    // Left empty to eat all key press events, especially for the Enter key.
-    // The Enter key press is handled with a connection to the itemActivated() signal but it's not consumed,
-    // and we don't want the event to be propagated to the parent widget.
+    /// Left empty to eat all key press events, especially for the Enter key.
+    /// The Enter key press is handled with a connection to the itemActivated() signal but it's not consumed,
+    /// and we don't want the event to be propagated to the parent widget.
 }
 
 }
