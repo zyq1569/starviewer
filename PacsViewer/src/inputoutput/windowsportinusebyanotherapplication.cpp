@@ -40,7 +40,7 @@ bool WindowsPortInUseByAnotherApplication::isPortInUseByAnotherApplication(int p
     bool inUseByAnotherApplication = false;
     error = false;
 
-    PMIB_TCPTABLE_OWNER_MODULE tcpTable = getTCPTables();    
+    PMIB_TCPTABLE_OWNER_MODULE tcpTable = getTCPTables();
     if (!tcpTable)
     {
         error = true;
@@ -55,7 +55,8 @@ bool WindowsPortInUseByAnotherApplication::isPortInUseByAnotherApplication(int p
         MIB_TCPROW_OWNER_MODULE module = tcpTable->table[index++];
         int pId = module.dwOwningPid;
         int localPort = htons((short)module.dwLocalPort);
-        // Només es comprova que el port sigui el mateix. No es comprova si està en ús o no, ja que ja es mira abans de cridar aquest mètode
+        /// Only check that the port is the same. It is not checked if it is in use or not,
+        /// as it is already looked at before calling this method
         if (localPort == port)
         {
             found = true;
@@ -79,34 +80,34 @@ PMIB_TCPTABLE_OWNER_MODULE WindowsPortInUseByAnotherApplication::getTCPTables()
     PVOID tcpTable = NULL;
     DWORD size = 0;
     DWORD result = 0;
-    // Primer de tot, hem de trobar el tamany de la taula TCP i guardar-lo a size, un cop el tenim, podem fer el malloc i tornar
-    // a cridar la funció per recuperar de forma correcta la taula.
-    // El problema ve perqué la funció no retorna el tamany de forma acurada (sempre retorna un valor diferent), 
-    // per tant, podem buscar-lo amb un while i quan es compleixi la variable pTCPTable estarà instanciada de forma correcta.
+    // First of all, we need to find the size of the TCP table and save it to size, once we have it, we can do the malloc and go back
+    // to call the function to retrieve the table correctly.
+    // The problem is because the function does not return the size carefully (it always returns a different value),
+    // therefore we can look for it with a while and when the variable pTCPTable is met it will be instantiated correctly.
     bool found = false;
     while (!found)
     {
-        // Buscar el tamany
+        //Find the size
         GetExtendedTcpTable(NULL, &size, true, AF_INET, TCP_TABLE_OWNER_MODULE_ALL, 0);
-        // Es reserva l'espai per la taula TCP ara que sabem el tamany
+        // Reserve space for the TCP table now that we know the size
         tcpTable = malloc(size);
-        // S'obté la taula TCP
+        //The TCP table is obtained
         result = GetExtendedTcpTable(tcpTable, &size, true, AF_INET, TCP_TABLE_OWNER_MODULE_ALL, 0);
-        // Si ens dona error de tamany, ho tornem a probar
+        // If it gives us a size error, we try again
         if (result == ERROR_INSUFFICIENT_BUFFER)
         {
             free(tcpTable);
         }
         else if (result == NO_ERROR)
         {
-            // Si no dona cap error ja podem plegar
+            // If you don't make any mistakes, we can fold
             found = true;
         }
         else
         {
-            // Si ens dona un error diferent, el loguem i retornem null
+            //  If it gives us a different error, we log it in and return null
             found = true;
-            ERROR_LOG(QString("Error al obtenir la taula TCP: %1").arg(GetLastError()));
+            ERROR_LOG(QString("Error getting TCP table: %1").arg(GetLastError()));
             free(tcpTable);
             tcpTable = NULL;
         }

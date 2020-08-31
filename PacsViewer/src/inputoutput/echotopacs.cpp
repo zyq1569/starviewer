@@ -32,13 +32,13 @@ bool EchoToPACS::echo(PacsDevice pacsDevice)
 {
     PACSConnection pacsConnection(pacsDevice);
 
-    /// Es fa la connexió connexió
+    /// The connection is made
     if (connectToPACS(&pacsConnection))
     {
-        /// Es fa un echo al pacs
+        ///  It echoes the pacs
         OFCondition condition = echoToPACS(&pacsConnection);
         
-        /// Desconnexió
+        /// Disconnect
         disconnectFromPACS(&pacsConnection);
         
         if (condition.good())

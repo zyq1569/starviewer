@@ -26,7 +26,7 @@ QString Utils::generateUID(const QString &prefix)
     char uid[512];
     if (prefix.isEmpty())
     {
-        // Tindrà el prefix de dcmtk
+        //It will have the prefix dcmtk
         dcmGenerateUniqueIdentifier(uid);
     }
     else
