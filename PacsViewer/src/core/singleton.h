@@ -23,42 +23,42 @@
 namespace udg {
 
 /**
-    Classe que implementa el pattern singleton. La implementació no és thread-safe, per tant, no s'hauria d'utilitzar des de diferents
-    threads. Qualsevol classe que es vulgui convertir a Singleton haurà de tenir un constructor sense paràmetres.
-    La manera d'utilitzar-la seria la següent:
-    \code
-    typedef Singleton<TestingClass> TestingClassSingleton;
-    ...
-    TestingClass* instance = TestingClassSingleton::instance();
-    instance->metode();
-    ...
-    \endcode
-    Com es pot veure, és molt recomenable utilizar un typedef per tal de que no disminueixi la llegibilitat del codi. Aquesta manera
-    d'utilitzar el singleton és perillosa si es vol que no hi pugui haver cap altra instància de la classe TestingClass. D'aquesta manera
-    el que s'està fent és garantir que del tipus TestingClassSingleton tindrem una instància globalment accessible. Però res ens impedeix
-    crear classes del tipus TestingClass a part.
-    Una altra manera de declarar una classe com a singleton seria la següent:
-    \code
-    class OnlyOne : public Singleton<OnlyOne>
-    {
-        //..resta del codi
-        protected:
-            friend Singleton<OnlyOne>;
-            OnlyOne();
-            ~OnlyOne();
-    };
-    \endcode
-    D'aquesta forma sí que estem assegurant que de la classe OnlyOne, en tota la vida del programa, només n'hi haurà una i serà la
-    mateixa per tota l'execució.
-    Cal declarar a Singleton<OnlyOne> com a friend perquè sinó ens veuríem obligats a declarar constructor i destructor
-    públics, trencant així la filosofia d'un Singleton.
-    \todo Fer-la thread-safe.
-  */
+Class that implements the singleton pattern. The implementation is not thread-safe, so it should not be used from different
+threads. Any class that wants to convert to Singleton will need to have a parameterless constructor.
+The way to use it would be as follows:
+\ code
+typedef Singleton <TestingClass> TestingClassSingleton;
+...
+TestingClass * instance = TestingClassSingleton :: instance ();
+instance-> method ();
+...
+\ endcode
+As you can see, it is highly recommended to use a typedef so that it does not decrease the readability of the code. This way
+using singleton is dangerous if there is no other instance of the TestingClass class. This way
+what is being done is to ensure that of the TestingClassSingleton type we will have a globally accessible instance. But nothing stops us
+create separate TestingClass classes.
+Another way to declare a class as a singleton would be as follows:
+\ code
+class OnlyOne: public Singleton <OnlyOne>
+{
+    //..rest of the code
+    protected:
+        friend Singleton <OnlyOne>;
+        OnlyOne ();
+        ~ OnlyOne ();
+};
+\ endcode
+In this way we are ensuring that of the OnlyOne class, throughout the life of the program, there will be only one and will be the
+same for the whole execution.
+Singleton <OnlyOne> must be declared a friend because otherwise we would be forced to declare a builder and destroyer
+audiences, thus breaking the philosophy of a Singleton.
+\ all Make it thread-safe.
+*/
 template <typename T>
 class Singleton {
 
 public:
-    /// Ens serveix per accedir a l'única instància de la classe T
+    /// It serves us to access the only instance of the T class
     static T* instance()
     {
         static T theSingleInstance;
@@ -66,23 +66,23 @@ public:
     }
 
 protected:
-    // No s'implementa
+    //  It is not implemented
     Singleton(){};
-    // No s'implementa
+    //  It is not implemented
     Singleton(const Singleton& ){};
-    // No s'implementa
+    // It is not implemented
     Singleton &operator=(const Singleton &){};
 };
 
 /**
-    Classe que implementa el patró Singleton però a nivell de punter. Es fa servir de la mateixa manera que Singleton però amb
-    la particularitat de que el singleton es fa a nivell de punter en comptes d'objecte.
-    Aquest singleton només s'hauria de fer servir quan hi ha problemes que impedeixen fer servir l'anterior. Alguns d'aquests problemes
-    serien problemes en l'ordre de destrucció d'objectes estàtics (com el cas de la DcmDatasetCache per culpa de dcmtk).
-    El problema que té aquesta implementació és que el la classe T ha de ser una classe de Qt i derivi de QObject.
-    El singleton es destruirà quan l'aplicació principal es destrueixi, és a dir, quan el signal QCoreApplication::aboutToQuit sigui
-    llançat.
-    Aquesta implementació sí que és thread-safe.
+Class that implements the Singleton pattern but at the pointer level. It is used in the same way as Singleton but with
+ the peculiarity that the singleton is made at the level of a pointer instead of an object.
+ This singleton should only be used when there are problems that prevent the use of the above. Some of these problems
+ they would be problems in the order of destruction of static objects (as in the case of the DcmDatasetCache because of dcmtk).
+ The problem with this implementation is that the T class must be a Qt class and derived from QObject.
+ The singleton will be destroyed when the main application is destroyed, that is, when the QCoreApplication :: aboutToQuit signal is
+ released.
+ This implementation is thread-safe.
 */
 template<typename T>
 class SingletonPointer {
@@ -93,7 +93,7 @@ public:
         if (m_theSinglePointer == NULL)
         {
             QWriteLocker locker(&m_pointerLock);
-            // Fem double checking per evitar bloquejos innecessaris
+            //We double check to avoid unnecessary blockages
             if (m_theSinglePointer == NULL)
             {
                 m_theSinglePointer = new T();
@@ -104,11 +104,11 @@ public:
     }
 
 protected:
-    // No s'implementa
+    // It is not implemented
     SingletonPointer(){};
-    // No s'implementa
+    // It is not implemented
     SingletonPointer(const SingletonPointer &){};
-    // No s'implementa
+    // It is not implemented
     SingletonPointer &operator=(const SingletonPointer &){};
 
 private:
