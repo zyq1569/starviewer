@@ -131,6 +131,15 @@ void ExtensionHandler::request(int who)
 bool ExtensionHandler::request(const QString &who)
 {
     bool ok = true;
+    ///    template <typename T>
+    ///    class Singleton {
+    ///
+    /// class ExtensionMediator : public QObject {
+    ///
+    /// typedef Singleton<GenericFactory<ExtensionMediator, QString> > ExtensionMediatorFactory;
+    ///
+    /// template <class BaseClass, typename ClassIdentifier, class ParentType = QObject>
+    ///  class GenericFactory {...}
     ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create(who);
     if (!mediator)
     {
@@ -170,6 +179,13 @@ bool ExtensionHandler::request(const QString &who)
     // Depending on the existing settings and extensions, we may or may not create the requested extension
     if (createExtension)
     {
+        ///    template <typename T>
+        ///    class Singleton {
+        ///
+        /// typedef Singleton<GenericFactory<QWidget, QString, QWidget> > ExtensionFactory;
+        ///
+        /// template <class BaseClass, typename ClassIdentifier, class ParentType = QObject>
+        ///  class GenericFactory {...}
         QWidget *extension = ExtensionFactory::instance()->create(who);
         if (extension)
         {

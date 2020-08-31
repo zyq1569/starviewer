@@ -96,6 +96,9 @@ namespace udg {
 ///  of QApplicationMainWindow can process
 /// options received, each option will only be processed by the first instance
 ///  that takes it through the takeOptionToRun () method.
+///
+/// template<typename T>
+/// class SingletonPointer {...}
 typedef SingletonPointer<StarviewerApplicationCommandLine> StarviewerSingleApplicationCommandLineSingleton;
 
 QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
