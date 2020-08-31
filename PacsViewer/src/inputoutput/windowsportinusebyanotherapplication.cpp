@@ -17,11 +17,11 @@
 
 // Windows
 #include <windows.h>
-/// Per Taules TCP/IP
+/// For TCP / IP Tables
 #include <iphlpapi.h>
-/// Per bstr_t
+/// For bstr_t
 #include <comdef.h>
-/// Per obtenir el pid
+/// To get the pid
 #include <process.h>
 
 namespace udg {
