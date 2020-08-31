@@ -35,14 +35,15 @@ void QSeriesThumbnailPreviewWidget::insertSeries(QString studyInstanceUID, Serie
     QString seriesThumbnailDescription = getSeriesThumbnailDescription(series);
     m_studyInstanceUIDBySeriesInstanceUID[series->getInstanceUID()] = studyInstanceUID;
 
-    // Comprovem la posició que hem d'inserir la sèrie, si és un DICOM Non-Image (no és una imatge) val final, sinó va després de la última imatge inserida
+    // We check the position that we have to insert the series, if it is a DICOM Non-Image
+    // (it is not an image) it is final, but it goes after the last inserted image
     if (m_DICOMModalitiesNonImage.contains(series->getModality()))
     {
         m_seriesThumbnailsPreviewWidget->append(series->getInstanceUID(), series->getThumbnail(), seriesThumbnailDescription);
     }
     else
     {
-        // És una imatge
+        // It's an image
         m_positionOfLastInsertedThumbnail++;
         m_seriesThumbnailsPreviewWidget->insert(m_positionOfLastInsertedThumbnail, series->getInstanceUID(), series->getThumbnail(), seriesThumbnailDescription);
     }
@@ -62,7 +63,7 @@ void QSeriesThumbnailPreviewWidget::clear()
 {
     m_seriesThumbnailsPreviewWidget->clear();
     m_studyInstanceUIDBySeriesInstanceUID.clear();
-    // Indiquem que la última imatge insertada està a la posició 0 perquè hem un clear
+    //We indicate that the last inserted image is in position 0 because we have a clear
     m_positionOfLastInsertedThumbnail = -1;
 }
 
