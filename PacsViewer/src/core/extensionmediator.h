@@ -24,39 +24,41 @@ namespace udg {
 class ExtensionContext;
 
 /**
-    Classe abstracta que fa de pont entre l'starviewer i una extensió. D'aquesta classe hauran d'heredar tots
-    els mediators de les diferents extensions. Hi ha d'haver un mediator per cada extensió.
-    La vida d'un ExtensionMediator és la mateixa que la de la seva extensió. Per això queda lligada a ell
-    mitjançants un parentiu.
-    S'instancia un objecte Mediator per cada objecte Extension.
-    Classe "mare" de l'Extensió. És l'única que enten a l'Extensió i sap on es troba, com tractar-la... Alhora
-    "totes les mares són iguals". I els fills no coneixen a les mares.
-
-    \TODO Cal revisar tot aquest esquema. Ara és temporal per poder separar en directoris a l'espera del "Nou Disseny(tm)"
-  */
+Abstract class that acts as a bridge between the starviewer and an extension. From this class they will all have to inherit
+the mediators of the different extensions. There must be a mediator for each extension.
+The life of an ExtensionMediator is the same as that of its extension. That is why it is tied to him
+by means of a kinship.
+A Mediator object is instantiated for each Extension object.
+"Mother" class of the Extension. She is the only one who understands the Extension and knows where it is, how to treat it ... At the same time
+"all mothers are equal." And children don’t know mothers.
+\ TODO This whole scheme needs to be reviewed. It is now temporary to be able to separate in directories waiting for "New Design (tm)"
+*/
 class ExtensionMediator : public QObject {
-Q_OBJECT
+    Q_OBJECT
 public:
     ExtensionMediator(QObject *parent = 0);
 
     virtual ~ExtensionMediator();
 
-    /// Mètode que ens serveix per, un cop creada l'extensió, inicialitzar-la amb els paràmetres necessàris a partir del seu contexte.
-    /// Per poder tractar l'extensió, el primer que caldrà serà realitzar un cast de QWidget a la classe concreta
-    /// del widget que se'ns passa.
-    /// @return Retorna false en el supòsit que hi hagi alguna cosa que impedeixi inicialitzar-la, true en la resta de casos
+    /// Method that helps us to, once the extension has been created,
+    /// initialize it with the necessary parameters based on its context.
+    /// In order to deal with the extension, the first thing you will
+    ///  need to do is cast a QWidget in the specific class
+    /// of the widget that is passed to us.
+    /// @return Returns false in the event that something prevents
+    /// it from being initialized, true in all other cases
     virtual bool initializeExtension(QWidget *extension, const ExtensionContext &extensionContext) = 0;
 
-    /// Retorna l'identificador de la classe Extension amb qui dialoga.
-    /// Aquest identificador també serveix per identificar els resources (.qrc) de l'extensió.
-    /// Per exemple, si l'extensió té un getExtensionID().getID() com a "MyExtension" al fitxer resources s'hi haurà de posar
-    ///  <qresource prefix="/extensions/MyExtension" >
-    /// i per accedir-hi: QIcon *icon = new QIcon(":/extensions/MyExtension/images/icon.png");
+    /// Returns the identifier of the Extension class with which it dialogs.
+    /// This identifier is also used to identify the resources (.qrc) of the extension.
+    /// For example, if the extension has a getExtensionID (). GetID ()
+    /// as "MyExtension" in the resources file it should be put
+    /// <qresource prefix = "/ extensions / MyExtension">
+    /// and to access it: QIcon * icon = new QIcon (": / extensions / MyExtension / images / icon.png");
     virtual DisplayableID getExtensionID() const = 0;
 
     /// Orders the extension to view newly loaded studies from the current patient.
     virtual void viewNewStudiesFromSamePatient(QWidget *extension, const QString &newStudyUID);
-
 };
 
 }
