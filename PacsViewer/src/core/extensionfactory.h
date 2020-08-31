@@ -24,9 +24,10 @@
 namespace udg {
 
 /**
-    \fn typedef Singleton<GenericFactory<QWidget, QString> > ExtensionFactory
-    Typedef per la classe que serveix per crear una extensió en temps d'execució. Aquesta és d'ús intern a l'hora de registrar una extensió.
-  */
+ \ fn typedef Singleton <GenericFactory <QWidget, QString>> ExtensionFactory
+ Typedef for the class used to create a runtime extension.
+This is for internal use when registering an extension.
+*/
 typedef Singleton<GenericFactory<QWidget, QString, QWidget> > ExtensionFactory;
 
 }
