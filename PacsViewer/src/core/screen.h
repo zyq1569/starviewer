@@ -20,8 +20,8 @@
 namespace udg {
 
 /**
-    Classe per definir una pantalla. Ens permet definir la seva geometria, el seu ID i si és principal o no.
-    També incorpora mètodes per determinar les posicions relatives entre la seva geometria
+Class to define a screen. It allows us to define its geometry, its ID and whether it is principal or not.
+     It also incorporates methods for determining the relative positions between its geometry
  */
 class Screen {
 public:
@@ -29,102 +29,102 @@ public:
     Screen(const QRect &geometry, const QRect &availableGeometry);
     ~Screen();
 
-    /// Assigna/Obté la geometria de la pantalla
+    /// Assigns / Gets the geometry of the screen
     void setGeometry(const QRect &geometry);
     QRect getGeometry() const;
 
-    /// Assigna/Obté la geometria disponible de la pantalla per les aplicacions, tenint en compte, per exemple,
-    /// les barres de menú de sistema i altres elements de l'entorn d'escriptori
+    /// Assign / Get the available geometry of the screen for applications, taking into account, for example,
+    /// system menu bars and other items in the desktop environment
     void setAvailableGeometry(const QRect &geometry);
     QRect getAvailableGeometry() const;
 
-    /// Indica/Obté si la pantalla és principal
+    ////// Indicates / Gets if the screen is main
     void setAsPrimary(bool isPrimary);
     bool isPrimary() const;
 
-    /// Assigna/obté l'ID de la pantalla
+    ///  Assign / get the screen ID
     void setID(int ID);
     int getID() const;
 
-    /// Ens retorna les propietats de l'objecte en un string
+    /// Returns the properties of the object to us in a string
     QString toString() const;
     
-    /// Ens diu si aquesta pantalla està més amunt/avall que l'altra. Només comprova que el seu top estigui per sobre/sota del top de la pantalla a comparar,
-    /// per tant retornarà cert tant si està completa com parcialment per sobre/sota.
+    /// Tells us if this screen is higher / lower than the other. Just check that your top is above / below the top of the screen to compare,
+    /// therefore will return true whether it is complete or partially above / below.
     bool isHigher(const Screen &screen);
     bool isLower(const Screen &screen);
     
-    /// Ens diu si aquesta pantalla està més a la esquerra/dreta que l'altra. Només comprova que que l'esquerra/dreta de cadascú ho estigui més o no,
-    /// per tant retornarà cert tant si està completa com parcialment més a l'esquerra/dreta.
+    /// Tells us if this screen is more to the left / right than the other. Just check that everyone's left / right is more or less,
+    /// will therefore return true whether it is complete or partially further left / right.
     bool isMoreToTheLeft(const Screen &screen);
     bool isMoreToTheRight(const Screen &screen);
 
-    /// Indica si aquesta pantalla està completament per sobre de l'altra. Comprova que el bottom d'aquesta estigui per sobre del top de l'altra.
+    /// Whether this screen is completely above the other. Check that the bottom of this one is above the top of the other..
     bool isOver(const Screen &screen) const;
     
-    /// Indica si aquesta pantalla està completament per sota de l'altra. Comprova que el top d'aquesta estigui per sota del bottom de l'altra.
+    /// Whether this screen is completely below the other. Check that the top of this one is below the bottom of the other.
     bool isUnder(const Screen &screen) const;
     
-    /// Indica si aquesta pantalla està completament a l'esquerra de l'altra. Comprova que el right d'aquesta sigui menor que el left de l'altra.
+    /// Whether this screen is completely to the left of the other. Check that the right of this one is less than the left of the other.
     bool isOnLeft(const Screen &screen) const;
     
-    /// Indica si aquesta pantalla està completament a la dreta de l'altra. Comprova que el left d'aquesta sigui major que el right de l'altra.
+    ///Whether this screen is completely to the right of the other. Check that the left of this one is greater than the right of the other.
     bool isOnRight(const Screen &screen) const;
     
     /// Indica si aquesta pantalla està sobre de l'altra. Per que sigui cert han de ser de la mateixa amplada
     /// i el top d'aquesta ha de ser igual al bottom de l'altra
     bool isTop(const Screen &screen) const;
     
-    /// Indica si aquesta pantalla està sota de l'altra. Per que sigui cert han de ser de la mateixa amplada
-    /// i el bottom d'aquesta ha de ser igual al top de l'altra
+    /// Whether this screen is on top of the other. For it to be true they must be of the same width
+    /// and the top of this must be equal to the bottom of the other
     bool isBottom(const Screen &screen) const;
     
-    /// Indica si aquesta pantalla està a l'esquerra de l'altra. Per que sigui cert han de ser de la mateixa alçada
-    /// i el right d'aquesta ha de ser igual al left de l'altra
+    /// Indicates whether this screen is below the other. For it to be true they must be of the same width
+    /// and the bottom of this must be equal to the top of the other
     bool isLeft(const Screen &screen) const;
     
-    /// Indica si aquesta pantalla està a la dreta de l'altra. Per que sigui cert han de ser de la mateixa alçada
-    /// i el left d'aquesta ha de ser igual al right de l'altra
+    /// Whether this screen is to the right of the other. For it to be true they must be of the same height
+    /// and the left of this must be equal to the right of the other
     bool isRight(const Screen &screen) const;
     
-    /// Indica si aquesta pantalla està en diagonal a sobre a l'esquerra de l'altra. Per que sigui cert
-    /// el punt bottomRight d'aquesta ha de ser igual al punt topLeft de l'altra
+    /// Indicates whether this screen is diagonally above the left of the other. To be true
+    /// the bottomRight point of this must be equal to the topLeft point of the other
     bool isTopLeft(const Screen &screen) const;
     
-    /// Indica si aquesta pantalla està en diagonal a sobre a la dreta de l'altra. Per que sigui cert
-    /// el punt bottomLeft d'aquesta ha de ser igual al punt topRight de l'altra
+    /// Indicates whether this screen is diagonally above to the right of the other. To be true
+    /// the bottomLeft point of this one must be equal to the topRight point of the other one
     bool isTopRight(const Screen &screen) const;
     
-    /// Indica si aquesta pantalla està en diagonal a sota a l'esquerra de l'altra. Per que sigui cert
-    /// el punt topRight d'aquesta ha de ser igual al punt bottomLeft de l'altra
+    /// Indicates whether this screen is diagonally below the left of the other. To be true
+    /// the topRight point of this must be equal to the bottomLeft point of the other
     bool isBottomLeft(const Screen &screen) const;
     
-    /// Indica si aquesta pantalla està en diagonal a sota a la dreta de l'altra. Per que sigui cert
-    /// el punt topLeft d'aquesta ha de ser igual al punt bottomRight de l'altra
+    /// Indicates whether this screen is diagonally below to the right of the other. To be true
+    /// the topLeft point of this one must be equal to the bottomRight point of the other one
     bool isBottomRight(const Screen &screen) const;
     
-    /// Operador igualtat
+    /// Equality operator
     bool operator==(const Screen &screen) const;
     
-    /// Constant per definir l'ID de pantalla inexistent
+    /// Constant to set the non-existent screen ID
     static const int NullScreenID;
 
 private:
-    /// Threshold amb el que definim la màxima distància entre finestres per determinar que estan de cantó
+    /// Threshold with which we define the maximum distance between windows to determine that they are of corner
     static const int MaximumDistanceInBetween;
     
-    /// Inicialitza valors per defecte
+    /// Initialize defaults
     void initializeValues();
 
 private:
-    /// Indica si és una pantalla principal
+    /// Indicates whether it is a main screen
     bool m_isPrimary;
 
-    /// Geometria total i disponible de la pantalla
+    /// Total and available screen geometry
     QRect m_geometry;
     QRect m_availableGeometry;
 
-    /// ID de la pantalla
+    /// Screen ID
     int m_ID;
 };
 
