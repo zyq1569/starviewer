@@ -23,26 +23,27 @@ class Patient;
 class Volume;
 
 /**
-    Contexte on s'executa una extensió. Permet accedir a informació que pot ser útil a l'extensió com l'objecte Patient, la finestra on s'executa, els "readers"..
-  */
+Context where an extension is executed. It allows access to information
+that may be useful to the extension such as the Patient object, the window where it runs, the "readers".
+   */
 class ExtensionContext {
 public:
     ExtensionContext();
 
     ~ExtensionContext();
 
-    /// Get/set del pacient amb el que ha de treballar l'extensió.
+    /// Get / set the patient with whom the extension should work.
     Patient* getPatient() const;
     void setPatient(Patient *patient);
 
-    /// Mètode de conveniència que ens dóna un volum per defecte a partir del contexte assignat.
-    /// Això ens servirà per obtenir un volum a partir tant del pacient o si no
-    /// tenim pacient (cas mhd's) fer-ho amb el volumeIdentifier
+    /// Convenience method that gives us a default volume from the assigned context.
+    /// This will help us to get a volume from both the patient or not
+    /// we have patient (case mhd's) do it with the volumeIdentifier
     Volume* getDefaultVolume() const;
 
-    /// Returns true if the patient of this context contains at least one image and false otherwise.
+    ///   /// Returns true if the patient of this context contains at least one image and false otherwise.
     bool hasImages() const;
-    /// Returns true if the patient of this context contains at least one encapsulated document and false otherwise.
+    /// /// Returns true if the patient of this context contains at least one encapsulated document and false otherwise.
     bool hasEncapsulatedDocuments() const;
 
 private:
