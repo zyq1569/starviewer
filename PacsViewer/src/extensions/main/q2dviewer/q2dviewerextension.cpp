@@ -66,7 +66,7 @@ namespace udg {
 
 // Minimum size in pixels of the unfolded combo box showing all the items.
 // This is used for the window level and transfer function combos.
-const int MinimumComboBoxViewWidth = 85;//170;
+const int MinimumComboBoxViewWidth = 170;
 
 Q2DViewerExtension::Q2DViewerExtension(QWidget *parent)
     : QWidget(parent), m_patient(0), m_lastSelectedViewer(0)
@@ -77,13 +77,7 @@ Q2DViewerExtension::Q2DViewerExtension(QWidget *parent)
     // We set a minimum size in the .ui file to see the widget and unset
     // it here to avoid the button being too small if the window doesn't fit in the screen
     m_thickSlabWidget->setMinimumSize(0, 0);
-    setWindowTitle("Q2DViewerExtension-QT");
-    if (this->parentWidget())
-    {
-        QString str = this->parentWidget()->metaObject()->className();
-        setWindowTitle("Q2DViewerExtension-QT"+str);
-    }
-    //parent->metaObject()->className();
+    setWindowTitle("Q2DViewerExtension");
 #ifdef STARVIEWER_LITE
     m_axialViewToolButton->hide();
     m_coronalViewToolButton->hide();
@@ -359,11 +353,6 @@ void Q2DViewerExtension::setupLayoutManager()
     this->addAction(toggleComparativeModeAction);
 
     m_layoutManager->initialize();
-    if (this->parentWidget())
-    {
-        QString str = this->parentWidget()->metaObject()->className();
-        setWindowTitle("Q2DViewerExtension-QT"+str);
-    }
 }
 
 void Q2DViewerExtension::showAvailableHangingProtocolsMenu()
