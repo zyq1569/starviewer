@@ -22,22 +22,21 @@ namespace udg {
 
 /**
 Identifier used in places where an identifier is needed that the user can see on the screen. This one has a fixed, invariable part, which is the
-     which is actually used as an identifier, internally. It also has a part that serves to be able to show it in the interface and that can be translated.
-     For example, the names of the Extensions.
+which is actually used as an identifier, internally. It also has a part that serves to be able to show it in the interface and that can be translated.
+For example, the names of the Extensions.
 
-     It has no "setters" expressly.
-     Example of assignments and creation of null id's:
-     @code
-     DisplayableID id (QString :: null);
+It has no "setters" expressly.
+Example of assignments and creation of null id's:
+@code
+DisplayableID id (QString :: null);
 
-     DisplayableID id2 ("test", tr ("test"));
+DisplayableID id2 ("test", tr ("test"));
 
-     id = DisplayableID ("newValue", tr ("newValue"));
+id = DisplayableID ("newValue", tr ("newValue"));
 
-     id = id2;
-     @endcode
-
-  */
+id = id2;
+@endcode
+*/
 class DisplayableID {
 
 public:
