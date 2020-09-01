@@ -34,21 +34,27 @@ QStudyTreeWidget::QStudyTreeWidget(QWidget *parent)
 
     m_studyTreeView->setColumnHidden(Type, true);
     m_studyTreeView->setColumnHidden(DICOMItemID, true);
-    //// Hide the Time column, as the date and time are now displayed in the same column so you can sort the studies by date and time
+    //// Hide the Time column, as the date and time are now displayed
+    /// in the same column so you can sort the studies by date and time
     m_studyTreeView->setColumnHidden(Time, true);
-    // Hack: Because the width of the columns for IndexColumn is saved in the settings, if we add a new column, we have to add it at the end we can't add it to its corresponding place
-    // since otherwise the width of the columns saved in the settings would be applied incorrectly. Suppose we have the columns PatientName, StudyID StudyDescription, if we add a new column next to it
-    // of PatientName in this new column will be applied the width that had StudyID, to StudyID the one of StudyDescription and so on, for that reason what we do if we add a new column
-    // is added to the end of the QTreeWidget and then we move it to its natural place
+    /// Hack: Because the width of the columns for IndexColumn is saved in the settings,
+    //if we add a new column, we have to add it at the end we can't add it to its corresponding place
+    /// since otherwise the width of the columns saved in the settings would be applied incorrectly.
+    /// Suppose we have the columns PatientName, StudyID StudyDescription, if we add a new column next to it
+    /// of PatientName in this new column will be applied the width that had StudyID,
+    /// to StudyID the one of StudyDescription and so on, for that reason what we do if we add a new column
+    /// is added to the end of the QTreeWidget and then we move it to its natural place
     m_studyTreeView->header()->moveSection(PatientBirth, PatientAge);
-    // Reordering the columns. We are using the column identifier just to point out wich column we are moving. We have to add a number to the original index
-    // because of the prior column moves. The column identifier is not bound to the actual column index.
-    // TODO This should be the default column order in the .ui file. The problem with the saved columns width stated before should be solved in another way.
+    /// Reordering the columns. We are using the column identifier just to point out wich
+    /// column we are moving. We have to add a number to the original index
+    /// because of the prior column moves. The column identifier is not bound to the actual column index.
+    /// TODO This should be the default column order in the .ui file.
+    /// The problem with the saved columns width stated before should be solved in another way.
     m_studyTreeView->header()->moveSection(Date + 1, 2);
     m_studyTreeView->header()->moveSection(Description + 2, 3);
     m_studyTreeView->header()->moveSection(Modality + 2, 4);
 
-    // Carreguem les imatges que es mostren el QStudyTreeWidget
+    ///We upload the images displayed on the QStudyTreeWidget
     m_iconOpenStudy = QIcon(":/images/icons/dicom-study.svg");
     m_iconCloseStudy = QIcon(":/images/icons/dicom-study-closed.svg");
     m_iconOpenSeries = QIcon(":/images/icons/dicom-series.svg");
@@ -59,7 +65,8 @@ QStudyTreeWidget::QStudyTreeWidget(QWidget *parent)
 
     m_studyTreeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-    // We indicate that the maximum level at which the Study / Series / Image tree can be issued by default is up to Image level
+    /// We indicate that the maximum level at which the
+    /// Study / Series / Image tree can be issued by default is up to Image level
     m_maximumExpandTreeItemsLevel = ImageLevel;
 
     initialize();
@@ -105,7 +112,8 @@ void QStudyTreeWidget::insertPatient(Patient *patient)
         m_studyTreeView->addTopLevelItems(fillPatient(patient));
         m_studyTreeView->clearSelection();
 
-        // There are studies that can share the same patient object, for example in DICOMDIR where the same patient has more than one study
+        /// There are studies that can share the same patient object,
+        /// for example in DICOMDIR where the same patient has more than one study
         m_addedPatients.append(patient);
     }
 }
@@ -115,16 +123,18 @@ void QStudyTreeWidget::insertSeriesList(const QString &studyInstanceUID, QList<S
     QTreeWidgetItem *studyItem = getStudyQTreeWidgetItem(studyInstanceUID, seriesList.at(0)->getDICOMSource());
     if (!studyItem)
     {
-        ERROR_LOG("No s'ha trobat l'estudi d'on s'han d'inserir les series.");
+        ERROR_LOG("The study of where to insert the series was not found.");
         return;
     }
 
     foreach (Series *series, seriesList)
     {
         studyItem->addChild(fillSeries(series));
-        // FIXME: The Series object inherits from QObject, when a setParentStudy is done to it, as a parent of the Series QObject it is assigned the study object
-        // this assignment fails if series and study have been created in different threads such as PACS search. Two QObjects to be father and son have
-        // of being of the same thread
+        /// FIXME: The Series object inherits from QObject, when a setParentStudy is done to it,
+        /// as a parent of the Series QObject it is assigned the study object
+        /// this assignment fails if series and study have been created in different
+        /// threads such as PACS search. Two QObjects to be father and son have
+        /// of being of the same thread
         series->setParentStudy(getStudyByDICOMItemID(studyItem->text(DICOMItemID).toInt()));
     }
 }
@@ -135,16 +145,18 @@ void QStudyTreeWidget::insertImageList(const QString &studyInstanceUID, const QS
 
     if (!seriesItem)
     {
-        ERROR_LOG("No s'ha trobat la serie d'on s'han d'inserir les imatges.");
+        ERROR_LOG("The series from which the images are to be inserted was not found.");
         return;
     }
 
     foreach (Image *image, imageList)
     {
         m_addedImagesByDICOMItemID[m_nextDICOMItemIDOfImage] = image;
-        //FIXME: L'objecte Image hereda de QObject, quan se li fa un setParentSeries, com a parent del QObject d'Image se li assigna l'objecte series
-        // this assignment fails if series and image have been created in different threads such as PACS search. Two QObjects to be father and son have
-        // of being of the same thread
+        ///FIXME: L'objecte Image hereda de QObject, quan se li fa un setParentSeries,
+        /// com a parent del QObject d'Image se li assigna l'objecte series
+        /// this assignment fails if series and image have been created in different
+        /// threads such as PACS search. Two QObjects to be father and son have
+        /// of being of the same thread
         image->setParentSeries(getSeriesByDICOMItemID(seriesItem->text(DICOMItemID).toInt()));
 
         QTreeWidgetItem *newImageItem = new QTreeWidgetItem();
@@ -330,7 +342,8 @@ void QStudyTreeWidget::setCurrentSeries(const QString &studyInstanceUID, const Q
 
     if (seriesItem->parent()->isExpanded())
     {
-        // We check that the parent element is deployed because otherwise Qt pops up if we assign as a current element an invisible element
+        /// We check that the parent element is deployed because otherwise
+        /// Qt pops up if we assign as a current element an invisible element
         m_studyTreeView->setCurrentItem (seriesItem);
     }
 }
@@ -436,7 +449,8 @@ QList<QTreeWidgetItem*> QStudyTreeWidget::fillPatient(Patient *patient)
         item->setText(PatientAge, formatAge(studyToInsert->getPatientAge()));
         item->setText(Modality, studyToInsert->getModalitiesAsSingleString());
         item->setText(Description, studyToInsert->getDescription());
-        /// EVERYTHING: Shouldn't the studio return the formatted date? Problem we need the date to be in yyyy / mm / dd format to be able to sort by date
+        /// EVERYTHING: Shouldn't the studio return the formatted date? Problem
+        ///  we need the date to be in yyyy / mm / dd format to be able to sort by date
         item->setText(Date, formatDateTime(studyToInsert->getDate(), studyToInsert->getTime()));
         item->setText(StudyID, tr("Study %1").arg(studyToInsert->getID()));
         item->setText(Institution, studyToInsert->getInstitutionName());
@@ -449,9 +463,9 @@ QList<QTreeWidgetItem*> QStudyTreeWidget::fillPatient(Patient *patient)
         // Check if the TreeItem should expand based on the maximum level they have told us we can expand
         if (m_maximumExpandTreeItemsLevel > StudyLevel)
         {
-            // Because for each study item we have child items that are series, and that consulting the series for each study is
-            // an expensive operation (for example when consulting the pacs) we will only insert the series so that you can
-            // consult the user when making a study expansion, but for the "+" button to display the study to appear we insert a blank item
+            /// Because for each study item we have child items that are series, and that consulting the series for each study is
+            /// an expensive operation (for example when consulting the pacs) we will only insert the series so that you can
+            /// consult the user when making a study expansion, but for the "+" button to display the study to appear we insert a blank item
             item->addChild(createDummyQTreeWidgetItem());
         }
         qtreeWidgetItemList.append(item);
@@ -489,9 +503,9 @@ QTreeWidgetItem* QStudyTreeWidget::fillSeries(Series *series)
     //// Check if the TreeItem should expand based on the maximum level they have told us we can expand
     if (m_maximumExpandTreeItemsLevel > SeriesLevel)
     {
-        // Because for each item series we have child items that are images, and that consulting the images for each series is
-        // an expensive operation (for example when consulting the pacs) we will only insert the series so that you can
-        // consult the user when expanding the series, but for the "+" button to unfold the series to appear we insert a blank item
+        /// Because for each item series we have child items that are images, and that consulting the images for each series is
+        /// an expensive operation (for example when consulting the pacs) we will only insert the series so that you can
+        /// consult the user when expanding the series, but for the "+" button to unfold the series to appear we insert a blank item
         seriesItem->addChild(createDummyQTreeWidgetItem());
     }
     return seriesItem;
@@ -662,16 +676,16 @@ bool QStudyTreeWidget::isDummyQTreeWidgetItem(QTreeWidgetItem *dummyQTreeWidgetI
 
 void QStudyTreeWidget::itemExpanded(QTreeWidgetItem *itemExpanded)
 {
-    // In case the item arrives with the empty text, we do nothing
-    // This happens in very specific situations when the '*' key is used to expand the item
+    /// In case the item arrives with the empty text, we do nothing
+    /// This happens in very specific situations when the '*' key is used to expand the item
     if (isDummyQTreeWidgetItem(itemExpanded))
     {
         return;
     }
 
-    // The QTreeWidget after double clicking expands or collapses the item depending on its status, we are not interested
-    // to do this, for this reason in case of a collapse or expand signal, what we do is check if that item ends
-    // to double click, if so we cancel the action of expanding
+    /// The QTreeWidget after double clicking expands or collapses the item depending on its status, we are not interested
+    /// to do this, for this reason in case of a collapse or expand signal, what we do is check if that item ends
+    /// to double click, if so we cancel the action of expanding
     if (!m_qTreeWidgetItemHasBeenDoubleClicked)
     {
         /// Because we insert a blank item to simulate children from studies

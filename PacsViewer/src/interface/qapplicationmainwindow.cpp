@@ -107,6 +107,7 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     connect(StarviewerSingleApplicationCommandLineSingleton::instance(), SIGNAL(newOptionsToRun()), SLOT(newCommandLineOptionsToRun()));
 
     this->setAttribute(Qt::WA_DeleteOnClose);
+    ///class ExtensionWorkspace : public QTabWidget
     m_extensionWorkspace = new ExtensionWorkspace(this);
     this->setCentralWidget(m_extensionWorkspace);
 
