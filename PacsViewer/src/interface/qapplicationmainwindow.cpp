@@ -130,7 +130,7 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     readSettings();
     // Application icon
     this->setWindowIcon(QIcon(":/images/logo/logo.ico"));
-    this->setWindowTitle(ApplicationNameString);
+    this->setWindowTitle(ApplicationNameString+"-MainWindow");
 
     //With starviewer lite there will be no hanging protocols, so we will not load them
 #ifndef STARVIEWER_LITE

@@ -16,7 +16,7 @@
 #include "toolregistry.h"
 #include "tooldata.h"
 #include "toolproxy.h"
-// Pel delete
+//For delete
 #include "toolconfiguration.h"
 #include "tool.h"
 #include "qviewer.h"
@@ -30,10 +30,10 @@
 namespace udg {
 
 ToolManager::ToolManager(QObject *parent)
- : QObject(parent)
+    : QObject(parent)
 {
-    // TODO De moment ToolRegistry és una classe normal, però si es passa a singleton
-    // El "new" s'haurà de canviar per un ::instance()
+    // TODO For now ToolRegistry is a normal class, but if you switch to singleton
+    // The "new" must be changed to an :: instance ()
     m_toolRegistry = new ToolRegistry(this);
     m_toolsActionSignalMapper = new QSignalMapper(this);
     connect(m_toolsActionSignalMapper, SIGNAL(mapped(const QString&)), SLOT(triggeredToolAction(const QString&)));
@@ -45,7 +45,7 @@ ToolManager::~ToolManager()
 
 void ToolManager::setViewerTools(QViewer *viewer, const QStringList &toolsList)
 {
-    // Cada cop que eliminem un viewer que estem gestionant, l'haurem de "desregistrar" del ToolManager
+    /// Every time we remove a viewer we are managing, we will have to "unregister" it from the ToolManager
     connect(viewer, SIGNAL(destroyed(QObject*)), SLOT(unregisterViewer(QObject*)));
     ViewerToolConfigurationPairType pair;
     pair.first = viewer;
@@ -54,7 +54,7 @@ void ToolManager::setViewerTools(QViewer *viewer, const QStringList &toolsList)
     {
         m_toolViewerMap.insert(toolName, pair);
     }
-    // TODO Xapussilla, s'hauria de fer amb tractament més bo intern, amb llistes de tools actives
+    // TODO Txapussilla, should be done with better internal treatment, with active tool lists
     refreshConnections();
 }
 
@@ -65,13 +65,13 @@ void ToolManager::setupRegisteredTools(QViewer *viewer)
 
 void ToolManager::setViewerTool(QViewer *viewer, const QString &toolName, ToolConfiguration *configuration)
 {
-    // Cada cop que eliminem un viewer que estem gestionant, l'haurem de "desregistrar" del ToolManager
+    // Every time we remove a viewer we are managing, we will have to "unregister" it from the ToolManager
     connect(viewer, SIGNAL(destroyed(QObject*)), SLOT(unregisterViewer(QObject*)));
     ViewerToolConfigurationPairType pair;
     pair.first = viewer;
     pair.second = configuration;
     m_toolViewerMap.insert(toolName, pair);
-    // TODO Xapussilla, s'hauria de fer amb tractament més bo intern, amb llistes de tools actives
+    // TODO -Txapussilla, should be done with better internal treatment, with active tool lists
     refreshConnections();
 }
 
@@ -88,17 +88,17 @@ void ToolManager::removeViewerTool(QViewer *viewer, const QString &toolName)
             if (pair.first == viewer)
             {
                 found = true;
-                // Eliminem la tool del proxy
+                //We remove the proxy tool
                 viewer->getToolProxy()->removeTool(toolName);
-                // Això vol dir que per un nom de tool, nomé spodem tenir un parell viewer-config
-                // del contrari, ens hauríem de "patejar" tot el map sencer per si tenim la mateixa tool,
-                // pel mateix viewer i amb una configuració diferent
+                // This means that for a tool name, we can only have a viewer-config pair
+                // otherwise we would have to "kick" the whole map if we have the same tool,
+                // for the same viewer and with a different configuration
                 if (pair.second)
                 {
-                    // Eliminem la configuració
+                    // We remove the settings
                     delete pair.second;
                 }
-                // Eliminem l'element del mapa
+                // We remove the map item
                 mapIterator.remove();
             }
         }
@@ -110,7 +110,7 @@ void ToolManager::addExclusiveToolsGroup(const QString &groupName, const QString
     QActionGroup *actionGroup = 0;
     if (m_toolsGroups.find(groupName) != m_toolsGroups.end())
     {
-        // Si el grup ja existeix, no cal crear l'entrada, simplement modificar-la
+        //If the group already exists, you do not need to create the entry, just modify it
         actionGroup = m_toolsGroups.take(groupName);
     }
     else
@@ -118,12 +118,12 @@ void ToolManager::addExclusiveToolsGroup(const QString &groupName, const QString
         actionGroup = new QActionGroup(this);
         actionGroup->setExclusive(true);
     }
-    // Afegim el grup al mapa
+    // We add the group to the map
     m_toolsGroups.insert(groupName, actionGroup);
-    // Per cada tool obtindrem la seva acció i la farem entrar en el grup d'exclusivitat
+    //For each tool we will get its action and we will make it enter the exclusivity group
     foreach (const QString &toolName, tools)
     {
-        // Obtenim l'acció corresponent a aquella tool
+        // We get the action corresponding to that tool
         QAction *toolAction = getRegisteredToolAction(toolName);
         if (toolAction)
         {
@@ -134,21 +134,21 @@ void ToolManager::addExclusiveToolsGroup(const QString &groupName, const QString
             DEBUG_LOG(QString("No tenim registrada cap Action per la tool ") + toolName);
         }
     }
-    // Guarrada! TODO Aixo es un workaround per poder desactivar "automaticament" les tools dins d'un mateix grup
-    // Lo correcte seria plantejar be el tema dels signals mappers o fer una implementacio propia mes elaborada
+    // Guarrada! TODO This is a workaround to be able to "automatically" disable tools within the same group
+    // The correct thing would be to raise the issue of signal mappers or make a more elaborate implementation
     connect(actionGroup, SIGNAL(triggered(QAction*)), SLOT(refreshConnections()));
 }
 
 QAction* ToolManager::registerActionTool(const QString &actionToolName)
 {
     QPair<QAction*, QString> pair;
-    // Si no està registrada la obtenim del registre i l'afegim al nostre map
+    //If it is not registered, we obtain it from the register and add it to our map
     if (!m_actionToolRegistry.contains(actionToolName))
     {
         pair = m_toolRegistry->getActionToolPair(actionToolName);
         m_actionToolRegistry.insert(actionToolName, pair);
     }
-    // Sinó, l'agafem del nostre map i no tornem a crear l'acció
+    // Otherwise, we take it from our map and do not recreate the action
     else
     {
         pair = m_actionToolRegistry.value(actionToolName);
@@ -219,12 +219,12 @@ void ToolManager::undoDisableAllToolsTemporarily()
 
 void ToolManager::activateTool(const QString &toolName)
 {
-    // TODO Caldria comprovar si la tool es troba en un grup exclusiu per "fer fora" les altres tools
-    // en el cas que prescindíssim del mecanisme que fem servir amb QActionToolGroup
+    //// It would be necessary to check if the tool is in an exclusive group to "take out" the other tools
+    // in case we do without the mechanism we use with QActionToolGroup
     QList<ViewerToolConfigurationPairType> viewerConfigList = m_toolViewerMap.values(toolName);
 
     ToolData *data = m_sharedToolDataRepository.value(toolName);
-    // Declarem aquestes variables per fer-ho més llegible
+    // We declare these variables to make it more readable
     QViewer *viewer;
     ToolConfiguration *configuration;
     foreach (const ViewerToolConfigurationPairType &pair, viewerConfigList)
@@ -233,23 +233,23 @@ void ToolManager::activateTool(const QString &toolName)
         configuration = pair.second;
         Tool *tool = 0;
 
-        // Hem de comprovar si el proxy ja té o no la tool
+        //We need to check if the proxy already has the tool or not
         if (!viewer->getToolProxy()->isToolActive(toolName))
         {
-            // Com que el proxy no té aquesta tool
-            // la produim i la posem a punt amb les dades i la configuració
+            // Because the proxy does not have this tool
+            // we produce it and fine-tune it with the data and configuration
             tool = m_toolRegistry->getTool(toolName, viewer);
-            // Si no tenim cap configuració guardada, no cal fer res, es queda amb la que té per defecte
+            /// If we don't have any saved settings, nothing needs to be done, it stays with the default one
             if (configuration)
             {
                 tool->setConfiguration(configuration);
             }
-            // Afegim la tool al proxy
+            //  We add the tool to the proxy
             viewer->getToolProxy()->addTool(tool);
-            // Comprovem les dades per si cal donar-n'hi
+            //We check the data in case it needs to be given
             if (tool->hasSharedData())
             {
-                // No hi són al repositori, les obtindrem de la pròpia tool i les registrarem al repositori
+                //They are not in the repository, we will get them from the tool itself and register them in the repository
                 if (!data)
                 {
                     data = tool->getToolData();
@@ -257,7 +257,7 @@ void ToolManager::activateTool(const QString &toolName)
                 }
                 else
                 {
-                    // Si ja les hem creat abans, li assignem les de la primera tool creada
+                    /// If we have already created them before, we assign them the ones from the first tool created
                     tool->setToolData(data);
                 }
             }
@@ -271,23 +271,23 @@ void ToolManager::deactivateTool(const QString &toolName)
 
     foreach (const ViewerToolConfigurationPairType &pair, viewerConfigList)
     {
-        // Declarem aquesta variable per fer-ho més llegible
+        // We declare this variable to make it more readable
         QViewer *viewer = pair.first;
-        // Eliminem la tool del proxy
+        // Remove the proxy tool
         viewer->getToolProxy()->removeTool(toolName);
     }
-    // Elinimen Shared Data d'aquesta tool
+    /// Remove Shared Data from this tool
     m_sharedToolDataRepository.remove(toolName);
 }
 
 void ToolManager::triggeredToolAction(const QString &toolName)
 {
-    // TODO Cal repassar tot això. Hauria d'anar amb llistes internes de tools activades/desactivades
-    // obtenim l'acció que l'ha provocat
+    // TODO All this needs to be reviewed. It should go with internal lists of tools enabled / disabled
+    // we get the action that caused it
     QAction *toolAction = getRegisteredToolAction(toolName);
     if (toolAction)
     {
-        // Si està checked és que s'ha d'activar, altrament desactivar
+        // // If checked it must be activated, otherwise deactivated
         if (toolAction->isChecked())
         {
             activateTool(toolName);
@@ -299,7 +299,7 @@ void ToolManager::triggeredToolAction(const QString &toolName)
     }
     else
     {
-        DEBUG_LOG(QString("No hi ha cap tool Action per la tool anomenada: ") + toolName);
+        DEBUG_LOG(QString("There is no Action tool for the called tool: ") + toolName);
     }
 }
 
@@ -308,7 +308,7 @@ QAction* ToolManager::getRegisteredToolAction(const QString &toolName)
     QAction *toolAction = 0;
     if (m_toolsActionsRegistry.contains(toolName))
     {
-        // Si ja existeix l'obtenim del registre de tools/acció
+        // If it already exists we get it from the tools / action log
         toolAction = m_toolsActionsRegistry.value(toolName);
     }
     return toolAction;
@@ -319,18 +319,18 @@ QAction* ToolManager::registerTool(const QString &toolName)
     QAction *toolAction;
     if (m_toolsActionsRegistry.contains(toolName))
     {
-        // Si ja existeix l'obtenim del registre de tools/acció
+        //If it already exists we get it from the tools / action register
         toolAction = m_toolsActionsRegistry.value(toolName);
     }
     else
     {
-        // Altrament, creem l'acció associada, la connectem amb l'estructura interna i la registrem
+        /// Otherwise, we create the associated action, connect it to the internal structure, and record it
         toolAction = m_toolRegistry->getToolAction(toolName);
         m_toolsActionSignalMapper->setMapping(toolAction, toolName);
         connect(toolAction, SIGNAL(triggered()), m_toolsActionSignalMapper, SLOT(map()));
         m_toolsActionsRegistry.insert(toolName, toolAction);
     }
-    // Retornem l'acció associada
+    //// Return the associated action
     return toolAction;
 }
 
@@ -350,7 +350,7 @@ void ToolManager::refreshConnections()
 
 void ToolManager::unregisterViewer(QObject *viewer)
 {
-    // Recorrem tot el mapa, eliminant totes les entrades on aparegui el viewer en qüestió
+    /// We go through the whole map, removing all the entries where the viewer in question appears
     QMutableMapIterator<QString, ViewerToolConfigurationPairType> mapIterator(m_toolViewerMap);
     while (mapIterator.hasNext())
     {
@@ -358,7 +358,7 @@ void ToolManager::unregisterViewer(QObject *viewer)
         ViewerToolConfigurationPairType pair = mapIterator.value();
         if (pair.first == viewer)
         {
-            // Eliminem l'element del map
+            /// We remove the map element
             mapIterator.remove();
         }
     }
