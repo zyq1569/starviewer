@@ -35,185 +35,217 @@ class Image;
 class DicomMask;
 
 /**
-    Aquesta classe mostrar estudis i sèries d'una manera organitzada i fàcilment.
-    Aquesta classe és una modificació de la QTreeWidget que s'ha adaptat per poder visualitzar la informació de la cerca d'estudis/series/imatges.
-    La classe manté la llista d'Study/Series/Image que se l'insereixen, i s'eliminen al invocar el mètode clean de la classe, per tant cal recordar
-    que les classes que n'invoquin mètodes ue retornen punters a Study/Series/Image seran responsables de fer-ne una còpia si necessiten
-    mantenir l'objecte viu una vegada fet un clean.
+This class will show studies and series in an organized and easy way.
+This class is a modification of the QTreeWidget that has been adapted to display
+ study / series / image search information.
+The class maintains the list of Studies / Series / Image that are inserted,
+and are removed by invoking the clean method of the class, so remember
+that classes that invoke methods that return pointers to Study / Series / Image
+will be responsible for making a copy if they need to
+keep the object alive once cleaned.
 
-    Aquesta classe té dos comportaments en funció de setUseDICOMSourceToDiscriminateStudies, que ens permet establir si s'han de discriminar els estudis a part de amb el UID
-    per DICOMSource també. En funció del lo establert es considerarà els estudis amb els mateix UID però diferent DICOMSource com un mateix estudi (duplicats) o s'els considesrarà
-    com estudis diferents.
+This class has two behaviors based on setUseDICOMSourceToDiscriminateStudies,
+which allows us to establish whether studies should be discriminated apart from with the UID
+by DICOMSource as well. Depending on what is established, studies with
+the same UID but different DICOMSource will be considered as the same study (duplicates) or will be considered
+as different studies.
 */
 class QStudyTreeWidget : public QWidget, private Ui::QStudyTreeWidgetBase {
-Q_OBJECT
+    Q_OBJECT
 public:
     enum ItemTreeLevels { StudyLevel = 0, SeriesLevel = 1, ImageLevel = 2 };
 
-    // Object Name s'utilitza per guardar El NomPacient, Serie + Identificador Sèrie i Imatge + Identificador Image
+    ///Object Name is used to save the Patient Name,
+    /// Series + Serial and Image Identifier + Image Identifier
     enum ColumnIndex { ObjectName = 0, PatientID = 1, PatientAge = 2, Description = 3, Modality = 4, Date = 5, Time = 6,
-    DICOMItemID = 7, Institution = 8, UID = 9, StudyID = 10, ProtocolName = 11, AccNumber = 12, Type = 13,
-    RefPhysName = 14, PPStartDate = 15, PPStartTime = 16, ReqProcID = 17, SchedProcStep = 18, PatientBirth = 19 };
+                       DICOMItemID = 7, Institution = 8, UID = 9, StudyID = 10, ProtocolName = 11, AccNumber = 12, Type = 13,
+                       RefPhysName = 14, PPStartDate = 15, PPStartTime = 16, ReqProcID = 17, SchedProcStep = 18, PatientBirth = 19 };
 
     QStudyTreeWidget(QWidget *parent = 0);
 
-    /// Indica si s'ha d'utilitzar el DICOMSource a part del InstanceUID per discriminar els estudis i considerar-lo dusplicats. Per defecte s'utilitza el DICOMSource per
-    /// discrimnar els estudis
+    /// Indicates whether to use DICOMSource apart from InstanceUID to
+    /// discriminate studies and consider them duplicate. By default, DICOMSource is used for
+    /// discriminate studies
     void setUseDICOMSourceToDiscriminateStudies(bool discrimateStudiesByDicomSource);
     bool getUseDICOMSourceToDiscriminateStudies();
 
-    /// Mostrar els estudis passats per paràmetres. Si algun dels estudis ja existeix en sobreescriu la informació. En funció del valor establert per setUseDICOMSourceToDiscriminateStudies
-    /// estudis amb el mateix UID però diferent DICOMSource es podran considerar duplicats
+    /// Show past studies by parameters. If any of the studies already exist,
+    /// overwrite the information. Depending on the value set by setUseDICOMSourceToDiscriminateStudies
+    /// studies with the same UID but different DICOMSource can be considered duplicates
     void insertPatientList(QList<Patient*> patientList);
 
-    /// Insereix el pacient al QStudyTreeWiget. Si el pacient amb aquell estudi ja existeix en sobreescriu la informació
+    ///Insert patient into QStudyTreeWiget. If the patient with that study
+    /// already exists, overwrite the information
     void insertPatient(Patient *patient);
 
-    /// Insereix un llista de sèries a l'estudi seleccionat actualment.
+    ///Inserts a list of series into the currently selected studio.
     void insertSeriesList(const QString &studyIstanceUID, QList<Series*> seriesList);
 
-    /// Insereix una llista d'imatges a la sèrie seleccionada actualment
+    /// Inserts a list of images into the currently selected series
     void insertImageList(const QString &studyInstanceUID, const QString &seriesInstanceUID, QList<Image*> imageList);
 
     /// Removes study from the list
     void removeStudy(const QString &studyInstanceUIDToRemove, const DICOMSource &dicomSourceStudyToRemove = DICOMSource());
 
-    /// Esborra la sèrie del QStudyTreeWidget, si és l'única sèrie de l'estudi també esborra l'estudi, no té sentit tenir una estudi sense
-    ///  series al TreeWidget
+    /// Delete QStudyTreeWidget series, if it is the only studio series also delete studio, it doesn't make sense to have a studio without
+    /// series to the TreeWidget
     void removeSeries(const QString &studyInstanceUIDToRemove, const QString &seriesInstanceUIDToRemove, const DICOMSource &dicomSourceSeriesToRemove = DICOMSource());
 
-    /// Per cada element seleccionat Study/Series/Imatge retorna la seva DicomMask. Si tenim el cas que tenim seleccionat un estudi, i d'aquest estudi tenim
-    /// seleccionada dos sèries o alguna de les imatges només ens retonarà l'estudi, ja que l'acció que s'hagi de fer sobre els elements seleccionats
-    /// si l'estudi està seleccionant no té sentit que es faci sobre les sèries i les imatges, passa el mateix si tenim seleccionada un sèrie i imatges d'aquesta.
-    /// Per exemple si tenim seleccionat un estudi i dos de les seves sèries i l'usuari indica que vol descarregar-lo no té sentit descarregar l'estudi i llavors les dos sèries
-    //Crec que QStudyTreeWidget no hauria de tenir coneixement de que per fer qualsevol acció sobre una font DICOM com DICOMDIR, BD, PACS...  necessita
-    //un DICOMMask amb DICOMSource, però ara mateix necessitem aquest mètode ja que retorna ens retorna aglutinat a tots elements seleccionats independentment
-    //de que siguin Study, Series, Image en un objecte comú el DICOMMask, sinó les classe que utilitzen aquest QStudyTreeWidget haurien de comprovar quins són els
-    //estudis seleccionats, series seleccionades i imatges seleccionades invocant un mètode per cada tipus d'objecte.
+    /// For each selected item Study / Series / Image returns its DicomMask.
+    /// If we have the case we have selected a study, and from that study we have
+    /// selected two series or one of the images will only return to us the study,
+    /// since the action that must be done on the selected elements
+    /// if the studio is selecting it does not make sense to do it on the series and the images,
+    /// the same happens if we have selected a series and images of it.
+    /// For example if we have selected a study and two of its series and the user
+    ///  indicates that he wants to download it does not make sense to
+    /// download the study and then the two series
+    /// I think QStudyTreeWidget should not be aware that to do any
+    ///  action on a DICOM source like DICOMDIR, BD, PACS ... you need
+    /// a DICOMMask with DICOMSource, but right now we need this method
+    /// as it returns it returns us agglutinated to all elements selected independently
+    /// that they are Study, Series, Image in a common object the DICOMMask,
+    ///  but the classes that use this QStudyTreeWidget should check which are the
+    /// selected studies, selected series and selected images invoking a method for each object type.
     QList<QPair<DicomMask, DICOMSource> > getDicomMaskOfSelectedItems();
 
-    /// Indica/Retorna la columna i direcció per la que s'ordena llista
+    ///Indicates / Returns the column and address by which list is sorted
     void setSortByColumn(QStudyTreeWidget::ColumnIndex sortColumn, Qt::SortOrder sortOrder);
     QStudyTreeWidget::ColumnIndex getSortColumn();
     Qt::SortOrder getSortOrderColumn();
 
-    /// Ordena descendentment per la columna seleccionada
+    /// Sort in descending order by the selected column
     void sort();
 
-    /// Retorna l'estudi/series que tingui el UID i el DICOMSource passat per paràmetre. L'objecte retornat es destruirà quan s'invoqui el mètode
-    /// clean d'aquesta classe, per tant si aquest objecte pot ser utilitzat després d'invocar el mètode clean és responsabilitat de la classe que el cridi
-    /// fer-ne una còpia
+    /// Returns the study / series that has the UID and DICOMSource passed by parameter.
+    /// The returned object will be destroyed when the method is invoked
+    /// clean of this class, so whether this object can be used after invoking
+    ///  the clean method is the responsibility of the class calling it
+    /// make a copy
     Study* getStudy(const QString &studyInstanceUID, const DICOMSource &dicomSourceOfStudy = DICOMSource());
     Series* getSeries(const QString &studyInstanceUID, const QString &seriesInstanceUID, const DICOMSource &dicomSourceOfSeries = DICOMSource());
 
-    /// Estableix el menú contextual del Widget
+    ///Sets the Widget context menu
     void setContextMenu(QMenu *contextMenu);
 
-    /// Retorna el QTreeWidget que conté el widget
+    ///Returns the QTreeWidget that the widget contains
     QTreeWidget* getQTreeWidget() const;
 
-    /// Assigna/Obté el nivell màxim fins el que es poden expandir els items que es mostren a QStudyTreeWiget, per defecte s'expandeix fins a nivell d'Image
+    /// Assigns / Gets the maximum level to which items displayed in
+    /// QStudyTreeWiget can be expanded, by default expands to Image level
     void setMaximumExpandTreeItemsLevel(QStudyTreeWidget::ItemTreeLevels maximumExpandTreeItemsLevel);
     QStudyTreeWidget::ItemTreeLevels getMaximumExpandTreeItemsLevel();
 
 public slots:
-    /// Indique que ens marqui la sèrie amb el uid passat per paràmetre com a seleccionada
+    /// Indicate that we mark the series with the uid passed by parameter as selected
     void setCurrentSeries(const QString &studyInstanceUID, const QString &seriesInstanceUID, const DICOMSource &dicomSource = DICOMSource());
 
-    /// Neteja el TreeView, i esborra els Study*/Series*/Images* inserits
+    ///Clear the TreeView, and delete the inserted Study * / Series * / Images *
     void clear();
 
 signals:
-    /// Signal cada vegada que seleccionem un estudi diferent. L'Study passat com a paràmetre es destrueix al invocar el mètode clean, d'aquesta classe
-    /// és responsanbilitat de la classe que rep el signal fer-ne una còpia per evitar problemes si ha d'utilitzar l'Study després després que s'hagi fet un clean
+    /// Signal each time we select a different study. The past Study as
+    /// a parameter is destroyed by invoking the clean method, of this class
+    /// it is the responsibility of the class receiving the signal to make
+    ///  a copy to avoid problems if you have to use the Study later after a clean has been done
     void currentStudyChanged(Study *currentStudy);
 
-    /// Signal que s'emete quan canviem de sèrie seleccionada. La Serie passada com a paràmetre es destrueix al invocar el mètode clean, d'aquesta classe
-    /// és responsanbilitat de la classe que rep el signal fer-ne una còpia per evitar problemes si ha d'utilitzar l'Study després després que s'hagi fet un clean
+    /// Signal that is emitted when we change selected series. The Series
+    /// passed as a parameter is destroyed by invoking the clean method, of this class
+    /// it is the responsibility of the class receiving the signal to make
+    ///  a copy to avoid problems if you have to use the Study later after a clean has been done
     void currentSeriesChanged(Series *currentSeries);
 
-    //TODO:Els signals de DoubleClicked no haurian de retornar l'estudi/series/imatge clickada =
-    /// Signal que s'emet quan s'ha fet un doble click a un estudi
+    //TODO: DoubleClicked signals should not return studio / series / clicked image =
+    /// Signal that is emitted when a double click has been made to a study
     void studyDoubleClicked();
 
-    /// Signal que s'emet quan s'ha fet un doble click a una sèrie
+    ///Signal that is emitted when a series has been double-clicked
     void seriesDoubleClicked();
 
-    /// Signal que s'emet quan s'ha fet un doble click a una imatge
+    /// Signal that is emitted when an image has been double-clicked
     void imageDoubleClicked();
 
-    /// Signal que s'emet quan es passa de tenir un item seleccionat a no tenir-ne cap de seleccionat
+    /// Signal that is emitted when you go from having a selected item to having none selected
     void notCurrentItemSelected();
 
-    ///Ens indica quan un usuari ha sol·licitat veure les sèries/imatges d'un estudi/sèrie
+    ///Indicates when a user has requested to view the series / images of a studio / series
     void requestedSeriesOfStudy(Study *studyRequestedSeries);
     void requestedImagesOfSeries(Series *seriesRequestedImage);
 
 protected:
-    /// Mostra el menu contextual
+    /// Displays the context menu
     void contextMenuEvent(QContextMenuEvent *event);
 
     void keyPressEvent(QKeyEvent*) override;
 
 private:
-    /// Crea les connexions dels signals i slots
+    /// Creates signal and slot connections
     void createConnections();
 
-    /// Inicialitza les variables necessàries del QWidget
+    /// Initialize the required QWidget variables
     void initialize();
 
-    /// Retorna l'objecte QTreeWidgetItem que mostra a l'estudi que compleix els paràmetres passats
+    ///Returns the QTreeWidgetItem object shown in the study that meets the past parameters
     QTreeWidgetItem* getStudyQTreeWidgetItem(const QString &studyUID, const DICOMSource &studyDICOMSource);
 
-    /// Retorna l'Objecte QTtreeWidgeItem que és de l'estudi i series
+    ///Returns the QTtreeWidgeItem Object that is from the studio and series
     QTreeWidgetItem* getSeriesQTreeWidgetItem(const QString &studyUID, const QString &seriesUID, const DICOMSource &seriesDICOMSource);
 
-    /// Ens indica si l'item passat és un Study/Series/Image
+    /// Tells us if the last item is a Study / Series / Image
     bool isItemStudy(QTreeWidgetItem *);
     bool isItemSeries(QTreeWidgetItem *);
     bool isItemImage(QTreeWidgetItem *);
 
-    /// Retorna llista QTreeWidgetItem resultant dels estudis que té el pacient
+    ///Returns QTreeWidgetItem list resulting from studies the patient has
     QList<QTreeWidgetItem*> fillPatient(Patient *);
 
-    /// Donada una sèrie emplena un QTreeWidgetItem per mostrar la informaciío de la sèrie
+    /// Given a series fill in a QTreeWidgetItem to display the information of the series
     QTreeWidgetItem* fillSeries(Series *serie);
 
-    /// Retorna Study/Series/Image a partir del seu DICOMItemID si no el troba retorna null
+    /// Returns Study / Series / Image from its DICOMItemID
+    ///  if it does not find it returns null
     Study* getStudyByDICOMItemID(int studyDICOMItemID);
     Series* getSeriesByDICOMItemID(int seriesDICOMItemID);
     Image* getImageByDICOMItemID(int imageDICOMItemID);
 
-    /// Retorna Study/Series/Image a la que pertany un QTreeWidgeITem. Si a getStudyByQTreeWidgetItem li passem un QTreeWidgetItem que és una imatge ens retornarà l'estudi al
-    /// que pertany la imatge,  si getSeriesByQTreeWidgetItem li passem un item que és un Study ens retornarà null
+    /// Returns Study / Series / Image to which a QTreeWidgeITem belongs.
+    /// If we pass a QTreeWidgetItem to getStudyByQTreeWidgetItem which
+    /// is an image it will return the study to us at
+    /// to which the image belongs, if we getSeriesByQTreeWidgetItem we
+    /// pass an item that is a Study will return us null
     Study* getStudyByQTreeWidgetItem(QTreeWidgetItem *qTreeWidgetItem);
     Series* getSeriesByQTreeWidgetItem(QTreeWidgetItem *qTreeWidgetItem);
     Image* getImageByQTreeWidgetItem(QTreeWidgetItem *qTreeWidgetItem);
 
-    /// Formata l'edat per mostrar per pantalla
+    ///Format age to display on screen
     QString formatAge(const QString &age) const;
 
-    /// Formata la data i hora passada a ISO 8601 extended (YYYY-MM-DD HH:MM:SS) Amb aquest format de data es pot ordenar els estudis per data/hora
-    /// Si l'hora no té valor només retorna la data, i si ni Data i Hora tenen valor retorna string buit
+    /// Format the date and time passed to ISO 8601 extended
+    ///  (YYYY-MM-DD HH: MM: SS) With this date format you can sort the studies by date / time
+    /// If the time has no value it only returns the date,
+    /// and if neither Date nor Time has value it returns empty string
     QString formatDateTime(const QDate &date, const QTime &time) const;
 
-    /// Crea un QTreeWidgetItem buit, per a que aparegui l'icona + per poder desplegar estudi/series amb el mouse
+    /// Create an empty QTreeWidgetItem, so that the + icon
+    ///  appears so you can deploy studio / series with the mouse
     QTreeWidgetItem* createDummyQTreeWidgetItem();
 
-    /// Indica si el QTreeWidgetItem és un Dummy utilitzat per poder expandir Estudis/Series quan encara no n'hem consultat els seus elements fills Series/Imatges
+    /// Whether QTreeWidgetItem is a Dummy used to expand
+    /// Studies / Series when we have not yet queried its Series / Images child elements
     bool isDummyQTreeWidgetItem(QTreeWidgetItem *);
 
 private slots:
-    /// Emet signal quan es selecciona un estudi o serie diferent a l'anterior
+    /// It emits signal when a study or series different from the previous one is selected
     void currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 
-    /// Emet signal quan s'expandeix un item, i no té items fills
+    ///It emits signal when an item expands, and has no child items
     void itemExpanded(QTreeWidgetItem *itemExpanded);
 
-    /// Emet signal quan es col·lapsa un item, i no té items fills
+    ///It emits signal when an item collapses, and has no child items
     void itemCollapsed(QTreeWidgetItem *itemCollapsed);
 
-    /// Emet signal qua es fa doble click sobre un item
+    ///It emits a signal when a double click is made on an item
     void doubleClicked(QTreeWidgetItem *, int);
 
 private:
@@ -231,14 +263,14 @@ private:
     /// Menu contextual
     QMenu *m_contextMenu;
 
-    /// Strings per guardar valors de l'anterior element
+    /// Strings to save values of the previous element
     Study *m_oldCurrentStudy;
     Series *m_oldCurrentSeries;
 
     bool m_qTreeWidgetItemHasBeenDoubleClicked;
     bool m_useDICOMSourceToDiscriminateStudies;
 
-    /// Icones utilitzades com a root al TreeWidget
+    /// Icons used as root in the TreeWidget
     QIcon m_iconOpenStudy, m_iconCloseStudy, m_iconOpenSeries, m_iconCloseSeries, m_iconDicomFile;
 
     QStudyTreeWidget::ItemTreeLevels m_maximumExpandTreeItemsLevel;
