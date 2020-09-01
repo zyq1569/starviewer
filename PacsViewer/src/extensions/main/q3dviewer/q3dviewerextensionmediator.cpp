@@ -32,7 +32,7 @@ Q3DViewerExtensionMediator::~Q3DViewerExtensionMediator()
 
 DisplayableID Q3DViewerExtensionMediator::getExtensionID() const
 {
-    return DisplayableID("Q3DViewerExtension", tr("3D Viewer"));
+    return DisplayableID("Q3DViewerExtension", tr("3D-Viewer"));
 }
 
 bool Q3DViewerExtensionMediator::initializeExtension(QWidget *extension, const ExtensionContext &extensionContext)
