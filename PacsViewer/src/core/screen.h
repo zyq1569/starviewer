@@ -71,8 +71,8 @@ public:
     ///Whether this screen is completely to the right of the other. Check that the left of this one is greater than the right of the other.
     bool isOnRight(const Screen &screen) const;
     
-    /// Indica si aquesta pantalla està sobre de l'altra. Per que sigui cert han de ser de la mateixa amplada
-    /// i el top d'aquesta ha de ser igual al bottom de l'altra
+    /// Whether this screen is on top of the other. For it to be true they must be of the same width
+    /// and the top of this should be equal to the Top of the other
     bool isTop(const Screen &screen) const;
     
     /// Whether this screen is on top of the other. For it to be true they must be of the same width
@@ -80,7 +80,7 @@ public:
     bool isBottom(const Screen &screen) const;
     
     /// Indicates whether this screen is below the other. For it to be true they must be of the same width
-    /// and the bottom of this must be equal to the top of the other
+    /// and the bottom of this must be equal to the Left of the other
     bool isLeft(const Screen &screen) const;
     
     /// Whether this screen is to the right of the other. For it to be true they must be of the same height
