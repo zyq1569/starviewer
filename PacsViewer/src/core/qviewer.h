@@ -54,16 +54,16 @@ public:
     QViewer(QWidget *parent = 0);
     ~QViewer();
 
-    /// Tipus de fitxer que pot desar
+    /// /// File type you can save
     enum FileType { PNG, JPEG, TIFF, DICOM, PNM, META, BMP };
 
-    /// Estat del viewer
+    ///  Viewer status
     enum ViewerStatus { NoVolumeInput, DownloadingVolume, DownloadingError, LoadingVolume, LoadingError, VisualizingVolume, VisualizingError };
 
-    /// Retorna l'interactor renderer
+    /// Returns the renderer interface
     virtual vtkRenderWindowInteractor* getInteractor() const;
 
-    /// Retorna el renderer
+    /// Returns the renderer
     virtual vtkRenderer* getRenderer() const;
 
     /// Returns the main input
@@ -113,7 +113,7 @@ public:
     /// Returns TRUE if there were images to save, FALSE otherwise
     bool saveGrabbedViews(const QString &baseName, FileType extension);
 
-    /// Retorna el nombre de vistes capturades que estan desades
+    ///Returns the number of captured views that are saved
     int grabbedViewsCount()
     {
         return m_grabList.size();
