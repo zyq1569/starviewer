@@ -23,49 +23,49 @@
 namespace udg {
 
 /**
-    Classe per representar la distribució de pantalles
+Class to represent the distribution of screens
  */
 class ScreenLayout {
 public:
     ScreenLayout();
     ~ScreenLayout();
 
-    /// Afegeix una pantalla al layout. Si la pantalla no és vàlida per afegir-se al layout actual, no s'afegirà i es retornarà fals, cert altrament.
-    /// No s'afegiran pantalles amb ID's invàlids (<0) o que tinguin el mateix ID que una pantalla existent al layout.
-    /// Tampoc s'afegirà una pantalla si aquesta és principal i ja n'existeix una al layout.
+    /// Add a screen to the layout. If the screen is not valid to add to the current layout, it will not be added and returned false, otherwise true.
+    /// Screens with invalid IDs (<0) or with the same ID as an existing screen in the layout will not be added.
+    /// A screen will not be added either if it is main and one already exists in the layout.
     bool addScreen(const Screen &screen);
 
-    /// Retorna el nombre de pantalles al layout
+    /// /// Returns the screen name to the layout
     int getNumberOfScreens() const;
     
-    /// Reseteja el layout eliminant totes les pantalles que contenia, deixant-lo buit
+    /// Reset the layout by removing all the screens it contained, leaving it blank
     void clear();
     
-    /// Ens retorna la pantalla amb l'ID demanat. Si la pantalla no existeix, ens retornarà una Screen buida
+    /// Returns the screen with the requested ID. If the screen does not exist, it will return an empty Screen
     Screen getScreen(int screenID) const;
 
-    /// Ens retorna l'id de la pantalla principal. En cas que no n'hi hagi cap de definida, ens retornarà -1
+    /// Returns the id of the main screen. In case there is no definite one, it will return -1
     int getPrimaryScreenID() const;
     
-    /// Ens indica quina és la pantalla que es troba a la dreta/esquerra de la pantalla amb ID indicada.
-    /// Retorna -1 si no n'hi ha cap pantalla en el costat indicat
+    /// Tells us which screen is on the right / left of the screen with ID indicated.
+    /// Returns -1 if there is no screen on the indicated side
     int getScreenOnTheRightOf(int screenID) const;
     int getScreenOnTheLeftOf(int screenID) const;
 
-    /// Ens indica quina és la pantalla que es considera anterior/posterior en el layout respecte a la pantalla passada per paràmetre
-    /// Retorna el mateix ID si no tenim més pantalles que la nostra i -1 si la pantalla passada no existeix.
+    /// Indicates which screen is considered anterior / posterior in the layout with respect to the screen passed by parameter
+    /// Returns the same ID if we have no more screens than ours and -1 if the last screen does not exist.
     int getPreviousScreenOf(int screenID) const;
     int getNextScreenOf(int screenID) const;
 
 private:
-    /// Ens retorna l'índex de la pantalla amb ID screenID. Si no existeix, l'índex serà -1
+    /// Returns the screen index with ID screenID. If it does not exist, the index will be -1
     int getIndexOfScreen(int screenID) const;
 
 private:
-    /// Constant per determinar el llindar de proximitat entre finestres
+    /// Constant to determine the proximity threshold between windows
     static const int SamePositionThreshold;
     
-    /// Llista de pantalles
+    /// List of screens
     QList<Screen> m_screens;
 };
 

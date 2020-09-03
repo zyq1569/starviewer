@@ -26,9 +26,9 @@ namespace udg {
 
 /**
 This class is used for two main functionalities, maximizing a window when there are multiple screens,
-    and move a window from one screen to another.
-    It is also responsible for calculating the screen layout (ScreenLayout) in the system.
-    Its basic operation is through the maximize and moveToDesktop methods, to which the window to be treated is passed.
+and move a window from one screen to another.
+It is also responsible for calculating the screen layout (ScreenLayout) in the system.
+Its basic operation is through the maximize and moveToDesktop methods, to which the window to be treated is passed.
   */
 class ScreenManager {
 public:
