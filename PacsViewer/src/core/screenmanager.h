@@ -25,57 +25,59 @@ class QRect;
 namespace udg {
 
 /**
-    Aquesta classe s'utilitza per dues funcionalitats principals, maximitzar una finestra quan hi ha múltiples pantalles,
-    i moure una finestra d'una pantalla a una altra.
-    Aquesta també s'encarrega de calcular quin és el layout de pantalles (ScreenLayout) al sistema.
-    El seu funcionament bàsic és a través dels mètodes maximize i moveToDesktop, als que se li passa la finestra a tractar.
+This class is used for two main functionalities, maximizing a window when there are multiple screens,
+    and move a window from one screen to another.
+    It is also responsible for calculating the screen layout (ScreenLayout) in the system.
+    Its basic operation is through the maximize and moveToDesktop methods, to which the window to be treated is passed.
   */
 class ScreenManager {
 public:
-    /// Constructor per defecte.
+    /// Default constructor.
     ScreenManager();
     
-    /// Ens retorna el layout actual
+    ///  Returns the current layout
     ScreenLayout getScreenLayout() const;
     
-    /// Mètode que maximitza la finestra passada per paràmetres a tantes pantalles com sigui possible per tal de que es vegi bé.
+    /// Method that maximizes the window passed by parameters
+    /// on as many screens as possible so that it looks good.
     void maximize(QWidget *window);
-    /// Returns true if the given window is maximized to more than one screen and false otherwise (including when it's simply maximized or not maximized).
+    /// Returns true if the given window is maximized to more than one screen
+    /// and false otherwise (including when it's simply maximized or not maximized).
     bool isMaximizedToMultipleScreens(QWidget *window);
-    /// Mètode per canviar la finestra especificada per el primer paràmetre a la pantalla amb l'identificador del segon paràmetre.
+    ///  Method for changing the window specified by the first parameter on the screen with the identifier of the second parameter.
     void moveToDesktop(QWidget *window, int idDesktop);
-    /// Mètode per moure la finestra a la pantalla anterior segons l'identificador de pantalla
+    ///  Method to move the window to the previous screen according to the screen identifier
     void moveToPreviousDesktop(QWidget *window);
-    /// Mètode per moure la finestra a la següent pantalla segons l'identificador de pantalla
+    ///  Method to move the window to the next screen according to the screen ID
     void moveToNextDesktop(QWidget *window);
 
-    ///Restaura la finestra a l'estat d'abans d'estar minimitzada
+    /// Restores the window to the state before it was minimized
     void restoreFromMinimized(QWidget *window);
     
-    /// Retorna a quina pantalla es troba el widget/coordenada
+    /// Returns to which screen the widget / coordinate is located
     int getScreenID(QWidget *window) const;
     int getScreenID(const QPoint &point) const;
 
-    /// Calcula la matriu de distribució de les pantalles.
-    /// Utilitza la classe DynamicMatrix per crear-se l'estructura de dades per representar la distribució de
-    /// les pantalles a l'espai.
+    /// Calculate the distribution matrix of the screens.
+    /// Use the DynamicMatrix class to create the data structure to represent the distribution of
+    /// the screens in space.
     DynamicMatrix computeScreenMatrix(QWidget *window) const;
 
 private:
-    /// Prepara l'screen layout segons la configuració actual
+    /// Prepare the screen layout according to the current configuration
     void setupCurrentScreenLayout();
     
-    /// Retorna si la finestra passada per paràmetre cap dins la pantalla.
+    /// Returns if the window passed by parameter to inside the screen.
     bool doesItFitInto(QWidget *window, int IdDesktop);
-    /// Modifica el tamany de la finestra passada per paràmtre per tal de que càpiga a la pantalla amb id IdDesktop.
-    /// A més, centra la finestra.
+    ///  Resize the window passed by parameter so that it fits on the screen with IdDesktop id.
+    ///  /// Also, center the window.
     void fitInto(QWidget *window, int IdDesktop);
 
-    /// Retorna el punt de més adalt a l'esquerra segons la geometria disponible.
-    /// (tenint en compte la barra de tasques)
+    /// Returns the point at the top left according to the available geometry.
+    /// (considering the taskbar)
     QPoint getTopLeft(const DynamicMatrix &dynamicMatrix) const;
-    /// Retorna el punt de més aball a la dreta segons la geometria disponible.
-    /// (tenint en compte la barra de tasques)
+    /// Returns the lowest point on the right according to the available geometry.
+    /// (considering the taskbar)
     QPoint getBottomRight(const DynamicMatrix &dynamicMatrix) const;
 
     /// Returns the geometry that should be applied to the given window to maximize it to multiple screens.
@@ -83,10 +85,10 @@ private:
     QRect getGeometryToMaximizeToMulipleScreens(QWidget *window);
 
 private:
-    /// Gestor d'escriptori on es fan les crides referents al múltiples escriptoris o pantalles
+    ///  Desktop manager where calls are made regarding multiple desktops or screens
     QDesktopWidget *m_applicationDesktop;
 
-    /// Distribució de pantalles
+    /// /// Distribution of screens
     ScreenLayout m_screenLayout;
 };
 
