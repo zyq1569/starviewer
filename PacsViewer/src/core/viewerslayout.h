@@ -28,8 +28,8 @@ class RelativeGeometryLayout;
 class Volume;
 
 /**
-    Classe que permet distribuir sobre un widget una sèrie Q2DViewerWidgets
-    amb diferents layouts i geometries de forma versàtil.
+Class that allows to distribute on a widget a series Q2DViewerWidgets
+with different layouts and geometries in a versatile way.
   */
 class ViewersLayout : public QWidget {
     Q_OBJECT
@@ -37,7 +37,7 @@ public:
     ViewersLayout(QWidget *parent = 0);
     ~ViewersLayout();
 
-    /// Obtenir el visualitzador seleccionat
+    /// Get the selected viewer
     Q2DViewerWidget* getSelectedViewer() const;
 
     /// Returns us in total number of viewers contained in the layout manager,
@@ -52,7 +52,7 @@ public:
     void setGrid(int rows, int columns);
     void setGridInArea(int rows, int columns, const QRectF &geometry);
 
-    /// Afegeix un nou visualitzador amb la geometria indicada
+    /// Add a new viewer with the indicated geometry
     Q2DViewerWidget* addViewer(const QRectF &geometry);
 
     /// Clean the layout, removing all viewers and geometries,
