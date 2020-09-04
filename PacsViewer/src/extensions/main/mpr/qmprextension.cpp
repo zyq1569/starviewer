@@ -1140,21 +1140,24 @@ void QMPRExtension::initOrientation()
     m_sagitalPlaneSource->SetPoint1(xbounds[0], ybounds[1] + halfDeltaY, zbounds[1]);
     m_sagitalPlaneSource->SetPoint2(xbounds[0], ybounds[0] - halfDeltaY, zbounds[0]);
     m_sagitalPlaneSource->Push(-0.5 * volumeSize[0]);
-    // Calculem la translació necessària per dibuixar les interseccions dels plans a la vista sagital
+    //We calculate the translation required to draw the intersections of the planes in the sagittal view
     m_sagitalTranslation[0] = m_sagitalPlaneSource->GetCenter()[1] + halfDeltaY;
     m_sagitalTranslation[1] = m_sagitalPlaneSource->GetCenter()[2];
     m_sagitalTranslation[2] = 0.0;
-    // Calculem els extents del sagital
+    //We calculate the extent of the sagittal
     double sagitalExtentLengthX = sqrt(static_cast<double>(extentLength[0] * extentLength[0] + extentLength[1] * extentLength[1]));
-    // sagitalExtentLengthX *= 2.0;    // potser caldria doblar l'extent per assegurar que no es perdi detall (Nyquist)
+    ///sagitalExtentLengthX * = 2.0; //
+    ///  maybe we should double the extent to ensure that no detail is lost (Nyquist)
     m_sagitalExtentLength[0] = MathTools::roundUpToPowerOf2(MathTools::roundToNearestInteger(sagitalExtentLengthX));
     m_sagitalExtentLength[1] = extentLength[2];
 
-    // ZX, y-normal: coronal view
-    // same as above
-    // The size of the initial X and Z, which will be a combination of X, Y, and Z during execution, must be the diagonal of the volume. We will expand half a
-    // each band about the size of the X and Z axes.
-    // Warning: we are assuming that xbounds [0] = 0. The correct form would be (xbounds [1] - xbounds [0] (+1?)). The same for y and z.
+    /// ZX, y-normal: coronal view
+    /// same as above
+    /// The size of the initial X and Z, which will be a combination of
+    /// X, Y, and Z during execution, must be the diagonal of the volume. We will expand half a
+    /// each band about the size of the X and Z axes.
+    /// Warning: we are assuming that xbounds [0] = 0.
+    /// The correct form would be (xbounds [1] - xbounds [0] (+1?)). The same for y and z.
     double diagonal = sqrt(volumeSize[0] * volumeSize[0] + volumeSize[1] * volumeSize[1] + volumeSize[2] * volumeSize[2]);
     double halfDeltaX = (diagonal - volumeSize[0]) * 0.5;
     double halfDeltaZ = (diagonal - volumeSize[2]) * 0.5;
@@ -1162,14 +1165,15 @@ void QMPRExtension::initOrientation()
     m_coronalPlaneSource->SetPoint1(xbounds[1] + halfDeltaX, ybounds[0], zbounds[1] + halfDeltaZ);
     m_coronalPlaneSource->SetPoint2(xbounds[0] - halfDeltaX, ybounds[0], zbounds[0] - halfDeltaZ);
     m_coronalPlaneSource->Push(0.5 * volumeSize[1]);
-    // Calculem els extents del coronal
+    // We calculate the extent of the coronal
     double coronalExtentLength = sqrt(static_cast<double>(extentLength[0] * extentLength[0] + extentLength[1] * extentLength[1] + extentLength[2] *
             extentLength[2]));
-    // coronalExtentLength *= 2.0; // potser caldria doblar l'extent per assegurar que no es perdi detall (Nyquist)
+    ///coronalExtentLength * = 2.0; //
+    ///  maybe we should double the extent to ensure that no detail is lost (Nyquist)
     m_coronalExtentLength[0] = MathTools::roundUpToPowerOf2(MathTools::roundToNearestInteger(coronalExtentLength));
     m_coronalExtentLength[1] = m_coronalExtentLength[0];
 
-    // Posem les mides dels drawer points
+    // We put the sizes of the drawer points
     const double RadiusFactor = 0.01;
     double o[3], p1[3], p2[3];
     double width, height;
@@ -1203,7 +1207,7 @@ void QMPRExtension::createActors()
     QColor sagitalColor = QColor::fromRgbF(1.0, 0.6, 0.0);
     QColor coronalColor = QColor::fromRgbF(0.0, 1.0, 1.0);
 
-    // Creem els axis actors
+    // We create the axis actors
     m_sagitalOverAxialAxisActor = vtkAxisActor2D::New();
     m_coronalOverAxialIntersectionAxis = vtkAxisActor2D::New();
     m_coronalOverSagitalIntersectionAxis = vtkAxisActor2D::New();
@@ -1234,7 +1238,8 @@ void QMPRExtension::createActors()
     m_axialOverSagitalIntersectionAxis->TitleVisibilityOff();
     m_axialOverSagitalIntersectionAxis->GetProperty()->SetColor(axialColor.redF(), axialColor.greenF(), axialColor.blueF());
 
-    // De moment les línies de thickslab seran invisibles ja que no podem fer MIPs i al quedar superposats sobre les línies dels plans fan mal efecte
+    ///For now the thickslab lines will be invisible as we cannot do MIPs
+    /// and being superimposed on the lines of the planes have a bad effect
     m_thickSlabOverAxialActor->AxisVisibilityOff();
     m_thickSlabOverAxialActor->TickVisibilityOff();
     m_thickSlabOverAxialActor->LabelVisibilityOff();
@@ -1256,7 +1261,7 @@ void QMPRExtension::createActors()
     m_sagital2DView->getRenderer()->AddViewProp(m_axialOverSagitalIntersectionAxis);
     m_sagital2DView->getRenderer()->AddViewProp(m_thickSlabOverSagitalActor);
 
-    // Creem els drawer points
+    // We create the drawer points
 
     m_axialViewSagitalCenterDrawerPoint = new DrawerPoint();
     m_axialViewSagitalCenterDrawerPoint->increaseReferenceCount();
@@ -1277,7 +1282,7 @@ void QMPRExtension::createActors()
 
 void QMPRExtension::axialSliceUpdated(int slice)
 {
-    // Push relatiu que hem de fer = reubicar-nos a l'inici i colocar la llesca
+    // Relative push we have to do = relocate to the start and place the slice
     m_axialPlaneSource->Push(m_axialZeroSliceCoordinate - m_axialPlaneSource->GetOrigin()[2] + slice * m_axialSpacing[2]);
     m_axialPlaneSource->Update();
     updateControls();
@@ -1285,7 +1290,7 @@ void QMPRExtension::axialSliceUpdated(int slice)
 
 void QMPRExtension::updateControls()
 {
-    // Passem a sistema de coordenades de món
+    // Let's move on to the world coordinate system
     m_sagitalOverAxialAxisActor->GetPositionCoordinate()->SetCoordinateSystemToWorld();
     m_sagitalOverAxialAxisActor->GetPosition2Coordinate()->SetCoordinateSystemToWorld();
 
@@ -1309,18 +1314,18 @@ void QMPRExtension::updateControls()
     m_thickSlabPlaneSource->SetPoint2(m_coronalPlaneSource->GetPoint2());
     m_thickSlabPlaneSource->Push(m_thickSlab);
 
-    // Obtenim la transformació per passar de coordenades de móna coordenades de sagital
+    //We obtain the transformation to pass from mona coordinates to sagittal coordinates
     vtkTransform *worldToSagitalTransform = getWorldToSagitalTransform();
 
-    // Calculem les interseccions
+    //We calculate the intersections
 
     double r[3], t[3], position1[3], position2[3];
     const double Length = 2000.0;
 
-    // Projecció sagital sobre axial i viceversa
+    //Sagittal projection on axial and vice versa
     MathTools::planeIntersection(m_axialPlaneSource->GetOrigin(), m_axialPlaneSource->GetNormal(), m_sagitalPlaneSource->GetOrigin(),
                                  m_sagitalPlaneSource->GetNormal(), r, t);
-    // Normalitzem t per que sempre tinguem la mateixa llargada (1)
+    // We normalize t so that we always have the same length (1)
     MathTools::normalize(t);
 
     position1[0] = r[0] - t[0] * Length;
@@ -1339,11 +1344,11 @@ void QMPRExtension::updateControls()
     m_axialOverSagitalIntersectionAxis->SetPosition(position1[0], position1[1]);
     m_axialOverSagitalIntersectionAxis->SetPosition2(position2[0], position2[1]);
 
-    // Projecció coronal sobre sagital
+    // Coronal projection on sagittal
 
     MathTools::planeIntersection(m_coronalPlaneSource->GetOrigin(), m_coronalPlaneSource->GetNormal(), m_sagitalPlaneSource->GetOrigin(),
                                  m_sagitalPlaneSource->GetNormal(), r, t);
-    // Normalitzem t per que sempre tinguem la mateixa llargada (1)
+    //We normalize t so that we always have the same length (1)
     MathTools::normalize(t);
 
     position1[0] = r[0] - t[0] * Length;
@@ -1359,10 +1364,10 @@ void QMPRExtension::updateControls()
     m_coronalOverSagitalIntersectionAxis->SetPosition(position1[0], position1[1]);
     m_coronalOverSagitalIntersectionAxis->SetPosition2(position2[0], position2[1]);
 
-    // Projecció thick slab sobre sagital
+    // Thick slab projection on sagittal
     MathTools::planeIntersection(m_thickSlabPlaneSource->GetOrigin(), m_thickSlabPlaneSource->GetNormal(), m_sagitalPlaneSource->GetOrigin(),
                                  m_sagitalPlaneSource->GetNormal(), r, t);
-    // Normalitzem t per que sempre tinguem la mateixa llargada (1)
+    //We normalize t so that we always have the same length (1)
     MathTools::normalize(t);
 
     position1[0] = r[0] - t[0] * Length;
@@ -1378,10 +1383,10 @@ void QMPRExtension::updateControls()
     m_thickSlabOverSagitalActor->SetPosition(position1[0], position1[1]);
     m_thickSlabOverSagitalActor->SetPosition2(position2[0], position2[1]);
 
-    // Projecció coronal sobre axial
+    // Coronal projection on axial
     MathTools::planeIntersection(m_coronalPlaneSource->GetOrigin(), m_coronalPlaneSource->GetNormal(), m_axialPlaneSource->GetOrigin(),
                                  m_axialPlaneSource->GetNormal(), r, t);
-    // Normalitzem t per que sempre tinguem la mateixa llargada (1)
+    // We normalize t so that we always have the same length (1)
     MathTools::normalize(t);
 
     position1[0] = r[0] - t[0] * Length;
@@ -1395,10 +1400,10 @@ void QMPRExtension::updateControls()
     m_coronalOverAxialIntersectionAxis->SetPosition(position1[0], position1[1]);
     m_coronalOverAxialIntersectionAxis->SetPosition2(position2[0], position2[1]);
 
-    // Projecció thick slab sobre axial
+    //Thick slab projection on axial
     MathTools::planeIntersection(m_thickSlabPlaneSource->GetOrigin(), m_thickSlabPlaneSource->GetNormal(), m_axialPlaneSource->GetOrigin(),
                                  m_axialPlaneSource->GetNormal(), r, t);
-    // Normalitzem t per que sempre tinguem la mateixa llargada (1)
+    // We normalize t so that we always have the same length (1)
     MathTools::normalize(t);
 
     position1[0] = r[0] - t[0] * Length;
@@ -1412,7 +1417,7 @@ void QMPRExtension::updateControls()
     m_thickSlabOverAxialActor->SetPosition(position1[0], position1[1]);
     m_thickSlabOverAxialActor->SetPosition2(position2[0], position2[1]);
 
-    // Situem els drawer points
+    //We place the drawer points
 
     double center[3];
 
@@ -1442,7 +1447,7 @@ void QMPRExtension::updateControls()
 
     worldToSagitalTransform->Delete();
 
-    // Repintem l'escena
+    // Let's repaint the scene
     m_axial2DView->render();
     m_sagital2DView->render();
     m_coronal2DView->render();
@@ -1461,7 +1466,7 @@ void QMPRExtension::updatePlane(vtkPlaneSource *planeSource, vtkImageReslice *re
         return;
     }
 
-    // Calculate appropriate pixel spacing for the reslicing
+    //Calculate appropriate pixel spacing for the reslicing
     double spacing[3];
     m_volume->getSpacing(spacing);
 
@@ -1475,7 +1480,7 @@ void QMPRExtension::updatePlane(vtkPlaneSource *planeSource, vtkImageReslice *re
     int extent[6];
     m_volume->getExtent(extent);
 
-    // L'ordre de les dades és xmin, xmax, ymin, ymax, zmin i zmax
+    // The order of the data is xmin, xmax, ymin, ymax, zmin and zmax
     double bounds[] = { origin[0] + spacing[0] * extent[0],
                         origin[0] + spacing[0] * extent[1],
                         origin[1] + spacing[1] * extent[2],
@@ -1525,7 +1530,7 @@ void QMPRExtension::updatePlane(vtkPlaneSource *planeSource, vtkImageReslice *re
 
     double planeAxis1[3];
     double planeAxis2[3];
-    // Obtenim els vectors
+    // We get the vectors
     planeAxis1[0] = planeSource->GetPoint1()[0] - planeSource->GetOrigin()[0];
     planeAxis1[1] = planeSource->GetPoint1()[1] - planeSource->GetOrigin()[1];
     planeAxis1[2] = planeSource->GetPoint1()[2] - planeSource->GetOrigin()[2];
@@ -1534,16 +1539,16 @@ void QMPRExtension::updatePlane(vtkPlaneSource *planeSource, vtkImageReslice *re
     planeAxis2[1] = planeSource->GetPoint2()[1] - planeSource->GetOrigin()[1];
     planeAxis2[2] = planeSource->GetPoint2()[2] - planeSource->GetOrigin()[2];
 
-    // The x,y dimensions of the plane
+    //The x,y dimensions of the plane
     double planeSizeX = MathTools::normalize(planeAxis1);
     double planeSizeY = MathTools::normalize(planeAxis2);
 
     double normal[3];
     planeSource->GetNormal(normal);
 
-    // Generate the slicing matrix
+    //Generate the slicing matrix
     //
-    // Podria ser membre de classe, com era originariament o passar per paràmetre
+    // It could be a class member, as it was originally, or pass as a parameter
     vtkMatrix4x4 *resliceAxes = vtkMatrix4x4::New();
     resliceAxes->Identity();
     for (i = 0; i < 3; i++)
@@ -1574,9 +1579,9 @@ void QMPRExtension::updatePlane(vtkPlaneSource *planeSource, vtkImageReslice *re
 
     reslice->SetOutputSpacing(planeSizeX / extentLength[0], planeSizeY / extentLength[1], 1.0);
     reslice->SetOutputOrigin(0.0, 0.0, 0.0);
-    // TODO Li passem thickSlab que és double però això només accepta int's! Buscar si aquesta és la manera adequada. Potsre si volem fer servir doubles
-    // ho hauríem de combinar amb l'outputSpacing
-    // Obtenim una única llesca
+    // TODO We pass it thickSlab which is double but this only accepts int's! Find out if this is the right way. Maybe if we want to use doubles
+    // we should combine it with outputSpacing
+    // We get a single slice
     reslice->SetOutputExtent(0, extentLength[0] - 1, 0, extentLength[1] - 1, 0, static_cast<int>(m_thickSlab));
     reslice->Update();
 }
@@ -1638,7 +1643,7 @@ bool QMPRExtension::isParallel(double axis[3])
 {
     QVector3D xyzAxis(1, 0, 0);
     QVector3D axis3D(axis[0], axis[1], axis[2]);
-    // TODO Hauríem de tenir un mètode MathTools::areParallel(vector1, vector2)
+    // TODO We should have a MathTools :: areParallel method (vector1, vector2)
     if (MathTools::angleInDegrees(xyzAxis, axis3D) == 0.0)
     {
         return true;
@@ -1691,7 +1696,7 @@ void QMPRExtension::rotateMiddle(double degrees, double rotationAxis[3], vtkPlan
     m_transform->Translate(plane->GetCenter()[0], plane->GetCenter()[1], plane->GetCenter()[2]);
     m_transform->RotateWXYZ(degrees, rotationAxis);
     m_transform->Translate(-plane->GetCenter()[0], -plane->GetCenter()[1], -plane->GetCenter()[2]);
-    // Ara que tenim la transformació, l'apliquem als punts del pla (origen, punt1, punt2)
+    //Now that we have the transformation, we apply it to the points of the plane (origin, point1, point2)
     double newPoint[3];
     m_transform->TransformPoint(plane->GetPoint1(), newPoint);
     plane->SetPoint1(newPoint);
