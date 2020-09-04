@@ -947,7 +947,7 @@ void QMPRExtension::detectPushSagitalViewAxisActor()
     if (distanceToCoronal < PickingDistanceThreshold || distanceToAxial < PickingDistanceThreshold)
     {
         m_sagital2DView->setCursor(Qt::OpenHandCursor);
-        // Desactivem les tools perquè no facin interferència
+        // We disable the tools so that they do not interfere
         m_toolManager->disableAllToolsTemporarily();
         if (distanceToCoronal < distanceToAxial)
         {
@@ -1009,10 +1009,10 @@ void QMPRExtension::setInput(Volume *input)
     m_volume->setData(changeInfo->GetOutput());
     m_volume->setNumberOfPhases(input->getNumberOfPhases());
     m_volume->setNumberOfSlicesPerPhase(input->getNumberOfSlicesPerPhase());
-    // Cal que li indiquem l'identificador que hi ha al repositori de volums per
-    // tal que quan mostrem el menú de pacient se'ns mostri en negreta el volum actual
-    // Això no deixa de ser un HACK que deixarà d'existir quan no li fem la transformació
-    // inicial de l'origen al volum quan tinguem llest el nou mòdul d'MPR
+    // We need to tell you the identifier in the volume repository for
+    // such that when we show the patient menu we are shown in bold the current volume
+    // This is still a HACK that will cease to exist when we do not transform it
+    // initial source to volume when we have the new MPR module ready
     m_volume->setIdentifier(input->getIdentifier());
 
     m_volume->getSpacing(m_axialSpacing);
@@ -1022,7 +1022,7 @@ void QMPRExtension::setInput(Volume *input)
         m_sagitalReslice->Delete();
     }
     m_sagitalReslice = vtkImageReslice::New();
-    // Perquè l'extent d'output sigui suficient i no es "mengi" dades
+    //So that the output extent is sufficient and no data is "eaten"
     m_sagitalReslice->AutoCropOutputOn();
     m_sagitalReslice->SetInterpolationModeToCubic();
     m_sagitalReslice->SetInputData(m_volume->getVtkData());
@@ -1050,11 +1050,11 @@ void QMPRExtension::setInput(Volume *input)
     m_thickSlabSlider->setMaximum((int) maxThickSlab);
     m_thickSlabSpinBox->setMaximum(maxThickSlab);
 
-    // Posta a punt dels planeSource
+    // Tuning planeSource
     initOrientation();
 
     Volume *sagitalResliced = new Volume;
-    // TODO Això es necessari perquè tingui la informació de la sèrie, estudis, pacient...
+    // TODO This is necessary so that you have the information of the series, studies, patient ...
     sagitalResliced->setImages(m_volume->getImages());
     sagitalResliced->setData(m_sagitalReslice->GetOutput());
     sagitalResliced->setNumberOfPhases(1);
@@ -1063,7 +1063,7 @@ void QMPRExtension::setInput(Volume *input)
     m_sagital2DView->setInput(sagitalResliced);
 
     Volume *coronalResliced = new Volume;
-    // TODO Això es necessari perquè tingui la informació de la sèrie, estudis, pacient...
+    // TODO This is necessary so that you have the information of the series, studies, patient ...
     coronalResliced->setImages(m_volume->getImages());
     coronalResliced->setData(m_coronalReslice->GetOutput());
     coronalResliced->setNumberOfPhases(1);
@@ -1079,12 +1079,12 @@ void QMPRExtension::initOrientation()
 {
     // IMPORTANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    // Ara li donem a cada pla unes dimensions, extent, espaiat, etc d'acord com si aquests plans haguessin de ser ortogonals,però segons el pla de tall
-    // serà d'una manera o altre
-    // La vista axial mantindrà els espaiats i extents originals
-    // La vista sagital, com que únicament es podrà rotar sobre l'eix Y, mantindrà l'extent de la seva X igual que l'extent Y original. Els altres
-    // s'hauran d'adaptar a les distàncies corresponents a les diagonals zmax-xmax
-    // En la vista coronal, com que pot tenir qualsevol orientacio tindrà que adaptar els seus extents als màxims
+    // Now we give each plane some dimensions, extent, spacing, etc. according as if these planes should be orthogonal, but according to the cutting plane
+    // it will be one way or another
+    // The axial view will keep the original spaced and extended
+    // The sagittal view, as it can only be rotated on the Y axis, will keep the extent of its X the same as the original Y extent. The others
+    // must be adapted to the distances corresponding to the diagonals zmax-xmax
+    // In the coronal view, as it can have any orientation you will have to adapt its extensions to the maximums
 
     int extent[6];
     m_volume->getExtent(extent);
@@ -1094,7 +1094,7 @@ void QMPRExtension::initOrientation()
     double spacing[3];
     m_volume->getSpacing(spacing);
 
-    // Prevent obscuring voxels by offsetting the plane geometry
+    //Prevent obscuring voxels by offsetting the plane geometry
     double xbounds[] = { origin[0] + spacing[0] * (extent[0] - 0.5),
                          origin[0] + spacing[0] * (extent[1] + 0.5) };
     double ybounds[] = { origin[1] + spacing[1] * (extent[2] - 0.5),
@@ -1129,11 +1129,11 @@ void QMPRExtension::initOrientation()
     m_axialPlaneSource->SetPoint2(xbounds[0], ybounds[1], zbounds[0]);
     m_axialZeroSliceCoordinate = zbounds[0];
 
-    // YZ, x-normal : vista sagital
-    // Estem ajustant la mida del pla a les dimensions d'aquesta orientació
-    // La mida de la Y inicial, que serà una combinació d'X i Y durant l'execució, ha de ser la diagonal del pla XY. Ampliarem la meitat a cada banda
-    // sobre la mida d'Y.
-    // Atenció: estem assumint que xbounds[0] = 0. La forma correcta seria (xbounds[1] - xbounds[0] (+1?)). El mateix per y.
+    // YZ, x-normal: sagittal sight
+    // We are adjusting the size of the plane to the dimensions of this orientation
+    // The size of the initial Y, which will be a combination of X and Y during execution, must be the diagonal of the XY plane. We will enlarge half on each side
+    // about the size of Y.
+    // Warning: we are assuming that xbounds [0] = 0. The correct form would be (xbounds [1] - xbounds [0] (+1?)). The same for y.
     double xyDiagonal = sqrt(volumeSize[0] * volumeSize[0] + volumeSize[1] * volumeSize[1]);
     double halfDeltaY = (xyDiagonal - volumeSize[1]) * 0.5;
     m_sagitalPlaneSource->SetOrigin(xbounds[0], ybounds[0] - halfDeltaY, zbounds[1]);
@@ -1150,11 +1150,11 @@ void QMPRExtension::initOrientation()
     m_sagitalExtentLength[0] = MathTools::roundUpToPowerOf2(MathTools::roundToNearestInteger(sagitalExtentLengthX));
     m_sagitalExtentLength[1] = extentLength[2];
 
-    // ZX, y-normal : vista coronal
-    // ídem anterior
-    // La mida de la X i la Z inicials, que seran una combinació d'X, Y i Z durant l'execució, ha de ser la diagonal del volum. Ampliarem la meitat a
-    // cada banda sobre la mida dels eixos X i Z.
-    // Atenció: estem assumint que xbounds[0] = 0. La forma correcta seria (xbounds[1] - xbounds[0] (+1?)). El mateix per y i z.
+    // ZX, y-normal: coronal view
+    // same as above
+    // The size of the initial X and Z, which will be a combination of X, Y, and Z during execution, must be the diagonal of the volume. We will expand half a
+    // each band about the size of the X and Z axes.
+    // Warning: we are assuming that xbounds [0] = 0. The correct form would be (xbounds [1] - xbounds [0] (+1?)). The same for y and z.
     double diagonal = sqrt(volumeSize[0] * volumeSize[0] + volumeSize[1] * volumeSize[1] + volumeSize[2] * volumeSize[2]);
     double halfDeltaX = (diagonal - volumeSize[0]) * 0.5;
     double halfDeltaZ = (diagonal - volumeSize[2]) * 0.5;
