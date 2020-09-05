@@ -26,7 +26,7 @@ public:
 
     void init();
 
-    /// Declaració de claus
+    ///Key statement
     static const QString HorizontalSplitterGeometry;
     static const QString VerticalSplitterGeometry;
 };

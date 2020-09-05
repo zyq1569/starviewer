@@ -16,7 +16,7 @@
 
 namespace udg {
 
-// Definició de les claus
+// Definition of the keys
 const QString KeyPrefix("Starviewer-App-MPR/");
 const QString MPRSettings::HorizontalSplitterGeometry(KeyPrefix + "horizontalSplitter");
 const QString MPRSettings::VerticalSplitterGeometry(KeyPrefix + "verticalSplitter");
