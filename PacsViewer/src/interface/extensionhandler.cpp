@@ -330,7 +330,8 @@ void ExtensionHandler::processInput(const QStringList &inputFiles)
 void ExtensionHandler::processInput(QList<Patient*> patientsList, bool loadOnly)
 {
     QList<Patient*> mergedPatientsList = mergePatients(patientsList);
-    // If we try to load one of all the patients that is loaded the same as the one we have already loaded, we keep it
+    /// If we try to load one of all the patients that is
+    /// loaded the same as the one we have already loaded, we keep it
     bool canReplaceActualPatient = true;
     if (m_mainApp->getCurrentPatient())
     {
@@ -361,7 +362,7 @@ void ExtensionHandler::processInput(QList<Patient*> patientsList, bool loadOnly)
         {
             if (mainApp->isMinimized())
             {
-                //Sand the Starviewer window is minimized we return it to its original state when viewing the study
+                /// Sand the Starviewer window is minimized we return it to its original state when viewing the study
                 ScreenManager().restoreFromMinimized(mainApp);
             }
 
@@ -372,7 +373,7 @@ void ExtensionHandler::processInput(QList<Patient*> patientsList, bool loadOnly)
         }
         firstPatient = false;
 
-        // Once a patient is loaded, we can no longer replace him
+        /// Once a patient is loaded, we can no longer replace him
         canReplaceActualPatient = false;
     }
 }
