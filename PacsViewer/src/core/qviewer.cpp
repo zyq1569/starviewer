@@ -61,7 +61,7 @@ QViewer::QViewer(QWidget *parent)
 {
     m_lastAngleDelta = QPoint();
     m_defaultFitIntoViewportMarginRate = 0.0;
-    m_vtkWidget = new QVTKWidget(this);
+    m_vtkWidget = new QVTKWidget(this);//the QWidget of VTK(lib)
     m_vtkWidget->setFocusPolicy(Qt::WheelFocus);
     m_renderer = vtkRenderer::New();
 

@@ -63,6 +63,8 @@
 #include <QPair>
 #include <QWidgetAction>
 #include <QShortcut>
+/////////
+#include <QSplitter>
 // Shortucts
 #include "shortcuts.h"
 #include "shortcutmanager.h"
@@ -109,6 +111,10 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     this->setAttribute(Qt::WA_DeleteOnClose);
     ///class ExtensionWorkspace : public QTabWidget
     m_extensionWorkspace = new ExtensionWorkspace(this);
+
+
+    //m_splitter= new QSplitter;
+    //this->setCentralWidget(m_splitter);
     this->setCentralWidget(m_extensionWorkspace);
 
     DatabaseInstallation databaseInstallation;

@@ -29,7 +29,7 @@ class QLabel;
 class QProgressDialog;
 class QWidgetAction;
 class QShortcut;
-
+class QSplitter;
 namespace udg {
 // Forward declarations
 class ExtensionWorkspace;
@@ -195,6 +195,7 @@ private:
     ///Service and applet manager
     ExtensionHandler *m_extensionHandler;
 
+    QSplitter *m_splitter;
     /// Menus
     QMenu *m_fileMenu;
     QMenu *m_visualizationMenu;

@@ -75,18 +75,18 @@ Q2DViewer::Q2DViewer(QWidget *parent)
     connect(m_volumeReaderManager, SIGNAL(progress(int)), m_workInProgressWidget, SLOT(updateProgress(int)));
     connect(m_patientBrowserMenu, SIGNAL(selectedVolumes(QList<Volume*>)), this, SLOT(setInputAndRender(QList<Volume*>)));
 
-    // Creem anotacions i actors
+    // We create annotations and actors
     m_annotationsHandler = new Q2DViewerAnnotationHandler(this);
     initializeCamera();
 
-    // Creem el drawer, passant-li com a visor l'objecte this
+    // We create the drawer, passing the this object as a viewfinder
     m_drawer = new Drawer(this);
 
     m_imageOrientationOperationsMapper = new ImageOrientationOperationsMapper();
 
     m_alignPosition = Q2DViewer::AlignCenter;
 
-    // Inicialitzem el filtre de shutter
+    //We initialize the shutter filter
     m_showDisplayShutters = true;
     m_overlaysAreEnabled = true;
 }
@@ -95,16 +95,16 @@ Q2DViewer::~Q2DViewer()
 {
     delete m_displayUnitsFactory;
     delete m_dummyDisplayUnit;
-    // Fem delete d'altres objectes vtk en cas que s'hagin hagut de crear
+    // We delete other vtk objects in case they had to be created
     delete m_blender;
 
     removeViewerBitmaps();
     
-    // TODO hem hagut de fer eliminar primer el drawer per davant d'altres objectes
-    // per solucionar el ticket #539, però això denota que hi ha algun problema de
-    // disseny que fa que no sigui prou robust. L'ordre en que s'esborren els objectes
-    // no ens hauria d'afectar
-    // HACK Imposem que s'esborri primer el drawer
+    // TODO we had to first remove the drawer ahead of other objects
+    // to fix ticket # 539, but this indicates that there is a problem with
+    // design that makes it not robust enough. The order in which objects are deleted
+    // shouldn't affect us
+    // HACK We force the drawer to be deleted first
     delete m_drawer;
     delete m_imageOrientationOperationsMapper;
 
@@ -113,7 +113,7 @@ Q2DViewer::~Q2DViewer()
 
 void Q2DViewer::rotateClockWise(int times)
 {
-    // Almenys ha de ser 1 (+90º)
+    // Must be at least 1 (+ 90º)
     if (times <= 0)
     {
         return;
@@ -126,7 +126,7 @@ void Q2DViewer::rotateClockWise(int times)
 
 void Q2DViewer::rotateCounterClockWise(int times)
 {
-    // Almenys ha de ser 1 (-90º)
+    //Must be at least 1 (-90º)
     if (times <= 0)
     {
         return;
@@ -159,8 +159,8 @@ PatientOrientation Q2DViewer::getCurrentDisplayedImagePatientOrientation() const
         return PatientOrientation();
     }
     
-    // Si no estem a la vista axial (adquisició original) obtindrem
-    // la orientació a través de la primera imatge
+    // If we are not in the axial view (original acquisition) we will get
+    // orientation through the first image
     int index = (getCurrentViewPlane() == OrthogonalPlane::XYPlane) ? getCurrentSlice() : 0;
 
     PatientOrientation originalOrientation;
@@ -175,11 +175,11 @@ PatientOrientation Q2DViewer::getCurrentDisplayedImagePatientOrientation() const
     }
     else
     {
-        DEBUG_LOG("L'índex d'imatge actual és incorrecte o no hi ha imatges al volum. Això no hauria de passar en aquest mètode.");
+        DEBUG_LOG("The current image index is incorrect or there are no images in the volume. This should not happen in this method.");
         return PatientOrientation();
     }
     
-    // Escollim les etiquetes que hem agafar com a referència segons la vista actual
+    // We choose the labels we have taken as a reference according to the current view
     QString baseRowLabel;
     QString baseColumnLabel;
     switch (getCurrentViewPlane())
@@ -191,25 +191,25 @@ PatientOrientation Q2DViewer::getCurrentDisplayedImagePatientOrientation() const
 
     case OrthogonalPlane::YZPlane:
         baseRowLabel = originalOrientation.getColumnDirectionLabel();
-        // TODO Tenim la normal "al revés", en realitat hauria de ser el contrari
+        // TODO We have the normal “upside down”, it should actually be the opposite
         baseColumnLabel = PatientOrientation::getOppositeOrientationLabel(originalOrientation.getNormalDirectionLabel());
         break;
 
     case OrthogonalPlane::XZPlane:
         baseRowLabel = originalOrientation.getRowDirectionLabel();
-        // TODO Tenim la normal "al revés", en realitat hauria de ser el contrari
+        // TODOWe have the normal “upside down”, it should actually be the opposite
         baseColumnLabel = PatientOrientation::getOppositeOrientationLabel(originalOrientation.getNormalDirectionLabel());
         break;
     }
 
-    // Ara caldrà escollir les etiquetes corresponents en funció de les rotacions i flips
+    //You will now need to choose the appropriate labels based on the rotations and flips
     QString rowLabel;
     QString columnLabel;
     int absoluteRotateFactor = (4 + m_rotateFactor) % 4;
     if (getCurrentViewPlane() == OrthogonalPlane::YZPlane || getCurrentViewPlane() == OrthogonalPlane::XZPlane)
     {
-        // HACK FLIP De moment necessitem fer aquest truc. Durant el refactoring caldria
-        // veure si es pot fer d'una manera millor
+        // HACK FLIP At the moment we need to do this trick. During refactoring it would be necessary
+        // see if it can be done in a better way
         if (m_isImageFlipped)
         {
             absoluteRotateFactor = (absoluteRotateFactor + 2) % 4;
@@ -285,13 +285,14 @@ void Q2DViewer::updatePreferredImageOrientation()
         return;
     }
     
-    // Hi ha estudis que són de la modalitat MG que no s'han d'orientar. S'han afegit unes excepcions per poder-los controlar.
+    /// There are studies that are of the MG modality that should not be targeted.
+    /// Some exceptions have been added to be able to control them.
     MammographyImageHelper mammographyImageHelper;
     if (mammographyImageHelper.isStandardMammographyImage(image))
     {
         PatientOrientation desiredOrientation = mammographyImageHelper.getImageOrientationPresentation(image);
 
-        // Apliquem la orientació que volem
+        //We apply the orientation we want
         setImageOrientation(desiredOrientation);
     }
 }
@@ -460,7 +461,7 @@ void Q2DViewer::executeInputFinishedCommand()
 
 void Q2DViewer::setInputFinishedCommand(QViewerCommand *command)
 {
-    /// Ens assegurem que la nova command que ens passen no és la mateixa que tenim actualment
+    /// We make sure that the new command they pass us is not the same as we currently have
     if (command != m_inputFinishedCommand)
     {
         deleteInputFinishedCommand();
@@ -485,9 +486,11 @@ void Q2DViewer::loadVolumesAsynchronously(const QList<Volume*> &volumes)
 
     m_volumeReaderManager->readVolumes(volumes);
 
-    // TODO: De moment no tenim cap més remei que especificar un volume fals. La resta del viewer (i els que en depenen) s'esperen
-    // tenir un volum carregat després de cridar a setInput.
-    // També tenim el problema de que perquè surti al menú de botó dret com a seleccionat, cal posar-li el mateix id.
+    /// TODO:At the moment we have no choice but to specify a fake volume.
+    /// The rest of the viewer (and those that depend on it) are expected
+    /// have a volume loaded after calling setInput.
+    /// We also have the problem that in order for it to
+    /// appear in the right-click menu as selected, you have to put the same id.
     QList<Volume*> dummies;
     foreach (Volume *volume, volumes) {
         Volume *dummyVolume = getDummyVolumeFromVolume(volume);
@@ -522,7 +525,7 @@ void Q2DViewer::setNewVolumesAndExecuteCommand(const QList<Volume*> &volumes)
     {
         handleNotEnoughMemoryForVisualizationError();
 
-        // Use volumes.first() instead of getMainVolume() because the main volume has probably been deleted
+        /// Use volumes.first() instead of getMainVolume() because the main volume has probably been deleted
         Volume *dummyVolume = getDummyVolumeFromVolume(volumes.first());
         dummyVolume->setIdentifier(volumes.first()->getIdentifier());
         setNewVolumes(QList<Volume*>() << dummyVolume, false);
@@ -531,7 +534,7 @@ void Q2DViewer::setNewVolumesAndExecuteCommand(const QList<Volume*> &volumes)
 
 Volume* Q2DViewer::getDummyVolumeFromVolume(Volume *volume)
 {
-    // TODO: Estem perdent memòria durant la vida del 2dviewer, caldria esborrar el dummy d'abans
+    /// TODO:We are losing memory for the life of 2dviewer, the dummy from before would have to be deleted
     Volume *newVolume = new Volume(this);
     newVolume->setObjectName(DummyVolumeObjectName);
     newVolume->setImages(volume->getImages());
@@ -732,15 +735,15 @@ void Q2DViewer::updateOverlay()
     switch (m_overlapMethod)
     {
     case None:
-        // Actualitzem el pipeline
+        // We update the pipeline
         getMainDisplayUnit()->getImagePipeline()->setInput(getMainInput()->getVtkData());
-        // TODO aquest procediment és possible que sigui insuficient,
-        // caldria unficar el pipeline en un mateix mètode
+        // ALL of this procedure may be insufficient,
+        // the pipeline should be unified in the same method
         break;
 
     case Blend:
-        // TODO Revisar la manera de donar-li l'input d'un blending al visualitzador
-        // Aquest procediment podria ser insuficent de cares a com estigui construit el pipeline
+        // TODO Review how to give a blending input to the viewer
+        // This procedure may be insufficient in terms of how the pipeline is built
         m_blender->update();
         getMainDisplayUnit()->getImagePipeline()->setInput(m_blender->getOutput());
         break;
