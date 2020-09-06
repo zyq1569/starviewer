@@ -80,7 +80,8 @@ bool ApplicationCommandLineOptions::parse()
                 // We check if it is a valid option
                 if (m_commandLineOptions.contains(parameter))
                 {
-                    // If it is an option that we have specified as valid we insert it as a parsed, for now as an argument of the option we put ""
+                    /// If it is an option that we have specified as valid we insert it as a parsed,
+                    /// for now as an argument of the option we put ""
                     m_parsedOptions.insert(parameter, "");
 
                     lastParameterWasAnOption = true;
