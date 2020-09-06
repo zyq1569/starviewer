@@ -352,7 +352,7 @@ void ExtensionHandler::processInput(QList<Patient*> patientsList, bool loadOnly)
 
     bool firstPatient = true;
 
-    // We add correctly loaded patients
+    /// We add correctly loaded patients
     foreach (Patient *patient, mergedPatientsList)
     {
         generatePatientVolumes(patient, QString());
