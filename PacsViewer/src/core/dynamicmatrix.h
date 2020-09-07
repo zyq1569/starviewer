@@ -22,42 +22,42 @@ class QPoint;
 namespace udg {
 
 /**
-    Aquesta classe representa una matriu dinàmica d'enters, la qual permet afegir i obtenir valors sense tenir en compte
-    passar-se de rang. Està feta a partir d'una llista de llistes d'enters i dos punters, un per les files i un per
-    les columnes, que indiquen a quina fila o columna es troba el 0.
+This class represents a dynamic array of integers, which allows you to add and obtain values without considering
+     move away from rank. It is made from a list of integer lists and two pointers, one for rows and one for
+     columns, which indicate which row or column the 0 is in.
 
-    Així, si s'afegeix un element a la posició (fila -1, columna 0) el que es fara és afegir una QList a la primera posició
-    de la llista, i incrementar el punter de files.
+     Thus, if an item is added to the position (row -1, column 0) what will be done is to add a QList to the first position
+     from the list, and increase the row pointer.
 
-    Per afegir un element a la posició (fila x, columna -1), s'hi afegirà un -1 al principi de cada QList de la llista i modificarà
-    el punter de les columnes.
+     To add an item to the position (row x, column -1), a -1 will be added to the beginning of each QList in the list and modified
+     the pointer to the columns.
   */
 class DynamicMatrix {
 public:
-    /// Constructor per defecte.
+    /// Default constructor..
     DynamicMatrix();
-    /// Posa un valor a una fila i columna de la matriu, no sortirà mai de rang.
+    /// Put a value in a row and column of the array, it will never go out of range..
     void setValue(int row, int column, int value);
-    /// Retorna el valor de la matriu de la posició fila i columna, si no existeix retorna un -1.
+    /// Returns the value of the array of the row and column position, if it does not exist returns a -1.
     int getValue(int row, int column) const;
 
-    /// Mostra per debug el contingut de la matriu.
+    /// Debug the contents of the array.
     void print();
 
-    /// Retorna una llista amb tots els identificadors de les pantalles de la primera columna.
+    ///  Returns a list with all the identifiers of the screens in the first column.
     QList<int> getLeftColumn() const;
-    /// Retorna una llista amb tots els identificadors de les pantalles de la última columna.
+    /// Returns a list of all screen identifiers in the last column.
     QList<int> getRightColumn() const;
-    /// Retorna una llista amb tots els identificadors de les pantalles de la fila superior.
+    /// Returns a list of all identifiers on the top row screens.
     QList<int> getTopRow() const;
-    /// Retorna una llista amb tots els identificadors de les pantalles de la fila inferior.
+    /// Returns a list of all identifiers on the screens in the bottom row.
     QList<int> getBottomRow() const;
 
-    /// Mètode que indica si es pot maximitzar la finestra a més d'una pantalla (el crida ScreenManager).
+    /// Method that indicates whether the window can be maximized to more than one screen (called ScreenManager).
     bool isMaximizable() const;
     /// Returns the number of rows.
     int getNumberOfRows() const;
-    /// Retorna el nombre de columnes que te la fila més llarga.
+    /// Returns the number of columns in the longest row.
     int getNumberOfColumns() const;
 
     /// Returns the index of the first row.
@@ -71,13 +71,13 @@ public:
     bool getPosition(int value, int &row, int &column) const;
 
 private:
-    /// La llista de llistes que guarda l'estructura de la matriu.
+    /// The list of lists that stores the structure of the array.
     QList<QList<int> > m_matrix;
-    /// Indica on esta la posició de la fila 0 a la llista de llistes.
+    /// Indicates where the position of row 0 is in the list of lists.
     int m_indexRow;
-    /// Indica on esta la posició de la columna 0 a la llista de llistes.
+    /// Indicates where the position of column 0 is in the list of lists.
     int m_indexColumn;
-    /// Nombre de columnes que te la fila més llarga.
+    /// Number of columns with the longest row.
     int m_columnCount;
 };
 

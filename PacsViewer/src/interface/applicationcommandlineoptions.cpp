@@ -102,12 +102,12 @@ bool ApplicationCommandLineOptions::parse()
         }
         else
         {
-            // It's an argument
+            /// It's an argument
             if (lastParameterWasAnOption)
             {
                 if (nextParameterHasToBeAnArgumentOption)
                 {
-                    // If we have an argument and the last parameter was an option, it means this parameter is an argument
+                    /// If we have an argument and the last parameter was an option, it means this parameter is an argument
                     m_parsedOptions[lastOption.getName()] = parameter;
                 }
                 else

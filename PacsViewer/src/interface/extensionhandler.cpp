@@ -51,12 +51,13 @@ ExtensionHandler::ExtensionHandler(QApplicationMainWindow *mainApp, QObject *par
 
     createConnections();
 
-    // Each time we create a new window we will close any instance of QueryScreen. So it is clearer that
-    // the window that invokes it is the one that receives the result of this one
-    // EVERYTHING It is necessary to improve the design of the interaction with the QueryScreen in order not to have problems like those exposed in the tickets
-    // # 1858, # 1018. At the moment we solve it with these hacks, but they are not a good solution
-    // TODO: Slap for the starviewer to listen to RIS requests, as all the code to listen to RIS requests is in the
-    // queryscreen we have to instantiate it at the beginning so that it listens to the requests
+    /// Each time we create a new window we will close any instance of QueryScreen. So it is clearer that
+    /// the window that invokes it is the one that receives the result of this one
+    /// EVERYTHING It is necessary to improve the design of the interaction with the QueryScreen in
+    /// order not to have problems like those exposed in the tickets
+    /// # 1858, # 1018. At the moment we solve it with these hacks, but they are not a good solution
+    /// TODO: Slap for the starviewer to listen to RIS requests, as all the code to listen to RIS requests is in the
+    /// queryscreen we have to instantiate it at the beginning so that it listens to the requests
     disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
     connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
 
