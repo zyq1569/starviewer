@@ -28,36 +28,36 @@ class DICOMTagReader;
 
 class ThumbnailCreator {
 public:
-    /// Crea un thumbnail a partir de les imatges de la sèrie
+    /// Create a thumbnail from the images in the series
     QImage getThumbnail(const Series *series, int resolution = 96);
 
-    /// Crea el thumbnail de la imatge passada per paràmetre
+    /// Creates the thumbnail of the image passed by parameter
     QImage getThumbnail(const Image *image, int resolution = 96);
 
-    /// Obté el thumbnail a partir del DICOMTagReader
+    /// Get the thumbnail from the DICOMTagReader
     QImage getThumbnail(const DICOMTagReader *reader, int resolution = 96);
 
-    /// Crea un thumbnail buit personalitzat amb el text que li donem
+    /// Create a custom blank thumbnail with the text we give it
     static QImage makeEmptyThumbnailWithCustomText(const QString &text, int resolution = 96);
 
 private:
-    /// Crea el thumbnail d'un objecte dicom que sigui una imatge
+    /// Create the thumbnail of an object that is said to be an image
     QImage createImageThumbnail(const QString &imageFileName, int resolution);
 
     /// Creates a thumbnail from an icon file to the specified resolution
     QImage createIconThumbnail(const QString &iconFileName, int resolution);
 
-    /// Crea el thumbnail a partir d'un DICOMTagReader
+    /// Create the thumbnail from a DICOMTagReader
     QImage createThumbnail(const DICOMTagReader *reader, int resolution);
 
-    /// Crea el thumbnail a partir d'una DicomImage
+    /// Create the thumbnail from a DicomImage
     QImage createThumbnail(DicomImage *dicomImage, int resolution);
 
-    /// Comprova que el dataset compleixi els requisitis necessaris per poder fer un thumbnail
-    /// Retorna true si és un dataset vàlid, false altrament
+    /// Check that the dataset meets the requirements to be able to make a thumbnail
+    /// Returns true if it is a valid dataset, false otherwise
     bool isSuitableForThumbnailCreation(const DICOMTagReader *reader) const;
 
-    /// Converteix la DicomImage a una QPixmap
+    /// Convert DicomImage to a QPixmap
     QPixmap convertToQPixmap(DicomImage *dicomImage);
 };
 
