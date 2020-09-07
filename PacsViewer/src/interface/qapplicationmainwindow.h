@@ -195,7 +195,11 @@ private:
     ///Service and applet manager
     ExtensionHandler *m_extensionHandler;
 
+    /// widows
+    QWidget *m_thumbnailWidget;
+
     QSplitter *m_splitter;
+    bool m_flag;
     /// Menus
     QMenu *m_fileMenu;
     QMenu *m_visualizationMenu;
