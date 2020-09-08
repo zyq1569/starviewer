@@ -25,11 +25,11 @@
 #include "image.h"
 #include "logging.h"
 #include "dicomtagreader.h"
-// Fem servir dcmtk per l'escalat de les imatges dicom
+// We use dcmtk for scaling dicom images
 #include <dcmimage.h>
 #include <ofbmanip.h>
 #include <dcdatset.h>
-// Necessari per suportar imatges de color
+// Needed to support color images
 #include <diregist.h>
 
 namespace udg {
@@ -63,7 +63,7 @@ QImage ThumbnailCreator::getThumbnail(const Series *series, int resolution)
         {
             thumbnail = createIconThumbnail(":/images/icons/mime-unknown.svg", resolution);
 
-            // Si la sèrie no conté imatges en el thumbnail ho indicarem
+            // If the series does not contain images in the thumbnail we will indicate it
             //thumbnail = makeEmptyThumbnailWithCustomText(QObject::tr("No Images Available"));
         }
     }
@@ -117,12 +117,13 @@ QImage ThumbnailCreator::createThumbnail(const DICOMTagReader *reader, int resol
     {
         try
         {
-            // Carreguem el fitxer dicom a escalar
-            // Fem que en el cas que sigui una imatge multiframe, només carregui la primera imatge i prou, estalviant allotjar memòria innecessàriament
+            /// Let's load the dicom file to scale
+            /// Let's say that in the case of a multiframe image,
+            /// just load the first image and enough, saving unnecessarily hosting memory
             DicomImage *dicomImage = new DicomImage(reader->getDcmDataset(), reader->getDcmDataset()->getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
             thumbnail = createThumbnail(dicomImage, resolution);
 
-            // Cal esborrar la DicomImage per no tenir fugues de memòria
+            // DicomImage must be deleted to avoid memory leaks
             if (dicomImage)
             {
                 delete dicomImage;
@@ -130,13 +131,13 @@ QImage ThumbnailCreator::createThumbnail(const DICOMTagReader *reader, int resol
         }
         catch (std::bad_alloc &e)
         {
-            ERROR_LOG(QString("No s'ha pogut generar el thumbnail per falta de memòria: %1").arg(e.what()));
+            ERROR_LOG(QString("Failed to generate thumbnail due to memory failure: %1").arg(e.what()));
             thumbnail = makeEmptyThumbnailWithCustomText(PreviewNotAvailableText);
         }
     }
     else
     {
-        // Creem thumbnail alternatiu indicant que no es pot mostrar una imatge de preview
+        //We create an alternative thumbnail indicating that a preview image cannot be displayed
         thumbnail = makeEmptyThumbnailWithCustomText(PreviewNotAvailableText);
     }
 
@@ -157,9 +158,9 @@ QImage ThumbnailCreator::createThumbnail(DicomImage *dicomImage, int resolution)
     {
         dicomImage->hideAllOverlays();
         dicomImage->setMinMaxWindow(1);
-        // Escalem la imatge
+        // We scale the image
         DicomImage *scaledImage;
-        // Escalem pel cantó més gran
+        // We climb the biggest corner
         unsigned long width, height;
         if (dicomImage->getWidth() < dicomImage->getHeight())
         {
@@ -210,7 +211,7 @@ QImage ThumbnailCreator::createThumbnail(DicomImage *dicomImage, int resolution)
                 ok = true;
             }
 
-            // Cal esborrar la DicomImage per no tenir fugues de memòria
+            // DicomImage must be deleted to avoid memory leaks
             delete scaledImage;
         }
         else
@@ -225,7 +226,7 @@ QImage ThumbnailCreator::createThumbnail(DicomImage *dicomImage, int resolution)
         DEBUG_LOG(QString("Error loading the DicomImage. Error:% 1 ").arg(DicomImage::getString(dicomImage->getStatus())));
     }
 
-    // Si no hem pogut generar el thumbnail, creem un de buit
+    //If we were unable to generate the thumbnail, we create a blank one
     if (!ok)
     {
         thumbnail = makeEmptyThumbnailWithCustomText(PreviewNotAvailableText);
@@ -279,7 +280,7 @@ QPixmap ThumbnailCreator::convertToQPixmap(DicomImage *dicomImage)
     const int height = (int)(dicomImage->getHeight());
     imageHeader += QString("\n%1 %2\n255\n").arg(width).arg(height);
 
-    // QPixmap en la que carregarem el buffer de dades
+    // QPixmap in which we will load the data buffer
     QPixmap thumbnail;
     // Create output buffer for DicomImage class
     const int offset = imageHeader.size();
@@ -293,7 +294,7 @@ QPixmap ThumbnailCreator::convertToQPixmap(DicomImage *dicomImage)
         {
             if (!thumbnail.loadFromData((const unsigned char*)buffer, length, imageFormat.toLatin1()))
             {
-                DEBUG_LOG("La càrrega del buffer al thumbnail ha fallat :(");
+                DEBUG_LOG("Buffer upload to thumbnail failed :(");
             }
         }
         // Delete temporary pixel buffer
@@ -301,7 +302,7 @@ QPixmap ThumbnailCreator::convertToQPixmap(DicomImage *dicomImage)
     }
     else
     {
-        DEBUG_LOG("Memòria insuficient per crear el buffer del thumbnail!");
+        DEBUG_LOG("Insufficient memory to create thumbnail buffer!");
     }
 
     return thumbnail;
