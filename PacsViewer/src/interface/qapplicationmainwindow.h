@@ -198,10 +198,14 @@ private:
     /// widows
     QWidget *m_thumbnailWidget;
 
-    //----
-//    QSplitter *m_splitter;
-    QDockWidget *m_leftdock;
-    //---
+    //---------------------------------\\
+    //-------QDockWidget---------------||
+    //QSplitter *m_splitter;///////////||
+    QDockWidget *m_leftdock;///////////||
+    QWidget* m_oldtitle;    ///////////||
+    QWidget* m_newtitle;    ///////////||
+    //---------------------------------||
+    //---------------------------------\\
     bool m_flag;
     /// Menus
     QMenu *m_fileMenu;
