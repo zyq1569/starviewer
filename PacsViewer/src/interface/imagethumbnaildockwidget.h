@@ -10,6 +10,8 @@ public:
     ImageThumbnailDockWidget(const QString &title, QWidget *parent = nullptr,
                              Qt::WindowFlags flags = Qt::WindowFlags());
     ~ImageThumbnailDockWidget();
+private:
+    QPalette m_background;
 };
 
 #endif // IMAGETHUMBNAILDOCKWIDGET_H

@@ -202,7 +202,7 @@ private:
     //-------------------------------------------\\
     //-------QDockWidget--------------------------||
     //QSplitter *m_splitter;//////////////////////||
-    ImageThumbnailDockWidget *m_leftImageThumbnail;/////////||
+    ImageThumbnailDockWidget *m_DockImageThumbnail;/////////||
     QWidget* m_oldtitle;    //////////////////////||
     QWidget* m_newtitle;    //////////////////////||
     //--------------------------------------------||

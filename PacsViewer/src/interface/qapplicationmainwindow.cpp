@@ -113,21 +113,26 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 
     this->setAttribute(Qt::WA_DeleteOnClose);
 
-    //-----  add QDockWidget
-    m_leftImageThumbnail= new ImageThumbnailDockWidget("      ");//("Thumbnail");
-    //    m_oldtitle = m_leftdock->titleBarWidget();
-    //    m_newtitle = new QWidget();
-    //    m_leftdock->setTitleBarWidget(m_newtitle);
-    //    delete m_oldtitle;
-    //    m_oldtitle = 0;
-    addDockWidget(Qt::LeftDockWidgetArea,m_leftImageThumbnail);
-    m_leftImageThumbnail->setFeatures(QDockWidget::DockWidgetMovable);
-    m_leftImageThumbnail->setObjectName("ImageThumbnail");
-    //m_leftImageThumbnail->setMaximumWidth(200); //set title width !!!
-    //-------------------------------------------------
     ///class ExtensionWorkspace : public QTabWidget
     m_extensionWorkspace = new ExtensionWorkspace(this);
     this->setCentralWidget(m_extensionWorkspace);
+
+    //-------add QDockWidget-----------------------------------------------------
+
+    m_DockImageThumbnail= new ImageThumbnailDockWidget("      ");//("Thumbnail");
+
+    //m_oldtitle = m_leftdock->titleBarWidget();
+    //m_newtitle = new QWidget();
+    //m_DockImageThumbnail->setTitleBarWidget(m_newtitle);
+    //delete m_oldtitle;
+    //m_oldtitle = 0;
+
+    addDockWidget(Qt::LeftDockWidgetArea,m_DockImageThumbnail);
+    m_DockImageThumbnail->setFeatures(QDockWidget::DockWidgetMovable);
+    m_DockImageThumbnail->setObjectName("ImageThumbnail");
+    //m_leftImageThumbnail->setMaximumWidth(200); //set title width !!!
+
+    //-----------------------------------------------------------------------------
 
     DatabaseInstallation databaseInstallation;
     if (!databaseInstallation.checkDatabase())
