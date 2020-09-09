@@ -10,6 +10,7 @@ FORMS += qconfigurationdialogbase.ui \
         qaboutdialogbase.ui \
         qlicensedialogbase.ui
 HEADERS += qapplicationmainwindow.h \
+           imagethumbnaildockwidget.h \
            interfacesettings.h \
            appimportfile.h \
            extensionhandler.h \
@@ -20,6 +21,7 @@ HEADERS += qapplicationmainwindow.h \
            qaboutdialog.h \
            qlicensedialog.h
 SOURCES += qapplicationmainwindow.cpp \
+           imagethumbnaildockwidget.cpp \
            interfacesettings.cpp \
            appimportfile.cpp \
            extensionhandler.cpp \

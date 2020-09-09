@@ -30,6 +30,7 @@ class QProgressDialog;
 class QWidgetAction;
 class QShortcut;
 class QSplitter;
+class ImageThumbnailDockWidget;
 namespace udg {
 // Forward declarations
 class ExtensionWorkspace;
@@ -198,14 +199,14 @@ private:
     /// widows
     QWidget *m_thumbnailWidget;
 
-    //---------------------------------\\
-    //-------QDockWidget---------------||
-    //QSplitter *m_splitter;///////////||
-    QDockWidget *m_leftdock;///////////||
-    QWidget* m_oldtitle;    ///////////||
-    QWidget* m_newtitle;    ///////////||
-    //---------------------------------||
-    //---------------------------------\\
+    //-------------------------------------------\\
+    //-------QDockWidget--------------------------||
+    //QSplitter *m_splitter;//////////////////////||
+    ImageThumbnailDockWidget *m_leftImageThumbnail;/////////||
+    QWidget* m_oldtitle;    //////////////////////||
+    QWidget* m_newtitle;    //////////////////////||
+    //--------------------------------------------||
+    //--------------------------------------------\\
     bool m_flag;
     /// Menus
     QMenu *m_fileMenu;

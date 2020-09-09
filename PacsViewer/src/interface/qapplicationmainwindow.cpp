@@ -33,7 +33,9 @@
 #include "qaboutdialog.h"
 #include "externalapplication.h"
 #include "externalapplicationsmanager.h"
-
+//------------------------------------
+#include "imagethumbnaildockwidget.h"
+//------------------------------------
 // Pel LanguageLocale
 #include "coresettings.h"
 #include "inputoutputsettings.h"
@@ -66,7 +68,6 @@
 /////////
 #include <QSplitter>
 #include <QDesktopWidget>
-#include <QDockWidget>
 // Shortucts
 #include "shortcuts.h"
 #include "shortcutmanager.h"
@@ -111,54 +112,22 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     connect(StarviewerSingleApplicationCommandLineSingleton::instance(), SIGNAL(newOptionsToRun()), SLOT(newCommandLineOptionsToRun()));
 
     this->setAttribute(Qt::WA_DeleteOnClose);
-    ///class ExtensionWorkspace : public QTabWidget
-    //    m_flag = true;
-    //    if (m_flag)
-    //    {
+
     //-----  add QDockWidget
-    m_leftdock= new QDockWidget("");//("Thumbnail");
+    m_leftImageThumbnail= new ImageThumbnailDockWidget("      ");//("Thumbnail");
     //    m_oldtitle = m_leftdock->titleBarWidget();
     //    m_newtitle = new QWidget();
     //    m_leftdock->setTitleBarWidget(m_newtitle);
     //    delete m_oldtitle;
     //    m_oldtitle = 0;
-    addDockWidget(Qt::LeftDockWidgetArea,m_leftdock);
-    m_leftdock->setFeatures(QDockWidget::DockWidgetMovable);
-    m_leftdock->setObjectName("ImageThumbnail");
-    //m_leftdock->setMaximumWidth(200); //set title width !!!
+    addDockWidget(Qt::LeftDockWidgetArea,m_leftImageThumbnail);
+    m_leftImageThumbnail->setFeatures(QDockWidget::DockWidgetMovable);
+    m_leftImageThumbnail->setObjectName("ImageThumbnail");
+    //m_leftImageThumbnail->setMaximumWidth(200); //set title width !!!
     //-------------------------------------------------
+    ///class ExtensionWorkspace : public QTabWidget
     m_extensionWorkspace = new ExtensionWorkspace(this);
     this->setCentralWidget(m_extensionWorkspace);
-    //    }
-    //    else
-    //    {
-    //        //----------------------------------test splitter-------------------------------------
-    //        //m_splitter= new QSplitter(this);
-    //        m_splitter = new QSplitter(Qt::Horizontal, this);// 垂直划分
-    //        m_splitter->setHandleWidth(1);
-    //        m_splitter->setStyleSheet("QSplitter::handle{background:#FFFFFF}");
-    //        //this->setCentralWidget(m_splitter);
-
-    //        m_thumbnailWidget = new QWidget(m_splitter); //第一列
-    //        m_thumbnailWidget->setStyleSheet("background:#323232");
-    //        m_thumbnailWidget->resize(width()/10+5, height());
-    //        m_thumbnailWidget->setMaximumWidth(width()/8);
-
-    //        m_extensionWorkspace = new ExtensionWorkspace(m_splitter);//第二列
-    //        m_extensionWorkspace->setStyleSheet("background:#000000");
-    //        m_extensionWorkspace->resize(width()-height()/10-1, height());
-    //        m_extensionWorkspace->setMinimumWidth(width()/2);
-    //        //m_splitter->setCentralWidget(m_extensionWorkspace);
-    //        //this->setCentralWidget(m_extensionWorkspace);
-
-    //        //signal
-    //        connect(m_splitter, SIGNAL(splitterMoved(int,int)), this, SLOT(slotSplitterMoved(int,int)));
-    //        m_extensionWorkspace->setMouseTracking(true);
-    //        m_thumbnailWidget->setMouseTracking(true);
-    //        m_extensionWorkspace->installEventFilter(this);
-    //        m_thumbnailWidget->installEventFilter(this);
-    //        //---------------------------------add up----------------------------------------------------
-    //    }
 
     DatabaseInstallation databaseInstallation;
     if (!databaseInstallation.checkDatabase())
