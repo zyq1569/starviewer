@@ -28,9 +28,9 @@
 namespace udg {
 
 Image::Image(QObject *parent)
- : QObject(parent), m_sliceThickness(0.0), m_samplesPerPixel(1), m_photometricInterpretation("MONOCHROME2"), m_rows(0), m_columns(0), m_bitsAllocated(16),
- m_bitsStored(16), m_pixelRepresentation(0), m_rescaleSlope(1), m_rescaleIntercept(0), m_frameNumber(0), m_phaseNumber(0), m_volumeNumberInSeries(0),
- m_orderNumberInVolume(0), m_overlaysSplitComputed(false), m_parentSeries(NULL)
+    : QObject(parent), m_sliceThickness(0.0), m_samplesPerPixel(1), m_photometricInterpretation("MONOCHROME2"), m_rows(0), m_columns(0), m_bitsAllocated(16),
+      m_bitsStored(16), m_pixelRepresentation(0), m_rescaleSlope(1), m_rescaleIntercept(0), m_frameNumber(0), m_phaseNumber(0), m_volumeNumberInSeries(0),
+      m_orderNumberInVolume(0), m_overlaysSplitComputed(false), m_parentSeries(NULL)
 {
     m_estimatedRadiographicMagnificationFactor = 1.0;
     
@@ -267,7 +267,7 @@ void Image::addVoiLut(const VoiLut &voiLut)
     if (voiLut.isWindowLevel() && !voiLut.getWindowLevel().isValid())
     {
         QString logMessage = QString("WW/WL Inconsistent: %1, %2. No s'afegira a la imatge").arg(voiLut.getWindowLevel().getWidth())
-                                                                                            .arg(voiLut.getWindowLevel().getCenter());
+                .arg(voiLut.getWindowLevel().getCenter());
         WARN_LOG(logMessage);
         DEBUG_LOG(logMessage);
     }
@@ -429,16 +429,16 @@ QString Image::getFormattedImageTime() const
     QString formattedTime = m_imageTime;
     if (!formattedTime.isEmpty())
     {
-        // Seguim la suggerència de la taula 6.2-1 de la Part 5 del DICOM standard de tenir en compte el format hh:mm:ss.frac
+        /// We follow the suggestion in Table 6.2-1 of Part 5 of the DICOM standard to take into account the format hh: mm: ss.frac
         formattedTime = formattedTime.remove(":");
 
         QStringList split = formattedTime.split(".");
         QTime convertedTime = QTime::fromString(split[0], "hhmmss");
 
-        // Té fracció al final
+        /// It has fraction at the end
         if (split.size() == 2)
         {
-            // Trunquem a milisegons i no a milionèssimes de segons
+            ///We truncate to milliseconds and not to millionths of a second
             convertedTime = convertedTime.addMSecs(split[1].leftJustified(3, '0', true).toInt());
         }
         formattedTime = convertedTime.toString("HH:mm:ss");
@@ -459,12 +459,12 @@ const QString& Image::getTransferSyntaxUID() const
 
 double Image::distance(Image *image)
 {
-    // Càlcul de la distància (basat en l'algorisme de Jolinda Smith)
+    ///Distance calculation (based on Jolinda Smith's algorithm)
     double distance = 0.0;
     
-    // Origen del pla
+    ///Origin of the plan
     const double *imagePosition = image->getImagePositionPatient();
-    // Normal del pla sobre la qual projectarem l'origen
+    ///Normal of the plan on which we will project the origin
     QVector3D normalVector = image->getImageOrientationPatient().getNormalVector();
     distance = normalVector.x() * imagePosition[0] + normalVector.y() * imagePosition[1] + normalVector.z() * imagePosition[2];
 
@@ -490,8 +490,8 @@ QList<ImageOverlay> Image::getOverlays()
 {
     if (hasOverlays())
     {
-        // Si el número d'overlays que tenim assignats no coincideix amb el número d'elements de la llista
-        // significa que encara no els hem carregat
+        // If the number of overlays we have assigned does not match the number of items in the list
+        // means we haven't loaded them yet
         if (getNumberOfOverlays() != m_overlaysList.count())
         {
             readOverlays(false);
@@ -548,11 +548,11 @@ DisplayShutter Image::getDisplayShutterForDisplay()
     {
         return m_displayShutterForDisplay;
     }
- 
-    // Si arribem fins aquí, llavors significa que hem de construir el DisplayShutter per display
-    
-    // Primer eliminem els shutters que no tingui sentit aplicar
-    // com serien els shutters rectangulars que tinguin una mida igual o major a la imatge i els que no tenen cap forma definida
+
+    /// If we get this far, then it means we need to build the DisplayShutter for display
+
+    /// First we remove the shutters that don't make sense to apply
+    /// what would be the rectangular shutters that have a size equal to or larger than the image and those that have no defined shape
     QList<DisplayShutter> shutterList = this->getDisplayShutters();
     QRect imageRect(1, 1, this->getColumns(), this->getRows());
     for (int i = 0; i < shutterList.count(); ++i)
@@ -561,7 +561,7 @@ DisplayShutter Image::getDisplayShutterForDisplay()
         if (shutter.getShape() == DisplayShutter::RectangularShape)
         {
             QPolygon points = shutter.getAsQPolygon();
-            QRect shutterRect(points.at(0), points.at(2));       
+            QRect shutterRect(points.at(0), points.at(2));
             if (imageRect.intersected(shutterRect).contains(imageRect, false))
             {
                 shutterList.removeAt(i);
@@ -573,7 +573,7 @@ DisplayShutter Image::getDisplayShutterForDisplay()
         }
     }
 
-    // Un cop feta la criba, retornem la intersecció dels shutters resultants
+    /// Once the sieve is done, we return the intersection of the resulting shutters
     m_displayShutterForDisplay = DisplayShutter::intersection(shutterList);
     m_haveToBuildDisplayShutterForDisplay = false;
     
@@ -648,12 +648,12 @@ QPixmap Image::getThumbnail(bool getFromCache, int resolution)
     {
         if (getFromCache)
         {
-            // Primer provem de trobar el thumbnail amb número de volum i després sense número de volum
-            // Si no trobem cap fitxer, l'haurem de crear de nou
+            //First we try to find the thumbnail with volume number and then without volume number
+            ///If we can't find any files, we'll have to re-create them
 
-            // Obtenim el directori base on es pot trobar el thumbnail
+            ///We get the base directory where the thumbnail can be found
             QString thumbnailPath = QFileInfo(getPath()).absolutePath();
-            // Path absolut de l'arxiu de thumbnail
+            ///Absolute path of the thumbnail file
             QString thumbnailFilePath = QString("%1/thumbnail%2.png").arg(thumbnailPath).arg(getVolumeNumberInSeries());
 
             QFileInfo thumbnailFile(thumbnailFilePath);
@@ -686,15 +686,15 @@ QStringList Image::getSupportedModalities()
 {
     // Modalitats extretes de DICOM PS 3.3 C.7.3.1.1.1
     QStringList supportedModalities;
-    // Modalitats que sabem que són d'imatge i que en principi hem de poder suportar
+    ///Modalities that we know are image and that in principle we must be able to support
     supportedModalities << "CR" << "CT" << "MR" << "US" << "BI" << "DD" << "ES" << "PT" << "ST" << "XA" << "RTIMAGE" << "DX" << "IO" << "GM" << "XC" << "OP"
                         << "NM" << "OT" << "CD" << "DG" << "LS" << "RG" << "TG" << "RF" << "MG" << "PX" << "SM" << "ECG" << "IVUS";
-    // Modalitats "no estàndars" però que es correspondrien amb imatges que podem suportar
+    ///"Non-standard" modes but that would correspond to images we can support
     supportedModalities << "SC";
 
-    // Aquestes modalitats en principi no són d'imatge. Les mantenim documentades per si calgués incloure-les a la llista
-    // TODO Cal comprovar si són modalitats d'imatge i eliminar-les segons el cas
-    // "RTSTRUCT" << "RTRECORD" << "EPS" << "RTDOSE" << "RTPLAN" << "HD" << "SMR" << "AU"
+    ///These modalities are in principle not image. We keep them documented in case they need to be included in the list
+    /// TODO You need to check if they are image modes and delete them as appropriate
+    /// "RTSTRUCT" << "RTRECORD" << "EPS" << "RTDOSE" << "RTPLAN" << "HD" << "SMR" << "AU"
 
     return supportedModalities;
 }
@@ -711,8 +711,8 @@ bool Image::readOverlays(bool splitOverlays)
             ImageOverlay mergedOverlay = ImageOverlay::mergeOverlays(reader.getOverlays(), mergeOk);
             if (!mergeOk)
             {
-                ERROR_LOG("Ha fallat el merge d'overlays! Possible causa: falta de memòria");
-                DEBUG_LOG("Ha fallat el merge d'overlays! Possible causa: falta de memòria");
+                ERROR_LOG("Overlays merge failed! Possible cause: lack of memory");
+                DEBUG_LOG("Overlays merge failed! Possible cause: lack of memory");
                 return false;
             }
 
@@ -727,8 +727,8 @@ bool Image::readOverlays(bool splitOverlays)
     }
     else
     {
-        ERROR_LOG("Ha fallat la lectura de l'overlay de la imatge amb path: " + this->getPath());
-        DEBUG_LOG("Ha fallat la lectura de l'overlay de la imatge amb path: " + this->getPath());
+        ERROR_LOG("Failed to read image overlay with path: " + this->getPath());
+        DEBUG_LOG("Failed to read image overlay with path: " + this->getPath());
         return false;
     }
 }

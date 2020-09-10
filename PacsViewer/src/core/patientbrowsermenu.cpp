@@ -32,9 +32,9 @@
 namespace udg {
 
 PatientBrowserMenu::PatientBrowserMenu(QWidget *parent)
- : QWidget(parent), m_patientBrowserList(0), m_patientAdditionalInfo(0)
+    : QWidget(parent), m_patientBrowserList(0), m_patientAdditionalInfo(0)
 {
-    // Inicialment no sabem en quina pantalla es pot desplegar el menú
+    // Initially we do not know on which screen the menu can be displayed
     m_currentScreenID = m_leftScreenID = m_rightScreenID = -1;
 
     m_showFusionOptions = false;
@@ -52,24 +52,24 @@ void PatientBrowserMenu::setPatient(Patient *patient)
     
     foreach (Study *study, patient->getStudies())
     {
-        // Extreiem el caption de l'estudi
+        // We extract the caption from the study
         caption = tr("Study %1 %2 [%3] %4")
-            .arg(study->getDate().toString(Qt::ISODate))
-            .arg(study->getTimeAsString())
-            .arg(study->getModalitiesAsSingleString())
-            .arg(study->getDescription());
+                .arg(study->getDate().toString(Qt::ISODate))
+                .arg(study->getTimeAsString())
+                .arg(study->getModalitiesAsSingleString())
+                .arg(study->getDescription());
 
-        // Per cada sèrie de l'estudi extreurem el seu label i l'identificador
+        // For each series of the study we will extract its label and identifier
         QList<QPair<QString, QString> > itemsList;
         QList<QPair<QString, QString> > fusionItemsList;
         foreach (Series *series, study->getViewableSeries())
         {
             label = tr(" Series %1: %2 %3 %4 %5")
-                        .arg(series->getSeriesNumber().trimmed())
-                        .arg(series->getProtocolName().trimmed())
-                        .arg(series->getDescription().trimmed())
-                        .arg(series->getBodyPartExamined())
-                        .arg(series->getViewPosition());
+                    .arg(series->getSeriesNumber().trimmed())
+                    .arg(series->getProtocolName().trimmed())
+                    .arg(series->getDescription().trimmed())
+                    .arg(series->getBodyPartExamined())
+                    .arg(series->getViewPosition());
 
             int volumeNumber = 1;
             foreach (Volume *volume, series->getVolumesList())
@@ -88,7 +88,7 @@ void PatientBrowserMenu::setPatient(Patient *patient)
                 volumeNumber++;
                 // Identifier
                 itemPair.second = QString::number(volume->getIdentifier().getValue());
-                // Afegim el parell a la llista
+                // We add the pair to the list
                 itemsList << itemPair;
 
                 // Look for fusion pairs
@@ -126,7 +126,7 @@ void PatientBrowserMenu::setPatient(Patient *patient)
                                                 itemPair.first = QString("%1 + %2").arg(series->getProtocolName().trimmed() + series->getDescription().trimmed()).arg(secondSeries->getProtocolName().trimmed() + secondSeries->getDescription().trimmed());
                                                 // Identifier
                                                 itemPair.second = QString("%1+%2").arg(volume->getIdentifier().getValue()).arg(secondVolume->getIdentifier().getValue());
-                                                // Afegim el parell a la llista
+                                                //We add the pair to the list
                                                 fusionItemsList << itemPair;
                                             }
                                         }
@@ -138,7 +138,7 @@ void PatientBrowserMenu::setPatient(Patient *patient)
                 }
             }
         }
-        // Afegim les sèries agrupades per estudi
+        // We add the series grouped by study
         m_patientBrowserList->addItemsGroup(caption, itemsList << fusionItemsList);
     }
 
@@ -162,7 +162,7 @@ void PatientBrowserMenu::updateActiveItemView(const QString &identifier)
             Volume *volume = VolumeRepository::getRepository()->getVolume(id);
             if (volume)
             {
-                // Actualitzem les dades de l'item amb informació adicional
+                //We update the item data with additional information
                 PatientBrowserMenuExtendedItem *item = new PatientBrowserMenuExtendedItem(m_patientAdditionalInfo);
                 item->setPixmap(volume->getThumbnail());
                 Series *series = volume->getImage(0)->getParentSeries();
@@ -183,16 +183,16 @@ void PatientBrowserMenu::updateActiveItemView(const QString &identifier)
         Volume *volume = VolumeRepository::getRepository()->getVolume(id);
         if (volume)
         {
-            // Actualitzem les dades de l'item amb informació adicional
+            // We update the item data with additional information
             PatientBrowserMenuExtendedItem *item = new PatientBrowserMenuExtendedItem(m_patientAdditionalInfo);
             item->setPixmap(volume->getThumbnail());
             Series *series = volume->getImage(0)->getParentSeries();
             item->setText(QString(tr("%1\n%2\n%3\n%4 Images"))
-                                            .arg(series->getDescription().trimmed())
-                                            .arg(series->getModality().trimmed())
-                                            .arg(series->getProtocolName().trimmed())
-                                            .arg(volume->getNumberOfFrames())
-                                             );
+                          .arg(series->getDescription().trimmed())
+                          .arg(series->getModality().trimmed())
+                          .arg(series->getProtocolName().trimmed())
+                          .arg(volume->getNumberOfFrames())
+                          );
             m_patientAdditionalInfo->setItems(QList<PatientBrowserMenuExtendedItem*>() << item);
         }
     }
@@ -201,10 +201,10 @@ void PatientBrowserMenu::updateActiveItemView(const QString &identifier)
 
 void PatientBrowserMenu::popup(const QPoint &point, const QString &identifier)
 {
-    // Marquem l'ítem actual de la llista
+    // We mark the current item in the list
     m_patientBrowserList->markItem(identifier);
 
-    // Determinem quines són les pantalles que tenim
+    // We determine what screens we have
     ScreenManager screenManager;
     m_currentScreenID = screenManager.getScreenID(point);
     ScreenLayout screenLayout = screenManager.getScreenLayout();
@@ -216,19 +216,19 @@ void PatientBrowserMenu::popup(const QPoint &point, const QString &identifier)
     m_patientBrowserList->setMaximumWidth(currentScreenGeometry.width() - 300);
     m_patientBrowserList->setMaximumHeight(currentScreenGeometry.height() - currentScreenGeometry.height() / 5);
 
-    // Calculem l'alineament del menú
+    //We calculate the alignment of the menu
     bool rightAligned = shouldAlignMenuToTheRight(currentScreenGeometry);
     
-    // Calculem quanta part de la llista queda fora segons la geometria de la pantalla on se'ns ha demanat obrir el menú
-    // i així poder determinar la posició del widget per tal que no surti fora de la pantalla i es pugui veure el seu contingut.
+    // Calculate how much of the list is left out according to the geometry of the screen where we have been asked to open the menu
+    // and thus be able to determine the position of the widget so that it does not go out of the screen and its content can be seen.
     QSize outside;
     computeListOutsideSize(point, outside, rightAligned);
 
-    // TODO Què fem si la pantalla adicional té una alçada més petita que l'actual? Recalculem tot el menú perquè tingui l'alçada menor?
-    // De moment això no es tindrà en compte
-    
-    // Si els valors són positius caldrà moure la posició original com a mínim tot el que ens sortim de les fronteres
-    // TODO En teoria aquest Margin no seria necessari si fèssim servir frameGeometry() en comptes de sizeHint()
+    // TODO What do we do if the additional screen has a smaller height than the current one? Do we recalculate the entire menu so that it has the lowest height?
+    // At the moment this will not be taken into account
+
+    // If the values are positive it will be necessary to move the original position at least everything that we leave the borders
+    // TODO In theory this Margin would not be necessary if we used frameGeometry () instead of sizeHint ()
     const int Margin = 5;
     int menuXPosition = point.x();
     int menuYPosition = point.y();
@@ -241,42 +241,42 @@ void PatientBrowserMenu::popup(const QPoint &point, const QString &identifier)
         menuYPosition -= outside.height() + Margin;
     }
 
-    // Movem la finestra del menu al punt que toca
+    //We move the menu window to the point it touches
     m_patientBrowserList->move(menuXPosition, menuYPosition);
 
-    // Col·loquem el widget amb la informació adicional a la dreta o l'esquerra del principal segons l'espai disponible
+    // We place the widget with the additional information to the right or left of the main one according to the available space
     placeAdditionalInfoWidget();
     m_patientAdditionalInfo->show();
-    // TODO: HACK si no mostrem l'"Aditional info" abans que el "browser list" després no processa els events
-    // correctament i quan seleccionem una sèrie no arriba el signal enlloc i no es pot seleccionar cap sèrie
-    // relacionat amb el ticket #555 Això només passa amb qt 4.3, amb qt 4.2 no tenim aquest
-    // problema. Amb qt 4.2 podem fer show en l'ordre que volguem. El que fem per evitar flickering és mostrar-lo sota mateix
-    // del "browser list" i així no es nota tant
-    // Això, a partir de Qt 4.7 sembla que només passa a Mac. Semblaria que això és el símptoma d'un altre problema: que es mostri com un popup?
+    // TODO: HACK if we don't show the "Additional information" before the "browser list" then it doesn't process the events
+    // correctly and when we select a series the signal does not get anywhere and no series can be selected
+    // related to ticket # 555 This only happens with qt 4.3, with qt 4.2 we don't have this one
+    // problem. With qt 4.2 we can do show in the order we want. What we do to avoid flickering is show it under itself
+    // from the "browser list" and so it is not so noticeable
+    // This, as of Qt 4.7 seems to only happen on Mac. It would seem that this is the symptom of another problem: that it is displayed as a popup?
     m_patientBrowserList->show();
 
-    // TODO No es té en compte si després d'haver mogut de lloc el widget aquest ja es veu correctament,
-    // ja que es podria donar el cas que el widget no hi cabés a tota la pantalla
-    // Caldria millorar el comportament en certs aspectes, com per exemple, redistribuir les files i columnes
-    // del llistat si aquest no hi cap a la pantalla, per exemple.
+    // TODO It is not taken into account if after having moved the widget it already looks correctly,
+    // since the widget might not fit in full screen
+    // Behavior should be improved in certain aspects, such as redistributing rows and columns
+    // from the list if it doesn't fit on the screen, for example.
 }
 
 bool PatientBrowserMenu::shouldAlignMenuToTheRight(const QRect &currentScreenGeometry)
 {
     bool rightAligned = true;
-    // Cal comprovar si la llista resultant és més ample
+    // Check if the resulting list is wider
     if (m_patientBrowserList->sizeHint().width() > currentScreenGeometry.width())
     {
         if (m_leftScreenID == -1)
         {
             if (m_rightScreenID == -1)
             {
-                // No podem expandir més, no tenim més pantalles.
-                // TODO Explorar top i bottom?
+                // We can't expand anymore, we don't have more screens.
+                // TODO Explore top and bottom?
             }
             else
             {
-                // Tenim pantalla per expandir-nos a la dreta
+                //We have screen to expand to the right
                 rightAligned = false;
             }
         }
@@ -284,13 +284,13 @@ bool PatientBrowserMenu::shouldAlignMenuToTheRight(const QRect &currentScreenGeo
         {
             if (m_rightScreenID == -1)
             {
-                // Tenim pantalla per expandir-nos a l'esquerra
+                //We have screen to expand to the left
                 rightAligned = true;
             }
             else
             {
-                // Tenim pantalles a esquerra i dreta. Cal escollir quina és la més adequada.
-                // Opció 1) La pantalla amb la mateixa alçada o major per mantenir aspecte
+                // We have screens on the left and right. You need to choose the most appropriate one.
+                // Option 1) The screen with the same height or greater to maintain appearance
                 ScreenLayout screenLayout = ScreenManager().getScreenLayout();
                 QRect leftScreenGeometry = screenLayout.getScreen(m_leftScreenID).getGeometry();
                 QRect rightScreenGeometry = screenLayout.getScreen(m_rightScreenID).getGeometry();
@@ -312,21 +312,21 @@ bool PatientBrowserMenu::shouldAlignMenuToTheRight(const QRect &currentScreenGeo
 
 void PatientBrowserMenu::computeListOutsideSize(const QPoint &popupPoint, QSize &out, bool rightAligned)
 {
-    // Obtenim la geometria de la pantalla on se'ns ha demanat obrir el menú
+    // We get the geometry of the screen where we have been asked to open the menu
     ScreenLayout screenLayout = ScreenManager().getScreenLayout();
     QRect currentScreenGeometry = screenLayout.getScreen(m_currentScreenID).getAvailableGeometry();
     QPoint currentScreenGlobalOriginPoint = currentScreenGeometry.topLeft();
 
-    // Calculem les mides dels widgets per saber on els hem de col·locar
-    // TODO Aquestes mesures no són les més exactes. Les adequades haurien de basar-se en els valors de QWidget::frameGeometry()
-    // tal com s'explica a http://doc.trolltech.com/4.7/application-windows.html#window-geometry
-    // El problema és que cal que abans haguem fet un show() per saber les mides de veritat. Una opció també seria implementar
-    // aquest posicionament quan es produeix un resize d'aquests widgets. Aquesta és una de les raons per la qual veiem el menú
-    // adicional amb una petita ombra quan es queda a la dreta del principal.
+    // We calculate the sizes of the widgets to know where to place them
+    // TODO These measurements are not the most accurate. The appropriate ones should be based on the values ​​of QWidget :: frameGeometry ()
+    // as explained at http://doc.trolltech.com/4.7/application-windows.html#window-geometry
+    // The problem is that we need to have done a show () before to know the true sizes. One option would also be to implement
+    // this positioning when a resize of these widgets occurs. This is one of the reasons we see the menu
+    // additional with a small shadow when it stays to the right of the main one.
     int mainMenuApproximateWidth = m_patientBrowserList->sizeHint().width();
     int wholeMenuApproximateHeight = qMax(m_patientBrowserList->sizeHint().height(), m_patientAdditionalInfo->sizeHint().height());
 
-    // Calculem les fronteres per on ens podria sortir el menú (lateral dret/esquerre)
+    //// Calculate the borders where the menu could come out (right / left side)
     if (rightAligned)
     {
         int globalRight = currentScreenGlobalOriginPoint.x() + currentScreenGeometry.width();
@@ -340,7 +340,7 @@ void PatientBrowserMenu::computeListOutsideSize(const QPoint &popupPoint, QSize 
         out.setWidth(widgetLeft - globalLeft);
     }
     
-    // Calculem les fronteres per on ens podria sortir el menú (alçada)
+    // We calculate the borders where the menu could come out (height)
     int globalBottom = currentScreenGlobalOriginPoint.y() + currentScreenGeometry.height();
     int widgetBottom = wholeMenuApproximateHeight + popupPoint.y();
     out.setHeight(widgetBottom - globalBottom);
@@ -352,45 +352,46 @@ void PatientBrowserMenu::placeAdditionalInfoWidget()
     QRect currentScreenGeometry = screenLayout.getScreen(m_currentScreenID).getAvailableGeometry();
     QPoint currentScreenGlobalOriginPoint = currentScreenGeometry.topLeft();
 
-    // TODO Aquesta mesura no és la més exacta. L'adequada hauria de basar-se en els valors de QWidget::frameGeometry()
+    // TODOThis measure is not the most accurate. The appropriate one should be based on the values of QWidget :: frameGeometry ()
     int mainMenuApproximateWidth = m_patientBrowserList->sizeHint().width();
     int menuXPosition = m_patientBrowserList->pos().x();
     int menuYPosition = m_patientBrowserList->pos().y();
-    // Cal fer un adjust size abans perquè les mides del widget quedin actualitzades correctament
+    //An adjust size must be made first so that the widget sizes are updated correctly
     m_patientAdditionalInfo->adjustSize();
     int additionalInfoWidgetApproximateWidth = m_patientAdditionalInfo->frameGeometry().width();
 
     int menuXShift = 0;
     if (menuXPosition + mainMenuApproximateWidth + additionalInfoWidgetApproximateWidth > currentScreenGlobalOriginPoint.x() + currentScreenGeometry.width())
     {
-        // En cas que la combinació de menús en sí, ja ocupi tota la pantalla comprobem en quina pantalla és millor col·locar el menú addicional
+        ///In case the menu combination itself already occupies the entire screen
+        /// we check on which screen it is better to place the additional menu
         if (mainMenuApproximateWidth + additionalInfoWidgetApproximateWidth >= currentScreenGlobalOriginPoint.x() + currentScreenGeometry.width())
         {
             if (m_leftScreenID != -1)
             {
-                // A l'esquerra
+                // To the left
                 menuXShift = -additionalInfoWidgetApproximateWidth;
             }
             else if (m_rightScreenID != -1)
             {
-                // A la dreta
+                //On the right
                 menuXShift = mainMenuApproximateWidth;
             }
             else
             {
-                // No tenim pantalles ni a esquerre ni a dreta, li indiquem a l'esquerra
+                //  We have no screens either left or right, we indicate on the left
                 menuXShift = -additionalInfoWidgetApproximateWidth;
             }
         }
         else
         {
-            // Tenim espai a l'esquerra, dins de la mateixa pantalla
+            // We have space on the left, inside the same screen
             menuXShift = -additionalInfoWidgetApproximateWidth;
         }
     }
     else
     {
-        // Tenim espai a la dreta, dins de la mateixa pantalla
+        //  We have space on the right, inside the same screen
         menuXShift = mainMenuApproximateWidth;
     }
 
