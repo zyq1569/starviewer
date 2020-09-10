@@ -119,7 +119,7 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 
     //-------add QDockWidget-----------------------------------------------------
 
-    m_DockImageThumbnail= new ImageThumbnailDockWidget("      ");//("Thumbnail");
+    m_DockImageThumbnail= new ImageThumbnailDockWidget("Thumbnail");//("Thumbnail");
 
     //m_oldtitle = m_leftdock->titleBarWidget();
     //m_newtitle = new QWidget();
