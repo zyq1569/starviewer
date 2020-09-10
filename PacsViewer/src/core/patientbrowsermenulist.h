@@ -31,7 +31,7 @@ Widget that represents the contents of the menu in a list of items
 These items will be organized in rows and columns within a group to which we will give a "caption"
 */
 class PatientBrowserMenuList : public QWidget {
-Q_OBJECT
+    Q_OBJECT
 
 public:
     PatientBrowserMenuList(QWidget *parent = 0);
@@ -55,7 +55,7 @@ public:
     /// Sets the width of the widget
     void setMaximumWidth(int width);
 
-	virtual QSize sizeHint() const;
+    virtual QSize sizeHint() const;
 signals:
     /// Signal that is emitted when the mouse enters the widget and notifies us of its identifier
     void isActive(QString);

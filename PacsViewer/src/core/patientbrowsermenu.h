@@ -29,7 +29,7 @@ class PatientBrowserMenuList;
 /**
 Widget in the form of a menu that displays the patient information we give him
 input so that we can browse their studies and corresponding volumes
-  */
+*/
 class PatientBrowserMenu : public QWidget {
     Q_OBJECT
 public:
@@ -68,7 +68,8 @@ private:
 
     /// Calculates the size that is outside the widget screen with the list of studies / series according to the popup point.
     /// If it is inside the screen, the size will be (0,0). The third parameter indicates how we want the menu to be aligned
-    /// with respect to the screen. If true, do the calculations keeping in mind that it is aligned to the right, otherwise as if it is aligned to the left
+    /// with respect to the screen. If true, do the calculations keeping in mind that it is aligned to the right,
+    /// otherwise as if it is aligned to the left
     void computeListOutsideSize(const QPoint &popupPoint, QSize &out, bool rightAligned);
 
     /// Place the additional information widget in the most appropriate place depending on the position of the main menu
