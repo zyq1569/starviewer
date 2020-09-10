@@ -27,9 +27,9 @@ class PatientBrowserMenuGroup;
 class PatientBrowserMenuBasicItem;
 
 /**
-    Widget que representa el contingut del menú en un llistat d'ítems
-    Aquests ítems s'organitzaran en files i columnes dins d'un grup al que li donarem un "caption"
-  */
+Widget that represents the contents of the menu in a list of items
+These items will be organized in rows and columns within a group to which we will give a "caption"
+*/
 class PatientBrowserMenuList : public QWidget {
 Q_OBJECT
 
@@ -37,16 +37,16 @@ public:
     PatientBrowserMenuList(QWidget *parent = 0);
     ~PatientBrowserMenuList();
 
-    /// Afegeix un grup d'ítems amb le caption donat
+    /// Adds a group of items with the given caption
     void addItemsGroup(const QString &caption, const QList<QPair<QString, QString> > &itemsList);
 
-    /// Marquem com a seleccionat l'ítem que tingui l'identificador donat
+    /// We mark as selected the item that has the given identifier
     void markItem(const QString &identifier);
 
-    /// Retorna l'identificador de l'ítem que tinguem marcat com a seleccionat
+    /// Returns the identifier of the item that we have marked as selected
     QString getMarkedItem() const;
 
-    /// Tractament dels events
+    /// Treatment of events
     bool event(QEvent *event);
 
     /// Sets the maximum height of the widget
@@ -57,23 +57,23 @@ public:
 
 	virtual QSize sizeHint() const;
 signals:
-    /// Senyal que s'emet quan el mouse entra en el widget i ens notifica el seu identificador
+    /// Signal that is emitted when the mouse enters the widget and notifies us of its identifier
     void isActive(QString);
 
-    /// Senyal que s'emet quan no hi ha cap item activat
+    /// Signal that is emitted when no item is activated
     void isNotActive();
 
-    /// Aquest senyal s'emet quan s'escull una ítem i ens notifica el seu identificador
+    /// This signal is emitted when an item is chosen and notifies us of its identifier
     void selectedItem(QString);
 
-    /// Signal que s'emet quan es rep l'event de tancar el menu
+    /// Signal that is emitted when the menu closing event is received
     void closed();
 
 private slots:
     void updateSize();
 
 private:
-    /// Ítem que tenim marcat
+    /// Item we have marked
     QString m_markedItem;
 
     /// List of item groups of the series

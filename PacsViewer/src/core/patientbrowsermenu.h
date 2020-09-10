@@ -28,7 +28,7 @@ class PatientBrowserMenuList;
 
 /**
 Widget in the form of a menu that displays the patient information we give him
-     input so that we can browse their studies and corresponding volumes
+input so that we can browse their studies and corresponding volumes
   */
 class PatientBrowserMenu : public QWidget {
     Q_OBJECT
