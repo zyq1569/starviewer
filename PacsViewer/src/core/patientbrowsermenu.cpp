@@ -216,19 +216,23 @@ void PatientBrowserMenu::popup(const QPoint &point, const QString &identifier)
     m_patientBrowserList->setMaximumWidth(currentScreenGeometry.width() - 300);
     m_patientBrowserList->setMaximumHeight(currentScreenGeometry.height() - currentScreenGeometry.height() / 5);
 
-    //We calculate the alignment of the menu
+    ///We calculate the alignment of the menu
     bool rightAligned = shouldAlignMenuToTheRight(currentScreenGeometry);
-    
-    // Calculate how much of the list is left out according to the geometry of the screen where we have been asked to open the menu
-    // and thus be able to determine the position of the widget so that it does not go out of the screen and its content can be seen.
+
+    /// Calculate how much of the list is left out according to the geometry of the screen where
+    /// we have been asked to open the menu
+    /// and thus be able to determine the position of the widget so that it does not go out
+    /// of the screen and its content can be seen.
     QSize outside;
     computeListOutsideSize(point, outside, rightAligned);
 
-    // TODO What do we do if the additional screen has a smaller height than the current one? Do we recalculate the entire menu so that it has the lowest height?
-    // At the moment this will not be taken into account
+    /// TODO What do we do if the additional screen has a smaller height than the current one?
+    /// Do we recalculate the entire menu so that it has the lowest height?
+    /// At the moment this will not be taken into account
 
-    // If the values are positive it will be necessary to move the original position at least everything that we leave the borders
-    // TODO In theory this Margin would not be necessary if we used frameGeometry () instead of sizeHint ()
+    /// If the values are positive it will be necessary to move the original position at
+    /// least everything that we leave the borders
+    /// TODO In theory this Margin would not be necessary if we used frameGeometry () instead of sizeHint ()
     const int Margin = 5;
     int menuXPosition = point.x();
     int menuYPosition = point.y();
@@ -244,15 +248,17 @@ void PatientBrowserMenu::popup(const QPoint &point, const QString &identifier)
     //We move the menu window to the point it touches
     m_patientBrowserList->move(menuXPosition, menuYPosition);
 
-    // We place the widget with the additional information to the right or left of the main one according to the available space
+    /// We place the widget with the additional information to the right
+    /// or left of the main one according to the available space
     placeAdditionalInfoWidget();
     m_patientAdditionalInfo->show();
-    // TODO: HACK if we don't show the "Additional information" before the "browser list" then it doesn't process the events
-    // correctly and when we select a series the signal does not get anywhere and no series can be selected
-    // related to ticket # 555 This only happens with qt 4.3, with qt 4.2 we don't have this one
-    // problem. With qt 4.2 we can do show in the order we want. What we do to avoid flickering is show it under itself
-    // from the "browser list" and so it is not so noticeable
-    // This, as of Qt 4.7 seems to only happen on Mac. It would seem that this is the symptom of another problem: that it is displayed as a popup?
+    /// TODO: HACK if we don't show the "Additional information" before the "browser list" then it doesn't process the events
+    /// correctly and when we select a series the signal does not get anywhere and no series can be selected
+    /// related to ticket # 555 This only happens with qt 4.3, with qt 4.2 we don't have this one
+    /// problem. With qt 4.2 we can do show in the order we want. What we do to avoid flickering is show it under itself
+    /// from the "browser list" and so it is not so noticeable
+    /// This, as of Qt 4.7 seems to only happen on Mac. It would seem that this is the
+    /// symptom of another problem: that it is displayed as a popup?
     m_patientBrowserList->show();
 
     // TODO It is not taken into account if after having moved the widget it already looks correctly,
