@@ -102,7 +102,7 @@ bool OrderImagesFillerStep::fillIndividually()
         }
         else
         {
-            DEBUG_LOG(QString("Null list for volume% 1 of series% 2. We create a new one.").arg(m_input->getCurrentVolumeNumber()).arg(
+            DEBUG_LOG(QString("Null list for volume% 1 of series%2. We create a new one.").arg(m_input->getCurrentVolumeNumber()).arg(
                           m_input->getCurrentSeries()->getInstanceUID()));
             m_orderedNormalsSet = new QMap<double,QMap<QString, QMap<double, QMap<unsigned long, Image*>*>*>*>();
             volumesInSeries->insert(m_input->getCurrentVolumeNumber(), m_orderedNormalsSet);
@@ -110,7 +110,7 @@ bool OrderImagesFillerStep::fillIndividually()
     }
     else
     {
-        DEBUG_LOG(QString("Null list We create a new one for series% 1.").arg(m_input->getCurrentSeries()->getInstanceUID()));
+        DEBUG_LOG(QString("Null list We create a new one for series%1.").arg(m_input->getCurrentSeries()->getInstanceUID()));
         volumesInSeries = new QMap<int, QMap<double, QMap<QString, QMap<double, QMap<unsigned long, Image*>*>*>*>*>();
         m_orderedNormalsSet = new QMap<double, QMap<QString, QMap<double, QMap<unsigned long, Image*>*>*>*>();
 

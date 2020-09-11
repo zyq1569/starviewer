@@ -37,13 +37,14 @@ class DICOMValueAttribute;
 
 /**
 Class in charge of reading information from DICOM files.
- It can be created from a file (the most common case) or using an existing DcmDataset (for efficiency cases).
- In the case of creating a DICOMTagReader from a DcmDataset it should be noted that the owner of this will be the
- same DICOMTagReader and therefore the object cannot be destroyed from the outside. DICOMTagReader will do the same.
-  */
+It can be created from a file (the most common case) or using an existing DcmDataset (for efficiency cases).
+In the case of creating a DICOMTagReader from a DcmDataset it should be noted that the owner of this will be the
+same DICOMTagReader and therefore the object cannot be destroyed from the outside. DICOMTagReader will do the same.
+*/
 class DICOMTagReader {
 public:
-    /// This enum indicates whether we should return the value for all tags when required, or if for "Heavy" Tags (PixelData, OverlayData)
+    /// This enum indicates whether we should return the value for
+    /// all tags when required, or if for "Heavy" Tags (PixelData, OverlayData)
     /// we must return them without their value, saving us from reading and loading them into memory
     enum ReturnValueOfTags { AllTags, ExcludeHeavyTags };
 
@@ -65,7 +66,8 @@ public:
     /// Returns the name of the file handled by the tag reader.
     QString getFileName() const;
 
-    /// Convenience method to take advantage of an already open DcmDataset. It is assumed that dcmDataset is not null and belongs to the past file.
+    /// Convenience method to take advantage of an already open DcmDataset.
+    /// It is assumed that dcmDataset is not null and belongs to the past file.
     /// In case you already have a file open, replace it by deleting the previous DcmDataset. Once past the owner
     /// of the DcmDataset becomes the DICOMTagReader.
     void setDcmDataset(const QString &filename, DcmDataset *dcmDataset);
@@ -118,7 +120,7 @@ private:
 
     /// Initializes the text codec according to the current dataset.
     void initializeTextCodec();
-    
+
     /// Converts a DCMTK sequence to a sequence of its own.
     DICOMSequenceAttribute* convertToDICOMSequenceAttribute(DcmSequenceOfItems *dcmtkSequence, DICOMTagReader::ReturnValueOfTags returnValueOfTags) const;
 
@@ -128,7 +130,7 @@ private:
     /// Converts a dcmtk DcmItem object to a DICOMAttribute list
     QList<DICOMAttribute*> convertToDICOMAttributeQList(DcmItem *dcmItem, DICOMTagReader::ReturnValueOfTags returnValueOfTags) const;
 
-    /// Esborra les dades de la últim fitxer carregat. Si no teníem cap fitxer carregat no fa res.
+    /// Clears the data from the last uploaded file. If we didn’t have any files uploaded it doesn’t matter.
     void deleteDataLastLoadedFile();
 
     ///Write the log according to the status passed by parameter for
