@@ -28,8 +28,8 @@ class Series;
 class Image;
 
 /**
-    Mòdul que s'encarrega d'ordenar correctament les imatges de les sèries. Un dels seus requisits és que es tingui l'etiqueta de DICOMClassified,
-    la ImageFillerStep i el TemporalDimensionFillerStep.
+Module that is responsible for correctly sorting the images of the series. One of its requirements is to have the DICOMClassified label,
+the ImageFillerStep and the TemporalDimensionFillerStep.
   */
 class OrderImagesFillerStep : public PatientFillerStep {
 public:
@@ -42,42 +42,40 @@ public:
     void postProcessing();
 
 private:
-    /// Mètodes per processar la informació específica de series
+    /// Methods for processing series-specific information
     void processImage(Image *image);
 
-    /// Mètode per calcular quantes fases per posició té realment cada imatge dins de cada sèrie i subvolum.
+    /// Method for calculating how many phases per position each image actually has within each series and subvolume.
     void processPhasesPerPositionEvaluation(Image *image);
-    
-    /// Mètode que transforma l'estructura d'imatges ordenades a una llista i l'insereix a la sèrie.
+    ///Method that transforms the structure of ordered images into a list and inserts it into the series
     void setOrderedImagesIntoSeries(Series *series);
 
-    //  Angle       NormalVector    Distance    InstanceNumber0FrameNumber
+    /// Method that transforms the structure of ordered images into a list and inserts it into the series.
     QMap<double, QMap<QString, QMap<double, QMap<unsigned long, Image*>*>*>*> *m_orderedNormalsSet;
 
-    //    Series        Volume     Angle     NormalVector    Distance  InstanceNumber0FrameNumber
+    // Angle NormalVector Distance InstanceNumber0FrameNumber
     QHash<Series*, QMap<int, QMap<double, QMap<QString, QMap<double, QMap<unsigned long, Image*>*>*>*>*>*> m_orderImagesInternalInfo;
-   
-    //    Series       Volume     AcqNumber MultipleAcqNumbers?
+
     QHash<Series*, QHash<int, QPair<QString, bool>*> > m_acquisitionNumberEvaluation;
 
     QVector3D m_firstPlaneVector3D;
     QVector3D m_direction;
 
-    /// Tipus per definir un hash per comptar les fases corresponents a cada posició
-    /// La clau del hash és un string amb la posició de la imatge (ImagePositionPatient) i el valor associat compta les ocurrències (fases) d'aquesta posició.
-    /// Si tenim igual nombre de fases a totes les posicions, podem dir que és un volum amb fases
+    /// Type to define a hash to count the phases corresponding to each position
+    /// The hash key is a string with the position of the image (ImagePositionPatient) and the associated value counts the occurrences (phases) of this position.
+    /// If we have the same number of phases in all positions, we can say that it is a volume with phases
     typedef QHash<QString, int> PhasesPerPositionHashType;
 
-    /// Hash en el que per cada sèrie, mapejem un hash que indica per cada volume number, quantes fases per posició té
-    /// Aquest ens servirà en el post processat per decidir quins subvolums s'han d'ordenar per instance number 
-    /// en cas que no totes les imatges d'un mateix subvolum no tinguin el mateix nombre de fases
-    /// <Sèrie, <VolumeNumber, <PhasesPerPositionHash> > >
+    /// Hash in which for each series, we map a hash that indicates for each volume number, how many phases by position it has
+    /// This will help us in the processed post to decide which subvolumes should be sorted by instance number
+    /// in case not all the images of a same subvolume do not have the same number of phases
+    /// <Series, <VolumeNumber, <PhasesPerPositionHash>>>
     QHash<Series*, QHash<int, PhasesPerPositionHashType*>*> m_phasesPerPositionEvaluation;
 
-    /// Hash amb que per cada sèrie mapejem un hash on s'indica per cada número de subvolum, si totes les posicions tenen el mateix nombre de fases.
-    /// En cas que no, cal ordenar el corresponent subvolum per instance number com en el cas dels m_acquisitionNumberEvaluation
-    /// TODO Potser amb aquesta avaluació seria suficient i la que es fa per Acquisition Number es podria eliminar
-    /// <Sèrie, <VolumeNumber, SameNumberOfPhasesPerPosition?> >
+    /// Hash with which for each series we map a hash where it is indicated by each number of subvolume, if all the positions have the same number of phases.
+    /// If not, the corresponding subvolume must be sorted by instance number as in the case of m_acquisitionNumberEvaluation
+    /// EVERYTHING Maybe with this evaluation it would be enough and the one done by Acquisition Number could be eliminated
+    /// <Series, <VolumeNumber, SameNumberOfPhasesPerPosition?>>
     QHash<Series*, QHash<int, bool>*> m_sameNumberOfPhasesPerPositionPerVolumeInSeriesHash;
 };
 

@@ -24,7 +24,7 @@
 namespace udg {
 
 OrderImagesFillerStep::OrderImagesFillerStep()
-: PatientFillerStep()
+    : PatientFillerStep()
 {
 }
 
@@ -102,15 +102,15 @@ bool OrderImagesFillerStep::fillIndividually()
         }
         else
         {
-            DEBUG_LOG(QString("Llista nul·la pel volum %1 de la serie %2. En creem una de nova.").arg(m_input->getCurrentVolumeNumber()).arg(
-                      m_input->getCurrentSeries()->getInstanceUID()));
+            DEBUG_LOG(QString("Null list for volume% 1 of series% 2. We create a new one.").arg(m_input->getCurrentVolumeNumber()).arg(
+                          m_input->getCurrentSeries()->getInstanceUID()));
             m_orderedNormalsSet = new QMap<double,QMap<QString, QMap<double, QMap<unsigned long, Image*>*>*>*>();
             volumesInSeries->insert(m_input->getCurrentVolumeNumber(), m_orderedNormalsSet);
         }
     }
     else
     {
-        DEBUG_LOG(QString("Llista nul·la en creem una de nova per la serie %1.").arg(m_input->getCurrentSeries()->getInstanceUID()));
+        DEBUG_LOG(QString("Null list We create a new one for series% 1.").arg(m_input->getCurrentSeries()->getInstanceUID()));
         volumesInSeries = new QMap<int, QMap<double, QMap<QString, QMap<double, QMap<unsigned long, Image*>*>*>*>*>();
         m_orderedNormalsSet = new QMap<double, QMap<QString, QMap<double, QMap<unsigned long, Image*>*>*>*>();
 
@@ -121,11 +121,11 @@ bool OrderImagesFillerStep::fillIndividually()
     foreach (Image * image, m_input->getCurrentImages())
     {
         processImage(image);
-        // Avaluació del nombre de fases per posició
+        // Evaluation of the number of phases per position
         processPhasesPerPositionEvaluation(image);
     }
 
-    // Avaluació dels AcquisitionNumbers
+    // Evaluation of AcquisitionNumbers
     QString acquisitionNumber;
     if (!m_input->getCurrentImages().isEmpty())
     {
@@ -135,7 +135,7 @@ bool OrderImagesFillerStep::fillIndividually()
     {
         if (m_acquisitionNumberEvaluation.value(m_input->getCurrentSeries()).contains(m_input->getCurrentVolumeNumber()))
         {
-            // Comparem els Acquisition Numbers
+            // We compare Acquisition Numbers
             QPair<QString, bool> *pair = m_acquisitionNumberEvaluation[m_input->getCurrentSeries()][m_input->getCurrentVolumeNumber()];
             if (!pair->second)
             {
@@ -165,7 +165,7 @@ bool OrderImagesFillerStep::fillIndividually()
 
 void OrderImagesFillerStep::postProcessing()
 {
-    // Per cada subvolum de cada sèrie, comprovem si aquestes tenen el mateix nombre de fases per posició
+    // For each subvolume of each series, we check whether these have the same number of phases per position
     foreach (Series *currentSeries, m_phasesPerPositionEvaluation.keys())
     {
         // <VolumeNumber, SameNumberOfPhasesPerPosition?>
@@ -173,8 +173,10 @@ void OrderImagesFillerStep::postProcessing()
         foreach (int currentVolumeNumber, m_phasesPerPositionEvaluation.value(currentSeries)->keys())
         {
             PhasesPerPositionHashType *phasesPerPositionHash = m_phasesPerPositionEvaluation.value(currentSeries)->value(currentVolumeNumber);
-            // Si passem la llista de valors a un QSet i aquest té mida 1, vol dir que totes les posicions tenen el mateix nombre de fases
-            // (Un QSet no admet duplicats). S'ha de tenir en compte que si només hi ha una posició amb diferents fases no cal fer res ja que serà correcte
+            /// If we pass the list of values to a QSet and this one has size 1,
+            /// it means that all the positions have the same number of phases
+            /// (A QSet does not support duplicates). It should be noted that if there
+            /// is only one position with different phases there is no need to do anything as it will be correct
             QList<int> phasesList = phasesPerPositionHash->values();
             int listSize = phasesList.count();
             bool sameNumberOfPhases = true;
@@ -195,11 +197,11 @@ void OrderImagesFillerStep::postProcessing()
 
 void OrderImagesFillerStep::processImage(Image *image)
 {
-    // Obtenim el vector normal del pla, que ens determina també a quin "stack" pertany la imatge
+    /// Obtenim el vector normal del pla, que ens determina també a quin "stack" pertany la imatge
     QVector3D planeNormalVector3D = image->getImageOrientationPatient().getNormalVector();
-    // El passem a string que ens serà més fàcil de comparar,perquè així és com es guarda a l'estructura d'ordenació
+    /// We pass it to string which will be easier for us to compare, because this is how it is saved in the sort structure
     QString planeNormalString = QString("%1\\%2\\%3").arg(planeNormalVector3D.x(), 0, 'f', 5).arg(planeNormalVector3D.y(), 0, 'f', 5)
-                                   .arg(planeNormalVector3D.z(), 0, 'f', 5);
+            .arg(planeNormalVector3D.z(), 0, 'f', 5);
 
     QMap<double, QMap<unsigned long, Image*>*> *imagePositionSet;
     QMap<QString, QMap<double, QMap<unsigned long, Image*>*>*> *orderedImageSet;
@@ -207,31 +209,31 @@ void OrderImagesFillerStep::processImage(Image *image)
 
     double distance = Image::distance(image);
 
-    // Primer busquem quina és la key (normal del pla) més semblant de totes les que hi ha
-    // Cada key és la normal de cada pla guardat com a string.
-    // En cas que tinguem diferents normals, indicaria que tenim per exemple, diferents stacks en el mateix volum
+    /// First we look for the most similar key (normal of the plan) of all
+    /// Each key is the normal of each plane saved as a string.
+    /// In case we have different normals, I would indicate that we have for example, different stacks in the same volume
 
-    // TODO WARN BUG: We are doing insertMulti() in another place, so there may be keys with multiple values,
-    //                but we are getting only the last value for each key, so some plane normals can be missed.
-    //                We should iterate over the values instead of the unique keys and use a QSet for planeNormals.
+    /// TODO WARN BUG: We are doing insertMulti () in another place, so there may be keys with multiple values,
+    /// but we are getting only the last value for each key, so some plane normals can be missed.
+    /// We should iterate over the values instead of the unique keys and use a QSet for planeNormals.
     QStringList planeNormals;
     foreach (double key, m_orderedNormalsSet->uniqueKeys())
     {
         planeNormals << m_orderedNormalsSet->value(key)->uniqueKeys();
     }
 
-    // Aquest bucle serveix per trobar si la normal de la nova imatge
-    // coincideix amb alguna normal de les imatges ja processada
+    // This loop is used to find if the normal of the new image
+    // matches any normal of the already processed images
     QString keyPlaneNormal;
     foreach (const QString &normal, planeNormals)
     {
         if (normal == planeNormalString)
         {
-            // La normal d'aquest pla ja existeix (cas més típic)
+            /// The normal of this plan already exists (most typical case)
             keyPlaneNormal = normal;
             break;
         }
-        // Les normals són diferents, comprovar si ho són completament o no
+        /// The normal ones are different, check if they are completely or not
         else
         {
             if (normal.isEmpty())
@@ -241,9 +243,9 @@ void OrderImagesFillerStep::processImage(Image *image)
             }
             else
             {
-                // Tot i que siguin diferents, pot ser que siguin gairebé iguals
-                // llavors cal comprovar que de fet són prou diferents
-                // ja que a vegades només hi ha petites imprecisions simplement
+                /// Although they are different, they may be almost the same
+                /// then you have to check that in fact they are quite different
+                /// since sometimes there are just small inaccuracies simply
                 QStringList normalSplitted = normal.split("\\");
                 QVector3D normalVector(normalSplitted.at(0).toDouble(), normalSplitted.at(1).toDouble(), normalSplitted.at(2).toDouble());
 
@@ -251,23 +253,23 @@ void OrderImagesFillerStep::processImage(Image *image)
 
                 if (angle < 1.0)
                 {
-                    // Si l'angle entre les normals
-                    // està dins d'un threshold,
-                    // les podem considerar iguals
-                    // TODO definir millor aquest threshold
+                    /// If the angle between the normals
+                    /// is within a threshold,
+                    /// we can consider them equal
+                    /// EVERYTHING better define this threshold
                     keyPlaneNormal = normal;
                     break;
                 }
             }
         }
     }
-    // Ara cal inserir la imatge a la llista ordenada
-    // Si no hem posat cap valor, vol dir que la normal és nova i no existia fins el moment
+    /// Now you need to insert the image in the sorted list
+    /// If we didn't put any value, it means that the normal one is new and didn't exist until now
     if (keyPlaneNormal.isEmpty())
     {
-        // Assignem la clau
+        ///We assign the key
         keyPlaneNormal = planeNormalString;
-        // Ara cal inserir la nova clau
+        ///Now you need to insert the new key
         instanceNumberSet = new QMap<unsigned long, Image*>();
         instanceNumberSet->insert(QString("%1%2%3").arg(image->getInstanceNumber()).arg("0").arg(image->getFrameNumber()).toULong(), image);
 
@@ -285,7 +287,7 @@ void OrderImagesFillerStep::processImage(Image *image)
         }
         else
         {
-            if (m_orderedNormalsSet->size() == 1) // Busquem la normal per saber la direcció per on s'han d'ordenar
+            if (m_orderedNormalsSet->size() == 1) /// We look for the normal to know the direction by which to order
             {
                 m_direction = QVector3D::crossProduct(m_firstPlaneVector3D, planeNormalVector3D);
                 m_direction = QVector3D::crossProduct(m_direction, m_firstPlaneVector3D);
@@ -301,12 +303,13 @@ void OrderImagesFillerStep::processImage(Image *image)
         m_orderedNormalsSet->insertMulti(angle, orderedImageSet);
 
     }
-    // La normal ja existia [m_orderedImageSet->contains(keyPlaneNormal) == true], per tant només cal actualitzar l'estructura
+    ///Normal already existed [m_orderedImageSet-> contains (keyPlaneNormal) == true],
+    /// so just update the structure La normal ja existia [m_orderedImageSet->contains(keyPlaneNormal) == true], per tant només cal actualitzar l'estructura
     else
     {
-        // TODO WARN BUG: We are doing insertMulti() in another place, so there may be keys with multiple values,
-        //                but we are getting only the last value for each key, so some plane normals can be missed.
-        //                We should iterate over the values instead of the unique keys.
+        /// TODO WARN BUG: We are doing insertMulti() in another place, so there may be keys with multiple values,
+        ///                but we are getting only the last value for each key, so some plane normals can be missed.
+        ///                We should iterate over the values instead of the unique keys.
         foreach (double key, m_orderedNormalsSet->keys())
         {
             if (m_orderedNormalsSet->value(key)->contains(keyPlaneNormal))
@@ -318,10 +321,10 @@ void OrderImagesFillerStep::processImage(Image *image)
         imagePositionSet = orderedImageSet->value(keyPlaneNormal);
         if (imagePositionSet->contains(distance))
         {
-            // Hi ha series on les imatges comparteixen el mateix instance number.
-            // Per evitar el problema es fa un insertMulti.
+            /// There are series where the images share the same instance number.
+            /// To avoid the problem an insertMulti is made.
             imagePositionSet->value(distance)->insertMulti(QString("%1%2%3").arg(image->getInstanceNumber()).arg("0")
-                                                              .arg(image->getFrameNumber()).toULong(), image);
+                                                           .arg(image->getFrameNumber()).toULong(), image);
         }
         else
         {
@@ -336,7 +339,7 @@ void OrderImagesFillerStep::processPhasesPerPositionEvaluation(Image *image)
 {
     Series *currentSeries = m_input->getCurrentSeries();
     
-    // Comprovem si tenim hash per la sèrie actual i l'assignem en cas que sigui necessari
+    /// We check if we have hash for the current series and assign it if necessary
     QHash<int, PhasesPerPositionHashType*> *volumeNumberPhasesPerPositionHash = 0;
     if (m_phasesPerPositionEvaluation.contains(currentSeries))
     {
@@ -348,7 +351,7 @@ void OrderImagesFillerStep::processPhasesPerPositionEvaluation(Image *image)
         m_phasesPerPositionEvaluation.insert(currentSeries, volumeNumberPhasesPerPositionHash);
     }
 
-    // Ara comprovem si el segon hash té l'actual número de volum i li assignem els valors en cas que sigui necessari
+    /// We now check if the second hash has the current volume number and assign the values to it if necessary
     int currentVolumeNumber = m_input->getCurrentVolumeNumber();
     PhasesPerPositionHashType *phasesPerPositionHash = 0;
     if (volumeNumberPhasesPerPositionHash->contains(currentVolumeNumber))
@@ -361,28 +364,28 @@ void OrderImagesFillerStep::processPhasesPerPositionEvaluation(Image *image)
         volumeNumberPhasesPerPositionHash->insert(currentVolumeNumber, phasesPerPositionHash);
     }
 
-    // Ara ja tenim el hash de les fases per posició corresponent a l'actual sèrie i número de volum
-    // Procedim a inserir la informació corresponent
+    /// Now we have the hash of the phases by position corresponding to the current series and volume number
+    /// We proceed to insert the corresponding information
     const double *imagePositionPatient = image->getImagePositionPatient();
 
     if (!(imagePositionPatient[0] == 0. && imagePositionPatient[1] == 0. && imagePositionPatient[2] == 0.))
     {
         QString imagePositionPatientString = QString("%1\\%2\\%3").arg(imagePositionPatient[0])
-                                                                    .arg(imagePositionPatient[1])
-                                                                    .arg(imagePositionPatient[2]);
+                .arg(imagePositionPatient[1])
+                .arg(imagePositionPatient[2]);
 
         if (phasesPerPositionHash->contains(imagePositionPatientString))
         {
-            // Ja el tenim, augmentem el nombre de fases per aquella posició
+            /// We already have it, we increase the number of phases by that position
             phasesPerPositionHash->insert(imagePositionPatientString, phasesPerPositionHash->value(imagePositionPatientString) + 1);
         }
         else
         {
-            // Creem la nova entrada, inicialment seria la primera fase
+            /// We create the new entry, initially it would be the first phase
             phasesPerPositionHash->insert(imagePositionPatientString, 1);
         }
-        // TODO L'if anterior en principi es podria resumir en aquesta sola línia
-        // m_phasesPerPositionHash.insert(imagePositionPatientString, m_phasesPerPositionHash.value(imagePositionPatientString, 0) + 1);
+        /// TODO The above if in principle could be summarized in this single line
+        /// m_phasesPerPositionHash.insert (imagePositionPatientString, m_phasesPerPositionHash.value (imagePositionPatientString, 0) + 1);
     }
 }
 
@@ -405,23 +408,23 @@ void OrderImagesFillerStep::setOrderedImagesIntoSeries(Series *series)
     foreach (int currentVolumeNumber, volumesInSeries->keys())
     {
         bool orderByInstanceNumber = false;
-        // Diferent número d'imatges per fase
+        /// Different number of images per phase
         if (!m_sameNumberOfPhasesPerPositionPerVolumeInSeriesHash.value(series)->value(currentVolumeNumber))
         {
             orderByInstanceNumber = true;
             DEBUG_LOG(QString("No totes les imatges tenen el mateix nombre de fases. Ordenem el volume %1 de la serie %2 per Instance Number").arg(
-                      currentVolumeNumber).arg(series->getInstanceUID()));
+                          currentVolumeNumber).arg(series->getInstanceUID()));
             INFO_LOG(QString("No totes les imatges tenen el mateix nombre de fases. Ordenem el volume %1 de la serie %2 per Instance Number").arg(
-                     currentVolumeNumber).arg(series->getInstanceUID()));
+                         currentVolumeNumber).arg(series->getInstanceUID()));
         }
-        // Multiple acquisition number
+        /// Multiple acquisition number
         if (m_acquisitionNumberEvaluation[series][currentVolumeNumber]->second)
         {
             orderByInstanceNumber = true;
             DEBUG_LOG(QString("No totes les imatges tenen el mateix AcquisitionNumber. Ordenem el volume %1 de la serie %2 per Instance Number").arg(
-                      currentVolumeNumber).arg(series->getInstanceUID()));
+                          currentVolumeNumber).arg(series->getInstanceUID()));
             INFO_LOG(QString("No totes les imatges tenen el mateix AcquisitionNumber. Ordenem el volume %1 de la serie %2 per Instance Number").arg(
-                     currentVolumeNumber).arg(series->getInstanceUID()));
+                         currentVolumeNumber).arg(series->getInstanceUID()));
         }
 
         if (orderByInstanceNumber)
@@ -462,7 +465,7 @@ void OrderImagesFillerStep::setOrderedImagesIntoSeries(Series *series)
         {
             m_orderedNormalsSet = volumesInSeries->take(currentVolumeNumber);
 
-            // Cal ordernar les agrupacions d'imatges
+            ///Image groupings need to be sorted
             foreach (double angle, m_orderedNormalsSet->keys())
             {
                 orderedImageSet = m_orderedNormalsSet->take(angle);
@@ -483,7 +486,7 @@ void OrderImagesFillerStep::setOrderedImagesIntoSeries(Series *series)
                         double key = imagePositionSet->keys().at(pos);
                         Image *lastImage = (*(imagePositionSet->value(key))->begin());
                         double distanceToFirstImage = qAbs(Image::distance(lastImage)-distance);
-                        if (distanceToFirstImage > 1.0) 
+                        if (distanceToFirstImage > 1.0)
                         {
                             isRotational = false;
                         }
