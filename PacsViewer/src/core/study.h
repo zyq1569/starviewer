@@ -26,34 +26,34 @@ namespace udg {
 class Patient;
 
 /**
-    Classe que encapsula l'estudi d'un pacient
-  */
+Class that encapsulates the study of a patient
+*/
 class Study : public QObject {
-Q_OBJECT
+    Q_OBJECT
 public:
-    /// Tipus d'ordenació d'un conjunt d'estudis
+    /// Type of arrangement of a set of studies
     enum StudySortType { RecentStudiesFirst, OlderStudiesFirst };
-    
+
     Study(Patient *parentPatient = 0, QObject *parent = 0);
     ~Study();
 
-    /// Assigna/Obtè l'objecte Patient pare de l'estudi
+    ///Assign / Obtain the Patient Parent object from the study
     void setParentPatient(Patient *patient);
     Patient* getParentPatient() const;
 
-    /// Assignar/Obtenir l'identificador universal de l'estudi
+    /// Assign / Obtain the Patient Parent object from the study
     void setInstanceUID(QString uid);
     QString getInstanceUID() const;
 
-    /// Assignar/Obtenir l'identificador de l'estudi
+    /// Assign / Obtain the universal identifier of the study
     void setID(QString id);
     QString getID() const;
 
-    /// Assignar/Obtenir l'accession number de l'estudi
+    /// Assign / Obtain the study identifier
     void setAccessionNumber(QString accessionNumber);
     QString getAccessionNumber() const;
 
-    /// Assignar/Obtenir la descripció de l'estudi
+    /// Assign / Obtain the accession number of the study
     void setDescription(QString description);
     QString getDescription() const;
 
@@ -63,32 +63,32 @@ public:
     /// Gets the age of the patient at study date. If it's not set, it will be computed from birth and study date if both are valid.
     QString getPatientAge() const;
 
-    /// Assignar/Obtenir el pes del pacient
+    /// Assign / Obtain the patient's weight
     void setWeight(double weight);
     double getWeight() const;
 
-    /// Assignar/Obtenir l'aclçada del pacient
+    /// Assign / Obtain the patient's height
     void setHeight(double height);
     double getHeight() const;
 
-    /// Permet afegir una modalitat a l'estudi
+    /// Allows you to add a modality to the studio
     void addModality(const QString &modality);
 
-    /// Retorna les modalitats que conté l'estudi.
-    /// @return la llista de modalitats en un string delimitades pel caràcter '/'
+    /// Returns the modalities contained in the study.
+    /// @return the list of modalities in a string delimited by the character '/'
     QString getModalitiesAsSingleString() const;
 
-    /// Retorna les modalitats que conté l'estudi.
+    /// Returns the modalities contained in the study.
     /// @return una llista d'strings
     QStringList getModalities() const;
 
-    /// Assigna/Obtenir el referring physician's name de l'estudi
+    /// Assign / Obtain the referring physician's name from the study
     void setReferringPhysiciansName(QString referringPhysiciansName);
     QString getReferringPhysiciansName() const;
 
-    /// Assignar/Obtenir la data i hora d'adquisició de l'estudi. El format de la data serà YYYYMMDD i el del
-    /// time hhmmss.frac on frac és una fracció de segon de rang 000000-999999
-    /// Retorna fals si hi ha algun error en el format
+    /// Assign / Obtain the date and time of acquisition of the study. The date format will be YYYYMMDD and the
+    /// time hhmmss.frac where frac is a fraction of a second of range 000000-999999
+    /// Returns false if there is a format error
     bool setDateTime(int day, int month, int year, int hour, int minute, int second = 0);
     bool setDateTime(QString date, QString time);
     bool setDate(int day, int month, int year);
@@ -103,124 +103,125 @@ public:
     QString getTimeAsString();
     QDateTime getDateTime() const;
 
-    /// Assignar/Obtenir la data i hora en que l'estudi s'ha descarregat a la base de dades Local
+    /// Assign / Obtain the date and time the study was downloaded to the Local database
     void setRetrievedDate(QDate date);
     void setRetrievedTime(QTime time);
     QDate getRetrievedDate() const;
     QTime getRetrievedTime() const;
 
-    /// Assigna/Obté la institució de la qual s'ha obtingut l'estudi
+    /// Assign / Obtain the institution from which the study was obtained
     void setInstitutionName(const QString &institution);
     QString getInstitutionName() const;
 
-    /// Afegeix una nova sèrie i li assigna com a parent aquest objecte study. Retorna fals si existeix una sèrie amb el mateix uid
+    /// Add a new series and assign this study object as a relative. Returns false if a series with the same uid exists
     bool addSeries(Series *series);
 
-    /// Li treu a l'estudi la sèrie amb l'UID donat. Si no existeix cap amb aquest uid retorna nul.
+    /// Take the series to the studio with the given UID. If none exists with this uid it returns null.
     void removeSeries(QString uid);
 
-    /// Obté la sèrie amb l'UID donat. NUL si no hi és
+    /// Gets the series with the given UID. NULL if not
     Series* getSeries(QString uid);
 
-    /// Ens diu si existeix una serie amb aquest uid a la llista
-    /// @param uid l'uid que busquem
-    /// @return Cert si existeix, fals altrament
+    /// Tells us if there is a series with this uid in the list
+    /// @param uid the uid we are looking for
+    /// @return True if it exists, false otherwise
     bool seriesExists(QString uid);
 
-    /// Retorna una llista de les sèries marcades com a seleccionades
+    /// Returns a list of series marked as selected
     QList<Series*> getSelectedSeries();
 
-    /// Mètode per obtenir el nombre de series que conté l'estudi
+    /// Method for obtaining the number of series contained in the study
     int getNumberOfSeries();
 
-    /// Mètode per obtenir la llista de series de l'estudi
+    /// Method for obtaining the list of study series
     QList<Series*> getSeries() const;
 
-    /// Ens retorna la llista de Series que es poden visualitzar en un viewer
+    /// Returns the list of Series that can be displayed in a viewer
     QList<Series*> getViewableSeries();
-    
+
     /// Returns a list of volumes that compose the study.
     QList<Volume*> getVolumesList();
 
     /// Returns the number of volumes that compose the study.
     int getNumberOfVolumes();
 
-    ///Retorna un DICOMSource que aglutina els diferents DICOMSource de les sèries que conté l'estudi i el de l'estudi si se n'hi ha assignat un.
+    /// Returns a DICOMSource that brings together the different DICOMSources of the series that the study contains and that of the study if one has been assigned.
     DICOMSource getDICOMSource() const;
-    ///Indica quina és la font DICOM de la sèrie
+
+    /// Indicates the DICOM source for the series
     void setDICOMSource(const DICOMSource &studyDICOMSource);
 
     QString toString();
 
-    /// Operadors per comparar si un estudi és més antic (operador <) o més recent (operador >).
+    /// Operators to compare whether a study is older (operator <) or newer (operator>).
     bool operator<(const Study &study);
     bool operator>(const Study &study);
 
-    /// Ens ordena una llista d'estudis segons el criteri d'ordenació donat
+    /// Sorts a list of studies according to the given ordering criteria
     static QList<Study*> sortStudies(const QList<Study*> &studiesList, StudySortType sortCriteria);
 
 private:
-    /// Inserta una serie a la llista de series ordenat per SeriesNumber.
-    /// Pre: se presuposa que s'ha comprovat anteriorment que la serie no existeix a la llista
+    /// Inserts a series into the series list sorted by SeriesNumber.
+    /// Pre: It is assumed that it has been previously verified that the series does not exist in the list
     /// @param serie
     void insertSeries(Series *series);
 
-    /// Troba l'índex de la serie amb l'uid donat a la llista de series
-    /// @param uid L'uid de la serie que volem trobar
-    /// @return L'índex d'aquella serie dins de la llista, -1 si no existeix la serie amb aquell uid.
+    /// Find the index of the series with the uid given in the list of series
+    /// @param uid The uid of the series we want to find
+    /// @return The index of that series within the list, -1 if the series with that uid does not exist.
     int findSeriesIndex(QString uid);
 
 private:
-    /// Informació comuna de l'estudi. C.7.2.1 General Study Module - PS 3.3.
+    /// Common study information. C.7.2.1 General Study Module - PS 3.3.
 
-    /// Identificador únic de l'estudi. (0020,000D) Tipus 1.
+    /// Unique identifier of the study. (0020,000D) Type 1.
     QString m_studyInstanceUID;
 
-    /// Llista de les modalitats de l'estudi
+    /// List of study modalities
     QStringList m_modalities;
 
-    /// Data i hora en que l'estudi va començar. (0008,0020),(0008,0030) Tipus 2.
+    /// Date and time the study began. (0008,0020), (0008,0030) Type 2.
     QDate m_date;
     QTime m_time;
 
-    /// Identificador de l'estudi generat per l'equipament o per l'usuari. (0020,0010) Tipus 2.
+    /// Identifier of the study generated by the equipment or by the user. (0020,0010) Type 2.
     QString m_studyID;
 
-    /// Accession Number. A RIS generated number that identifies the order for the Study. (0008,0050) Tipus 2.
+    /// Accession Number. A RIS generated number that identifies the order for the Study. (0008,0050) Type 2.
     QString m_accessionNumber;
 
-    /// Descripció de l'estudi generada per la institució. (0008,1030) Tipus 3
+    /// Description of the study generated by the institution. (0008,1030) Type 3
     QString m_description;
 
-    /// Informació del pacient, relacionada únicament amb aquest estudi. Aquesta és la informació que podem tenir d'un pacient en el moment en el que
-    /// se li va fer l'estudi. C.7.2.2 Patient Study Module - PS 3.3.
+    /// Patient information, related only to this study. This is the information we can have from a patient at the time
+    /// he was studied. C.7.2.2 Patient Study Module - PS 3.3.
 
-    /// Edat del pacient. (0010,1010) Tipus 3
+    /// Age of the patient. (0010,1010) Type 3
     QString m_age;
 
-    /// Alçada (en metres) del pacient (0010,1020) Tipus 3
+    /// Height (in meters) of the patient (0010,1020) Type 3
     double m_height;
 
-    /// Pes (en Kg.) del pacient (0010,1030) Tipus 3
+    /// Weight (in Kg.) Of the patient (0010,1030) Type 3
     double m_weight;
 
-    /// Metge que atén el pacient durant visita, relacionada amb la prova exploratòria (0008,0090) Tipus 2
+    /// Doctor treating the patient during a visit, related to the exploratory test (0008,0090) Type 2
     QString m_referringPhysiciansName;
 
-    /// Data en que l'estudi s'ha descarregat a la base de dades local
+    /// Date the study was downloaded to the local database
     QDate m_retrievedDate;
     QTime m_retrieveTime;
 
-    /// Insitutició de la que s'ha obtingut l'estudi
+    /// Institution of which the study has been obtained
     QString m_institutionName;
 
-    /// Llista de les Series de l'estudi ordenades per número de serie
+    /// List of Study Series sorted by serial number
     QList<Series*> m_seriesSet;
 
-    /// L'entitat Patient a la qual pertany aquest estudi
+    /// The Patient entity to which this study belongs
     Patient *m_parentPatient;
 
-    ///Conté la font dels objectes DICOM de l'estudi
+    /// Contains the source of the DICOM objects in the study
     DICOMSource m_studyDICOMSource;
 };
 
