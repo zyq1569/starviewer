@@ -97,7 +97,7 @@ QViewer::QViewer(QWidget *parent)
     this->setMouseTracking(false);
     m_patientBrowserMenu = new PatientBrowserMenu(0);
     //Right now the default behavior will be that once a
-    // volume is selected we immediately assign it as input
+    //volume is selected we immediately assign it as input
     this->setAutomaticallyLoadPatientBrowserMenuSelectedInput(true);
 }
 
@@ -228,9 +228,10 @@ void QViewer::eventHandler(vtkObject *object, unsigned long vtkEvent, void *clie
         }
     }
 
-    // When the window is "selected" a signal will be issued indicating this.
-    // We understand selected when the wheel has been clicked or moved over the viewfinder.
-    // TODO It is now inefficient because once selected it would not be necessary to re-send this signal. The system needs to be improved
+    /// When the window is "selected" a signal will be issued indicating this.
+    /// We understand selected when the wheel has been clicked or moved over the viewfinder.
+    /// TODO It is now inefficient because once selected it would
+    /// not be necessary to re-send this signal. The system needs to be improved
     switch (vtkEvent)
     {
     case QVTKWidget::ContextMenuEvent:
@@ -336,7 +337,7 @@ void QViewer::setupInteraction()
 {
     Q_ASSERT(m_renderer);
 
-    // TODO Do this here? or do it in the tool manager?
+    /// TODO Do this here? or do it in the tool manager?
     this->getInteractor()->RemoveObservers(vtkCommand::LeftButtonPressEvent);
     this->getInteractor()->RemoveObservers(vtkCommand::RightButtonPressEvent);
     this->getInteractor()->RemoveObservers(vtkCommand::MouseWheelForwardEvent);
@@ -345,7 +346,7 @@ void QViewer::setupInteraction()
     this->getInteractor()->RemoveObservers(vtkCommand::CharEvent);
 
     m_vtkQtConnections = vtkEventQtSlotConnect::New();
-    // Despatxa qualsevol event-> tools
+    /// Dispatch any event-> tools
     m_vtkQtConnections->Connect(this->getInteractor(), vtkCommand::AnyEvent, this, SLOT(eventHandler(vtkObject*, unsigned long, void*, void*, vtkCommand*)));
 }
 
@@ -420,7 +421,7 @@ bool QViewer::saveGrabbedViews(const QString &baseName, FileType extension)
             }
         }
         writer->Delete();
-        // Buidem la llista
+        // Let's empty the list
         clearGrabbedViews();
         return true;
     }

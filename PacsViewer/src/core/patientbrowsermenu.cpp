@@ -162,7 +162,7 @@ void PatientBrowserMenu::updateActiveItemView(const QString &identifier)
             Volume *volume = VolumeRepository::getRepository()->getVolume(id);
             if (volume)
             {
-                //We update the item data with additional information
+                ///We update the item data with additional information
                 PatientBrowserMenuExtendedItem *item = new PatientBrowserMenuExtendedItem(m_patientAdditionalInfo);
                 item->setPixmap(volume->getThumbnail());
                 Series *series = volume->getImage(0)->getParentSeries();
@@ -191,8 +191,7 @@ void PatientBrowserMenu::updateActiveItemView(const QString &identifier)
                           .arg(series->getDescription().trimmed())
                           .arg(series->getModality().trimmed())
                           .arg(series->getProtocolName().trimmed())
-                          .arg(volume->getNumberOfFrames())
-                          );
+                          .arg(volume->getNumberOfFrames()));
             m_patientAdditionalInfo->setItems(QList<PatientBrowserMenuExtendedItem*>() << item);
         }
     }
