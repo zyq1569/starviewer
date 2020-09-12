@@ -32,13 +32,18 @@ void ScreenManager::setupCurrentScreenLayout()
     m_applicationDesktop = QApplication::desktop();
 
     Screen screen;
+    int primaryScreen = m_applicationDesktop->primaryScreen();
+    QRect temp;
     for (int i = 0; i < m_applicationDesktop->screenCount(); ++i)
     {
         screen.setID(i);
-        screen.setGeometry(m_applicationDesktop->screenGeometry(i));
+        temp = m_applicationDesktop->screenGeometry(i);
+        //screen.setGeometry(m_applicationDesktop->screenGeometry(i));
+        //screen.setGeometry(m_applicationDesktop->screenGeometry(i));
+        screen.setGeometry(temp);
+        screen.setGeometry(temp);
         screen.setAvailableGeometry(m_applicationDesktop->availableGeometry(i));
-        screen.setAsPrimary(m_applicationDesktop->primaryScreen() == i);
-        
+        screen.setAsPrimary(primaryScreen == i);
         m_screenLayout.addScreen(screen);
     }
 }
