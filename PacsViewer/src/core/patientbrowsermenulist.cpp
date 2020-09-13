@@ -108,7 +108,8 @@ bool PatientBrowserMenuList::event(QEvent *event)
     return QWidget::event(event);
 }
 
-QSize PatientBrowserMenuList::sizeHint() const {
+QSize PatientBrowserMenuList::sizeHint() const
+{
     int width = m_qmlView->rootObject()->property("width").toInt() +  2 * this->layout()->margin();
     int height = m_qmlView->rootObject()->property("height").toInt() +  2 * this->layout()->margin();
     return QSize(width, height);

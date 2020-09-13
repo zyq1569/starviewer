@@ -39,6 +39,7 @@ void PatientBrowserMenuExtendedInfo::setItems(const QList<PatientBrowserMenuExte
 
     int maxWidth = 0;
     int accumulatedHeight = 0;
+    ///PatientBrowserMenuExtendedItem::setPixmap
     foreach(PatientBrowserMenuExtendedItem *item, items)
     {
         item->adjustSize();
