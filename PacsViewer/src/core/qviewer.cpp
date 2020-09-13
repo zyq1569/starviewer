@@ -816,7 +816,11 @@ void QViewer::contextMenuEvent(QContextMenuEvent *menuEvent)
         m_patientBrowserMenu->setPatient(mainWindow->getCurrentPatient());
 
         QString selectedItem = getInputIdentifier();
-        m_patientBrowserMenu->popup(menuEvent->globalPos(), selectedItem); //->globalPos() ?
+
+        //m_patientBrowserMenu->popup(menuEvent->globalPos(), selectedItem); //->globalPos() ?
+        //QPoint point = QCursor::pos();
+        //menuEvent->globalPos() -> error???????!!! (windows 10:now)
+        m_patientBrowserMenu->popup(QCursor::pos(), selectedItem);
     }
 }
 
