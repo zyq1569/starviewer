@@ -55,7 +55,7 @@ void PatientBrowserMenuExtendedInfo::setItems(const QList<PatientBrowserMenuExte
 
 bool PatientBrowserMenuExtendedInfo::event(QEvent *event)
 {
-    // Si s'ha pulsat l'escape
+    ///If the escape has been pressed
     if (event->type() == QEvent::Close)
     {
         emit closed();

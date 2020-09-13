@@ -21,10 +21,10 @@
 namespace udg {
 
 /**
-    Classe per mostrar la informació addicional referent a una serie d'un estudi d'un pacient.
-  */
+Class to display additional information regarding a series of a patient study.
+*/
 class PatientBrowserMenuExtendedItem : public QFrame {
-Q_OBJECT
+    Q_OBJECT
 public:
     PatientBrowserMenuExtendedItem(QWidget *parent = 0);
     ~PatientBrowserMenuExtendedItem();
@@ -33,14 +33,14 @@ public:
     void setText(const QString &text);
 
 private:
-    /// Crea el widget inicial sense cap informació
+    /// Create the initial widget without any information
     void createInitialWidget();
 
 private:
-    /// Label que conté el text addicional a mostrar
+    /// Label containing the additional text to display
     QLabel *m_text;
 
-    /// Label que conté la icona a mostrar
+    /// Label containing the icon to display
     QLabel *m_icon;
 };
 
