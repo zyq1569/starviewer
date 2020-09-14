@@ -82,7 +82,8 @@ void ImageThumbnailDockWidget::paintEvent(QPaintEvent*)
     QRect rect = this->rect();
     m_ImagelistWidge->setGeometry(rect.left()+1,rect.top()+1,rect.right()-1,rect.bottom()-1);
 #ifdef QT_DEBUG
-    // PatientBrowserMenuExtendedItem
+    /// look ! PatientBrowserMenuExtendedItem
+    ///void PatientBrowserMenu::placeAdditionalInfoWidget()
     static bool init = false;
     if (!init)
     {
