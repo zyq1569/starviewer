@@ -696,6 +696,7 @@ QApplicationMainWindow* QApplicationMainWindow::getActiveApplicationMainWindow()
     return qobject_cast<QApplicationMainWindow*>(QApplication::activeWindow());
 }
 
+
 ExtensionWorkspace* QApplicationMainWindow::getExtensionWorkspace()
 {
     return m_extensionWorkspace;
@@ -876,5 +877,13 @@ void QApplicationMainWindow::openReleaseNotes()
 {
     ApplicationVersionChecker::showLocalReleaseNotes();
 }
+
+///add -------------------------------------------------------------------------------------------------------
+///
+void QApplicationMainWindow::clearImageThumbnailDockWidget()
+{
+     m_DockImageThumbnail->clearThumbmailList();
+}
+///
 
 } // end namespace udg

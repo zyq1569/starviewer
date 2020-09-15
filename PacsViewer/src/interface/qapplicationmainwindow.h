@@ -31,6 +31,8 @@ class QWidgetAction;
 class QShortcut;
 class QSplitter;
 class ImageThumbnailDockWidget;
+
+
 namespace udg {
 // Forward declarations
 class ExtensionWorkspace;
@@ -188,6 +190,9 @@ private slots:
     ///
     /// If no external applications are defined, the menu is not created.
     void createExternalApplicationsMenu();
+
+public:
+    void clearImageThumbnailDockWidget();
 
 private:
     ///The mini-applications area
