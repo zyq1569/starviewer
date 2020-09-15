@@ -884,6 +884,11 @@ void QApplicationMainWindow::clearImageThumbnailDockWidget()
 {
      m_DockImageThumbnail->clearThumbmailList();
 }
-///
+
+void QApplicationMainWindow::addPatientsThumbnail(QList<Patient*> patientsList)
+{
+
+}
+///------------------------------------------------------------------------------------------------------------
 
 } // end namespace udg

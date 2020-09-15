@@ -191,9 +191,6 @@ private slots:
     /// If no external applications are defined, the menu is not created.
     void createExternalApplicationsMenu();
 
-public:
-    void clearImageThumbnailDockWidget();
-
 private:
     ///The mini-applications area
     ExtensionWorkspace *m_extensionWorkspace;
@@ -201,17 +198,6 @@ private:
     ///Service and applet manager
     ExtensionHandler *m_extensionHandler;
 
-    /// widows
-    QWidget *m_thumbnailWidget;
-
-    //-------------------------------------------\\
-    //-------QDockWidget--------------------------||
-    //QSplitter *m_splitter;//////////////////////||
-    ImageThumbnailDockWidget *m_DockImageThumbnail;/////////||
-    QWidget* m_oldtitle;    //////////////////////||
-    QWidget* m_newtitle;    //////////////////////||
-    //--------------------------------------------||
-    //--------------------------------------------\\
     bool m_flag;
     /// Menus
     QMenu *m_fileMenu;
@@ -267,6 +253,23 @@ private:
     ///Usability statistics
     StatsWatcher *m_statsWatcher;
 
+    //------------------------------------------------------------
+public:
+    /// widows
+    //QWidget *m_thumbnailWidget;
+
+    //-----------------------------------------------------//
+    //-------QDockWidget-----------------------------------||
+    //QSplitter *m_splitter;///////////////////////////////||
+    ImageThumbnailDockWidget *m_DockImageThumbnail;////////||
+    QWidget* m_oldtitle;///////////////////////////////////||
+    QWidget* m_newtitle;///////////////////////////////////||
+    //-----------------------------------------------------||
+    //-----------------------------------------------------//
+
+public:
+    void clearImageThumbnailDockWidget();
+    void addPatientsThumbnail(QList<Patient*> patientsList);
 };
 
 }; // fi namespace udg
