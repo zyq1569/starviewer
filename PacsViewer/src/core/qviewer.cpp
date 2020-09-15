@@ -56,8 +56,8 @@
 namespace udg {
 
 QViewer::QViewer(QWidget *parent)
-    : QWidget(parent), m_mainVolume(0), m_contextMenuActive(true), m_mouseHasMoved(false), m_voiLutData(0),
-      m_isRenderingEnabled(true), m_isActive(false)
+    :QWidget(parent), m_mainVolume(0), m_contextMenuActive(true),
+      m_mouseHasMoved(false), m_voiLutData(0),m_isRenderingEnabled(true), m_isActive(false)
 {
     m_lastAngleDelta = QPoint();
     m_defaultFitIntoViewportMarginRate = 0.0;
@@ -71,7 +71,7 @@ QViewer::QViewer(QWidget *parent)
 
     this->setCurrentViewPlane(OrthogonalPlane::XYPlane);
 
-    // We connect the events
+    // We connect the events :
     setupInteraction();
 
     m_toolProxy = new ToolProxy(this);
@@ -819,7 +819,7 @@ void QViewer::contextMenuEvent(QContextMenuEvent *menuEvent)
 
         //m_patientBrowserMenu->popup(menuEvent->globalPos(), selectedItem); //->globalPos() ?
         //QPoint point = QCursor::pos();
-        //menuEvent->globalPos() -> error???????!!! (windows 10:now)
+        //menuEvent->globalPos() -> error???????!!! (windows 10:now 2020-09-09)
         m_patientBrowserMenu->popup(QCursor::pos(), selectedItem);
     }
 }

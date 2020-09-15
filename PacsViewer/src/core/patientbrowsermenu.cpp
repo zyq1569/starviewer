@@ -118,7 +118,7 @@ void PatientBrowserMenu::setPatient(Patient *patient)
                                             double range2[2];
                                             range2[0] = secondVolume->getImages().first()->getImagePositionPatient()[zIndex];
                                             range2[1] = secondVolume->getImages().last()->getImagePositionPatient()[zIndex];
-                                            
+
                                             if ((range1[0] + margin > range2[0] && range1[1] - margin < range2[1]) || (range2[0] + margin > range1[0] && range2[1] - margin < range1[1]))
                                             {
                                                 QPair<QString, QString> itemPair;

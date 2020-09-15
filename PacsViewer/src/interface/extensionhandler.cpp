@@ -150,6 +150,10 @@ bool ExtensionHandler::request(const QString &who)
         return ok;
     }
 
+    //----------------------------------------------------------------------------------------
+    //add :delete all Thumbnail list!~ 20200915
+    m_mainApp->clearImageThumbnailDockWidget();
+    //----------------------------------------------------------------------------------------
     bool createExtension = true;
     int extensionIndex = 0;
     QString requestedExtensionLabel = mediator->getExtensionID().getLabel();
@@ -315,6 +319,9 @@ void ExtensionHandler::processInput(const QStringList &inputFiles)
     {
         // There are no mistakes, we load them all
         processInput(patientsList);
+        ///----------add patientsList--------------------
+        m_mainApp->addPatientsThumbnail(patientsList);
+        ///----------------------------------------------
     }
     else
     {
@@ -325,6 +332,9 @@ void ExtensionHandler::processInput(const QStringList &inputFiles)
             rightPatients << patientsList.at(index);
         }
         processInput(rightPatients);
+        ///----------add patientsList--------------------
+        m_mainApp->addPatientsThumbnail(rightPatients);
+        ///----------------------------------------------
     }
 }
 
