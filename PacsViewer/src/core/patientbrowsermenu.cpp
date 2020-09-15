@@ -49,7 +49,7 @@ void PatientBrowserMenu::setPatient(Patient *patient)
     createWidgets();
     QString caption;
     QString label;
-    
+
     foreach (Study *study, patient->getStudies())
     {
         // We extract the caption from the study
@@ -357,7 +357,7 @@ void PatientBrowserMenu::placeAdditionalInfoWidget()
     QRect currentScreenGeometry = screenLayout.getScreen(m_currentScreenID).getAvailableGeometry();
     QPoint currentScreenGlobalOriginPoint = currentScreenGeometry.topLeft();
 
-    // TODOThis measure is not the most accurate. The appropriate one should be based on the values of QWidget :: frameGeometry ()
+    // TODO:This measure is not the most accurate. The appropriate one should be based on the values of QWidget :: frameGeometry ()
     int mainMenuApproximateWidth = m_patientBrowserList->sizeHint().width();
     int menuXPosition = m_patientBrowserList->pos().x();
     int menuYPosition = m_patientBrowserList->pos().y();
