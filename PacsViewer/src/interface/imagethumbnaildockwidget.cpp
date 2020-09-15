@@ -6,15 +6,15 @@
 #include <QDir>
 #include <QVBoxLayout>
 #include <QPalette>
-const int g_DockWidgetwith = 130;
+const int g_DockWidgetwith = 133;
 const QSize IMAGE_SIZE(96,99);
 const QSize ITEM_SIZE(109,120);
 
 ImageThumbnailDockWidget::ImageThumbnailDockWidget(const QString &title, QWidget *parent,
                                                    Qt::WindowFlags flags ):QDockWidget(title, parent, flags)
 {
-    m_background.setColor(QPalette::Background,Qt::black);
-    setAutoFillBackground(true);
+//    m_background.setColor(QPalette::Background,Qt::black);
+//    setAutoFillBackground(true);
     setPalette(m_background);
     m_ImagelistWidge = new QListWidget(this);
     m_ImagelistWidge->setIconSize(IMAGE_SIZE);
@@ -25,9 +25,9 @@ ImageThumbnailDockWidget::ImageThumbnailDockWidget(const QString &title, QWidget
     m_ImagelistWidge->setSpacing(0);
     m_ImagelistWidge->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);//always show!!?? set
 
-    //    QPalette palette;
-    //    palette.setColor(QPalette::Background, Qt::red);
-    //    m_ImagelistWidge->setPalette(palette);
+//    QPalette palette;
+//    palette.setColor(QPalette::Background, Qt::red);
+//    m_ImagelistWidge->setPalette(palette);
 
     m_mainlayout = new QHBoxLayout;
     m_mainlayout->addWidget(m_ImagelistWidge);
@@ -35,10 +35,34 @@ ImageThumbnailDockWidget::ImageThumbnailDockWidget(const QString &title, QWidget
     setLayout(m_mainlayout);
     m_ImagelistWidge->show();
     setMinimumWidth(g_DockWidgetwith);
-    setMinimumWidth(g_DockWidgetwith+3);
+    setMaximumWidth(g_DockWidgetwith);
 
 }
 
+void ImageThumbnailDockWidget::clearThumbmailList()
+{
+    if (m_ImagelistWidge)
+    {
+        int itemcount = m_ImagelistWidge->count();
+        if (itemcount > 0)
+        {
+            for(int index=0;index<itemcount;index++)
+            {
+                QListWidgetItem *item =m_ImagelistWidge->takeItem(0);// auto change /first item!!!
+                delete item;
+            }
+
+            //update
+            QRect rect = this->rect();
+            m_ImagelistWidge->setGeometry(rect.left()+1,rect.top()+1,rect.right()-1,rect.bottom()-1);
+        }
+
+    }
+}
+void ImageThumbnailDockWidget::addPatientsThumbmailList()
+{
+
+}
 
 ImageThumbnailDockWidget::~ImageThumbnailDockWidget()
 {
@@ -85,7 +109,7 @@ void ImageThumbnailDockWidget::paintEvent(QPaintEvent*)
     //                        rect.width() - leftPm.width() - rightPm.width(),
     //                       centerPm.height(), centerPm);
     QRect rect = this->rect();
-    m_ImagelistWidge->setGeometry(rect.left()+1,rect.top()+1,rect.right()-1,rect.bottom()-1);
+    m_ImagelistWidge->setGeometry(rect.left(),rect.top(),rect.right(),rect.bottom());
 #ifdef QT_DEBUG
     /// look ! PatientBrowserMenuExtendedItem
     ///void PatientBrowserMenu::placeAdditionalInfoWidget()

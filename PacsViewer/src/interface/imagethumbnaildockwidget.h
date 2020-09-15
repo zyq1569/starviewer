@@ -4,6 +4,8 @@
 class QListWidget;
 class QVBoxLayout;
 class QHBoxLayout;
+
+class Patient;
 #include <QDockWidget>
 
 class ImageThumbnailDockWidget : public QDockWidget
@@ -15,12 +17,13 @@ public:
     ~ImageThumbnailDockWidget();
 
 public:
-    //    QSize sizeHint() const override
-    //    {
-    //        return minimumSizeHint();
-    //    }
-    //    QSize minimumSizeHint() const override;
-
+    //QSize sizeHint() const override
+    //{
+    //return minimumSizeHint();
+    //}
+    //QSize minimumSizeHint() const override;
+    void clearThumbmailList();
+    void addPatientsThumbmailList();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
