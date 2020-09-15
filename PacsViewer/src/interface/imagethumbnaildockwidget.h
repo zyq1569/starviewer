@@ -23,7 +23,7 @@ public:
     //}
     //QSize minimumSizeHint() const override;
     void clearThumbmailList();
-    void addPatientsThumbmailList();
+    void addPatientsThumbmailList(QList<Patient*> patientsList);
 
 protected:
     void paintEvent(QPaintEvent *event) override;

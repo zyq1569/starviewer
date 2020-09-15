@@ -1,4 +1,5 @@
 #include "imagethumbnaildockwidget.h"
+#include "patient.h"
 
 #include <QSize>
 #include <QListWidget>
@@ -59,7 +60,7 @@ void ImageThumbnailDockWidget::clearThumbmailList()
 
     }
 }
-void ImageThumbnailDockWidget::addPatientsThumbmailList()
+void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<Patient*> patientsList)
 {
 
 }
