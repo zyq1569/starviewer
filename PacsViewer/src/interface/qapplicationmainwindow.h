@@ -30,7 +30,7 @@ class QProgressDialog;
 class QWidgetAction;
 class QShortcut;
 class QSplitter;
-class ImageThumbnailDockWidget;
+
 
 
 namespace udg {
@@ -42,6 +42,7 @@ class QLogViewer;
 class Patient;
 class StatsWatcher;
 class ExternalApplication;
+class ImageThumbnailDockWidget;
 
 class QApplicationMainWindow : public QMainWindow {
     Q_OBJECT
@@ -262,14 +263,13 @@ public:
     //-------QDockWidget-----------------------------------||
     //QSplitter *m_splitter;///////////////////////////////||
     ImageThumbnailDockWidget *m_DockImageThumbnail;////////||
-    QWidget* m_oldtitle;///////////////////////////////////||
-    QWidget* m_newtitle;///////////////////////////////////||
     //-----------------------------------------------------||
     //-----------------------------------------------------//
 
 public:
     void clearImageThumbnailDockWidget();
     void addPatientsThumbnail(QList<Patient*> patientsList);
+    ExtensionHandler *getExtensionHandler();
 };
 
 }; // fi namespace udg

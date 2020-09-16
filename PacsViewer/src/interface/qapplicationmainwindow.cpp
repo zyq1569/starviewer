@@ -107,7 +107,7 @@ namespace udg {
 typedef SingletonPointer<StarviewerApplicationCommandLine> StarviewerSingleApplicationCommandLineSingleton;
 
 QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
-    : QMainWindow(parent), m_patient(0), m_isBetaVersion(false)/*, m_flag(true)*/
+    : QMainWindow(parent), m_patient(0), m_isBetaVersion(false)
 {
     connect(StarviewerSingleApplicationCommandLineSingleton::instance(), SIGNAL(newOptionsToRun()), SLOT(newCommandLineOptionsToRun()));
 
@@ -119,7 +119,7 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 
     //-------add QDockWidget-----------------------------------------------------
 
-    m_DockImageThumbnail= new ImageThumbnailDockWidget("");//("Thumbnail");
+    m_DockImageThumbnail= new ImageThumbnailDockWidget("",this);//("Thumbnail");
 
     //m_oldtitle = m_leftdock->titleBarWidget();
     //m_newtitle = new QWidget();
@@ -888,6 +888,10 @@ void QApplicationMainWindow::clearImageThumbnailDockWidget()
 void QApplicationMainWindow::addPatientsThumbnail(QList<Patient*> patientsList)
 {
     m_DockImageThumbnail->addPatientsThumbmailList(patientsList);
+}
+ExtensionHandler *QApplicationMainWindow::getExtensionHandler()
+{
+    return  m_extensionHandler;
 }
 ///------------------------------------------------------------------------------------------------------------
 
