@@ -887,7 +887,7 @@ void QApplicationMainWindow::clearImageThumbnailDockWidget()
 
 void QApplicationMainWindow::addPatientsThumbnail(QList<Patient*> patientsList)
 {
-
+    m_DockImageThumbnail->addPatientsThumbmailList(patientsList);
 }
 ///------------------------------------------------------------------------------------------------------------
 
