@@ -46,7 +46,7 @@ signals:
     void identifierChanged();
 
 protected:
-    /// Identificador de l'ítem
+    ///Item identifier
     QString m_identifier;
     QString m_text;
 };
