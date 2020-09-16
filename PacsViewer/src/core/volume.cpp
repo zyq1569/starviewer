@@ -28,7 +28,7 @@
 namespace udg {
 
 Volume::Volume(QObject *parent)
-: QObject(parent), m_checkedImagesAnatomicalPlane(false)
+    : QObject(parent), m_checkedImagesAnatomicalPlane(false)
 {
     m_numberOfPhases = 1;
     m_numberOfSlicesPerPhase = 1;
@@ -180,7 +180,7 @@ Volume* Volume::getPhaseVolume(int index)
     Volume *result = 0;
     if (m_numberOfPhases == 1)
     {
-        // Si només tenim una sola fase, retornem totes les imatges que conté el volum
+        //If we have only one phase, we return all the images contained in the volume
         result = new Volume();
         result->setImages(m_imageSet);
     }
@@ -197,7 +197,7 @@ QList<Image*> Volume::getPhaseImages(int index)
     QList<Image*> phaseImages;
     if (index >= 0 && index < m_numberOfPhases)
     {
-        // Obtenim el nombre d'imatges per fase
+        //We get the number of images per phase
         int slices = getNumberOfSlicesPerPhase();
         int currentImageIndex = index;
         for (int i = 0; i < slices; ++i)
@@ -236,11 +236,12 @@ void Volume::addImage(Image *image)
     if (!m_imageSet.contains(image))
     {
         m_imageSet << image;
-        // Si tenim dades carregades passen a ser invàlides
+        //If we have uploaded data they become invalid
         if (isPixelDataLoaded())
         {
-            // WARNING Possible memory leak temporal: el VolumePixelData anterior quedarà penjat sense destruir fins que es destruixi el seu pare (si en té,
-            // sinó per sempre).
+            /// WARNING Possible temporary memory leak: the previous VolumePixelData
+            /// will be hung undestroyed until his father is destroyed (if he has any,
+            /// but forever).
             m_volumePixelData = new VolumePixelData(this);
         }
 
@@ -252,11 +253,12 @@ void Volume::setImages(const QList<Image*> &imageList)
 {
     m_imageSet.clear();
     m_imageSet = imageList;
-    // Si tenim dades carregades passen a ser invàlides
+    // If we have uploaded data they become invalid
     if (isPixelDataLoaded())
     {
-        // WARNING Possible memory leak temporal: el VolumePixelData anterior quedarà penjat sense destruir fins que es destruixi el seu pare (si en té, sinó
-        // per sempre).
+        // WARNING Possible temporary memory leak: the previous VolumePixelData
+        // will be hung undestroyed until his father is destroyed (if he has any, otherwise
+        // forever).
         m_volumePixelData = new VolumePixelData(this);
     }
 
@@ -277,7 +279,7 @@ bool Volume::isMultiframe() const
 {
     if (m_imageSet.count() > 1)
     {
-        // Comprovant la primera i segona imatges n'hi ha prou
+        //Checking the first and second images is enough
         if (m_imageSet.at(0)->getPath() == m_imageSet.at(1)->getPath())
         {
             return true;
@@ -496,90 +498,90 @@ ImagePlane* Volume::getImagePlane(int sliceNumber, const OrthogonalPlane &plane,
     
     switch (plane)
     {
-        case OrthogonalPlane::XYPlane:
+    case OrthogonalPlane::XYPlane:
+    {
+        Image *image = getImage(sliceNumber);
+        if (image)
         {
-            Image *image = getImage(sliceNumber);
-            if (image)
-            {
-                imagePlane = new ImagePlane();
-                imagePlane->fillFromImage(image);
-            }
+            imagePlane = new ImagePlane();
+            imagePlane->fillFromImage(image);
         }
-            break;
+    }
+        break;
 
-        case OrthogonalPlane::YZPlane:
+    case OrthogonalPlane::YZPlane:
+    {
+        Image *image = getImage(0);
+        if (image)
         {
-            Image *image = getImage(0);
-            if (image)
+            QVector3D sagittalRowVector = image->getImageOrientationPatient().getColumnVector();
+            QVector3D sagittalColumnVector;
+            if (vtkReconstructionHack)
             {
-                QVector3D sagittalRowVector = image->getImageOrientationPatient().getColumnVector();
-                QVector3D sagittalColumnVector;
-                if (vtkReconstructionHack)
-                {
-                    // Returning a fake plane, regarding real world coords, but fits better to vtk world
-                    sagittalColumnVector = image->getImageOrientationPatient().getNormalVector();
-                }
-                else
-                {
-                    // This would be the norm, returning the real plane direction
-                    double sagittalColumnArray[3];
-                    getStackDirection(sagittalColumnArray, 0);
-                    sagittalColumnVector.setX(sagittalColumnArray[0]);
-                    sagittalColumnVector.setY(sagittalColumnArray[1]);
-                    sagittalColumnVector.setZ(sagittalColumnArray[2]);
-                }
-
-                imagePlane = new ImagePlane();
-                imagePlane->setImageOrientation(ImageOrientation(sagittalRowVector, sagittalColumnVector));
-                imagePlane->setSpacing(PixelSpacing2D(spacing[1], spacing[2]));
-                imagePlane->setThickness(spacing[0]);
-                imagePlane->setRowLength(dimensions[1] * spacing[1]);
-                imagePlane->setColumnLength(dimensions[2] * spacing[2]);
-
-                QVector3D sagittalNormalVector = image->getImageOrientationPatient().getRowVector();
-                imagePlane->setOrigin(origin[0] + sliceNumber * sagittalNormalVector.x() * spacing[0],
-                                        origin[1] + sliceNumber * sagittalNormalVector.y() * spacing[0],
-                                        origin[2] + sliceNumber * sagittalNormalVector.z() * spacing[0]);
+                // Returning a fake plane, regarding real world coords, but fits better to vtk world
+                sagittalColumnVector = image->getImageOrientationPatient().getNormalVector();
             }
-        }
-            break;
+            else
+            {
+                // This would be the norm, returning the real plane direction
+                double sagittalColumnArray[3];
+                getStackDirection(sagittalColumnArray, 0);
+                sagittalColumnVector.setX(sagittalColumnArray[0]);
+                sagittalColumnVector.setY(sagittalColumnArray[1]);
+                sagittalColumnVector.setZ(sagittalColumnArray[2]);
+            }
 
-        case OrthogonalPlane::XZPlane:
+            imagePlane = new ImagePlane();
+            imagePlane->setImageOrientation(ImageOrientation(sagittalRowVector, sagittalColumnVector));
+            imagePlane->setSpacing(PixelSpacing2D(spacing[1], spacing[2]));
+            imagePlane->setThickness(spacing[0]);
+            imagePlane->setRowLength(dimensions[1] * spacing[1]);
+            imagePlane->setColumnLength(dimensions[2] * spacing[2]);
+
+            QVector3D sagittalNormalVector = image->getImageOrientationPatient().getRowVector();
+            imagePlane->setOrigin(origin[0] + sliceNumber * sagittalNormalVector.x() * spacing[0],
+                    origin[1] + sliceNumber * sagittalNormalVector.y() * spacing[0],
+                    origin[2] + sliceNumber * sagittalNormalVector.z() * spacing[0]);
+        }
+    }
+        break;
+
+    case OrthogonalPlane::XZPlane:
+    {
+        Image *image = getImage(0);
+        if (image)
         {
-            Image *image = getImage(0);
-            if (image)
+            QVector3D coronalRowVector = image->getImageOrientationPatient().getRowVector();
+            QVector3D coronalColumnVector;
+            if (vtkReconstructionHack)
             {
-                QVector3D coronalRowVector = image->getImageOrientationPatient().getRowVector();
-                QVector3D coronalColumnVector;
-                if (vtkReconstructionHack)
-                {
-                    // Returning a fake plane, regarding real world coords, but fits better to vtk world
-                    coronalColumnVector = image->getImageOrientationPatient().getNormalVector();
-                }
-                else
-                {
-                    // This would be the norm, returning the real plane direction
-                    double coronalColumnArray[3];
-                    getStackDirection(coronalColumnArray, 0);
-                    coronalColumnVector.setX(coronalColumnArray[0]);
-                    coronalColumnVector.setY(coronalColumnArray[1]);
-                    coronalColumnVector.setZ(coronalColumnArray[2]);
-                }
-
-                imagePlane = new ImagePlane();
-                imagePlane->setImageOrientation(ImageOrientation(coronalRowVector, coronalColumnVector));
-                imagePlane->setSpacing(PixelSpacing2D(spacing[0], spacing[2]));
-                imagePlane->setThickness(spacing[1]);
-                imagePlane->setRowLength(dimensions[0] * spacing[0]);
-                imagePlane->setColumnLength(dimensions[2] * spacing[2]);
-
-                QVector3D coronalNormalVector = image->getImageOrientationPatient().getColumnVector();
-                imagePlane->setOrigin(origin[0] + coronalNormalVector.x() * sliceNumber * spacing[1],
-                                        origin[1] + coronalNormalVector.y() * sliceNumber * spacing[1],
-                                        origin[2] + coronalNormalVector.z() * sliceNumber * spacing[1]);
+                // Returning a fake plane, regarding real world coords, but fits better to vtk world
+                coronalColumnVector = image->getImageOrientationPatient().getNormalVector();
             }
+            else
+            {
+                // This would be the norm, returning the real plane direction
+                double coronalColumnArray[3];
+                getStackDirection(coronalColumnArray, 0);
+                coronalColumnVector.setX(coronalColumnArray[0]);
+                coronalColumnVector.setY(coronalColumnArray[1]);
+                coronalColumnVector.setZ(coronalColumnArray[2]);
+            }
+
+            imagePlane = new ImagePlane();
+            imagePlane->setImageOrientation(ImageOrientation(coronalRowVector, coronalColumnVector));
+            imagePlane->setSpacing(PixelSpacing2D(spacing[0], spacing[2]));
+            imagePlane->setThickness(spacing[1]);
+            imagePlane->setRowLength(dimensions[0] * spacing[0]);
+            imagePlane->setColumnLength(dimensions[2] * spacing[2]);
+
+            QVector3D coronalNormalVector = image->getImageOrientationPatient().getColumnVector();
+            imagePlane->setOrigin(origin[0] + coronalNormalVector.x() * sliceNumber * spacing[1],
+                    origin[1] + coronalNormalVector.y() * sliceNumber * spacing[1],
+                    origin[2] + coronalNormalVector.z() * sliceNumber * spacing[1]);
         }
-            break;
+    }
+        break;
     }
     
     return imagePlane;
@@ -616,20 +618,20 @@ int Volume::getMinimumSlice(const OrthogonalPlane &plane)
 
 void Volume::getStackDirection(double direction[3], int stack)
 {
-    // TODO Encara no suportem múltiples stacks!!!!
-    // Fem el tractament com si només hi hagués un sol
+    // EVERYTHING We don't support multiple stacks yet !!!!
+    // We do the treatment as if there was only one
     Q_UNUSED(stack);
     Image *firstImage = this->getImage(0);
     Image *secondImage = this->getImage(1);
     if (!firstImage)
     {
-        DEBUG_LOG("Error gravísim. No hi ha 'primera' imatge!");
+        DEBUG_LOG("Very serious error. There is no 'first' image!");
         return;
     }
 
     if (!secondImage)
     {
-        DEBUG_LOG("Només hi ha una imatge per stack! Retornem la normal del pla");
+        DEBUG_LOG("There is only one image per stack! We return to the normal of the plan");
         QVector3D normalVector = firstImage->getImageOrientationPatient().getNormalVector();
         direction[0] = normalVector.x();
         direction[1] = normalVector.y();
@@ -639,9 +641,9 @@ void Volume::getStackDirection(double direction[3], int stack)
     {
         const double *firstOrigin = firstImage->getImagePositionPatient();
         const double *secondOrigin = secondImage->getImagePositionPatient();
-        // Calculem la direcció real de com estan apilades
+        // We calculate the actual direction of how they are stacked
         QVector3D zDirection = MathTools::directorVector(QVector3D(firstOrigin[0], firstOrigin[1], firstOrigin[2]),
-                                                         QVector3D(secondOrigin[0], secondOrigin[1], secondOrigin[2]));
+                QVector3D(secondOrigin[0], secondOrigin[1], secondOrigin[2]));
         zDirection.normalize();
         direction[0] = zDirection.x();
         direction[1] = zDirection.y();
@@ -678,8 +680,8 @@ void Volume::convertToNeutralVolume()
 {
     m_volumePixelData->convertToNeutralPixelData();
 
-    // Quan creem el volum neutre indiquem que només tenim 1 sola fase
-    // TODO Potser s'haurien de crear tantes fases com les que indiqui la sèrie?
+    // When we create the neutral volume we indicate that we only have 1 single phase
+    // EVERYTHING Maybe as many phases should be created as the series indicates?
     this->setNumberOfPhases(1);
 }
 
@@ -701,70 +703,70 @@ OrthogonalPlane Volume::getCorrespondingOrthogonalPlane(const AnatomicalPlane &a
     AnatomicalPlane acquisitionPlane = getAcquisitionPlane();
     switch (acquisitionPlane)
     {
+    case AnatomicalPlane::Axial:
+    case AnatomicalPlane::NotAvailable:
+    case AnatomicalPlane::Oblique:
+        switch(anatomicalPlane)
+        {
         case AnatomicalPlane::Axial:
-        case AnatomicalPlane::NotAvailable:
-        case AnatomicalPlane::Oblique:
-            switch(anatomicalPlane)
-            {
-                case AnatomicalPlane::Axial:
-                    orthogonalPlane = OrthogonalPlane::XYPlane;
-                    break;
-
-                case AnatomicalPlane::Sagittal:
-                    orthogonalPlane = OrthogonalPlane::YZPlane;
-                    break;
-
-                case AnatomicalPlane::Coronal:
-                    orthogonalPlane = OrthogonalPlane::XZPlane;
-                    break;
-
-                default:
-                    orthogonalPlane = OrthogonalPlane::XYPlane;
-                    break;
-            }
+            orthogonalPlane = OrthogonalPlane::XYPlane;
             break;
 
         case AnatomicalPlane::Sagittal:
-            switch(anatomicalPlane)
-            {
-                case AnatomicalPlane::Axial:
-                    orthogonalPlane = OrthogonalPlane::XZPlane;
-                    break;
-
-                case AnatomicalPlane::Sagittal:
-                    orthogonalPlane = OrthogonalPlane::XYPlane;
-                    break;
-
-                case AnatomicalPlane::Coronal:
-                    orthogonalPlane = OrthogonalPlane::YZPlane;
-                    break;
-
-                default:
-                    orthogonalPlane = OrthogonalPlane::XYPlane;
-                    break;
-            }
+            orthogonalPlane = OrthogonalPlane::YZPlane;
             break;
 
         case AnatomicalPlane::Coronal:
-            switch(anatomicalPlane)
-            {
-                case AnatomicalPlane::Axial:
-                    orthogonalPlane = OrthogonalPlane::XZPlane;
-                    break;
-
-                case AnatomicalPlane::Sagittal:
-                    orthogonalPlane = OrthogonalPlane::YZPlane;
-                    break;
-
-                case AnatomicalPlane::Coronal:
-                    orthogonalPlane = OrthogonalPlane::XYPlane;
-                    break;
-
-                default:
-                    orthogonalPlane = OrthogonalPlane::XYPlane;
-                    break;
-            }
+            orthogonalPlane = OrthogonalPlane::XZPlane;
             break;
+
+        default:
+            orthogonalPlane = OrthogonalPlane::XYPlane;
+            break;
+        }
+        break;
+
+    case AnatomicalPlane::Sagittal:
+        switch(anatomicalPlane)
+        {
+        case AnatomicalPlane::Axial:
+            orthogonalPlane = OrthogonalPlane::XZPlane;
+            break;
+
+        case AnatomicalPlane::Sagittal:
+            orthogonalPlane = OrthogonalPlane::XYPlane;
+            break;
+
+        case AnatomicalPlane::Coronal:
+            orthogonalPlane = OrthogonalPlane::YZPlane;
+            break;
+
+        default:
+            orthogonalPlane = OrthogonalPlane::XYPlane;
+            break;
+        }
+        break;
+
+    case AnatomicalPlane::Coronal:
+        switch(anatomicalPlane)
+        {
+        case AnatomicalPlane::Axial:
+            orthogonalPlane = OrthogonalPlane::XZPlane;
+            break;
+
+        case AnatomicalPlane::Sagittal:
+            orthogonalPlane = OrthogonalPlane::YZPlane;
+            break;
+
+        case AnatomicalPlane::Coronal:
+            orthogonalPlane = OrthogonalPlane::XYPlane;
+            break;
+
+        default:
+            orthogonalPlane = OrthogonalPlane::XYPlane;
+            break;
+        }
+        break;
     }
 
     return orthogonalPlane;

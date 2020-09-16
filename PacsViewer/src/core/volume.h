@@ -37,17 +37,18 @@ class VolumeReader;
 class ImagePlane;
 
 /**
-    Aquesta classe respresenta un volum de dades. Aquesta serà la classe on es guardaran les dades que voldrem tractar.
-    Ens donarà mètodes per poder obtenir les dades en el format que volguem: ITK, VTK, etc.
+This class represents a volume of data. This will be the class where the data we want to process will be saved.
+It will give us methods to get the data in the format we want: ITK, VTK, etc.
 
-    Es pot inicialitzar amb dades de tipus itk o vtk amb el mètode \c setData() .
-    Per raons d'eficiència, com que el programa principalment el que farà serà visualitzar es retindran les dades en format natiu vtk.
-    Només es convertiran a itk quan es demanin explícitament.
+It can be initialized with data of type itk or vtk with the method \ c setData ().
+For efficiency reasons, as the program will mainly display the data in native vtk format.
+They will only be converted to itk when explicitly requested.
   */
 class Volume : public QObject {
-Q_OBJECT
+    Q_OBJECT
 public:
-    // TODO: Typedef's duplicats de VolumePixelData, es manté de moment mentre no es va substituïnt arreu on s'hi fa referència
+    /// TODO: Typedef's duplicates of VolumePixelData, is maintained
+    /// for the time being as long as it is not replaced wherever it is referenced
     typedef VolumePixelData::ItkPixelType ItkPixelType;
     static const unsigned int VDimension = VolumePixelData::VDimension;
     typedef VolumePixelData::ItkImageType ItkImageType;
@@ -64,43 +65,43 @@ public:
     void setData(vtkImageData *vtkImage);
     vtkImageData* getVtkData();
 
-    /// Assigna/Retorna el Volume Pixel Data
-    /// L'assignació no accepta punters nuls.
+    /// Assign / Return the Volume Pixel Data
+    /// Assignment does not accept null pointers.
     void setPixelData(VolumePixelData *pixelData);
     VolumePixelData* getPixelData();
 
-    /// Ens indica si té el pixel data carregat.
-    /// Si no el té els mètodes que pregunten sobre dades del volum poden donar respostes incorrectes.
+    /// Tells us if the data pixel is loaded.
+    /// If you don't have it, the methods that ask about volume data can give incorrect answers.
     bool isPixelDataLoaded() const;
 
-    /// Obté l'origen del volum
+    /// Get the source of the volume
     void getOrigin(double xyz[3]);
     double* getOrigin();
 
-    /// Obté l'espaiat del model al llarg dels eixos
+    ///Get the model spacing along the axes
     void getSpacing(double xyz[3]);
     double* getSpacing();
 
-    /// Retorna la ¿bounding box?
+    /// Returns bounding box?
     void getExtent(int extent[6]);
     int* getExtent();
 
-    /// Retorna les dimensions del volum
+    /// Returns the dimensions of the volume
     int* getDimensions();
     void getDimensions(int dims[3]);
 
-    /// Ens retornar el rang de valors del volum (valor mínim i màxim).
+    /// Return the range of volume values (minimum and maximum value).
     void getScalarRange(double range[2]);
 
-    /// Assigna/Retorna l'identificador del volum.
+    /// Assigns / Returns the volume identifier.
     void setIdentifier(const Identifier &id);
     Identifier getIdentifier() const;
 
-    /// Assigna/Retorna el thumbnail del volum
+    /// Assign / Return the volume thumbnail
     void setThumbnail(const QPixmap &thumbnail);
     QPixmap getThumbnail() const;
 
-    /// TODO Mètodes transitoris pels canvis de disseny del tema de fases
+    /// TODO Transitional methods for design changes to the phase theme
     void setNumberOfPhases(int phases);
     int getNumberOfPhases() const;
     Volume* getPhaseVolume(int index);
@@ -111,66 +112,70 @@ public:
     /// Returns the modality, if available, of the images that compose the volume
     QString getModality() const;
 
-    /// Afegim una imatge al conjunt d'imatges que composen el volum
+    /// We add an image to the set of images that make up the volume
     void addImage(Image *image);
 
-    /// Assignem directament el conjunt d'imatges que composen aquest volum
+    /// We directly assign the set of images that make up this volume
     void setImages(const QList<Image*> &imageList);
 
-    /// Retorna les imatges que composen el volum
+    /// Returns the images that make up the volume
     QList<Image*> getImages() const;
 
-    /// Retorna el nombre total de frames que té el volum amb els objectes Image que conté
+    /// Returns the total number of frames the volume has with the Image objects it contains
     int getNumberOfFrames() const;
 
-    /// Retorna cert si el volum és multiframe.
+    /// Returns true if the volume is multiframe.
     bool isMultiframe() const;
 
-    /// Shortcut methods to get the parent series/study/patient which this volume belongs to
+    /// Shortcut methods to get the parent series / study / patient which this volume belongs to
     Series* getSeries() const;
     Study* getStudy() const;
     Patient* getPatient() const;
 
-    /// Volcat d'informació en un string per poder-ho printar on interessi
+    /// Dump information into a string so you can print it where you want it
     QString toString(bool verbose = false);
 
-    /// Ens dóna la imatge corresponent a la llesca i fase donats
-    /// Per defecte, només especificarem la imatge sense tenir en compte la fase
-    /// @param sliceNumber llesca
-    /// @param phaseNumber fase
-    /// @return la imatge en cas que els índexs siguin correctes, NULL altrament
+    /// It gives us the image corresponding to the given slice and phase
+    /// By default, we will only specify the image regardless of the phase
+    /// @param sliceNumber slice
+    /// @param phaseNumber phase
+    /// @return the image in case the indexes are correct, NULL otherwise
     Image* getImage(int sliceNumber, int phaseNumber = 0) const;
 
     /// Given a slice and an orthogonal plane, returns the corresponding ImagePlane
     /// @param vtkReconstructionHack HACK enables a hack for cases which the "real" plane is not the really wanted
-    /// applying a correction to satisfy some restrictions with vtk. This should only be used on very concrete cases. Default value should be used.
+    /// applying a correction to satisfy some restrictions with vtk.
+    /// This should only be used on very concrete cases. Default value should be used.
     /// @return The corresponding image plane
     ImagePlane* getImagePlane(int sliceNumber, const OrthogonalPlane &plane, bool vtkReconstructionHack = false);
-    
+
     /// Returns the pixel units for this volume. If the units cannot be specified, an empty string will be returned
     QString getPixelUnits();
-    
     /// Returns the slice range of the current volume corresponding to an specified orthogonal plane
     void getSliceRange(int &min, int &max, const OrthogonalPlane &plane);
 
-    /// Returns the maximum/minimum slice for an specified orthogonal plane
+    /// Returns the slice range of the current volume corresponding to a specified orthogonal plane
     int getMaximumSlice(const OrthogonalPlane &plane);
     int getMinimumSlice(const OrthogonalPlane &plane);
 
-    /// Ens retorna la direcció REAL(DICOM) en la que es troben apilades
-    /// les imatges que formen el volum. Com que dins d'un mateix volum podem tenir més
-    /// d'un frame/stack, hem d'indicar de quin frame/stack volem la direcció
-    /// TODO de moment, com que el suport a stacks/frames és bastant patètic, assumim que només hi ha un, però cal corretgir això
-    /// Caldrà també tenir com a mínim dues imatges en el mateix stack/frame per donar una direcció fiable.
-    /// En cas que només tinguem una sola imatge pel frame/stack donat, retornarem la normal d'aquella imatge
-    /// que és el que més se li pot aproximar
+
+    /// It returns the REAL address (DICOM) in which they are stacked
+    /// the images that make up the volume. Because within the same volume we can have more
+    /// of a frame / stack, we have to indicate from which frame / stack we want the direction
+    /// EVERYTHING at the moment, since the support for stacks / frames is quite pathetic,
+    /// we assume that there is only one, but this needs to be corrected
+    /// You will also need to have at least two images in the same stack / frame to give a reliable direction.
+    /// In case we only have one image for the given frame / stack, we will return the normal of that image
+    /// which is the closest thing you can get
     /// @param stack
-    /// @param direction[]
+    /// @param direction []
     void getStackDirection(double direction[3], int stack = 0);
 
-    /// Returns a pointer to the raw pixel data at index [x, y, z]. Avoid its use if possible and prefer using an iterator instead.
+    /// Returns a pointer to the raw pixel data at index [x, y, z].
+    ///  Avoid its use if possible and prefer using an iterator instead.
     void* getScalarPointer(int x = 0, int y = 0, int z = 0);
-    /// Returns a pointer to the raw pixel data at the given index. Avoid its use if possible and prefer using an iterator instead.
+    /// Returns a pointer to the raw pixel data at the given index.
+    /// Avoid its use if possible and prefer using an iterator instead.
     void* getScalarPointer(int index[3]);
 
     /// Returns a VolumePixelDataIterator pointing to the voxel at index [x, y, z].
@@ -181,45 +186,45 @@ public:
     /// Returns value of voxel at index [x, y, z].
     double getScalarValue(int x, int y, int z);
 
-    /// S'encarrega de convertir el volum a un volum "de mínims" per donar un output en casos que
-    /// ens quedem sense memòria o ens trobem amb altres problemes. Vindria a ser un
-    /// volum neutre per evitar que l'aplicació peti en casos d'error no controlats
-    /// TODO Aquest mètode potser s'hauria de transformar en una subclasse de Volume que
-    /// únicament creïi aquest tipu de volum
+    /// It is responsible for converting the volume to a "minimum" volume to give an output in cases that
+    /// we run out of memory or run into other problems. It would become one
+    /// neutral volume to prevent the application from crashing in uncontrolled error cases
+    /// TODO This method should perhaps be transformed into a subclass of Volume that
+    /// only create this type of volume
     void convertToNeutralVolume();
 
-    /// Ens retorna el pla d'adquisició del volum
-    /// En el cas que no tinguem imatges retornarà NotAvailable.
-    /// TODO Com que el volum pot estar format per imatges de diferents plans, el pla d'adquisició 
-    /// es calcula en base a la primera imatge i prou
+    /// Returns the volume acquisition plan
+    /// In case we don't have images, NotAvailable will return.
+    /// EVERYTHING Because the volume can be made up of images from different planes, the acquisition plan
+    /// is calculated based on the first image and enough
     AnatomicalPlane getAcquisitionPlane() const;
 
     /// Returns which orthogonal plane of the current volume corresponds to the given anatomical plane
     OrthogonalPlane getCorrespondingOrthogonalPlane(const AnatomicalPlane &anatomicalPlane) const;
 
-    /// Ens retorna l'índex intern d'imatge corresponent a la llesca i fase indicats
+    /// Returns the internal image index corresponding to the indicated slice and phase
     int getImageIndex(int sliceNumber, int phaseNumber) const;
 
-    /// Donada una coordenada de món, ens dóna l'índex del vòxel corresponent.
-    /// Si la coordenada està dins del volum retorna true, false altrament.
-    /// TODO S'espera que la coordenada sigui dins del món VTK!
+    /// Given a world coordinate, it gives us the index of the corresponding voxel.
+    /// If the coordinate is within the volume returns true, false otherwise.
+    /// EVERYTHING The coordinate is expected to be within the VTK world!
     bool computeCoordinateIndex(const double coordinate[3], int index[3]);
 
-    /// Retorna el nombre de components
+    /// Returns the number of components
     int getNumberOfScalarComponents();
 
-     /// Retorna la mida dels escalars
+    /// Returns the size of the stairs
     int getScalarSize();
 
-    /// Retorna l'scalar pointer de la imatge en forma de QByteArray.
+    /// Returns the scalar pointer of the image in the form of QByteArray.
     QByteArray getImageScalarPointer(int imageNumber);
 
     /// Returns true if all the images in this volume are in the same anatomical plane.
     bool areAllImagesInTheSameAnatomicalPlane() const;
-    
+
 signals:
-    /// Emet l'estat del progrés en el que es troba la càrrega de dades del volum
-    /// @param progress progrés de la càrrega en una escala de 1 a 100
+    /// It emits the state of the progress in which the data load of the volume is
+    /// @param progress load progress on a scale of 1 to 100
     void progress(int);
 
 private:
@@ -231,27 +236,29 @@ private:
 
 private:
 
-    /// Conjunt d'imatges que composen el volum
+    /// Set of images that make up the volume
     QList<Image*> m_imageSet;
-    /// True if it has been checked that all images are in the same anatomical plane since the last change in the image set.
+    /// True if it has been checked that all images are in the same anatomical
+    ///  plane since the last change in the image set.
     mutable bool m_checkedImagesAnatomicalPlane;
     /// True if all the images in this volume are in the same anatomical plane.
     mutable bool m_allImagesAreInTheSameAnatomicalPlane;
 
-    /// Identificador de volum
+    /// Volume identifier
     Identifier m_identifier;
 
-    /// Thumbnail del volum
+    /// Volume Thumbnail
     QPixmap m_thumbnail;
 
-    /// Pixel data del volume
+    /// Pixel volume date
     VolumePixelData *m_volumePixelData;
 
-    /// TODO membre temporal per la transició al tractament de fases
+    /// EVERY temporary member for the transition to phase treatment
     int m_numberOfPhases;
     int m_numberOfSlicesPerPhase;
 
-    /// Stores the units of the pixel values of PT series. getPTPixelUnits should always be used to get this value
+    /// Stores the units of the pixel values of PT series.
+    /// getPTPixelUnits should always be used to get this value
     QString m_PTPixelUnits;
 };
 
