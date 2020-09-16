@@ -4,16 +4,18 @@
 class QListWidget;
 class QVBoxLayout;
 class QHBoxLayout;
-
-//class Patient;
-#include "patient.h"
 #include <QDockWidget>
+
+namespace udg {
+
+class QApplicationMainWindow;
+class Patient;
 
 class ImageThumbnailDockWidget : public QDockWidget
 {
     Q_OBJECT
 public:
-    ImageThumbnailDockWidget(const QString &title, QWidget *parent = nullptr,
+    ImageThumbnailDockWidget(const QString &title, QApplicationMainWindow *mainApp,QWidget *parent = nullptr,
                              Qt::WindowFlags flags = Qt::WindowFlags());
     ~ImageThumbnailDockWidget();
 
@@ -24,7 +26,7 @@ public:
     //}
     //QSize minimumSizeHint() const override;
     void clearThumbmailList();
-    void addPatientsThumbmailList(QList<udg::Patient*> patientsList);
+    void addPatientsThumbmailList(QList<Patient*> patientsList);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -38,8 +40,11 @@ private:
     const QPixmap m_pushpin;
     QListWidget *m_ImagelistWidge;
     QHBoxLayout *m_mainlayout;
-    QList<udg::Patient*> m_patientsList;
+    QList<Patient*> m_patientsList;
+private:
+    /// Pointer to the main application
+    QApplicationMainWindow *m_mainApp;
 };
 
-
+};  // end namespace udg
 #endif // IMAGETHUMBNAILDOCKWIDGET_H
