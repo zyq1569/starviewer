@@ -18,7 +18,7 @@ namespace udg {
 
 const int g_DockWidgetwith = 133;
 const QSize IMAGE_SIZE(96,99);
-const QSize ITEM_SIZE(109,120);
+const QSize ITEM_SIZE(109,140);
 
 ImageThumbnailDockWidget::ImageThumbnailDockWidget(const QString &title,QApplicationMainWindow *mainApp, QWidget *parent,
                                                    Qt::WindowFlags flags ):QDockWidget(title, parent, flags)
@@ -36,7 +36,7 @@ ImageThumbnailDockWidget::ImageThumbnailDockWidget(const QString &title,QApplica
     m_ImagelistWidge->setSelectionRectVisible(true);
     m_ImagelistWidge->setSpacing(0);
     m_ImagelistWidge->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);//always show!!?? set
-
+    m_ImagelistWidge->setWordWrap(true);
     //    QPalette palette;
     //    palette.setColor(QPalette::Background, Qt::red);
     //    m_ImagelistWidge->setPalette(palette);
@@ -70,11 +70,14 @@ void ImageThumbnailDockWidget::clearThumbmailList()
         }
     }
 }
-void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<udg::Patient*> patientsList)
+void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<Patient*> patientsList)
 {
     clearThumbmailList();
     QString caption;
     QString label;
+    // For each series of the study we will extract its label and identifier
+    QList<QPair<QString, QString> > itemsList;
+    QList<QPair<QString, QString> > fusionItemsList;
     foreach(Patient *patient, patientsList)
     {
         foreach (Study *study, patient->getStudies())
@@ -86,17 +89,18 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<udg::Patient*> pat
                     .arg(study->getModalitiesAsSingleString())
                     .arg(study->getDescription());
 
-            // For each series of the study we will extract its label and identifier
-            QList<QPair<QString, QString> > itemsList;
-            QList<QPair<QString, QString> > fusionItemsList;
+            //            // For each series of the study we will extract its label and identifier
+            //            QList<QPair<QString, QString> > itemsList;
+            //            QList<QPair<QString, QString> > fusionItemsList;
             foreach (Series *series, study->getViewableSeries())
             {
-                label = tr(" Series %1: %2 %3 %4 %5")
+                label = tr("Series%1:%2%3%4%5%6 Images")
                         .arg(series->getSeriesNumber().trimmed())
                         .arg(series->getProtocolName().trimmed())
                         .arg(series->getDescription().trimmed())
                         .arg(series->getBodyPartExamined())
-                        .arg(series->getViewPosition());
+                        .arg(series->getViewPosition())
+                        .arg(series->getNumberOfImages());
 
                 int volumeNumber = 1;
                 foreach (Volume *volume, series->getVolumesList())
@@ -111,13 +115,13 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<udg::Patient*> pat
                     {
                         itemPair.first = label;
                     }
-                    ///
-                    /// \brief item
+                    /////--------------------------------------------------------------------------------
+                    ///// \brief item
                     QPixmap pixmap(volume->getThumbnail());
                     QListWidgetItem *item = new QListWidgetItem(QIcon(pixmap.scaled(IMAGE_SIZE)),label);
                     item->setSizeHint(ITEM_SIZE);
                     m_ImagelistWidge->insertItem(volumeNumber,item);
-                    ///
+                    //////////////////////////////////////////////////////////////////////////////////////
                     volumeNumber++;
                     // Identifier
                     itemPair.second = QString::number(volume->getIdentifier().getValue());
@@ -125,9 +129,9 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<udg::Patient*> pat
                     itemsList << itemPair;
                     if (series->getModality() == "CT" && !series->isCTLocalizer())
                     {
-                        udg::AnatomicalPlane acquisitionPlane = volume->getAcquisitionPlane();
+                        AnatomicalPlane acquisitionPlane = volume->getAcquisitionPlane();
 
-                        if (acquisitionPlane != udg::AnatomicalPlane::NotAvailable)
+                        if (acquisitionPlane != AnatomicalPlane::NotAvailable)
                         {
                             int zIndex = volume->getCorrespondingOrthogonalPlane(acquisitionPlane).getZIndex();
                             double margin = series->getImages().first()->getSliceThickness() * 5;
@@ -166,10 +170,22 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<udg::Patient*> pat
                     }
                 }
             }
+            itemsList << fusionItemsList;
             // We add the series grouped by study
             //m_patientBrowserList->addItemsGroup(caption, itemsList << fusionItemsList);
         }
     }
+    //    typedef QPair<QString, QString> MyPair;
+    //    int index = 0;
+    //    foreach (MyPair itemPair, itemsList)
+    //    {
+    //        ///--------------------------------------------------------------------------------
+    //        /// \brief item
+    //        QPixmap pixmap(volume->getThumbnail());
+    //        QListWidgetItem *item = new QListWidgetItem(QIcon(pixmap.scaled(IMAGE_SIZE)),itemPair.first);
+    //        item->setSizeHint(ITEM_SIZE);
+    //        m_ImagelistWidge->insertItem(index++,item);
+    //    }
     //    connect(m_ImagelistWidge, SIGNAL(isActive(QString)), SLOT(updateActiveItemView(QString)));
     //    connect(m_ImagelistWidge, SIGNAL(selectedItem(QString)), SLOT(processSelectedItem(QString)));
 }
@@ -196,62 +212,8 @@ ImageThumbnailDockWidget::~ImageThumbnailDockWidget()
 
 void ImageThumbnailDockWidget::paintEvent(QPaintEvent*)
 {
-    //    QPainter painter(this);
-    //    QRect rect = this->rect();
-
-    //    QDockWidget *dw = qobject_cast<QDockWidget*>(parentWidget());
-    //    Q_ASSERT(dw);
-
-    //    if (dw->features() & QDockWidget::DockWidgetVerticalTitleBar) {
-    //        QSize s = rect.size();
-    //        s.transpose();
-    //        rect.setSize(s);
-
-    //        painter.translate(rect.left(), rect.top() + rect.width());
-    //        painter.rotate(-90);
-    //        painter.translate(-rect.left(), -rect.top());
-    //    }
-
-    //    painter.drawPixmap(rect.topLeft(), leftPm);
-    //    painter.drawPixmap(rect.topRight() - QPoint(rightPm.width() - 1, 0), rightPm);
-    //    QBrush brush(centerPm);
-    //    painter.fillRect(rect.left() + leftPm.width(), rect.top(),
-    //                        rect.width() - leftPm.width() - rightPm.width(),
-    //                       centerPm.height(), centerPm);
     QRect rect = this->rect();
     m_ImagelistWidge->setGeometry(rect.left(),rect.top(),rect.right(),rect.bottom());
-#ifdef QT_DEBUG
-    /// look ! PatientBrowserMenuExtendedItem
-    ///void PatientBrowserMenu::placeAdditionalInfoWidget()
-    ///
-    //    static bool init = false;
-    //    if (!init)
-    //    {
-    //        init = true;
-    //        QString path = "F:\\\log\\image";
-    //        QDir dir(path);
-    //        if (dir.exists())
-    //        {
-    //            dir.setFilter(QDir::Files | QDir::NoSymLinks);
-    //            QStringList filters;
-    //            filters<<"*.png"<<"*.jpg";
-    //            dir.setNameFilters(filters);
-    //            static QStringList m_imgList;
-    //            m_imgList = dir.entryList();
-    //            if (m_imgList.count()>0)
-    //            {
-    //                for (int i=0; i<m_imgList.count(); i++)
-    //                {
-    //                    QPixmap pixmap(path +"\\"+m_imgList.at(i));
-    //                    QListWidgetItem *item = new QListWidgetItem(QIcon(pixmap.scaled(IMAGE_SIZE)),m_imgList.at(i));
-    //                    item->setSizeHint(ITEM_SIZE);
-    //                    m_ImagelistWidge->insertItem(i,item);
-    //                }
-    //            }
-    //        }
-    //        //connect(m_ImagelistWidge, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(slot_itemClicked(QListWidgetItem*)));
-    //    }
-#endif
 }
 
 void ImageThumbnailDockWidget::mouseReleaseEvent(QMouseEvent *event)
