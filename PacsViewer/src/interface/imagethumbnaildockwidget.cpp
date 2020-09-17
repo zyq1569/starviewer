@@ -6,6 +6,7 @@
 #include "image.h"
 #include "qapplicationmainwindow.h"
 #include "patient.h"
+#include "VolumeRepository.h"
 
 #include <QSize>
 #include <QListWidget>
@@ -94,7 +95,7 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<Patient*> patients
             //            QList<QPair<QString, QString> > fusionItemsList;
             foreach (Series *series, study->getViewableSeries())
             {
-                label = tr("Series%1:%2%3%4%5%6 Images")
+                label = tr("Series %1: %2%3%4%5(%6 Images)")
                         .arg(series->getSeriesNumber().trimmed())
                         .arg(series->getProtocolName().trimmed())
                         .arg(series->getDescription().trimmed())
@@ -115,15 +116,8 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<Patient*> patients
                     {
                         itemPair.first = label;
                     }
-                    /////--------------------------------------------------------------------------------
-                    ///// \brief item
-                    QPixmap pixmap(volume->getThumbnail());
-                    QListWidgetItem *item = new QListWidgetItem(QIcon(pixmap.scaled(IMAGE_SIZE)),label);
-                    item->setSizeHint(ITEM_SIZE);
-                    m_ImagelistWidge->insertItem(volumeNumber,item);
-                    //////////////////////////////////////////////////////////////////////////////////////
                     volumeNumber++;
-                    // Identifier
+                    // Identifier !!!!!!
                     itemPair.second = QString::number(volume->getIdentifier().getValue());
                     // We add the pair to the list
                     itemsList << itemPair;
@@ -175,17 +169,19 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<Patient*> patients
             //m_patientBrowserList->addItemsGroup(caption, itemsList << fusionItemsList);
         }
     }
-    //    typedef QPair<QString, QString> MyPair;
-    //    int index = 0;
-    //    foreach (MyPair itemPair, itemsList)
-    //    {
-    //        ///--------------------------------------------------------------------------------
-    //        /// \brief item
-    //        QPixmap pixmap(volume->getThumbnail());
-    //        QListWidgetItem *item = new QListWidgetItem(QIcon(pixmap.scaled(IMAGE_SIZE)),itemPair.first);
-    //        item->setSizeHint(ITEM_SIZE);
-    //        m_ImagelistWidge->insertItem(index++,item);
-    //    }
+    typedef QPair<QString, QString> DefPair;
+    int index = 0;
+    foreach (DefPair itemPair, itemsList)
+    {
+        ///--------------------------------------------------------------------------------
+        /// item
+        Identifier id(itemPair.second.toInt());
+        QPixmap pixmap(VolumeRepository::getRepository()->getVolume(id)->getThumbnail());
+        QListWidgetItem *item = new QListWidgetItem(QIcon(pixmap.scaled(IMAGE_SIZE)),itemPair.first);
+        item->setSizeHint(ITEM_SIZE);
+        m_ImagelistWidge->insertItem(index++,item);
+    }
+    // ????
     //    connect(m_ImagelistWidge, SIGNAL(isActive(QString)), SLOT(updateActiveItemView(QString)));
     //    connect(m_ImagelistWidge, SIGNAL(selectedItem(QString)), SLOT(processSelectedItem(QString)));
 }
