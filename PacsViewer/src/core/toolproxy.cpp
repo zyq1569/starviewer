@@ -20,7 +20,7 @@
 namespace udg {
 
 ToolProxy::ToolProxy(QObject *parent)
- : QObject(parent)
+    : QObject(parent)
 {
 }
 
@@ -35,20 +35,20 @@ void ToolProxy::addTool(Tool *tool)
     if (!m_toolsMap.contains(tool->toolName()))
     {
         m_toolsMap.insert(tool->toolName(), tool);
-        // Si la tool demanada existeix, comprovem si té dades persistents
+        //If the requested tool exists, we check if it has persistent data
         if (tool->hasPersistentData())
         {
-            // Mirem si les tenim al repositori
+            //Let's see if we have them in the repository
             ToolData *persistentData = m_persistentToolDataRepository.value(tool->toolName());
             if (persistentData)
             {
-                // Hi són, per tant li assignem a la tool
+                // They are there, so we assign them to the tool
                 tool->setToolData(persistentData);
             }
             else
             {
-                // No hi són al respositori, per tant és el primer cop que demanen la tool
-                // Obtenim les seves dades i les registrem al repositori
+                // They are not in the repository, so this is the first time they have asked for the tool
+                // We obtain your data and register it in the repository
                 m_persistentToolDataRepository[tool->toolName()] = tool->getToolData();
             }
         }
@@ -64,7 +64,7 @@ bool ToolProxy::removeTool(const QString &toolName)
     bool ok = false;
     if (m_toolsMap.contains(toolName))
     {
-        // L'eliminem del mapa i alliberem la seva memòria
+        //We remove it from the map and free its memory
         Tool *tool = m_toolsMap.take(toolName);
         delete tool;
         ok = true;
@@ -100,7 +100,8 @@ Tool* ToolProxy::getTool(const QString &toolName)
 
 void ToolProxy::forwardEvent(unsigned long eventID)
 {
-    // No es pot fer un foreach sobre un map perquè retorna parella d'elements, per això passem tots els elements del map a una QList.
+    /// You can't do a foreach on a map because it
+    /// returns a pair of elements, so we pass all the elements of the map to a QList.
     QList<Tool*> toolsList = m_toolsMap.values();
 
     foreach (Tool *tool, toolsList)
