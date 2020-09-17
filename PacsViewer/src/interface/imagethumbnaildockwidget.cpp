@@ -192,7 +192,7 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<Patient*> patients
 
 ImageThumbnailDockWidget::~ImageThumbnailDockWidget()
 {
-
+    clearThumbmailList();
 }
 
 

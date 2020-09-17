@@ -24,48 +24,48 @@
 namespace udg {
 
 /**
-    Aquesta classe és el repositori de volums. En aquesta classe es guarden tots els volums que hi ha oberts durant
-    l'execució del programa. Només hi haura una sola instància en tota la vida del programa d'aquesta classe.
-    Per fer-ho s'aplica el patró Singleton.
+This class is the volume repository. In this class are kept all the volumes that are open during
+program execution. There will be only one instance in the entire life of the program in this class.
+To do this the Singleton pattern is applied.
 
-    Per poder obtenir una instància del repositori hem de fer un include del fitxer volumerepository.h i fer una crida
-    al mètode VolumeRepository::getRepository(). Aquest ens retornarà un punter al repositori de volums.
+In order to get an instance of the repository we need to make an include of the volumerepository.h file and make a call
+to the VolumeRepository :: getRepository () method. This will return a pointer to the volume repository.
 
-    Exemple:
+Exemple:
 
-    \code
-    #include "volumerepository.h"
-    ...
-    udg::VolumeRepository* m_volumeRepository;
-    m_volumeRepository = VolumeRepository::getRepository();
-    ...
-    Volume* m_volume = m_volumeRepository->getVolume(id);
-    \endcode
+\code
+#include "volumerepository.h"
+...
+udg::VolumeRepository* m_volumeRepository;
+m_volumeRepository = VolumeRepository::getRepository();
+...
+Volume* m_volume = m_volumeRepository->getVolume(id);
+\endcode
   */
 class VolumeRepository : public Repository<Volume> {
 Q_OBJECT
 public:
-    /// Afegeix un volum al repositori.
-    /// Ens retorna l'id del volum afegit per poder-lo obtenir més endavant.
+    /// Add a volume to the repository.
+    /// Returns the id of the added volume so we can get it later.
     Identifier addVolume(Volume *model);
 
-    /// Ens retorna un volum del repositori amb l'identificador que especifiquem.
+    /// Returns a volume from the repository with the identifier we specify.
     Volume* getVolume(Identifier id);
 
-    /// Esborra un Volume de memòria i el treu del repositori
+    /// Delete a Memory Volume and remove it from the repository
     void deleteVolume(Identifier id);
 
-    /// Retorna el nombre de volums que hi ha al repositori
+    /// Returns the number of volumes in the repository
     int getNumberOfVolumes();
 
-    /// Ens retorna l'única instància del repositori.
+    /// Returns us the only instance of the repository.
     static VolumeRepository* getRepository()
     {
         static VolumeRepository repository;
         return &repository;
     }
 
-    /// El destructor allibera l'espai ocupat pels volums
+    /// The shredder frees up space occupied by volumes
     ~VolumeRepository(){};
 
 signals:
@@ -73,7 +73,7 @@ signals:
     void itemRemoved(Identifier id);
 
 private:
-    /// Ha de quedar amagat perquè no poguem crear instàncies
+    /// It must be hidden so that we cannot create instances
     VolumeRepository();
 };
 
