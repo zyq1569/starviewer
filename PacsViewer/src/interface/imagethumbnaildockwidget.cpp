@@ -182,7 +182,7 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<Patient*> patients
         item->setWhatsThis(itemPair.second);
         m_ImagelistWidge->insertItem(index++,item);
     }
-    //????
+    //????  -------->  m_mainApp->getExtensionWorkspace()->addApplication(extension, requestedExtensionLabel, who);
     connect(m_ImagelistWidge, SIGNAL(itemDoubleClicked(QListWidgetItem *)),this, SLOT(updateActiveItemView(QListWidgetItem*)));
 }
 
