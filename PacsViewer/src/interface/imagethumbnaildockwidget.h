@@ -4,6 +4,8 @@
 class QListWidget;
 class QVBoxLayout;
 class QHBoxLayout;
+class QListWidgetItem;
+
 #include <QDockWidget>
 
 namespace udg {
@@ -34,6 +36,17 @@ protected:
 
 public slots:
     void updateMask();
+
+signals:
+    /// Signal that is emitted when the mouse enters the widget and notifies us of its identifier
+    void isActive(QString);
+
+    /// This signal is emitted when an item is chosen and notifies us of its identifier
+    void selectedItem(QString);
+
+private slots:
+    /// Update views related to the active item (the one the mouse hovers over)
+    void updateActiveItemView(QListWidgetItem *item);
 
 private:
     QPalette m_background;

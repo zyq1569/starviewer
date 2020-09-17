@@ -179,11 +179,11 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<Patient*> patients
         QPixmap pixmap(VolumeRepository::getRepository()->getVolume(id)->getThumbnail());
         QListWidgetItem *item = new QListWidgetItem(QIcon(pixmap.scaled(IMAGE_SIZE)),itemPair.first);
         item->setSizeHint(ITEM_SIZE);
+        item->setWhatsThis(itemPair.second);
         m_ImagelistWidge->insertItem(index++,item);
     }
-    // ????
-    //    connect(m_ImagelistWidge, SIGNAL(isActive(QString)), SLOT(updateActiveItemView(QString)));
-    //    connect(m_ImagelistWidge, SIGNAL(selectedItem(QString)), SLOT(processSelectedItem(QString)));
+    //????
+    connect(m_ImagelistWidge, SIGNAL(itemDoubleClicked(QListWidgetItem *)),this, SLOT(updateActiveItemView(QListWidgetItem*)));
 }
 
 ImageThumbnailDockWidget::~ImageThumbnailDockWidget()
@@ -191,6 +191,12 @@ ImageThumbnailDockWidget::~ImageThumbnailDockWidget()
     clearThumbmailList();
 }
 
+void ImageThumbnailDockWidget::updateActiveItemView(QListWidgetItem *item)
+{
+    QString id = item->whatsThis();
+    //m_mainApp->getExtensionHandler();
+    //int index = id.toInt();
+}
 
 //QSize ImageThumbnailDockWidget::minimumSizeHint() const
 //{
