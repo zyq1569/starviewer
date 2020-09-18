@@ -35,14 +35,14 @@ class VolumePixelDataIterator;
 class Voxel;
 
 /**
-    Classe que té com a responsabilitat mantenir el pixel data d'un Volume.
-    El pixel data d'un volume és el lloc de memòria on es guarden els diferents valors de voxel d'un Volume.
-  */
+Class whose responsibility is to maintain the date pixel of a Volume.
+The date pixel of a volume is the memory location where the different voxel values of a Volume are stored.
+*/
 class VolumePixelData : public QObject {
-Q_OBJECT
+    Q_OBJECT
 public:
 
-    /// Tipus d'imatge intern per defecte d'itk
+    ///Default internal image type of itk
     typedef signed short int ItkPixelType;
     static const unsigned int VDimension = 3;
 
@@ -59,11 +59,12 @@ public:
     void setData(vtkImageData *vtkImage);
     vtkImageData* getVtkData();
 
-    /// Creem les dades a partir d'un buffer d'unsigned chars
-    /// L'extent ha de ser coherent amb la mida de les dades del buffer i els bytesPerPixel indicats
-    /// Si deleteData = cert, aquesta classe s'encarregarà de destruir el buffer quan es destrueixi aquest objecte
-    /// Si deleteData = fals, (per defecte) no esborrarà el buffer
-    /// Les característiques d'spacing i origin no s'assignaran amb aquest mètode. Això caldrà fer-ho accedint posteriorment a les dades vtk
+    /// We create the data from an unsigned chars buffer
+    /// The extent must be consistent with the size of the buffer data and the indicated ByPixel bytes
+    /// If deleteData = true, this class will be responsible for destroying the buffer when this object is destroyed
+    /// If deleteData = false, (by default) it will not clear the buffer
+    /// Spacing and origin characteristics will not be assigned with this method.
+    /// This must be done by later accessing the vtk data
     void setData(unsigned char *data, int extent[6], int bytesPerPixel, bool deleteData = false);
 
     /// Sets the number of phases of this pixel data.
@@ -84,49 +85,48 @@ public:
     /// Returns a VolumePixelDataIterator pointing to the first voxel.
     VolumePixelDataIterator getIterator();
 
-    /// Donada una coordenada de món, ens dóna l'índex del vòxel corresponent.
-    /// Si la coordenada està dins del volum retorna true, false altrament.
-    /// TODO S'espera que la coordenada sigui dins del món VTK!
-    /// Caldria determinar si ha de ser així o hauria de ser DICOM o en un altre sistema.
-    /// HACK El paràmetre phaseNumber és necessari per poder calcular l'índex correcte dins del volum corresponent a la fase actual
+    /// Given a world coordinate, it gives us the index of the corresponding voxel.
+    /// If the coordinate is within the volume returns true, false otherwise.
+    /// EVERYTHING The coordinate is expected to be within the VTK world!
+    /// It should be determined whether it should be like this or it should be DICOM or another system.
+    /// HACK The phaseNumber parameter is needed to be able to calculate the correct index within the volume corresponding to the current phase
     bool computeCoordinateIndex(const double coordinate[3], int index[3], int phaseNumber = 0);
 
-    /// Donada una coordenada de món, ens dóna el valor del vòxel corresponent.
-    /// TODO S'espera que la coordenada sigui dins del món VTK!
-    /// Caldria determinar si ha de ser així o hauria de ser DICOM o en un altre sistema.
-    /// HACK El paràmetre phaseNumber és necessari per poder calcular l'índex correcte dins del volum corresponent a la fase actual
+    /// Given a world coordinate, it gives us the value of the corresponding voxel.
+    /// TODO: The coordinate is expected to be within the VTK world!
+    /// It should be determined whether it should be like this or it should be DICOM or another system.
+    /// HACK The phaseNumber parameter is needed to be able to calculate the correct index within the volume corresponding to the current phase
     Voxel getVoxelValue(double coordinate[3], int phaseNumber = 0);
 
     /// Returns the voxel corresponding to the given index. If index is out of range, a default constructed value will be returned.
     Voxel getVoxelValue(int index[3]);
 
-    /// S'encarrega de convertir el VolumePixelData en un pixel data neutre que permet que es faci servir en casos en
-    /// els que ens quedem sense memòria o ens trobem amb altres problemes a l'hora d'intentar allotjar-ne un en memòria
+    /// It is responsible for converting VolumePixelData into a neutral data pixel that allows it to be used in cases in
+    /// those who run out of memory or encounter other problems when trying to host one in memory
     void convertToNeutralPixelData();
 
-    /// Assigna/Obté l'origen
+    ///Assign / Obtain the source
     void setOrigin(double origin[3]);
     void setOrigin(double x, double y, double z);
     void getOrigin(double origin[3]);
 
-    /// Assigna/Obté l'espaiat del model al llarg dels eixos
+    /// Assign / Obtain the source
     void setSpacing(double spacing[3]);
     void setSpacing(double x, double y, double z);
     void getSpacing(double spacing[3]);
 
-    /// Retorna l'extent
+    /// Returns the extension
     void getExtent(int extent[6]);
 
-    /// Retorna el nombre de components escalars
+    /// Returns the number of scalar components
     int getNumberOfScalarComponents();
 
-    /// Retorna el nombre de components escalars
+    /// Returns the number of scalar components
     int getScalarSize();
-    
-    /// Obté el tipus d'escalars
+    /// Get the type of scalar
     int getScalarType();
 
-    //  Obté el nombre de punts
+    // Get the number of points
     int getNumberOfPoints();
    
 private:
@@ -134,16 +134,16 @@ private:
     typedef itk::ImageToVTKImageFilter<ItkImageType> ItkToVtkFilterType;
     typedef itk::VTKImageToImageFilter<ItkImageType> VtkToItkFilterType;
 
-    /// Les dades en format vtk
+    /// The data in vtk format
     vtkSmartPointer<vtkImageData> m_imageDataVTK;
 
-    /// Indica si conté dades carregades o no.
+    /// Indicates whether it contains loaded data or not.
     bool m_loaded;
 
     /// Number of phases of the pixel data. Its minimum value must be 1
     int m_numberOfPhases;
-    
-    /// Filtres per passar de vtk a itk
+
+    /// Filters to switch from vtk to itk
     ItkToVtkFilterType::Pointer m_itkToVtkFilter;
     VtkToItkFilterType::Pointer m_vtkToItkFilter;
 };

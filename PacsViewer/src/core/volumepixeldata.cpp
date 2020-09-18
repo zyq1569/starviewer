@@ -45,7 +45,7 @@ VolumePixelData::ItkImageTypePointer VolumePixelData::getItkData()
     }
     catch (itk::ExceptionObject &excep)
     {
-        WARN_LOG(QString("Excepció en el filtre vtkToItk :: Volume::getItkData() -> ") + excep.GetDescription());
+        WARN_LOG(QString("Exception in vtkToItk filter :: Volume::getItkData() -> ") + excep.GetDescription());
     }
     return m_vtkToItkFilter->GetImporter()->GetOutput();
 }
@@ -59,7 +59,7 @@ void VolumePixelData::setData(ItkImageTypePointer itkImage)
     }
     catch (itk::ExceptionObject &excep)
     {
-        WARN_LOG(QString("Excepció en el filtre itkToVtk :: Volume::setData(ItkImageTypePointer itkImage) -> ") + excep.GetDescription());
+        WARN_LOG(QString("Exception in the filter itkToVtk :: Volume::setData(ItkImageTypePointer itkImage) -> ") + excep.GetDescription());
     }
     this->setData(m_itkToVtkFilter->GetOutput());
 }
@@ -81,7 +81,7 @@ void VolumePixelData::setData(vtkImageData *vtkImage)
         m_imageDataVTK->ReleaseData();
     }
     m_imageDataVTK = vtkImage;
-    // Si el punter que ens assignen no és nul considerem que són dades carregades
+    //If the pointer assigned to us is not null we consider that it is loaded data
     m_loaded = vtkImage != 0;
 }
 
@@ -151,7 +151,7 @@ bool VolumePixelData::computeCoordinateIndex(const double coordinate[3], int ind
 {
     if (!this->getVtkData())
     {
-        DEBUG_LOG("Dades VTK nul·les!");
+        DEBUG_LOG("Dades VTK null!");
         return false;
     }
 
@@ -166,9 +166,9 @@ bool VolumePixelData::computeCoordinateIndex(const double coordinate[3], int ind
     // Apply phase correction (Safety check, phaseNumber and numberOfPhases must be coherent to apply it)
     if (MathTools::isInsideRange(phaseNumber, 0, m_numberOfPhases - 1))
     {
-        // HACK Aquest càlcul és necessari per pal·liar la manca de coneixement de la fase
-        // TODO Cal resoldre això d'una forma més elegant, el qual comporta un redisseny del tractament de fases i volums
-        // Calculem l'índex correcte en cas que tinguem fases
+        // HACK This calculation is necessary to alleviate the lack of knowledge of the phase
+        // TODO This must be resolved in a more elegant way, which involves a redesign of the treatment of phases and volumes
+        // We calculate the correct index in case we have phases
         index[2] = index[2] * m_numberOfPhases + phaseNumber;
     }
 
@@ -184,7 +184,7 @@ Voxel VolumePixelData::getVoxelValue(double coordinate[3], int phaseNumber)
 {
     if (!this->getVtkData())
     {
-        DEBUG_LOG("Dades VTK nul·les!");
+        DEBUG_LOG("Dades VTK null!");
         
         return Voxel();
     }
@@ -227,15 +227,15 @@ Voxel VolumePixelData::getVoxelValue(int index[3])
 
 void VolumePixelData::convertToNeutralPixelData()
 {
-    // Creem un objecte vtkImageData "neutre"
+    // Create a "neutral" vtkImageData object
     m_imageDataVTK = vtkSmartPointer<vtkImageData>::New();
-    // Inicialitzem les dades
+    // We initialize the data
     m_imageDataVTK->SetOrigin(.0, .0, .0);
     m_imageDataVTK->SetSpacing(1., 1., 1.);
     m_imageDataVTK->SetDimensions(10, 10, 1);
     m_imageDataVTK->SetExtent(0, 9, 0, 9, 0, 0);
     m_imageDataVTK->AllocateScalars(VTK_SHORT, 1);
-    // Omplim el dataset perquè la imatge resultant quedi amb un cert degradat
+    // We fill the dataset so that the resulting image is left with a certain gradient
     signed short *scalarPointer = (signed short*) m_imageDataVTK->GetScalarPointer();
     signed short value;
     for (int i = 0; i < 10; i++)

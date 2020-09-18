@@ -43,7 +43,7 @@ It will give us methods to get the data in the format we want: ITK, VTK, etc.
 It can be initialized with data of type itk or vtk with the method \ c setData ().
 For efficiency reasons, as the program will mainly display the data in native vtk format.
 They will only be converted to itk when explicitly requested.
-  */
+*/
 class Volume : public QObject {
     Q_OBJECT
 public:
