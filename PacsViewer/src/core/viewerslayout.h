@@ -30,8 +30,9 @@ class Volume;
 /**
 Class that allows to distribute on a widget a series Q2DViewerWidgets
 with different layouts and geometries in a versatile way.
-  */
-class ViewersLayout : public QWidget {
+*/
+class ViewersLayout : public QWidget
+{
     Q_OBJECT
 public:
     ViewersLayout(QWidget *parent = 0);

@@ -45,7 +45,7 @@
 
 // Qt
 #include <QResizeEvent>
-// Include's bàsics vtk
+// Include basic vtk
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>

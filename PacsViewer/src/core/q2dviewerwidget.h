@@ -31,7 +31,7 @@ class QViewerCommand;
 This class is the generic interface of a Q2DViewer along with its
 corresponding slider and spinbox. It contains the method to put such an input
 as the methods for modifying the value of the slider and spinbox.
- */
+*/
 class Q2DViewerWidget : public QStackedWidget, private ::Ui::Q2DViewerWidgetBase {
     Q_OBJECT
 public:

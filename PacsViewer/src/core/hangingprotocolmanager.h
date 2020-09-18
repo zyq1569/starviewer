@@ -36,76 +36,82 @@ class Q2DViewer;
 class RelatedStudiesManager;
 
 /**
-    Classe encarregada de fer la gestió de HP: cercar HP candidats i aplicar HP.
-    Degut a que els HP es modifiquen per assignar-los les sèries que s'han de mostrar, es fa una còpia del repositori.
+HP Management Class: Find HP candidates and apply HP.
+Because HPs are modified to assign the series to be displayed,
+a copy of the repository is made.
   */
 class HangingProtocolManager : public QObject {
-Q_OBJECT
+    Q_OBJECT
 public:
     HangingProtocolManager(QObject *parent = 0);
     ~HangingProtocolManager();
 
-    /// Buscar els hanging protocols disponibles
+    /// Search for available hanging protocols
     QList<HangingProtocol*> searchHangingProtocols(Study *study);
     QList<HangingProtocol*> searchHangingProtocols(Study *study, const QList<Study*> &previousStudies);
 
-    /// Aplica un hanging protocol concret
+    /// Apply a specific hanging protocol
     void applyHangingProtocol(HangingProtocol *hangingProtocol, ViewersLayout *layout, Patient *patient);
     void applyHangingProtocol(HangingProtocol *hangingProtocol, ViewersLayout *layout, Patient *patient, const QRectF &geometry);
 
-    /// Aplica el millor hanging protocol de la llista donada
+    ///Apply the best hanging protocol from the given list
     HangingProtocol* setBestHangingProtocol(Patient *patient, const QList<HangingProtocol*> &hangingProtocolList, ViewersLayout *layout, const QRectF &geometry);
 
-    /// Si hi havia estudis en descàrrega, s'elimina de la llista
+    ///If there were downloading studies, it is removed from the list
     void cancelAllHangingProtocolsDownloading();
     void cancelHangingProtocolDownloading(HangingProtocol *hangingProtocol);
 
 protected:
 
-    /// Fa una còpia del repositori de HP per poder-los modificar sense que el repositori es vegi afectat.
+    /// Make a copy of the HP repository so that you can modify them without the repository being affected.
     virtual void copyHangingProtocolRepository();
 
 protected:
-    /// Còpia del repositori de HP però poder-los modificar sense que afecti al repositori
+    ///Copy of the HP repository but be able to modify them without affecting the repository
     QList<HangingProtocol*> m_availableHangingProtocols;
 
 private slots:
-    /// S'ha descarregat un estudi previ demanat
+    /// A previous requested study has been downloaded
     void previousStudyDownloaded(Study *study);
 
-    /// Slot que comprova si l'error a la descarrega d'un estudi és un dels que s'estava esperan
+    /// Slot that checks if the error in downloading a study is one that was expected
     void errorDownloadingPreviousStudies(const QString &studyUID);
 
 private:
-    /// Mira si el protocol es pot aplicar al pacient
+    ///See if the protocol can be applied to the patient
     bool isModalityCompatible(HangingProtocol *protocol, Study *study);
 
-    /// Mira si la modalitat és compatible amb el protocol
+    /// See if the mode supports the protocol
     bool isModalityCompatible(HangingProtocol *protocol, const QString &modality);
 
-    /// Mira si la institució és compatible amb el protocol
+    /// See if the institution supports the protocol
     bool isInstitutionCompatible(HangingProtocol *protocol, Study *study);
 
-    /// Comprova si el protocol és aplicable a la institució. Si el protocol no té expressió regular per institució és aplicable
+    /// Check if the protocol is applicable to the institution.
+    ///  If the protocol does not have regular expression by institution it is applicable
     bool isValidInstitution(HangingProtocol *protocol, const QString &institutionName);
 
-    /// Mètode encarregat d'assignar l'input al viewer a partir de les especificacions del displaySet+imageSet.
+    /// Method responsible for assigning input to the viewer
+    /// based on the specifications of the displaySet + imageSet.
     void setInputToViewer(Q2DViewerWidget *viewerWidget, HangingProtocolDisplaySet *displaySet);
 
 private:
-    /// Estructura per guardar les dades que es necessiten quan es rep que s'ha fusionat un pacient amb un nou estudi
-    /// Hem de guardar tota la informació perquè només sabem que és un previ i fins que s'hagi descarregat no podem saber quines series i imatges te
+    /// Structure to store the data needed when it is received that a patient has merged with a new study
+    /// We have to save all the information because we only know
+    /// that it is a previous one and until it has been downloaded we cannot know which series and images you have
     struct StructPreviousStudyDownloading
     {
-        /// Widget a on s'ha de mostrar la informacio
+        /// Widget where the information should be displayed
         QPointer<Q2DViewerWidget> widgetToDisplay;
-        /// Guardem el display set per poder escollir l'orientacio (útil en mamo) i si cal una eina també
+        /// We save the display set to be able to choose the
+        /// orientation (useful on the breast) and if necessary a tool as well
         HangingProtocolDisplaySet *displaySet;
     };
 
     QHash<HangingProtocol*, QMultiHash<QString, StructPreviousStudyDownloading*>*> *m_hangingProtocolsDownloading;
 
-    /// Objecte utilitzat per descarregar estudis relacionats. No es fa servir QueryScreen per problemes de dependències entre carpetes.
+    ///Object used to download related studies.
+    ///  QueryScreen is not used for folder dependency issues.
     RelatedStudiesManager *m_relatedStudiesManager;
 };
 
