@@ -132,7 +132,7 @@ QList<HangingProtocol*> HangingProtocolManager::searchHangingProtocols(Study *st
 
     if (outputHangingProtocolList.size() > 0)
     {
-        // Noms per mostrar al log
+        // Names to display in the log
         QString infoLog;
         foreach (HangingProtocol *hangingProtocol, outputHangingProtocolList)
         {

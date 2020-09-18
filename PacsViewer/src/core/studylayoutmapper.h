@@ -39,10 +39,12 @@ public:
     void applyConfig(const StudyLayoutConfig &config, ViewersLayout *layout, Study *study, const QRectF &geometry, int rows, int columns);
 
 private:
-    /// Ens retorna la llista de volums amb la corresponent imatge que hem de col·locar segons la configuració i els estudis obtinguts a getMatchingStudies()
+    /// Returns the list of volumes with the corresponding image that we have to collect
+    /// locate according to configuration and studies obtained in getMatchingStudies ()
     QList<QPair<Volume*, int> > getImagesToPlace(const StudyLayoutConfig &config, const QList<Study*> &matchingStudies);
-    
-    /// Donada una llista de volums amb la corresponent llesca, els col·loca al layout segons la configuració donada
+
+    /// Given a list of volumes with the corresponding slice,
+    /// places them in the layout according to the given configuration
     void placeImagesInCurrentLayout(const QList<QPair<Volume*, int> > &volumesToPlace, StudyLayoutConfig::UnfoldDirectionType unfoldDirection,
                                     ViewersLayout *layout, int rows, int columns, const QRectF &geometry);
 
