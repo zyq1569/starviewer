@@ -12,7 +12,7 @@ namespace udg {
 
 class QApplicationMainWindow;
 class Patient;
-
+class Volume;
 class ImageThumbnailDockWidget : public QDockWidget
 {
     Q_OBJECT
@@ -43,6 +43,9 @@ signals:
 
     /// This signal is emitted when an item is chosen and notifies us of its identifier
     void selectedItem(QString);
+
+    /// Signal that notifies the volume corresponding to the chosen item
+    void selectedVolume(Volume *);
 
 private slots:
     /// Update views related to the active item (the one the mouse hovers over)

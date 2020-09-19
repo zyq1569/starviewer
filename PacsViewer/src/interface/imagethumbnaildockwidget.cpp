@@ -7,6 +7,8 @@
 #include "qapplicationmainwindow.h"
 #include "patient.h"
 #include "VolumeRepository.h"
+#include "ExtensionWorkspace.h"
+//#include "q2dviewerextension.h"
 
 #include <QSize>
 #include <QListWidget>
@@ -14,7 +16,7 @@
 #include <QDir>
 #include <QVBoxLayout>
 #include <QPalette>
-
+#include <QMessageBox>
 namespace udg {
 
 const int g_DockWidgetwith = 133;
@@ -194,6 +196,15 @@ ImageThumbnailDockWidget::~ImageThumbnailDockWidget()
 void ImageThumbnailDockWidget::updateActiveItemView(QListWidgetItem *item)
 {
     QString id = item->whatsThis();
+    //emit selectedVolume(VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
+    QMessageBox::about(NULL, "Volume", id);
+    QMap<QWidget *, QString> m_qwidget = m_mainApp->getExtensionWorkspace()->getActiveExtensions();
+    QMapIterator<QWidget *, QString> i(m_qwidget);//read only
+    QWidget *q2dviewerextension = i.key();
+    //connect()
+    //Q2DViewerExtension *q2dviewerextension = i.key();
+    //m_qwidget.size();
+    //QMap<QWidget *, QString> getActiveExtensions()
     //m_mainApp->getExtensionHandler();
     //int index = id.toInt();
 }

@@ -152,7 +152,7 @@ bool ExtensionHandler::request(const QString &who)
 
     //----------------------------------------------------------------------------------------
     //add :delete all Thumbnail list!~ 20200915
-    m_mainApp->clearImageThumbnailDockWidget();
+    //m_mainApp->clearImageThumbnailDockWidget();
     //----------------------------------------------------------------------------------------
     bool createExtension = true;
     int extensionIndex = 0;
