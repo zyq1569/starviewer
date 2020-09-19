@@ -31,6 +31,7 @@
 #include "automaticsynchronizationtool.h"
 #include "automaticsynchronizationtooldata.h"
 #include "coresettings.h"
+
 //To be able to take screenshots from the menu
 #include "screenshottool.h"
 #include "toolproxy.h"
@@ -1142,6 +1143,13 @@ void Q2DViewerExtension::setFusionLayoutMprRight(const QList<Volume *> &volumes)
     {
         m_syncActionManager->enable(true);
     }
+}
+
+
+//---20200919 add-----------------------------------------------------------------------
+void  Q2DViewerExtension::updateQ2DViewer(Volume* volume)
+{
+    m_lastSelectedViewer->setInputAsynchronously(volume);
 }
 
 }

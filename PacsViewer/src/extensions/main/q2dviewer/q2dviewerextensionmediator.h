@@ -21,6 +21,7 @@
 #include "q2dviewerextension.h"
 
 namespace udg {
+class Volume;
 
 class Q2DViewerExtensionMediator : public ExtensionMediator {
 Q_OBJECT
@@ -34,6 +35,9 @@ public:
 
     /// Orders the extension to view newly loaded studies from the current patient.
     virtual void viewNewStudiesFromSamePatient(QWidget *extension, const QString &newStudyUID);
+
+    //---20200919---add
+    virtual void executionCommand(QWidget *extension,Volume* volume);
 
 };
 

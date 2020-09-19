@@ -61,7 +61,7 @@ public:
     ~Q2DViewerExtension();
 
 #ifdef STARVIEWER_LITE
-    /// Li assigna el volum principal
+    /// Assigns the main volume to it
     void setInput(Volume *input);
 #endif
 
@@ -252,7 +252,7 @@ private:
 
     /// To make usability statistics
     StatsWatcher *m_statsWatcher;
-    
+
     ///Handles hanging protocols and automatic layouts
     LayoutManager *m_layoutManager;
 
@@ -273,6 +273,12 @@ private:
 
     /// Study Instance UID of current study.
     QString m_currentStudyUID;
+
+
+
+//----------------------add 2020-09-18-------------------------------------------------------------------
+public:
+    void  updateQ2DViewer(Volume* volume);
 
 };
 
