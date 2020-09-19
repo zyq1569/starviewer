@@ -21,6 +21,12 @@ public:
 
     virtual bool initializeExtension(QWidget *extension, const ExtensionContext &extensionContext);
 
+
+    //---20200919---add
+    virtual void executionCommand(QWidget *extension,Volume* volume)
+    {
+
+    }
 };
 
 static InstallExtension<QExperimental3DExtension, Experimental3DExtensionMediator> registerExperimental3DExtension;

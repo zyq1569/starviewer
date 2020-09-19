@@ -34,6 +34,12 @@ public:
     virtual bool initializeExtension(QWidget *extension, const ExtensionContext &extensionContext) override;
     virtual DisplayableID getExtensionID() const override;
 
+    //---20200919---add
+    virtual void executionCommand(QWidget *extension,Volume* volume)
+    {
+
+    }
+
 };
 
 static InstallExtension<QPdfExtension, PdfExtensionMediator> registerPdfExtension;

@@ -32,6 +32,12 @@ public:
     virtual bool initializeExtension(QWidget *extension, const ExtensionContext &extensionContext);
 
     virtual DisplayableID getExtensionID() const;
+
+    //---20200919---add
+    virtual void executionCommand(QWidget *extension,Volume* volume)
+    {
+
+    }
 };
 
 static InstallExtension<QMPRExtension, MPRExtensionMediator> registerMPRExtension;

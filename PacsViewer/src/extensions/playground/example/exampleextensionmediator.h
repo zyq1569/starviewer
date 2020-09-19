@@ -33,6 +33,12 @@ public:
     bool initializeExtension(QWidget *extension, const ExtensionContext &extensionContext) override;
     DisplayableID getExtensionID() const override;
 
+    //---20200919---add
+    virtual void executionCommand(QWidget *extension,Volume* volume)
+    {
+
+    }
+
 };
 
 static InstallExtension<QExampleExtension, ExampleExtensionMediator> registerExampleExtension;
