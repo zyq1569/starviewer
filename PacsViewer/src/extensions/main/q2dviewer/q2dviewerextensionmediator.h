@@ -36,8 +36,8 @@ public:
     /// Orders the extension to view newly loaded studies from the current patient.
     virtual void viewNewStudiesFromSamePatient(QWidget *extension, const QString &newStudyUID);
 
-    //---20200919---add
-    virtual void executionCommand(QWidget *extension,Volume* volume);
+    //---20200919---add--------------------------------------------------------------
+    virtual void executionCommand(QWidget *extension,Volume* volume,int command=0);
 
 };
 

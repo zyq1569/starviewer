@@ -69,15 +69,18 @@ void Q2DViewerExtensionMediator::viewNewStudiesFromSamePatient(QWidget *extensio
     }
 }
 
-
-void Q2DViewerExtensionMediator::executionCommand(QWidget *extension,Volume* volume)
+//---20200919---add-----------------------------------------------------------------------------------------------
+void Q2DViewerExtensionMediator::executionCommand(QWidget *extension, Volume* volume, int command)
 {
     Q2DViewerExtension *q2dviewerExtension;
 
     if (!(q2dviewerExtension = qobject_cast<Q2DViewerExtension*>(extension)))
     {
-        return ;
+        return;
     }
+
     q2dviewerExtension->updateQ2DViewer(volume);
 }
+
+
 } // End udg namespace
