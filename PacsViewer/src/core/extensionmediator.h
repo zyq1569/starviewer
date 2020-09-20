@@ -62,7 +62,7 @@ public:
 
 
     //---20200919---add
-    virtual void executionCommand(QWidget *extension, Volume* volume) = 0;
+    virtual void executionCommand(QWidget *extension, Volume* volume, int command=0) = 0;
 };
 
 }
