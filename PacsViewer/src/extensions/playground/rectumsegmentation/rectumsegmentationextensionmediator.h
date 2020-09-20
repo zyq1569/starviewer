@@ -15,7 +15,7 @@
 namespace udg {
 
 /**
-    @author Grup de Gràfics de Girona (GGG) <vismed@ima.udg.es>
+    @author Girona Graphics Group (GGG) <vismed@ima.udg.es>
 */
 class RectumSegmentationExtensionMediator : public ExtensionMediator
 {
