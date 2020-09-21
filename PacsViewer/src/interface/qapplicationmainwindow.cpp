@@ -300,7 +300,7 @@ void QApplicationMainWindow::createActions()
     m_moveToDesktopAction->setStatusTip(tr("Move the window to the screen..."));
     m_moveToDesktopAction->setCheckable(false);
     connect(screenDistribution, SIGNAL(screenClicked(int)), this, SLOT(moveToDesktop(int)));
-    
+
     m_moveToPreviousDesktopAction = new QAction(this);
     m_moveToPreviousDesktopAction->setText(tr("Move to previous screen"));
     m_moveToPreviousDesktopAction->setStatusTip(tr("Move the window to the previous screen"));

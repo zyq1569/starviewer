@@ -29,7 +29,8 @@ class PatientFillerStep;
 /**
  * @brief The PatientFiller class generates patients, studies, series, images and volumes from a list of DICOM or MHD files.
  *
- * Files can be given to it one by one (e.g. as they arrive from PACS) in processDICOMFile() and then call finishDICOMFilesProcess() after the last file.
+ * Files can be given to it one by one (e.g. as they arrive from PACS) in processDICOMFile()
+ * and then call finishDICOMFilesProcess() after the last file.
  * Alternatively, files can be given to it all at once (e.g. when reading fils from a directory) in processFiles().
  *
  * The files are processed by several steps that share a common PatientFillerInput.
