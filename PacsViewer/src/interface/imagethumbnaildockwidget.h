@@ -29,6 +29,7 @@ public:
     //QSize minimumSizeHint() const override;
     void clearThumbmailList();
     void addPatientsThumbmailList(QList<Patient*> patientsList);
+    void setSelectQ2DViewerExtension(QWidget* widget);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -60,6 +61,7 @@ private:
 private:
     /// Pointer to the main application
     QApplicationMainWindow *m_mainApp;
+    QWidget *m_extension;
 };
 
 };  // end namespace udg

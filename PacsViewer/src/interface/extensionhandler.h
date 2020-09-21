@@ -27,7 +27,6 @@ namespace udg {
 
 // Fordward Declarations
 class QApplicationMainWindow;
-
 /**
    Manager of mini-applications and services of the main application
   */

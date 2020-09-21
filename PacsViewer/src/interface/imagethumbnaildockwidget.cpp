@@ -7,8 +7,8 @@
 #include "qapplicationmainwindow.h"
 #include "patient.h"
 #include "VolumeRepository.h"
-#include "ExtensionWorkspace.h"
-//#include "q2dviewerextension.h"
+//#include "ExtensionWorkspace.h"
+#include "extensionmediatorfactory.h"
 
 #include <QSize>
 #include <QListWidget>
@@ -51,6 +51,8 @@ ImageThumbnailDockWidget::ImageThumbnailDockWidget(const QString &title,QApplica
     m_ImagelistWidge->show();
     setMinimumWidth(g_DockWidgetwith);
     setMaximumWidth(g_DockWidgetwith);
+
+    m_extension = 0;
 
 }
 
@@ -197,10 +199,16 @@ void ImageThumbnailDockWidget::updateActiveItemView(QListWidgetItem *item)
 {
     QString id = item->whatsThis();
     //emit selectedVolume(VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
-    QMessageBox::about(NULL, "Volume", id);
-    QMap<QWidget *, QString> m_qwidget = m_mainApp->getExtensionWorkspace()->getActiveExtensions();
-    QMapIterator<QWidget *, QString> i(m_qwidget);//read only
-    QWidget *q2dviewerextension = i.key();
+//    QMessageBox::about(NULL, "Volume", id);
+//    QMap<QWidget *, QString> m_qwidget = m_mainApp->getExtensionWorkspace()->getActiveExtensions();
+//    QMapIterator<QWidget *, QString> i(m_qwidget);//read only
+//    QWidget *q2dviewerextension = i.key();
+    static ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create("Q2DViewerExtension");
+    if  (m_extension)
+    {
+        mediator->executionCommand(m_extension,VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
+    }
+
     //connect()
     //Q2DViewerExtension *q2dviewerextension = i.key();
     //m_qwidget.size();
@@ -332,6 +340,13 @@ void ImageThumbnailDockWidget::updateMask()
 
     dw->setMask(bitmap);
 */
+}
+
+
+
+void ImageThumbnailDockWidget::setSelectQ2DViewerExtension(QWidget* widget)
+{
+    m_extension = widget;
 }
 
 }   // end namespace udg

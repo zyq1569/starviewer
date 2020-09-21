@@ -255,17 +255,18 @@ private:
     StatsWatcher *m_statsWatcher;
 
     //------------------------------------------------------------
-public:
+private:
     /// widows
     //QWidget *m_thumbnailWidget;
 
     //-----------------------------------------------------//
     //-------QDockWidget-----------------------------------||
     //QSplitter *m_splitter;///////////////////////////////||
-    ImageThumbnailDockWidget *m_DockImageThumbnail;////////||
+    ImageThumbnailDockWidget* m_DockImageThumbnail;////////||
     //-----------------------------------------------------||
     //-----------------------------------------------------//
-
+public:
+    void setImageThumbnailQ2DViewerExtension(QWidget* widget);
 public:
     void clearImageThumbnailDockWidget();
     void addPatientsThumbnail(QList<Patient*> patientsList);

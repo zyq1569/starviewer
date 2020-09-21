@@ -889,9 +889,14 @@ void QApplicationMainWindow::addPatientsThumbnail(QList<Patient*> patientsList)
 {
     m_DockImageThumbnail->addPatientsThumbmailList(patientsList);
 }
-ExtensionHandler *QApplicationMainWindow::getExtensionHandler()
+ExtensionHandler* QApplicationMainWindow::getExtensionHandler()
 {
     return  m_extensionHandler;
+}
+
+void QApplicationMainWindow::setImageThumbnailQ2DViewerExtension(QWidget* widget)
+{
+      m_DockImageThumbnail->setSelectQ2DViewerExtension(widget);
 }
 ///------------------------------------------------------------------------------------------------------------
 
