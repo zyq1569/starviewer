@@ -38,6 +38,7 @@ protected:
 public slots:
     void updateMask();
 
+    void mainAppclearThumbnail();
 signals:
     /// Signal that is emitted when the mouse enters the widget and notifies us of its identifier
     void isActive(QString);

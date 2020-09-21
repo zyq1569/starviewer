@@ -200,21 +200,12 @@ void ImageThumbnailDockWidget::updateActiveItemView(QListWidgetItem *item)
     QString id = item->whatsThis();
     //emit selectedVolume(VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
 //    QMessageBox::about(NULL, "Volume", id);
-//    QMap<QWidget *, QString> m_qwidget = m_mainApp->getExtensionWorkspace()->getActiveExtensions();
-//    QMapIterator<QWidget *, QString> i(m_qwidget);//read only
-//    QWidget *q2dviewerextension = i.key();
     static ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create("Q2DViewerExtension");
     if  (m_extension)
     {
         mediator->executionCommand(m_extension,VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
     }
 
-    //connect()
-    //Q2DViewerExtension *q2dviewerextension = i.key();
-    //m_qwidget.size();
-    //QMap<QWidget *, QString> getActiveExtensions()
-    //m_mainApp->getExtensionHandler();
-    //int index = id.toInt();
 }
 
 //QSize ImageThumbnailDockWidget::minimumSizeHint() const
@@ -342,7 +333,10 @@ void ImageThumbnailDockWidget::updateMask()
 */
 }
 
-
+void ImageThumbnailDockWidget::mainAppclearThumbnail()
+{
+    clearThumbmailList();
+}
 
 void ImageThumbnailDockWidget::setSelectQ2DViewerExtension(QWidget* widget)
 {

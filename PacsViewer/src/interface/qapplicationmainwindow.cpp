@@ -118,20 +118,10 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     this->setCentralWidget(m_extensionWorkspace);
 
     //-------add QDockWidget-----------------------------------------------------
-
     m_DockImageThumbnail= new ImageThumbnailDockWidget("",this);//("Thumbnail");
-
-    //m_oldtitle = m_leftdock->titleBarWidget();
-    //m_newtitle = new QWidget();
-    //m_DockImageThumbnail->setTitleBarWidget(m_newtitle);
-    //delete m_oldtitle;
-    //m_oldtitle = 0;
-
     addDockWidget(Qt::LeftDockWidgetArea,m_DockImageThumbnail);
     m_DockImageThumbnail->setFeatures(QDockWidget::DockWidgetMovable);
     m_DockImageThumbnail->setObjectName("ImageThumbnail");
-    //m_leftImageThumbnail->setMaximumWidth(200); //set title width !!!
-
     //-----------------------------------------------------------------------------
 
     DatabaseInstallation databaseInstallation;
@@ -365,6 +355,9 @@ void QApplicationMainWindow::createActions()
     m_closeAction->setIcon(QIcon(":/images/icons/project-development-close.svg"));
     connect(m_closeAction, SIGNAL(triggered()), m_extensionWorkspace, SLOT(closeCurrentApplication()));
 
+    //----------20200921---------------------------------------------------------------------------------
+    connect(m_closeAction, SIGNAL(triggered()), m_DockImageThumbnail, SLOT(mainAppclearThumbnail()));
+    //----------------------------------------------------------------------------------------------------
     m_exitAction = new QAction(this);
     m_exitAction->setText(tr("E&xit"));
     m_exitAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::CloseApplication));
@@ -713,16 +706,6 @@ void QApplicationMainWindow::closeEvent(QCloseEvent *event)
 
 void QApplicationMainWindow::resizeEvent(QResizeEvent *event)
 {
-    //    if (!m_flag)
-    //    {
-    //        //test-----------------------------------------------------------
-    //        m_splitter->setGeometry(0, 0, width(), height());
-    //        QDesktopWidget *deskTop = QApplication::desktop();
-    //        QRect rect = deskTop->availableGeometry(this);
-    //        move((rect.width() - width())/2,(rect.height() - height())/2-10);
-    //        //---------------------------------------------------------------
-    //    }
-
     if (m_isBetaVersion)
     {
         updateBetaVersionTextPosition();
@@ -882,7 +865,7 @@ void QApplicationMainWindow::openReleaseNotes()
 ///
 void QApplicationMainWindow::clearImageThumbnailDockWidget()
 {
-     m_DockImageThumbnail->clearThumbmailList();
+    m_DockImageThumbnail->clearThumbmailList();
 }
 
 void QApplicationMainWindow::addPatientsThumbnail(QList<Patient*> patientsList)
@@ -896,7 +879,7 @@ ExtensionHandler* QApplicationMainWindow::getExtensionHandler()
 
 void QApplicationMainWindow::setImageThumbnailQ2DViewerExtension(QWidget* widget)
 {
-      m_DockImageThumbnail->setSelectQ2DViewerExtension(widget);
+    m_DockImageThumbnail->setSelectQ2DViewerExtension(widget);
 }
 ///------------------------------------------------------------------------------------------------------------
 
