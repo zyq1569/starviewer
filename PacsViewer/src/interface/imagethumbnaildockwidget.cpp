@@ -198,12 +198,15 @@ ImageThumbnailDockWidget::~ImageThumbnailDockWidget()
 void ImageThumbnailDockWidget::updateActiveItemView(QListWidgetItem *item)
 {
     QString id = item->whatsThis();
-    //emit selectedVolume(VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
 //    QMessageBox::about(NULL, "Volume", id);
     static ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create("Q2DViewerExtension");
     if  (m_extension)
     {
         mediator->executionCommand(m_extension,VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
+    }
+    else
+    {
+        QMessageBox::warning(NULL, "extension NULL!", id);
     }
 
 }
