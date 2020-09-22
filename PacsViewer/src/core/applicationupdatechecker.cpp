@@ -33,7 +33,7 @@
 namespace udg {
 
 ApplicationUpdateChecker::ApplicationUpdateChecker(QObject *parent)
-: QObject(parent)
+    : QObject(parent)
 {
     m_manager = NULL;
 
@@ -68,7 +68,7 @@ void ApplicationUpdateChecker::checkForUpdates()
     connect(m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(checkForUpdatesReply(QNetworkReply*)));
     connect(m_timeoutTimer, SIGNAL(timeout()), this, SLOT(checkForUpdatesReplyTimeout()), Qt::DirectConnection);
     
-    // Fer la petició
+    //Make the request
     performOnlinePetition(url);
 }
 
@@ -120,6 +120,7 @@ QString ApplicationUpdateChecker::createWebServiceUrl()
 
     QString url = QString("http://starviewer.udg.edu/checknewversion/?currentVersion=%1&os=%2").arg(StarviewerVersionString).arg(operatingSystem);
 
+    INFO_LOG("UpdateChecker:"+url);
     QString additionalParametersString = Settings().getValue(CoreSettings::UpdateCheckUrlAdditionalParameters).toString();
     QStringList additionalParameters = additionalParametersString.split(",", QString::SkipEmptyParts);
 
@@ -169,12 +170,12 @@ void ApplicationUpdateChecker::parseWebServiceReply(QNetworkReply *reply)
     m_checkOk = false;
     if (reply->error() == QNetworkReply::NoError)
     {
-        // Punt d'entrada per el unit testing (readReplyData)
+        // Entry point for unit testing (readReplyData)
         parseJSON(readReplyData(reply));
     }
     else
     {
-        ERROR_LOG(QString("Error buscant noves versions al servidor. La resposta del webservice és del tipus ") +
+        ERROR_LOG(QString("Error searching for new versions on server. The response of the webservice is of the type") +
                   QString::number(reply->error()) + QString(": ") + reply->errorString());
         m_errorDescription = tr("Error connecting to the server. Server response is: %1").arg(reply->errorString());
     }
@@ -188,7 +189,7 @@ void ApplicationUpdateChecker::parseJSON(const QString &json)
     if (result.value("error").isObject())
     {
         QJsonObject errorObject = result.value("error").toObject();
-        ERROR_LOG(QString("Error llegint la resposta del servidor (error en el json) ") + 
+        ERROR_LOG(QString("Error reading server response (error in json)") +
                   errorObject.value("code").toString() +
                   QString(": ") + errorObject.value("message").toString());
         m_errorDescription = tr("Error parsing JSON.");
@@ -206,7 +207,7 @@ void ApplicationUpdateChecker::parseJSON(const QString &json)
                     m_checkedVersion = result.value("version").toString();
                     m_releaseNotesURL = result.value("releaseNotesURL").toString();
 
-                    INFO_LOG(QString("S'ha trobat una nova versió en el servidor, %1.").arg(m_checkedVersion));
+                    INFO_LOG(QString("A new version has been found on the server, %1.").arg(m_checkedVersion));
                 }
                 else
                 {
@@ -216,7 +217,7 @@ void ApplicationUpdateChecker::parseJSON(const QString &json)
             }
             else
             {
-                INFO_LOG("Starviewer està actualitzat. No s'ha trobat cap versió nova al servidor.");
+                INFO_LOG("Starviewer is up to date. No new versions found on the server.");
             }
         }
         else
@@ -240,12 +241,11 @@ QString ApplicationUpdateChecker::readReplyData(QNetworkReply *reply)
 
 void ApplicationUpdateChecker::checkForUpdatesReply(QNetworkReply *reply)
 {
-    // Desconectar el manager
+    // Disconnect the manager
     disconnect(m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(checkForUpdatesReply(QNetworkReply*)));
     m_timeoutTimer->stop();
-
-    // Comprovar si hi ha error a la resposta i si no n'hi ha, es parseja el JSON i es guarda en els atributs de l'objecte.
-    // m_checkOk ens dirà si ha anat bé.
+    // Check if there is an error in the answer and if there is none, the JSON is parsed and saved in the attributes of the object.
+    // m_checkOk will tell us if it went well.
     parseWebServiceReply(reply);
 
     reply->deleteLater();
@@ -258,10 +258,10 @@ void ApplicationUpdateChecker::checkForUpdatesReplyTimeout()
 {
     // Desconectar el manager
     disconnect(m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(checkForUpdatesReply(QNetworkReply*)));
-   
+
     m_checkOk = false;
     m_errorDescription = tr("Error requesting release notes: timeout");
-    ERROR_LOG("Error en la petició de les release notes. El servidor no respon: Timeout");
+    ERROR_LOG("Error requesting release notes. The server does not respond: Timeout");
     
     delete m_manager;
 
