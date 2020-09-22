@@ -20,6 +20,7 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QTextStream>
 // itk
 #include <itkObject.h> // Required to disable release warnings
 // Recursos
@@ -28,7 +29,7 @@
 namespace udg {
 
 AppImportFile::AppImportFile(QObject *parent)
- : QObject(parent)
+    : QObject(parent)
 {
     // TODO: Warnings in release are currently disabled so that the vtkOutputWindow window does not appear
     // but the good solution is to avoid warnings or redirect them to a file.
@@ -71,6 +72,90 @@ void AppImportFile::open()
     delete openDialog;
 }
 
+typedef QString  OFString;
+
+bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data)
+{
+    OFString value;
+    QFile aFile(filename);
+    if (!aFile.exists()) //no file
+        return false;
+    if (!aFile.open(QIODevice::ReadOnly | QIODevice::Text))
+        return false;
+    QTextStream aStream(&aFile);
+    aFile.readAll();
+    {
+        //using namespace std;
+        //int max = 1024;
+        //char buffer[1024];
+        //fstream out;
+        //out.open(filename.c_str(), ios::in);
+        //out.getline(buffer, max, '\n');//getline(char *,int,char) 表示该行字符达到256个或遇到换行就结束
+        OFString str = aStream.readLine();
+        aStream.atEnd();
+        //value = OFString(buffer);
+        do
+        {
+            value = str;
+            if (value == "[SERIES]")
+            {
+                //out.getline(buffer, max, '\n');//getline(char *,int,char) 表示该行字符达到256个或遇到换行就结束
+                //value = buffer;
+                //int pos = value.indexOf('|');
+                OFString seruid = value.section('|',2,2);//substr(pos + 1, value.length());
+                aStream.readLine();
+                aStream.readLine();
+                //out.getline(buffer, max, '\n');
+                //out.getline(buffer, max, '\n');
+                //value = OFString(buffer);
+                value = aStream.readLine();
+                //if (out.eof())
+                if (aStream.atEnd())
+                {
+                    //pos = value.find('|');
+                    OFString imageuid = value.section('|',1,1);//substr(pos + 1, value.length());
+                    value = dir + "/";
+                    value += seruid;
+                    value += "/";
+                    value += imageuid + ".dcm";
+                    data.push_back(value);
+                    break;
+                }
+                while (value != "[SERIES]")
+                {
+                    //pos = value.find('|');
+                    OFString imageuid = value.section('|',1,1);//substr(pos + 1, value.length());
+                    value = dir + "/";
+                    value += seruid;
+                    value += "/";
+                    value += imageuid+".dcm";
+                    data.push_back(value);
+                    //aStream.readLine();//out.getline(buffer, max, '\n');
+                    value = aStream.readLine();
+                    if (aStream.atEnd())
+                    {
+                        //pos = value.find('|');
+                        imageuid = value.section('|',1,1);//substr(pos + 1, value.length());
+                        value = dir + "/";
+                        value += seruid;
+                        value += "/";
+                        value += imageuid + ".dcm";
+                        data.push_back(value);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                value = aStream.readLine();//out.getline(buffer, max, '\n');//getline(char *,int,char) 表示该行字符达到256个或遇到换行就结束
+                // value = OFString(buffer);
+            }
+        } while (!aStream.atEnd());
+        //out.close();
+        aFile.close();
+    }
+    return true;
+}
 void AppImportFile::openDirectory(bool recursively)
 {
     QString directoryName = QFileDialog::getExistingDirectory(0, tr("Choose a directory to scan"), m_workingDicomDirectory, QFileDialog::ShowDirsOnly);
