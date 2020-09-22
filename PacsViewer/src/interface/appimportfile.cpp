@@ -79,6 +79,7 @@ bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data);
 
 bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data)
 {
+    //    filename = dir + filename;
     OFString value;
     QFile aFile(filename);
     if (!aFile.exists()) //no file
@@ -86,38 +87,47 @@ bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data)
     if (!aFile.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
     QTextStream aStream(&aFile);
-    aFile.readAll();
+    value = aStream.readLine();
+    aStream.atEnd();
+    //value = OFString(buffer);
+    do
     {
-        //using namespace std;
-        //int max = 1024;
-        //char buffer[1024];
-        //fstream out;
-        //out.open(filename.c_str(), ios::in);
-        //out.getline(buffer, max, '\n');//getline(char *,int,char) 表示该行字符达到256个或遇到换行就结束
-        //OFString str = aStream.readLine();
-        value = aStream.readLine();
-        aStream.atEnd();
-        //value = OFString(buffer);
-        do
+        //value = str;
+        if (value == "[SERIES]")
         {
-            //value = str;
-            if (value == "[SERIES]")
+
+            OFString seruid = value.section('|',2,2);//substr(pos + 1, value.length());
+            aStream.readLine();
+            aStream.readLine();
+
+            value = aStream.readLine();
+            //if (out.eof())
+            if (aStream.atEnd())
             {
-                //out.getline(buffer, max, '\n');//getline(char *,int,char) 表示该行字符达到256个或遇到换行就结束
-                //value = buffer;
-                //int pos = value.indexOf('|');
-                OFString seruid = value.section('|',2,2);//substr(pos + 1, value.length());
-                aStream.readLine();
-                aStream.readLine();
-                //out.getline(buffer, max, '\n');
-                //out.getline(buffer, max, '\n');
-                //value = OFString(buffer);
+                //pos = value.find('|');
+                OFString imageuid = value.section('|',1,1);//substr(pos + 1, value.length());
+                value = dir + "/";
+                value += seruid;
+                value += "/";
+                value += imageuid + ".dcm";
+                data.push_back(value);
+                break;
+            }
+            while (value != "[SERIES]")
+            {
+                //pos = value.find('|');
+                OFString imageuid = value.section('|',1,1);//substr(pos + 1, value.length());
+                value = dir + "/";
+                value += seruid;
+                value += "/";
+                value += imageuid+".dcm";
+                data.push_back(value);
+                //aStream.readLine();//out.getline(buffer, max, '\n');
                 value = aStream.readLine();
-                //if (out.eof())
                 if (aStream.atEnd())
                 {
                     //pos = value.find('|');
-                    OFString imageuid = value.section('|',1,1);//substr(pos + 1, value.length());
+                    imageuid = value.section('|',1,1);//substr(pos + 1, value.length());
                     value = dir + "/";
                     value += seruid;
                     value += "/";
@@ -125,44 +135,32 @@ bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data)
                     data.push_back(value);
                     break;
                 }
-                while (value != "[SERIES]")
-                {
-                    //pos = value.find('|');
-                    OFString imageuid = value.section('|',1,1);//substr(pos + 1, value.length());
-                    value = dir + "/";
-                    value += seruid;
-                    value += "/";
-                    value += imageuid+".dcm";
-                    data.push_back(value);
-                    //aStream.readLine();//out.getline(buffer, max, '\n');
-                    value = aStream.readLine();
-                    if (aStream.atEnd())
-                    {
-                        //pos = value.find('|');
-                        imageuid = value.section('|',1,1);//substr(pos + 1, value.length());
-                        value = dir + "/";
-                        value += seruid;
-                        value += "/";
-                        value += imageuid + ".dcm";
-                        data.push_back(value);
-                        break;
-                    }
-                }
             }
-            else
-            {
-                value = aStream.readLine();//out.getline(buffer, max, '\n');//getline(char *,int,char) 表示该行字符达到256个或遇到换行就结束
-                // value = OFString(buffer);
-            }
-        } while (!aStream.atEnd());
-        //out.close();
-        aFile.close();
-    }
+        }
+        else
+        {
+            value = aStream.readLine();//out.getline(buffer, max, '\n');//getline(char *,int,char) 表示该行字符达到256个或遇到换行就结束
+            // value = OFString(buffer);
+        }
+    } while (!aStream.atEnd());
+    //out.close();
+    aFile.close();
     return true;
 }
 void AppImportFile::openDirectory(bool recursively)
 {
     QString directoryName = QFileDialog::getExistingDirectory(0, tr("Choose a directory to scan"), m_workingDicomDirectory, QFileDialog::ShowDirsOnly);
+    int pos = directoryName.lastIndexOf("/");
+    QString studyini = directoryName.right(directoryName.size()-pos-1)+".ini";
+    QStringList data;
+    if (!ReadStudyInfo(directoryName + "/"+studyini,directoryName,data))
+    {
+        if  (!data.isEmpty())
+        {
+             emit selectedFiles(data);
+            return;
+        }
+    }
     if (!directoryName.isEmpty())
     {
         INFO_LOG("The directory is scanned: " + directoryName + " to open the studies it contains");
