@@ -183,7 +183,8 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<Patient*> patients
         QPixmap pixmap(VolumeRepository::getRepository()->getVolume(id)->getThumbnail());
         QListWidgetItem *item = new QListWidgetItem(QIcon(pixmap.scaled(IMAGE_SIZE)),itemPair.first);
         item->setSizeHint(ITEM_SIZE);
-        item->setWhatsThis(itemPair.second);
+        item->setWhatsThis(itemPair.first);
+        item->setToolTip(itemPair.first);
         m_ImagelistWidge->insertItem(index++,item);
     }
     //????  -------->  m_mainApp->getExtensionWorkspace()->addApplication(extension, requestedExtensionLabel, who);
