@@ -74,6 +74,9 @@ void AppImportFile::open()
 
 typedef QString  OFString;
 
+bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data);
+
+
 bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data)
 {
     OFString value;
@@ -91,12 +94,13 @@ bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data)
         //fstream out;
         //out.open(filename.c_str(), ios::in);
         //out.getline(buffer, max, '\n');//getline(char *,int,char) 表示该行字符达到256个或遇到换行就结束
-        OFString str = aStream.readLine();
+        //OFString str = aStream.readLine();
+        value = aStream.readLine();
         aStream.atEnd();
         //value = OFString(buffer);
         do
         {
-            value = str;
+            //value = str;
             if (value == "[SERIES]")
             {
                 //out.getline(buffer, max, '\n');//getline(char *,int,char) 表示该行字符达到256个或遇到换行就结束
