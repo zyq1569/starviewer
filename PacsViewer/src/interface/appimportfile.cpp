@@ -200,10 +200,15 @@ QStringList AppImportFile::generateFilenames(const QString &dirPath)
     QDir dir(dirPath);
     QFileInfoList fileInfoList = dir.entryInfoList(QDir::Files);
 
+    QString suffix;
     //We add to the list each of the absolute paths of the files contained in the directory
     foreach (const QFileInfo &fileInfo, fileInfoList)
     {
-        list << fileInfo.absoluteFilePath();
+        suffix = fileInfo.suffix();
+        if(( suffix.length() > 0 && suffix == "dcm" ) || suffix.length() == 0)
+        {
+            list << fileInfo.absoluteFilePath();
+        }
     }
 
     return list;

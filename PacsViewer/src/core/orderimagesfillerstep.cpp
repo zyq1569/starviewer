@@ -197,7 +197,7 @@ void OrderImagesFillerStep::postProcessing()
 
 void OrderImagesFillerStep::processImage(Image *image)
 {
-    /// Obtenim el vector normal del pla, que ens determina també a quin "stack" pertany la imatge
+    /// We obtain the normal vector of the plane, which also determines to which "stack" the image belongs
     QVector3D planeNormalVector3D = image->getImageOrientationPatient().getNormalVector();
     /// We pass it to string which will be easier for us to compare, because this is how it is saved in the sort structure
     QString planeNormalString = QString("%1\\%2\\%3").arg(planeNormalVector3D.x(), 0, 'f', 5).arg(planeNormalVector3D.y(), 0, 'f', 5)
@@ -412,18 +412,18 @@ void OrderImagesFillerStep::setOrderedImagesIntoSeries(Series *series)
         if (!m_sameNumberOfPhasesPerPositionPerVolumeInSeriesHash.value(series)->value(currentVolumeNumber))
         {
             orderByInstanceNumber = true;
-            DEBUG_LOG(QString("No totes les imatges tenen el mateix nombre de fases. Ordenem el volume %1 de la serie %2 per Instance Number").arg(
+            DEBUG_LOG(QString("Not all images have the same number of phases. We sort volume% 1 of series% 2 by Instance Number").arg(
                           currentVolumeNumber).arg(series->getInstanceUID()));
-            INFO_LOG(QString("No totes les imatges tenen el mateix nombre de fases. Ordenem el volume %1 de la serie %2 per Instance Number").arg(
+            INFO_LOG(QString("Not all images have the same number of phases. We sort volume% 1 of series% 2 by Instance Number").arg(
                          currentVolumeNumber).arg(series->getInstanceUID()));
         }
         /// Multiple acquisition number
         if (m_acquisitionNumberEvaluation[series][currentVolumeNumber]->second)
         {
             orderByInstanceNumber = true;
-            DEBUG_LOG(QString("No totes les imatges tenen el mateix AcquisitionNumber. Ordenem el volume %1 de la serie %2 per Instance Number").arg(
+            DEBUG_LOG(QString("Not all images have the same AcquisitionNumber. We sort volume% 1 of series% 2 by Instance Number").arg(
                           currentVolumeNumber).arg(series->getInstanceUID()));
-            INFO_LOG(QString("No totes les imatges tenen el mateix AcquisitionNumber. Ordenem el volume %1 de la serie %2 per Instance Number").arg(
+            INFO_LOG(QString("Not all images have the same AcquisitionNumber. We sort volume% 1 of series% 2 by Instance Number").arg(
                          currentVolumeNumber).arg(series->getInstanceUID()));
         }
 
