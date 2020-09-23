@@ -30,7 +30,7 @@ class Image;
 /**
 Module that is responsible for correctly sorting the images of the series. One of its requirements is to have the DICOMClassified label,
 the ImageFillerStep and the TemporalDimensionFillerStep.
-  */
+*/
 class OrderImagesFillerStep : public PatientFillerStep {
 public:
     OrderImagesFillerStep();
@@ -62,7 +62,8 @@ private:
     QVector3D m_direction;
 
     /// Type to define a hash to count the phases corresponding to each position
-    /// The hash key is a string with the position of the image (ImagePositionPatient) and the associated value counts the occurrences (phases) of this position.
+    /// The hash key is a string with the position of the image (ImagePositionPatient)
+    /// and the associated value counts the occurrences (phases) of this position.
     /// If we have the same number of phases in all positions, we can say that it is a volume with phases
     typedef QHash<QString, int> PhasesPerPositionHashType;
 
@@ -72,7 +73,8 @@ private:
     /// <Series, <VolumeNumber, <PhasesPerPositionHash>>>
     QHash<Series*, QHash<int, PhasesPerPositionHashType*>*> m_phasesPerPositionEvaluation;
 
-    /// Hash with which for each series we map a hash where it is indicated by each number of subvolume, if all the positions have the same number of phases.
+    /// Hash with which for each series we map a hash where it is indicated by each number
+    /// of subvolume, if all the positions have the same number of phases.
     /// If not, the corresponding subvolume must be sorted by instance number as in the case of m_acquisitionNumberEvaluation
     /// EVERYTHING Maybe with this evaluation it would be enough and the one done by Acquisition Number could be eliminated
     /// <Series, <VolumeNumber, SameNumberOfPhasesPerPosition?>>
