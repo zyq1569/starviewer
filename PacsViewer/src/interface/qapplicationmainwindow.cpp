@@ -117,11 +117,13 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     m_extensionWorkspace = new ExtensionWorkspace(this);
     this->setCentralWidget(m_extensionWorkspace);
 
-    //-------add QDockWidget-----------------------------------------------------
+    ///-------add QDockWidget-----------------------------------------------------
     m_DockImageThumbnail= new ImageThumbnailDockWidget("",this);//("Thumbnail");
     addDockWidget(Qt::LeftDockWidgetArea,m_DockImageThumbnail);
     m_DockImageThumbnail->setFeatures(QDockWidget::DockWidgetMovable);
     m_DockImageThumbnail->setObjectName("ImageThumbnail");
+    /// addd connect(m_tab, SIGNAL(currentChanged(int)), SLOT(refreshTab(int)));
+    connect(m_extensionWorkspace, SIGNAL(currentChanged(int)),m_DockImageThumbnail, SLOT(refreshTab(int)));
     //-----------------------------------------------------------------------------
 
     DatabaseInstallation databaseInstallation;

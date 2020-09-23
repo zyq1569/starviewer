@@ -214,6 +214,11 @@ void ImageThumbnailDockWidget::updateActiveItemView(QListWidgetItem *item)
     }
 }
 
+void  ImageThumbnailDockWidget::refreshTab(int index)
+{
+    QMessageBox::about(NULL, "refreshTab", QString(index));
+}
+
 //QSize ImageThumbnailDockWidget::minimumSizeHint() const
 //{
 //    QDockWidget *dw = qobject_cast<QDockWidget*>(parentWidget());

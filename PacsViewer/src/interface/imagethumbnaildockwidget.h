@@ -41,6 +41,8 @@ public slots:
     void updateMask();
 
     void mainAppclearThumbnail();
+
+
 signals:
     /// Signal that is emitted when the mouse enters the widget and notifies us of its identifier
     void isActive(QString);
@@ -54,6 +56,8 @@ signals:
 private slots:
     /// Update views related to the active item (the one the mouse hovers over)
     void updateActiveItemView(QListWidgetItem *item);
+
+    void refreshTab(int index);
 
 private:
     QPalette m_background;
