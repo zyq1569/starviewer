@@ -266,7 +266,7 @@ private:
     //-----------------------------------------------------||
     //-----------------------------------------------------//
 public:
-    void setImageThumbnailQ2DViewerExtension(QWidget* widget);
+    void addViewerExtension(QWidget *widget, QString caption, const QString &widgetIdentifier);
 public:
     void clearImageThumbnailDockWidget();
     void addPatientsThumbnail(QList<Patient*> patientsList);

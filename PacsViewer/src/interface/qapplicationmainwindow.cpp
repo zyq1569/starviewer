@@ -877,9 +877,9 @@ ExtensionHandler* QApplicationMainWindow::getExtensionHandler()
     return  m_extensionHandler;
 }
 
-void QApplicationMainWindow::setImageThumbnailQ2DViewerExtension(QWidget* widget)
+void QApplicationMainWindow::addViewerExtension(QWidget *widget, QString caption, const QString &widgetIdentifier)
 {
-    m_DockImageThumbnail->setSelectQ2DViewerExtension(widget);
+    m_DockImageThumbnail->addViewerExtension(widget,caption,widgetIdentifier);
 }
 ///------------------------------------------------------------------------------------------------------------
 
