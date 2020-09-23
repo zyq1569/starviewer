@@ -52,7 +52,7 @@ ImageThumbnailDockWidget::ImageThumbnailDockWidget(const QString &title,QApplica
     setMinimumWidth(g_DockWidgetwith);
     setMaximumWidth(g_DockWidgetwith);
 
-    m_extension = 0;
+    m_lastExtension = 0;
 
 }
 
@@ -198,18 +198,20 @@ ImageThumbnailDockWidget::~ImageThumbnailDockWidget()
 
 void ImageThumbnailDockWidget::updateActiveItemView(QListWidgetItem *item)
 {
-    QString id = item->whatsThis();
-//    QMessageBox::about(NULL, "Volume", id);
-    static ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create("Q2DViewerExtension");
-    if  (m_extension)
+    if (m_lastWidgetIdentifier == "Q2DViewerExtension")
     {
-        mediator->executionCommand(m_extension,VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
+        QString id = item->whatsThis();
+        //QMessageBox::about(NULL, "Volume", id);
+        static ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create("Q2DViewerExtension");
+        if (m_lastExtension)
+        {
+            mediator->executionCommand(m_lastExtension,VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
+        }
+        else
+        {
+            QMessageBox::warning(NULL, "extension NULL!", id);
+        }
     }
-    else
-    {
-        QMessageBox::warning(NULL, "extension NULL!", id);
-    }
-
 }
 
 //QSize ImageThumbnailDockWidget::minimumSizeHint() const
@@ -342,9 +344,14 @@ void ImageThumbnailDockWidget::mainAppclearThumbnail()
     clearThumbmailList();
 }
 
-void ImageThumbnailDockWidget::setSelectQ2DViewerExtension(QWidget* widget)
+void ImageThumbnailDockWidget::addViewerExtension(QWidget *widget, QString caption, const QString &widgetIdentifier)
 {
-    m_extension = widget;
+    m_lastExtension = widget;
+    m_lastWidgetIdentifier = widgetIdentifier;
+    INFO_LOG("ImageThumbnailDockWidget switch:"+caption);
+    //this->setCurrentIndex(this->indexOf(application));
+    // We add the extension to the list of active extensions
+    m_activeExtensions.insert(widget, widgetIdentifier);
 }
 
 }   // end namespace udg

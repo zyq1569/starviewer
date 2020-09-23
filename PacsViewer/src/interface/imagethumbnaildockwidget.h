@@ -7,6 +7,7 @@ class QHBoxLayout;
 class QListWidgetItem;
 
 #include <QDockWidget>
+#include <QMap>
 
 namespace udg {
 
@@ -29,7 +30,8 @@ public:
     //QSize minimumSizeHint() const override;
     void clearThumbmailList();
     void addPatientsThumbmailList(QList<Patient*> patientsList);
-    void setSelectQ2DViewerExtension(QWidget* widget);
+    void addViewerExtension(QWidget *widget, QString caption, const QString &widgetIdentifier);
+
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -62,7 +64,10 @@ private:
 private:
     /// Pointer to the main application
     QApplicationMainWindow *m_mainApp;
-    QWidget *m_extension;
+    QWidget *m_lastExtension;
+    ///Map containing the extensions we have open, associated with their name
+    QMap<QWidget *, QString> m_activeExtensions;
+    QString m_lastWidgetIdentifier;
 };
 
 };  // end namespace udg
