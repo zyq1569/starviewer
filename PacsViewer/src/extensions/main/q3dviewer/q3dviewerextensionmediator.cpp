@@ -57,4 +57,16 @@ bool Q3DViewerExtensionMediator::initializeExtension(QWidget *extension, const E
     return true;
 }
 
+//---20200919---add-----------------------------------------------------------------------------------------------
+void Q3DViewerExtensionMediator::executionCommand(QWidget *extension, Volume* volume, int command)
+{
+    Q3DViewerExtension *q3dviewerExtension;
+
+    if (!(q3dviewerExtension = qobject_cast<Q3DViewerExtension*>(extension)))
+    {
+        return;
+    }
+
+    //Q3DViewerExtensionMediator->updateQ2DViewer(volume);
+}
 }

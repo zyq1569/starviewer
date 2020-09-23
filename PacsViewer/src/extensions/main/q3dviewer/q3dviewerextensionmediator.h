@@ -22,8 +22,8 @@
 namespace udg {
 
 /**
-    \author Grup de Gràfics de Girona (GGG) <vismed@ima.udg.edu>
-  */
+author Girona Graphics Group (GGG) <vismed@ima.udg.edu>
+*/
 class Q3DViewerExtensionMediator : public ExtensionMediator {
 Q_OBJECT
 public:
@@ -35,10 +35,7 @@ public:
     virtual bool initializeExtension(QWidget *extension, const ExtensionContext &extensionContext);
 
     //---20200919---add
-    virtual void executionCommand(QWidget *extension,Volume* volume, int command=0)
-    {
-
-    }
+    virtual void executionCommand(QWidget *extension,Volume* volume, int command=0);
 };
 
 static InstallExtension<Q3DViewerExtension, Q3DViewerExtensionMediator> registerQ3DViewerExtensionMediator;
