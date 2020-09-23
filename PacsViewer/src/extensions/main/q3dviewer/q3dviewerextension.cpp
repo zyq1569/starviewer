@@ -37,15 +37,15 @@
 namespace udg {
 
 Q3DViewerExtension::Q3DViewerExtension(QWidget *parent)
- : QWidget(parent)
+    : QWidget(parent)
 {
     setupUi(this);
     Q3DViewerExtensionSettings().init();
 
-    // Creem el temporitzador (s'ha de fer abans del createConnections())
+    //We create the timer (must be done before createConnections ())
     m_timer = new QTimer(this);
     m_timer->setSingleShot(true);
-    /// \todo Poso 1000 ms arbitràriament.
+    /// \todo I put 1000 ms arbitrarily.
     m_timer->setInterval(1000);
 
     initializeTools();
@@ -63,15 +63,15 @@ Q3DViewerExtension::Q3DViewerExtension(QWidget *parent)
 
 Q3DViewerExtension::~Q3DViewerExtension()
 {
-    // El que aquí volem fer és forçar a eliminar primer totes les tools abans de que s'esborri el viewer
-    // TODO potser caldria refactoritzar el nom d'aquest mètode o crear-ne un per aquesta tasca
+    // What we want to do here is force all tools first before deleting the viewer
+    // EVERYTHING might need to refactor the name of this method or create one for this task
     m_toolManager->disableAllToolsTemporarily();
 }
 
 void Q3DViewerExtension::initializeTools()
 {
     m_toolManager = new ToolManager(this);
-    // Obtenim les accions de cada tool que volem
+    //We get the actions of each tool we want
     m_zoomToolButton->setDefaultAction(m_toolManager->registerTool("ZoomTool"));
     m_rotate3DToolButton->setDefaultAction(m_toolManager->registerTool("Rotate3DTool"));
     m_windowLevelToolButton->setDefaultAction(m_toolManager->registerTool("WindowLevelTool"));
@@ -85,12 +85,12 @@ void Q3DViewerExtension::initializeTools()
     m_sagitalOrientationButton->setDefaultAction(m_toolManager->registerActionTool("SagitalViewActionTool"));
     m_coronalOrientationButton->setDefaultAction(m_toolManager->registerActionTool("CoronalViewActionTool"));
 
-    // Activem les tools que volem tenir per defecte, això és com si clickéssim a cadascun dels ToolButton
+    // We activate the tools we want to have by default, this is as if we clicked on each of the ToolButton
     QStringList defaultTools;
     defaultTools << "ZoomTool" << "TranslateTool" << "Rotate3DTool" << "ScreenShotTool";
     m_toolManager->triggerTools(defaultTools);
 
-    // Registrem al manager les tools que van amb el viewer principal
+    // We register to the manager the tools that go with the main viewer
     m_toolManager->setupRegisteredTools(m_3DView);
     m_toolManager->enableRegisteredActionTools(m_3DView);
 
@@ -98,7 +98,7 @@ void Q3DViewerExtension::initializeTools()
     rightButtonExclusiveTools << "Rotate3DTool" << "WindowLevelTool";
     m_toolManager->addExclusiveToolsGroup("RightButtonGroup", rightButtonExclusiveTools);
 
-    // Fem que quan es clicki al botó es faci un screen shot
+    //Let's make a screen shot when the button is clicked
     ScreenShotTool *screenShotTool = dynamic_cast<ScreenShotTool*>(m_3DView->getToolProxy()->getTool("ScreenShotTool"));
     connect(m_screenShotToolButton, SIGNAL(clicked()), screenShotTool, SLOT(singleCapture()));
 }
@@ -120,7 +120,7 @@ void Q3DViewerExtension::loadClutPresets()
     }
     if (!m_clutsDir.isReadable())
     {
-        // No es pot accedir al directori
+        // Unable to access directory
         return;
     }
 
@@ -149,8 +149,8 @@ void Q3DViewerExtension::loadRenderingStyles()
 {
     m_renderingStyleModel = new QStandardItemModel(this);
 
-    // Per la primera versió creem tot això a pèl.
-    // Per cada estil creem un item i li assignem unes dades que seran les que es faran servir a l'hora d'aplicar-lo.
+    // For the first version we create all this by default.
+    // For each style we create an item and assign some data that will be used to apply it.
     QStandardItem *item;
     RenderingStyle renderingStyle;
     TransferFunction *transferFunction;
@@ -288,7 +288,7 @@ void Q3DViewerExtension::loadRenderingStyles()
 
 void Q3DViewerExtension::createConnections()
 {
-    // Actualització del mètode de rendering
+    //Render method update
     connect(m_blendModeComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &Q3DViewerExtension::updateUiForBlendMode);
     connect(m_renderModeComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &Q3DViewerExtension::updateUiForBlendMode);
 
@@ -317,7 +317,7 @@ void Q3DViewerExtension::createConnections()
     // Temporitzador
     connect(m_timer, SIGNAL(timeout()), SLOT(render()));
 
-    // Per mostrar exportació
+    //To display export
     connect(m_screenshotsExporterToolButton, SIGNAL(clicked()), SLOT(showScreenshotsExporterDialog()));
 }
 
@@ -373,7 +373,7 @@ void Q3DViewerExtension::applyClut(const TransferFunction &clut, bool preset)
     m_currentClut = clut;
     if (!preset)
     {
-        // Cal fer el disconnect per evitar un bucle infinit
+        // You need to disconnect to avoid an infinite loop
         disconnect(m_clutPresetsComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(applyPresetClut(const QString&)));
         m_clutPresetsComboBox->setCurrentIndex(-1);
         connect(m_clutPresetsComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(applyPresetClut(const QString&)));
@@ -381,12 +381,12 @@ void Q3DViewerExtension::applyClut(const TransferFunction &clut, bool preset)
     m_gradientEditor->setTransferFunction(m_currentClut);
     m_editorByValues->setTransferFunction(m_currentClut);
     m_3DView->setTransferFunction(m_currentClut);
-//     this->render();
+    //     this->render();
 }
 
 void Q3DViewerExtension::changeViewerTransferFunction()
 {
-    // Actualitzem l'editor de cluts quan es canvia per la funció pel w/l del visor
+    //We update the clutter editor when changing the function for the w / l viewer
     m_gradientEditor->setTransferFunction(m_3DView->getTransferFunction());
     m_editorByValues->setTransferFunction(m_3DView->getTransferFunction());
 }
@@ -492,29 +492,29 @@ void Q3DViewerExtension::applyRenderingStyle(const QModelIndex &index)
 
     switch (renderingStyle.getMethod())
     {
-        case RenderingStyle::RayCasting:
-            m_blendModeComboBox->setCurrentIndex(0);
-            applyClut(renderingStyle.getTransferFunction());
-            m_shadingGroupBox->setChecked(renderingStyle.getShading());
+    case RenderingStyle::RayCasting:
+        m_blendModeComboBox->setCurrentIndex(0);
+        applyClut(renderingStyle.getTransferFunction());
+        m_shadingGroupBox->setChecked(renderingStyle.getShading());
 
-            if (renderingStyle.getShading())
-            {
-                m_ambientCoefficientDoubleSpinBox->setValue(renderingStyle.getAmbientCoefficient());
-                m_diffuseCoefficientDoubleSpinBox->setValue(renderingStyle.getDiffuseCoefficient());
-                m_specularCoefficientDoubleSpinBox->setValue(renderingStyle.getSpecularCoefficient());
-                m_specularPowerDoubleSpinBox->setValue(renderingStyle.getSpecularPower());
-            }
+        if (renderingStyle.getShading())
+        {
+            m_ambientCoefficientDoubleSpinBox->setValue(renderingStyle.getAmbientCoefficient());
+            m_diffuseCoefficientDoubleSpinBox->setValue(renderingStyle.getDiffuseCoefficient());
+            m_specularCoefficientDoubleSpinBox->setValue(renderingStyle.getSpecularCoefficient());
+            m_specularPowerDoubleSpinBox->setValue(renderingStyle.getSpecularPower());
+        }
 
-            break;
+        break;
 
-        case RenderingStyle::MIP:
-            m_blendModeComboBox->setCurrentIndex(1);
-            break;
+    case RenderingStyle::MIP:
+        m_blendModeComboBox->setCurrentIndex(1);
+        break;
 
-        case RenderingStyle::IsoSurface:
-            m_blendModeComboBox->setCurrentIndex(5);
-            m_isoValueSpinBox->setValue(static_cast<int>(qRound(renderingStyle.getIsoValue())));
-            break;
+    case RenderingStyle::IsoSurface:
+        m_blendModeComboBox->setCurrentIndex(5);
+        m_isoValueSpinBox->setValue(static_cast<int>(qRound(renderingStyle.getIsoValue())));
+        break;
     }
 
     updateView(false);
@@ -558,7 +558,7 @@ void Q3DViewerExtension::updateView(bool fast)
 
     if (fast)
     {
-        /// \todo Ara ho fem abans del render. Caldria comprovar en sistemes lents si és millor abans o després.
+        /// \todo Now we do it before rendering. It should be checked in slow systems whether it is better before or after.
         m_timer->start();
         m_3DView->getRenderWindow()->SetDesiredUpdateRate(m_3DView->getInteractor()->GetDesiredUpdateRate());
     }
@@ -586,7 +586,7 @@ void Q3DViewerExtension::enableAutoUpdate()
     connect(m_specularCoefficientDoubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(updateView()));
     connect(m_specularPowerDoubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(updateView()));
 
-    // Isosuperfícies
+    // Isosurfaces
     connect(m_isoValueSpinBox, SIGNAL(valueChanged(int)), this, SLOT(updateView()));
 }
 
@@ -603,7 +603,7 @@ void Q3DViewerExtension::disableAutoUpdate()
     disconnect(m_specularCoefficientDoubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(updateView()));
     disconnect(m_specularPowerDoubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(updateView()));
 
-    // Isosuperfícies
+    //Isosurfaces
     disconnect(m_isoValueSpinBox, SIGNAL(valueChanged(int)), this, SLOT(updateView()));
 }
 

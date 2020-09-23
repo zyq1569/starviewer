@@ -41,39 +41,39 @@ public:
     Q3DViewerExtension(QWidget *parent = 0);
     virtual ~Q3DViewerExtension();
 
-    /// Li donem l'input a processar
+    /// We give it input to process
     void setInput(Volume *input);
 
 public slots:
-    /// Aplica una funció de transferència predefinida a la visualització.
+    ///Applies a predefined transfer function to the display.
     void applyPresetClut(const QString &clutName);
 
-    /// Aplica la funció de transferència passada a la visualització.
+    /// Applies the last transfer function to the display.
     void applyClut(const TransferFunction &clut, bool preset = false);
 
     void setScalarRange(double min, double max);
 
     void updateUiForBlendMode(int blendModeIndex);
 
-    /// Actualitza la vista d'acord amb tots els paràmetres actuals de la interfície.
+    /// Refreshes the view according to all current interface settings.
     void updateView(bool fast = true);
 
 private:
-    /// Posa a punt les tools que es poden fer servir en l'extensió
+    /// Tune in the tools that can be used in the extension
     void initializeTools();
 
-    /// Obté la llista de funcions de transferència predefinides.
+    /// Gets the list of predefined transfer functions.
     void loadClutPresets();
 
-    /// Carrega els estils de rendering predefinits.
+    ///Load predefined rendering styles.
     void loadRenderingStyles();
 
-    /// Estableix les connexions de signals i slots
+    ///Establishes signal and slot connections
     void createConnections();
 
-    /// Fa que es cridi updateView() quan canvia qualsevol element de la interfície.
+    /// Causes updateView () to be called when it changes any element of the interface.
     void enableAutoUpdate();
-    /// Fa que no es cridi updateView() quan canvia qualsevol element de la interfície.
+    /// Makes it not called updateView () when it changes any interface element.
     void disableAutoUpdate();
 
 private slots:
@@ -84,34 +84,34 @@ private slots:
     void applyEditorClut();
     void toggleClutEditor();
     void hideClutEditor();
-    /// Canvia l'estat del botó del custom style depenent de si s'està mostrant o no l'editor en aquell moment.
+    /// Changes the status of the custom style button depending on whether or not the editor is being displayed at that time.
     void setCustomStyleButtonStateBySplitter();
     void changeViewerTransferFunction();
     void applyRenderingStyle(const QModelIndex &index);
     void showScreenshotsExporterDialog();
 
 private:
-    /// El volum d'input
+    /// The input volume
     Volume *m_input;
 
-    /// Gestor de tools
+    /// GE is Tor's tools
     ToolManager *m_toolManager;
 
-    /// Directori de funcions de transferència predefinides.
+    /// Directory of predefined transfer functions.
     QDir m_clutsDir;
-    /// Mapa entre noms de funcions de transferència i el nom de fitxer corresponent.
+    ///Map between transfer function names and the corresponding file name.
     QMap<QString, QString> m_clutNameToFileName;
 
-    /// Última clut aplicada.
+    ///Last applied clut.
     TransferFunction m_currentClut;
 
-    /// Serà cert abans d'entrar el primer input.
+    ///It will be true before entering the first input.
     bool m_firstInput;
 
-    /// Model que guarda els estils de rendering.
+    /// Model that saves rendering styles.
     QStandardItemModel *m_renderingStyleModel;
 
-    /// Temporitzador que serveix per fer renderings amb qualitat després d'un rendering ràpid.
+    /// Timer used to make quality renderings after a quick render.
     QTimer *m_timer;
 };
 
