@@ -79,7 +79,6 @@ bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data);
 
 bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data)
 {
-    //    filename = dir + filename;
     OFString value;
     QFile aFile(filename);
     if (!aFile.exists()) //no file
@@ -92,16 +91,12 @@ bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data)
     //value = OFString(buffer);
     do
     {
-        //value = str;
         if (value == "[SERIES]")
         {
-
+            value = aStream.readLine();
             OFString seruid = value.section('|',2,2);//substr(pos + 1, value.length());
             aStream.readLine();
-            aStream.readLine();
-
             value = aStream.readLine();
-            //if (out.eof())
             if (aStream.atEnd())
             {
                 //pos = value.find('|');
@@ -115,18 +110,16 @@ bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data)
             }
             while (value != "[SERIES]")
             {
-                //pos = value.find('|');
                 OFString imageuid = value.section('|',1,1);//substr(pos + 1, value.length());
                 value = dir + "/";
                 value += seruid;
                 value += "/";
                 value += imageuid+".dcm";
                 data.push_back(value);
-                //aStream.readLine();//out.getline(buffer, max, '\n');
+
                 value = aStream.readLine();
                 if (aStream.atEnd())
                 {
-                    //pos = value.find('|');
                     imageuid = value.section('|',1,1);//substr(pos + 1, value.length());
                     value = dir + "/";
                     value += seruid;
@@ -150,23 +143,26 @@ bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data)
 void AppImportFile::openDirectory(bool recursively)
 {
     QString directoryName = QFileDialog::getExistingDirectory(0, tr("Choose a directory to scan"), m_workingDicomDirectory, QFileDialog::ShowDirsOnly);
-    int pos = directoryName.lastIndexOf("/");
-    QString studyini = directoryName.right(directoryName.size()-pos-1)+".ini";
-    QStringList data;
-    if (!ReadStudyInfo(directoryName + "/"+studyini,directoryName,data))
-    {
-        if  (!data.isEmpty())
-        {
-             emit selectedFiles(data);
-            return;
-        }
-    }
+
     if (!directoryName.isEmpty())
     {
         INFO_LOG("The directory is scanned: " + directoryName + " to open the studies it contains");
         m_workingDicomDirectory = directoryName;
         writeSettings();
-
+        //------------------------2020923-----------------------------------------------
+        //int pos = directoryName.lastIndexOf("/");
+        //QString studyini = directoryName.right(directoryName.size()-pos-1)+".ini";
+        //QStringList data;
+        //if (ReadStudyInfo(directoryName + "/"+studyini,directoryName,data))
+        //{
+        //    if  (!data.isEmpty())
+        //    {
+        //        emit selectedFiles(data);
+        //        return;
+        //    }
+        //}
+        //------------------------------------------------------------------------
+        //INFO_LOG("scanDirectories(...)" + directoryName + "start!");
         //List where we will save all the supported files in the directories
         QStringList filenames;
         if (recursively)
