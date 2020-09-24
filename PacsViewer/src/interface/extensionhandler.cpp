@@ -198,7 +198,7 @@ bool ExtensionHandler::request(const QString &who)
             mediator->initializeExtension(extension, m_extensionContext);
             m_mainApp->getExtensionWorkspace()->addApplication(extension, requestedExtensionLabel, who);
             ///---2020921
-            m_mainApp->addViewerExtension(extension, requestedExtensionLabel, who);
+            //m_mainApp->addViewerExtension(extension, requestedExtensionLabel, who);
         }
         else
         {

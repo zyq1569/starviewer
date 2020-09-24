@@ -376,7 +376,7 @@ void ImageThumbnailDockWidget::addViewerExtension(QWidget *widget, QString capti
 {
     m_lastExtension = widget;
     m_lastWidgetIdentifier = widgetIdentifier;
-    INFO_LOG("ImageThumbnailDockWidget switch:"+caption);
+    //INFO_LOG("ImageThumbnailDockWidget switch:"+caption);
     //this->setCurrentIndex(this->indexOf(application));
     // We add the extension to the list of active extensions
     m_activeExtensions.insert(widget, widgetIdentifier);

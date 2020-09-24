@@ -123,7 +123,7 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     m_DockImageThumbnail->setFeatures(QDockWidget::DockWidgetMovable);
     m_DockImageThumbnail->setObjectName("ImageThumbnail");
     /// addd connect(m_tab, SIGNAL(currentChanged(int)), SLOT(refreshTab(int)));
-    connect(m_extensionWorkspace, SIGNAL(currentChanged(int)),m_DockImageThumbnail, SLOT(refreshTab(int)));
+    //connect(m_extensionWorkspace, SIGNAL(currentChanged(int)),m_DockImageThumbnail, SLOT(refreshTab(int)));
     //-----------------------------------------------------------------------------
 
     DatabaseInstallation databaseInstallation;
