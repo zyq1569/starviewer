@@ -268,24 +268,29 @@ void QApplicationMainWindow::createActions()
     QStringList extensionsMediatorNames = ExtensionMediatorFactory::instance()->getFactoryIdentifiersList();
     foreach (const QString &name, extensionsMediatorNames)
     {
-        ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create(name);
-
-        if (mediator)
+        if (name == "DicomPrintExtension" || name == "MPRExtension" || name == "Q2DViewerExtension" || name == "Q3DViewerExtension")
         {
-            QAction *action = new QAction(this);
-            action->setText(mediator->getExtensionID().getLabel());
-            action->setStatusTip(tr("Open the %1 Application").arg(mediator->getExtensionID().getLabel()));
-            action->setEnabled(false);
-            m_signalMapper->setMapping(action, mediator->getExtensionID().getID());
-            connect(action, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
-            m_actionsList.append(action);
+            ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create(name);
 
-            delete mediator;
+            if (mediator)
+            {
+                QAction *action = new QAction(this);
+                QString lable = mediator->getExtensionID().getLabel();
+                action->setText(lable);
+                action->setStatusTip(tr("Open the %1 Application").arg(mediator->getExtensionID().getLabel()));
+                action->setEnabled(false);
+                m_signalMapper->setMapping(action, mediator->getExtensionID().getID());
+                connect(action, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
+                m_actionsList.append(action);
+
+                delete mediator;
+            }
+            else
+            {
+                ERROR_LOG("Error loading mediator from " + name);
+            }
         }
-        else
-        {
-            ERROR_LOG("Error loading mediator from " + name);
-        }
+
     }
 
     m_maximizeAction = new QAction(this);
