@@ -268,6 +268,7 @@ void QApplicationMainWindow::createActions()
     QStringList extensionsMediatorNames = ExtensionMediatorFactory::instance()->getFactoryIdentifiersList();
     foreach (const QString &name, extensionsMediatorNames)
     {
+        ///20200924 add   name == ???  delete other QAction-------------------------------------------------------------------------
         if (name == "DicomPrintExtension" || name == "MPRExtension" || name == "Q2DViewerExtension" || name == "Q3DViewerExtension")
         {
             ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create(name);
