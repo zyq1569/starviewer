@@ -59,6 +59,7 @@ Q3DViewerExtension::Q3DViewerExtension(QWidget *parent)
     hideClutEditor();
     m_screenshotsExporterToolButton->setToolTip(tr("Export viewer image to DICOM and send it to a PACS server"));
     m_customStyleToolButton->setToolTip(tr("Show/Hide advanced colour options"));
+    setWindowTitle("Q3DViewerExtension");
 }
 
 Q3DViewerExtension::~Q3DViewerExtension()
