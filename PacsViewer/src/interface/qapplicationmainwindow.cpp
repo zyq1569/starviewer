@@ -883,6 +883,11 @@ void QApplicationMainWindow::addViewerExtension(QWidget *widget, QString caption
 {
     m_DockImageThumbnail->addViewerExtension(widget,caption,widgetIdentifier);
 }
+
+QWidget *QApplicationMainWindow::currentWidgetOfExtensionWorkspace()
+{
+    return m_extensionWorkspace->currentWidget();
+}
 ///------------------------------------------------------------------------------------------------------------
 
 } // end namespace udg

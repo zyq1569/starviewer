@@ -267,10 +267,12 @@ private:
     //-----------------------------------------------------//
 public:
     void addViewerExtension(QWidget *widget, QString caption, const QString &widgetIdentifier);
-public:
-    void clearImageThumbnailDockWidget();
     void addPatientsThumbnail(QList<Patient*> patientsList);
     ExtensionHandler *getExtensionHandler();
+//----------------------------------------------------------------
+public:
+    void clearImageThumbnailDockWidget();
+QWidget *currentWidgetOfExtensionWorkspace();
 };
 
 }; // fi namespace udg
