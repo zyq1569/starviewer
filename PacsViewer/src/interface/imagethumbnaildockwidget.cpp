@@ -198,25 +198,48 @@ ImageThumbnailDockWidget::~ImageThumbnailDockWidget()
 
 void ImageThumbnailDockWidget::updateActiveItemView(QListWidgetItem *item)
 {
-    if (m_lastWidgetIdentifier == "Q2DViewerExtension")
+    QWidget* widget = m_mainApp->currentWidgetOfExtensionWorkspace();
+    //QString str = widget->windowTitle();
+    QString className = widget->metaObject()->className();
+    QString str = className.section("::",1,1);
+    //if (str == "Q2DViewerExtension")
+    // {
+    QString id = item->whatsThis();
+    //QMessageBox::about(NULL, "Volume", id);
+    ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create(str);
+    if (mediator)
     {
-        QString id = item->whatsThis();
-        //QMessageBox::about(NULL, "Volume", id);
-        static ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create("Q2DViewerExtension");
-        if (m_lastExtension)
+        if (widget)
         {
-            mediator->executionCommand(m_lastExtension,VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
+            mediator->executionCommand(widget,VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
         }
         else
         {
             QMessageBox::warning(NULL, "extension NULL!", id);
         }
+        delete mediator;
     }
+
+    //}
+    //    if (m_lastWidgetIdentifier == "Q2DViewerExtension")
+    //    {
+    //        QString id = item->whatsThis();
+    //        //QMessageBox::about(NULL, "Volume", id);
+    //        static ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create("Q2DViewerExtension");
+    //        if (m_lastExtension)
+    //        {
+    //            mediator->executionCommand(m_lastExtension,VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
+    //        }
+    //        else
+    //        {
+    //            QMessageBox::warning(NULL, "extension NULL!", id);
+    //        }
+    //    }
 }
 
 void  ImageThumbnailDockWidget::refreshTab(int index)
 {
-    QMessageBox::about(NULL, "refreshTab", QString(index));
+    //QMessageBox::about(NULL, "refreshTab", QString(index));
 }
 
 //QSize ImageThumbnailDockWidget::minimumSizeHint() const
