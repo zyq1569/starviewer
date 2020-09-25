@@ -129,11 +129,8 @@ void ExtensionHandler::request(int who)
     }
 }
 
-bool ExtensionHandler::createExtension(QString who)
+bool ExtensionHandler::createExtension(const QString &who)
 {
-    //QObject *object = sender();
-    //QAction *act=qobject_cast<QAction*>(sender());//使用Qt的类型转换，将指针恢复为QAction类型
-    //QVariant str = object->
     bool ok = true;
     ///template <typename T>
     ///class Singleton {
@@ -221,6 +218,10 @@ bool ExtensionHandler::createExtension(QString who)
 }
 bool ExtensionHandler::request(const QString &who)
 {
+    //QObject *object = sender();
+    //QAction *act=qobject_cast<QAction*>(sender());//使用Qt的类型转换，将指针恢复为QAction类型
+    //QVariant str = object->
+
     return createExtension(who);
 }
 

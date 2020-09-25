@@ -90,7 +90,7 @@ private:
 
     ///add creat Extension object 20200925
 private:
-    bool createExtension(QString classname);
+    bool createExtension(const QString &who);
 
 private:
     /// Pointer to the main application
