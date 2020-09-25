@@ -129,7 +129,7 @@ void ExtensionHandler::request(int who)
     }
 }
 
-bool ExtensionHandler::request(const QString &who)
+bool ExtensionHandler::createExtension(QString who)
 {
     //QObject *object = sender();
     //QAction *act=qobject_cast<QAction*>(sender());//使用Qt的类型转换，将指针恢复为QAction类型
@@ -217,6 +217,11 @@ bool ExtensionHandler::request(const QString &who)
     delete mediator;
 
     return ok;
+
+}
+bool ExtensionHandler::request(const QString &who)
+{
+    return createExtension(who);
 }
 
 void ExtensionHandler::setContext(const ExtensionContext &context)
@@ -554,16 +559,16 @@ void ExtensionHandler::openDefaultExtension()
         {
             Settings settings;
             QString defaultExtension = settings.getValue(InterfaceSettings::DefaultExtension).toString();
-            if (!request(defaultExtension))
+            if (!createExtension(defaultExtension))
             {
                 WARN_LOG("The request for the default extension called failed: " + defaultExtension + ". We start default 2D extension (hardcoded)");
-                request("Q2DViewerExtension");
+                createExtension("Q2DViewerExtension");
             }
         }
 
         if (m_extensionContext.hasEncapsulatedDocuments())
         {
-            request("PdfExtension");
+            createExtension("PdfExtension");
         }
     }
     else
