@@ -85,7 +85,7 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<Patient*> patients
     // For each series of the study we will extract its label and identifier
     QList<QPair<QString, QString> > itemsList;
     QList<QPair<QString, QString> > fusionItemsList;
-    foreach(Patient *patient, patientsList)
+    foreach(Patient *patient, m_patientsList)
     {
         foreach (Study *study, patient->getStudies())
         {
@@ -96,9 +96,9 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<Patient*> patients
                     .arg(study->getModalitiesAsSingleString())
                     .arg(study->getDescription());
 
-            //            // For each series of the study we will extract its label and identifier
-            //            QList<QPair<QString, QString> > itemsList;
-            //            QList<QPair<QString, QString> > fusionItemsList;
+            //// For each series of the study we will extract its label and identifier
+            //QList<QPair<QString, QString> > itemsList;
+            //QList<QPair<QString, QString> > fusionItemsList;
             foreach (Series *series, study->getViewableSeries())
             {
                 label = tr("Series %1: %2%3%4%5(%6 Images)")
@@ -189,7 +189,7 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<Patient*> patients
         item->setToolTip(itemPair.first);
         m_ImagelistWidge->insertItem(index++,item);
     }
-    //????  -------->  m_mainApp->getExtensionWorkspace()->addApplication(extension, requestedExtensionLabel, who);
+    //????-------->  m_mainApp->getExtensionWorkspace()->addApplication(extension, requestedExtensionLabel, who);
     connect(m_ImagelistWidge, SIGNAL(itemDoubleClicked(QListWidgetItem *)),this, SLOT(updateActiveItemView(QListWidgetItem*)));
 }
 
@@ -223,20 +223,20 @@ void ImageThumbnailDockWidget::updateActiveItemView(QListWidgetItem *item)
     }
 
     //}
-    //    if (m_lastWidgetIdentifier == "Q2DViewerExtension")
-    //    {
-    //        QString id = item->whatsThis();
-    //        //QMessageBox::about(NULL, "Volume", id);
-    //        static ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create("Q2DViewerExtension");
-    //        if (m_lastExtension)
-    //        {
-    //            mediator->executionCommand(m_lastExtension,VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
-    //        }
-    //        else
-    //        {
-    //            QMessageBox::warning(NULL, "extension NULL!", id);
-    //        }
-    //    }
+    //if (m_lastWidgetIdentifier == "Q2DViewerExtension")
+    //{
+    //QString id = item->whatsThis();
+    ////QMessageBox::about(NULL, "Volume", id);
+    //static ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create("Q2DViewerExtension");
+    //if (m_lastExtension)
+    //{
+    //    mediator->executionCommand(m_lastExtension,VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
+    //}
+    //else
+    //{
+    //    QMessageBox::warning(NULL, "extension NULL!", id);
+    //}
+    //}
 }
 
 void  ImageThumbnailDockWidget::refreshTab(int index)
