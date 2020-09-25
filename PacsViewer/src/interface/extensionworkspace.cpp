@@ -67,7 +67,6 @@ void ExtensionWorkspace::setDarkBackgroundColorEnabled(bool enabled)
 void ExtensionWorkspace::addApplication(QWidget *application, QString caption, const QString &extensionIdentifier)
 {
     INFO_LOG("We add the extension: " + caption + " to the workspace");
-    ///move(10,0);  //test :QTabWidget position
     this->addTab(application, caption);
     this->setCurrentIndex(this->indexOf(application));
     // We add the extension to the list of active extensions

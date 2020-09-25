@@ -269,6 +269,7 @@ void QApplicationMainWindow::createActions()
     foreach (const QString &name, extensionsMediatorNames)
     {
         ///20200924 add   name == ???  delete other QAction-------------------------------------------------------------------------
+        ///Comment out uncommon functions temporarily , keep follow  four QAction
         if (name == "DicomPrintExtension" || name == "MPRExtension" || name == "Q2DViewerExtension" || name == "Q3DViewerExtension")
         {
             ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create(name);
@@ -283,7 +284,6 @@ void QApplicationMainWindow::createActions()
                 m_signalMapper->setMapping(action, mediator->getExtensionID().getID());
                 connect(action, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
                 m_actionsList.append(action);
-
                 delete mediator;
             }
             else

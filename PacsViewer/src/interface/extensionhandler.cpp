@@ -131,16 +131,19 @@ void ExtensionHandler::request(int who)
 
 bool ExtensionHandler::request(const QString &who)
 {
+    //QObject *object = sender();
+    //QAction *act=qobject_cast<QAction*>(sender());//使用Qt的类型转换，将指针恢复为QAction类型
+    //QVariant str = object->
     bool ok = true;
-    ///    template <typename T>
-    ///    class Singleton {
+    ///template <typename T>
+    ///class Singleton {
     ///
-    /// class ExtensionMediator : public QObject {
+    ///class ExtensionMediator : public QObject {
     ///
-    /// typedef Singleton<GenericFactory<ExtensionMediator, QString> > ExtensionMediatorFactory;
+    ///typedef Singleton<GenericFactory<ExtensionMediator, QString> > ExtensionMediatorFactory;
     ///
-    /// template <class BaseClass, typename ClassIdentifier, class ParentType = QObject>
-    ///  class GenericFactory {...}
+    ///template <class BaseClass, typename ClassIdentifier, class ParentType = QObject>
+    ///class GenericFactory {...}
     ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create(who);
     if (!mediator)
     {
@@ -159,8 +162,8 @@ bool ExtensionHandler::request(const QString &who)
     QString requestedExtensionLabel = mediator->getExtensionID().getLabel();
     if (!Settings().getValue(InterfaceSettings::AllowMultipleInstancesPerExtension).toBool())
     {
-        // We only want one instance per extension
-        // We must then check that the extension we are requesting is not already created
+        //We only want one instance per extension
+        //We must then check that the extension we are requesting is not already created
         int count = m_mainApp->getExtensionWorkspace()->count();
         bool found = false;
         while (extensionIndex < count && !found)
@@ -184,8 +187,8 @@ bool ExtensionHandler::request(const QString &who)
     // Depending on the existing settings and extensions, we may or may not create the requested extension
     if (createExtension)
     {
-        ///    template <typename T>
-        ///    class Singleton {
+        ///template <typename T>
+        ///class Singleton {
         ///
         /// typedef Singleton<GenericFactory<QWidget, QString, QWidget> > ExtensionFactory;
         ///
@@ -197,8 +200,7 @@ bool ExtensionHandler::request(const QString &who)
             INFO_LOG("Activate extension: " + who);
             mediator->initializeExtension(extension, m_extensionContext);
             m_mainApp->getExtensionWorkspace()->addApplication(extension, requestedExtensionLabel, who);
-            ///---2020921
-            //m_mainApp->addViewerExtension(extension, requestedExtensionLabel, who);
+
         }
         else
         {
@@ -208,7 +210,7 @@ bool ExtensionHandler::request(const QString &who)
     }
     else
     {
-        // Otherwise we show the already existing extension
+        //Otherwise we show the already existing extension
         m_mainApp->getExtensionWorkspace()->setCurrentIndex(extensionIndex);
     }
 
