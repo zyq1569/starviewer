@@ -28,8 +28,8 @@ ImageThumbnailDockWidget::ImageThumbnailDockWidget(const QString &title,QApplica
 {
     m_mainApp = mainApp;
 
-    //    m_background.setColor(QPalette::Background,Qt::black);
-    //    setAutoFillBackground(true);
+    //m_background.setColor(QPalette::Background,Qt::black);
+    //setAutoFillBackground(true);
     setPalette(m_background);
     m_ImagelistWidge = new QListWidget(this);
     m_ImagelistWidge->setIconSize(IMAGE_SIZE);
@@ -40,9 +40,9 @@ ImageThumbnailDockWidget::ImageThumbnailDockWidget(const QString &title,QApplica
     m_ImagelistWidge->setSpacing(0);
     m_ImagelistWidge->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);//always show!!?? set
     m_ImagelistWidge->setWordWrap(true);
-    //    QPalette palette;
-    //    palette.setColor(QPalette::Background, Qt::red);
-    //    m_ImagelistWidge->setPalette(palette);
+    //QPalette palette;
+    //palette.setColor(QPalette::Background, Qt::red);
+    //m_ImagelistWidge->setPalette(palette);
 
     m_mainlayout = new QHBoxLayout;
     m_mainlayout->addWidget(m_ImagelistWidge);
@@ -204,8 +204,7 @@ void ImageThumbnailDockWidget::updateActiveItemView(QListWidgetItem *item)
     //QString str = widget->windowTitle();
     QString className = widget->metaObject()->className();
     QString str = className.section("::",1,1);
-    //if (str == "Q2DViewerExtension")
-    // {
+
     QString id = item->whatsThis();
     //QMessageBox::about(NULL, "Volume", id);
     ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create(str);
@@ -222,21 +221,6 @@ void ImageThumbnailDockWidget::updateActiveItemView(QListWidgetItem *item)
         delete mediator;
     }
 
-    //}
-    //if (m_lastWidgetIdentifier == "Q2DViewerExtension")
-    //{
-    //QString id = item->whatsThis();
-    ////QMessageBox::about(NULL, "Volume", id);
-    //static ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create("Q2DViewerExtension");
-    //if (m_lastExtension)
-    //{
-    //    mediator->executionCommand(m_lastExtension,VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
-    //}
-    //else
-    //{
-    //    QMessageBox::warning(NULL, "extension NULL!", id);
-    //}
-    //}
 }
 
 void  ImageThumbnailDockWidget::refreshTab(int index)
