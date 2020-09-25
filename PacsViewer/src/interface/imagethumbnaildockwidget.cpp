@@ -74,10 +74,12 @@ void ImageThumbnailDockWidget::clearThumbmailList()
             m_ImagelistWidge->setGeometry(rect.left()+1,rect.top()+1,rect.right()-1,rect.bottom()-1);
         }
     }
+    m_patientsList.clear();
 }
 void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<Patient*> patientsList)
 {
     clearThumbmailList();
+    m_patientsList<<patientsList;
     QString caption;
     QString label;
     // For each series of the study we will extract its label and identifier

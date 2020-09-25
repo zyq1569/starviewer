@@ -150,10 +150,6 @@ bool ExtensionHandler::createExtension(const QString &who)
         return ok;
     }
 
-    //----------------------------------------------------------------------------------------
-    //add :delete all Thumbnail list!~ 20200915
-    //m_mainApp->clearImageThumbnailDockWidget();
-    //----------------------------------------------------------------------------------------
     bool createExtension = true;
     int extensionIndex = 0;
     QString requestedExtensionLabel = mediator->getExtensionID().getLabel();
@@ -221,7 +217,9 @@ bool ExtensionHandler::request(const QString &who)
     //QObject *object = sender();
     //QAction *act=qobject_cast<QAction*>(sender());//使用Qt的类型转换，将指针恢复为QAction类型
     //QVariant str = object->
-
+    QList<Patient*> Patients;
+    Patients<<m_mainApp->getCurrentPatient();
+    m_mainApp->addPatientsThumbnail(Patients);
     return createExtension(who);
 }
 

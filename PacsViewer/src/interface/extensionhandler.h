@@ -88,10 +88,10 @@ private:
     /// Patients are only considered to be the same if Patient::compareTo() returns SamePatients value.
     QList<Patient*> mergePatients(const QList<Patient*> &patientList);
 
-    ///add creat Extension object 20200925
+    ///----add creat Extension object 20200925-------
 private:
     bool createExtension(const QString &who);
-
+    //-----------------------------------------------
 private:
     /// Pointer to the main application
     QApplicationMainWindow *m_mainApp;

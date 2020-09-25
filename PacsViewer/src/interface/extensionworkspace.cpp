@@ -120,6 +120,7 @@ void ExtensionWorkspace::closeCurrentApplication()
 
 void ExtensionWorkspace::closeApplicationByTabIndex(int index)
 {
+    //QString classname = this->widget(index)->metaObject()->className();
     removeApplication(this->widget(index));
 }
 
