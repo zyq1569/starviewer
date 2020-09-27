@@ -23,10 +23,6 @@ public:
     ~ImageThumbnailDockWidget();
 
 public:
-    //QSize sizeHint() const override
-    //{
-    //return minimumSizeHint();
-    //}
     //QSize minimumSizeHint() const override;
     void clearThumbmailList();
     void addPatientsThumbmailList(QList<Patient*> patientsList);
@@ -39,7 +35,6 @@ protected:
 
 public slots:
     void updateMask();
-
     void mainAppclearThumbnail();
 
 
