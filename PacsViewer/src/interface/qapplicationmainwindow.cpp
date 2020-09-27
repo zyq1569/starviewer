@@ -880,15 +880,11 @@ void QApplicationMainWindow::addPatientsThumbnail(QList<Patient*> patientsList)
 {
     m_DockImageThumbnail->addPatientsThumbmailList(patientsList);
 }
-ExtensionHandler* QApplicationMainWindow::getExtensionHandler()
-{
-    return  m_extensionHandler;
-}
 
-void QApplicationMainWindow::addViewerExtension(QWidget *widget, QString caption, const QString &widgetIdentifier)
-{
-    m_DockImageThumbnail->addViewerExtension(widget,caption,widgetIdentifier);
-}
+//ExtensionHandler* QApplicationMainWindow::getExtensionHandler()
+//{
+//    return  m_extensionHandler;
+//}
 
 QWidget *QApplicationMainWindow::currentWidgetOfExtensionWorkspace()
 {

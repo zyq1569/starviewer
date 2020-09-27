@@ -256,23 +256,18 @@ private:
 
     //------------------------------------------------------------
 private:
-    /// widows
-    //QWidget *m_thumbnailWidget;
-
     //-----------------------------------------------------//
     //-------QDockWidget-----------------------------------||
-    //QSplitter *m_splitter;///////////////////////////////||
     ImageThumbnailDockWidget* m_DockImageThumbnail;////////||
     //-----------------------------------------------------||
     //-----------------------------------------------------//
 public:
-    void addViewerExtension(QWidget *widget, QString caption, const QString &widgetIdentifier);
     void addPatientsThumbnail(QList<Patient*> patientsList);
-    ExtensionHandler *getExtensionHandler();
-//----------------------------------------------------------------
+    //ExtensionHandler *getExtensionHandler();
+    //----------------------------------------------------------------
 public:
     void clearImageThumbnailDockWidget();
-QWidget *currentWidgetOfExtensionWorkspace();
+    QWidget *currentWidgetOfExtensionWorkspace();
 };
 
 }; // fi namespace udg
