@@ -124,6 +124,7 @@ static bool launchCrashReporter(const wchar_t *dumpDirPath, const wchar_t *minid
     const char *crashReporterPath = static_cast<CrashHandler*>(crashHandler)->getCrashReporterPath();
 
     // Convert crashReporterPath to widechars, which sadly means the product name must be Latin1
+#ifdef UNICODE
     wchar_t crashReporterPathWchar[256];
     char *out = (char *)crashReporterPathWchar;
     const char *in = crashReporterPath - 1;
@@ -135,7 +136,6 @@ static bool launchCrashReporter(const wchar_t *dumpDirPath, const wchar_t *minid
         *out++ = '\0';
     }
     while (*in);
-
     wchar_t command[MAX_PATH * 3 + 6];
     wcscpy_s(command, crashReporterPathWchar);
     wcscat_s(command, L" \"");
@@ -159,6 +159,44 @@ static bool launchCrashReporter(const wchar_t *dumpDirPath, const wchar_t *minid
         CloseHandle(pi.hThread);
         TerminateProcess(GetCurrentProcess(), 1);
     }
+#else
+    char crashReporterPathWchar[256];
+    char *out = (char *)crashReporterPathWchar;
+    const char *in = crashReporterPath - 1;
+    do
+    {
+        // Latin1 chars fit in first byte of each wchar
+        *out++ = *++in;
+        // Every second byte is NULL
+        *out++ = '\0';
+    }
+    while (*in);
+    char command[MAX_PATH * 3 + 6];
+    strcpy(command, crashReporterPathWchar);
+    strcpy(command, " \"");
+    strcpy(command, (char*)dumpDirPath);
+    strcpy(command, "\" \"");
+    strcpy(command, (char*)minidumpId);
+    strcpy(command, "\"");
+
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+
+    ZeroMemory(&si, sizeof(si));
+    si.cb = sizeof(si);
+    si.dwFlags = STARTF_USESHOWWINDOW;
+    si.wShowWindow = SW_SHOWNORMAL;
+    ZeroMemory(&pi, sizeof(pi));
+
+    if (CreateProcess(NULL, command, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
+    {
+        CloseHandle(pi.hProcess);
+        CloseHandle(pi.hThread);
+        TerminateProcess(GetCurrentProcess(), 1);
+    }
+#endif // !UNICODE
+
+
 
     return false;
 }
