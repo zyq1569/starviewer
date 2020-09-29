@@ -38,7 +38,7 @@ namespace udg {
 static const char *MoveAbstractSyntax = UID_MOVEStudyRootQueryRetrieveInformationModel;
 
 RetrieveDICOMFilesFromPACS::RetrieveDICOMFilesFromPACS(PacsDevice pacs)
- : DIMSECService()
+    : DIMSECService()
 {
     m_pacs = pacs;
     m_abortIsRequested = false;
@@ -57,9 +57,9 @@ OFCondition RetrieveDICOMFilesFromPACS::acceptSubAssociation(T_ASC_Network *asso
     if (condition.good())
     {
 #ifndef DISABLE_COMPRESSION_EXTENSION
-        // Si disposem de compressió la demanem, i podrem accelerar el temps de descàrrega considerablement
-        // De moment demanem la compressió lossless que tot PACS que suporti compressió ha
-        // de proporcionar: JPEGLossless:Non-Hierarchical-1stOrderPrediction
+        // If we have compression we ask for it, and we can speed up the download time considerably
+        // For now we ask for the lossless compression that every PACS that supports compression has
+        // to provide: JPEGLossless: Non-Hierarchical-1stOrderPrediction
         transferSyntaxes[0] = UID_JPEGProcess14SV1TransferSyntax;
         transferSyntaxes[1] = UID_LittleEndianExplicitTransferSyntax;
         transferSyntaxes[2] = UID_BigEndianExplicitTransferSyntax;
@@ -69,13 +69,13 @@ OFCondition RetrieveDICOMFilesFromPACS::acceptSubAssociation(T_ASC_Network *asso
         // Defined in dcxfer.h
         if (gLocalByteOrder == EBO_LittleEndian)
         {
-        transferSyntaxes[0] = UID_LittleEndianExplicitTransferSyntax;
-        transferSyntaxes[1] = UID_BigEndianExplicitTransferSyntax;
+            transferSyntaxes[0] = UID_LittleEndianExplicitTransferSyntax;
+            transferSyntaxes[1] = UID_BigEndianExplicitTransferSyntax;
         }
         else
         {
-        transferSyntaxes[0] = UID_BigEndianExplicitTransferSyntax;
-        transferSyntaxes[1] = UID_LittleEndianExplicitTransferSyntax;
+            transferSyntaxes[0] = UID_BigEndianExplicitTransferSyntax;
+            transferSyntaxes[1] = UID_LittleEndianExplicitTransferSyntax;
         }
         transferSyntaxes[2] = UID_LittleEndianImplicitTransferSyntax;
         numTransferSyntaxes = 3;
@@ -87,9 +87,21 @@ OFCondition RetrieveDICOMFilesFromPACS::acceptSubAssociation(T_ASC_Network *asso
 
         if (condition.good())
         {
+#ifdef  PACKAGE_VERSION_NUMBER
+
+#if PACKAGE_VERSION_NUMBER == 361
             // The array of Storage SOP Class UIDs comes from dcuid.h
             condition = ASC_acceptContextsWithPreferredTransferSyntaxes((*association)->params, dcmAllStorageSOPClassUIDs, numberOfAllDcmStorageSOPClassUIDs,
                                                                         transferSyntaxes, numTransferSyntaxes);
+
+#else if  PACKAGE_VERSION_NUMBER == 363
+
+            condition = ASC_acceptContextsWithPreferredTransferSyntaxes((*association)->params, dcmAllStorageSOPClassUIDs, numberOfDcmAllStorageSOPClassUIDs,
+                                                                        transferSyntaxes, numTransferSyntaxes);
+
+#endif
+
+#endif
         }
     }
 
@@ -112,8 +124,8 @@ void RetrieveDICOMFilesFromPACS::moveCallback(void *callbackData, T_DIMSE_C_Move
     Q_UNUSED(request);
     Q_UNUSED(callbackData);
 
-    // Aquest en teoria és el codi per cancel·lar una descàrrega però el PACS del l'UDIAT no suporta les requestCancel, per tant la única manera
-    // de fer-ho és com es fa en el mètode subOperationSCP que s'aborta la connexió amb el PACS.
+    // This in theory is the code to cancel a download but the PACS of the UDIAT does not support the requestCancel, therefore the only way
+    // to do so is as done in the subOperationSCP method which aborts the connection to the PACS.
 
     //MoveSCPCallbackData *moveSCPCallbackData = (MoveSCPCallbackData*) callbackData;
 
@@ -139,7 +151,7 @@ OFCondition RetrieveDICOMFilesFromPACS::echoSCP(T_ASC_Association *association, 
     OFCondition condition = DIMSE_sendEchoResponse(association, presentationContextID, &dimseMessage->msg.CEchoRQ, STATUS_Success, NULL);
     if (condition.bad())
     {
-        ERROR_LOG("El PACS ens ha sol.licitat un echo durant la descarrega pero la resposta a aquest ha fallat");
+        ERROR_LOG("The PACS requested an echo during the download but the response to this failed");
     }
 
     return condition;
@@ -148,11 +160,11 @@ OFCondition RetrieveDICOMFilesFromPACS::echoSCP(T_ASC_Association *association, 
 void RetrieveDICOMFilesFromPACS::storeSCPCallback(void *callbackData, T_DIMSE_StoreProgress *progress, T_DIMSE_C_StoreRQ *storeRequest, char *imageFileName,
                                                   DcmDataset **imageDataSet, T_DIMSE_C_StoreRSP *storeResponse, DcmDataset **statusDetail)
 {
-    // Paràmetres d'entrada: callbackData, progress, storeRequest, imageFileName, imageDataSet
-    // Paràmetres de sortida: storeResponse, statusDetail
+    // Input parameters: callbackData, progress, storeRequest, imageFileName, imageDataSet
+    // Output parameters: storeResponse, statusDetail
     Q_UNUSED(imageFileName);
 
-    // Si el paquest és de finalització d'una imatge hem de guardar-la
+    // If the package is at the end of an image we must save it
     if (progress->state == DIMSE_StoreEnd)
     {
         // No status detail
@@ -166,18 +178,18 @@ void RetrieveDICOMFilesFromPACS::storeSCPCallback(void *callbackData, T_DIMSE_St
             RetrieveDICOMFilesFromPACS *retrieveDICOMFilesFromPACS = storeSCPCallbackData->retrieveDICOMFilesFromPACS;
             QString dicomFileAbsolutePath = retrieveDICOMFilesFromPACS->getAbsoluteFilePathCompositeInstance(*imageDataSet, storeSCPCallbackData->fileName);
 
-            // Guardem la imatge
+            //Let's save the image
             OFCondition stateSaveImage = retrieveDICOMFilesFromPACS->save(storeSCPCallbackData->dcmFileFormat, dicomFileAbsolutePath);
 
             if (stateSaveImage.bad())
             {
                 storeResponse->DimseStatus = STATUS_STORE_Refused_OutOfResources;
-                DEBUG_LOG("No s'ha pogut guardar la imatge descarregada [" + dicomFileAbsolutePath + "], error: " + stateSaveImage.text());
-                ERROR_LOG("No s'ha pogut guardar la imatge descarregada [" + dicomFileAbsolutePath + "], error: " + stateSaveImage.text());
+                DEBUG_LOG("The downloaded image could not be saved [" + dicomFileAbsolutePath + "], error: " + stateSaveImage.text());
+                ERROR_LOG("The downloaded image could not be saved [" + dicomFileAbsolutePath + "], error: " + stateSaveImage.text());
                 if (!QFile::remove(dicomFileAbsolutePath))
                 {
-                    DEBUG_LOG("Ha fallat el voler esborrar el fitxer " + dicomFileAbsolutePath + " que havia fallat prèviament al voler guardar-se.");
-                    ERROR_LOG("Ha fallat el voler esborrar el fitxer " + dicomFileAbsolutePath + " que havia fallat prèviament al voler guardar-se.");
+                    DEBUG_LOG ("Failed to delete file" + dicomFileAbsolutePath + "previously failed to save.");
+                    ERROR_LOG ("Failed to delete file" + dicomFileAbsolutePath + "previously failed to save.");
                 }
             }
             else
@@ -190,21 +202,21 @@ void RetrieveDICOMFilesFromPACS::storeSCPCallback(void *callbackData, T_DIMSE_St
                     if (!DU_findSOPClassAndInstanceInDataSet(*imageDataSet, sopClass, sopInstance, correctUIDPadding))
                     {
                         storeResponse->DimseStatus = STATUS_STORE_Error_CannotUnderstand;
-                        ERROR_LOG(QString("No s'ha trobat la sop class i la sop instance per la imatge %1").arg(storeSCPCallbackData->fileName));
+                        ERROR_LOG(QString("Sop class and sop instance not found for image %1").arg(storeSCPCallbackData->fileName));
                     }
                     else if (strcmp(sopClass, storeRequest->AffectedSOPClassUID) != 0)
                     {
                         storeResponse->DimseStatus = STATUS_STORE_Error_DataSetDoesNotMatchSOPClass;
-                        ERROR_LOG(QString("No concorda la sop class rebuda amb la sol.licitada per la imatge %1").arg(storeSCPCallbackData->fileName));
+                        ERROR_LOG(QString("The sop class received does not match the one requested by the image%1").arg(storeSCPCallbackData->fileName));
                     }
                     else if (strcmp(sopInstance, storeRequest->AffectedSOPInstanceUID) != 0)
                     {
                         storeResponse->DimseStatus = STATUS_STORE_Error_DataSetDoesNotMatchSOPClass;
-                        ERROR_LOG(QString("No concorda sop instance rebuda amb la sol.licitada per la imatge %1").arg(storeSCPCallbackData->fileName));
+                        ERROR_LOG(QString("It does not match the received instance with the one requested by the image %1").arg(storeSCPCallbackData->fileName));
                     }
                 }
 
-                // TODO:Té processar el fitxer si ha fallat alguna de les anteriors comprovacions ?
+                // TODO:You have to process the file if any of the above checks failed ?
                 retrieveDICOMFilesFromPACS->m_numberOfImagesRetrieved++;
                 DICOMTagReader *dicomTagReader = new DICOMTagReader(dicomFileAbsolutePath, storeSCPCallbackData->dcmFileFormat->getAndRemoveDataset());
                 emit retrieveDICOMFilesFromPACS->DICOMFileRetrieved(dicomTagReader, retrieveDICOMFilesFromPACS->m_numberOfImagesRetrieved);
@@ -215,7 +227,7 @@ void RetrieveDICOMFilesFromPACS::storeSCPCallback(void *callbackData, T_DIMSE_St
 
 OFCondition RetrieveDICOMFilesFromPACS::save(DcmFileFormat *fileRetrieved, QString dicomFileAbsolutePath)
 {
-    // Indiquem que no fem servir meta-header
+    //We indicate that we do not use meta-header
     E_FileWriteMode writeMode = EWM_fileformat;
     E_EncodingType sequenceType = EET_ExplicitLength;
     E_GrpLenEncoding groupLength = EGL_recalcGL;
@@ -245,7 +257,7 @@ OFCondition RetrieveDICOMFilesFromPACS::storeSCP(T_ASC_Association *association,
     if (condition.bad())
     {
         // Remove file
-        ERROR_LOG("S'ha produit al processar una peticio de descarregar d'un fitxer, descripcio error " + QString(condition.text()));
+        ERROR_LOG("Occurred while processing a download request from a file, description error " + QString(condition.text()));
         unlink(qPrintable(storeSCPCallbackData.fileName));
     }
 
@@ -254,7 +266,8 @@ OFCondition RetrieveDICOMFilesFromPACS::storeSCP(T_ASC_Association *association,
 
 OFCondition RetrieveDICOMFilesFromPACS::subOperationSCP(T_ASC_Association **subAssociation)
 {
-    // Ens convertim com en un servei. El PACS ens fa peticions que nosaltres hem de respondre, ens pot demanar descarregar una imatge o fer un echo
+    /// We become like a service. The PACS makes us requests that we must respond,
+    /// you can ask us to download an image or do an echo
     T_DIMSE_Message dimseMessage;
     T_ASC_PresentationContextID presentationContextID;
 
@@ -269,24 +282,24 @@ OFCondition RetrieveDICOMFilesFromPACS::subOperationSCP(T_ASC_Association **subA
     {
         switch (dimseMessage.CommandField)
         {
-            case DIMSE_C_STORE_RQ:
-                condition = storeSCP(*subAssociation, &dimseMessage, presentationContextID);
-                break;
+        case DIMSE_C_STORE_RQ:
+            condition = storeSCP(*subAssociation, &dimseMessage, presentationContextID);
+            break;
 
-            case DIMSE_C_ECHO_RQ:
-                condition = echoSCP(*subAssociation, &dimseMessage, presentationContextID);
-                break;
+        case DIMSE_C_ECHO_RQ:
+            condition = echoSCP(*subAssociation, &dimseMessage, presentationContextID);
+            break;
 
-            default:
-                ERROR_LOG("El PACS ens ha sol.licitat un tipus d'operacio invalida");
-                condition = DIMSE_BADCOMMANDTYPE;
-                break;
+        default:
+            ERROR_LOG("The PACS has requested an invalid type of operation");
+            condition = DIMSE_BADCOMMANDTYPE;
+            break;
         }
     }
     // Clean up on association termination
     if (condition == DUL_PEERREQUESTEDRELEASE)
     {
-        INFO_LOG("El PACS sol.licita tancar la connexio per on ens ha enviat els fitxers");
+        INFO_LOG("The PACS requests to close the connection through which it sent us the files");
         condition = ASC_acknowledgeRelease(*subAssociation);
         ASC_dropSCPAssociation(*subAssociation);
         ASC_destroyAssociation(subAssociation);
@@ -294,26 +307,26 @@ OFCondition RetrieveDICOMFilesFromPACS::subOperationSCP(T_ASC_Association **subA
     }
     else if (condition == DUL_PEERABORTEDASSOCIATION)
     {
-        INFO_LOG("El PACS ha abortat la connexió");
+        INFO_LOG("PACS aborted connection");
     }
     else if (condition != EC_Normal)
     {
-        ERROR_LOG("S'ha produit un error reben la peticio d'una suboperacio, descripcio error: " + QString(condition.text()));
+        ERROR_LOG("An error occurred while receiving a suboperation request, error description: " + QString(condition.text()));
         condition = ASC_abortAssociation(*subAssociation);
     }
     else if (m_abortIsRequested)
     {
-        INFO_LOG("Abortarem les connexions amb el PACS, perque han sol.licitant cancel.lar la descarrega");
+        INFO_LOG("We will abort the connections with the PACS, because they have requested to cancel the download");
         condition = ASC_abortAssociation(*subAssociation);
         if (!condition.good())
         {
-            ERROR_LOG("Error al abortar la connexio pel qual rebem les imatges" + QString(condition.text()));
+            ERROR_LOG("Error aborting the connection for which we received the images" + QString(condition.text()));
         }
 
-        // Tanquem la connexió amb el PACS perquè segons indica la documentació DICOM al PS 3.4 (Baseline Behavior of SCP) C.4.2.3.1 si abortem
-        // la connexió per la qual rebem les imatges, el comportament del PACS és desconegut, per exemple DCM4CHEE tanca la connexió amb el PACS, però
-        // el RAIM_Server no la tanca i la manté fent que no sortim mai d'aquesta classe. Degut a que no es pot saber en aquesta situació com actuaran
-        // els PACS es tanca aquí la connexió amb el PACS.
+        // We close the connection with the PACS because according to the DICOM documentation in PS 3.4 (Baseline Behavior of SCP) C.4.2.3.1 if we abort
+        // the connection through which we receive the images, the behavior of the PACS is unknown, for example DCM4CHEE closes the connection with the PACS, but
+        // RAIM_Server does not close it and keeps it from ever leaving this class. Because it is not possible to know in this situation how they will act
+        // the PACS closes the connection to the PACS here.
         condition = ASC_abortAssociation(m_pacsConnection->getConnection());
         if (!condition.good())
         {
@@ -371,7 +384,7 @@ PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::retrieve(co
     DcmDataset *dcmDatasetToRetrieve = getDcmDatasetOfImagesToRetrieve(studyInstanceUID, seriesInstanceUID, sopInstanceUID);
     m_numberOfImagesRetrieved = 0;
 
-    // TODO S'hauria de comprovar que es tracti d'un PACS amb el servei de retrieve configurat
+    // TODO It should be checked that it is a PACS with the retrieve service configured
     if (!m_pacsConnection->connectToPACS(PACSConnection::RetrieveDICOMFiles))
     {
         ERROR_LOG("S'ha produit un error al intentar connectar al PACS per fer un retrieve. AE Title: " + m_pacs.getAETitle());
@@ -402,7 +415,7 @@ PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::retrieve(co
     if (condition.bad())
     {
         ERROR_LOG(QString("El metode descarrega no ha finalitzat correctament. Codi error: %1, descripcio error: %2").arg(condition.code())
-                     .arg(condition.text()));
+                  .arg(condition.text()));
     }
 
     m_pacsConnection->disconnect();
@@ -449,19 +462,37 @@ DcmDataset* RetrieveDICOMFilesFromPACS::getDcmDatasetOfImagesToRetrieve(const QS
 {
     DcmDataset *dcmDatasetToRetrieve = new DcmDataset();
     QString retrieveLevel = "STUDY";
-
+#ifdef  PACKAGE_VERSION_NUMBER
+#if PACKAGE_VERSION_NUMBER == 361
     DcmElement *elemSpecificCharacterSet = newDicomElement(DCM_SpecificCharacterSet);
-    // ISO_IR 100 és Latin1
+#else if  PACKAGE_VERSION_NUMBER == 363
+    DcmElement *elemSpecificCharacterSet = DcmItem::newDicomElement(DCM_SpecificCharacterSet);
+#endif
+#endif
+
+    // ISO_IR 100 and Latin1
     elemSpecificCharacterSet->putString("ISO_IR 100");
     dcmDatasetToRetrieve->insert(elemSpecificCharacterSet, OFTrue);
-
+#ifdef  PACKAGE_VERSION_NUMBER
+#if PACKAGE_VERSION_NUMBER == 361
     DcmElement *elem = newDicomElement(DCM_StudyInstanceUID);
+#else if  PACKAGE_VERSION_NUMBER == 363
+    DcmElement *elem = DcmItem::newDicomElement(DCM_StudyInstanceUID);
+#endif
+#endif
+
     elem->putString(qPrintable(studyInstanceUID));
     dcmDatasetToRetrieve->insert(elem, OFTrue);
 
     if (!seriesInstanceUID.isEmpty())
     {
+#ifdef  PACKAGE_VERSION_NUMBER
+#if PACKAGE_VERSION_NUMBER == 361
         DcmElement *elem = newDicomElement(DCM_SeriesInstanceUID);
+#else if  PACKAGE_VERSION_NUMBER == 363
+        DcmElement *elem = DcmItem::newDicomElement(DCM_SeriesInstanceUID);
+#endif
+#endif
         elem->putString(qPrintable(seriesInstanceUID));
         dcmDatasetToRetrieve->insert(elem, OFTrue);
         retrieveLevel = "SERIES";
@@ -469,14 +500,27 @@ DcmDataset* RetrieveDICOMFilesFromPACS::getDcmDatasetOfImagesToRetrieve(const QS
 
     if (!sopInstanceUID.isEmpty())
     {
+#ifdef  PACKAGE_VERSION_NUMBER
+#if PACKAGE_VERSION_NUMBER == 361
         DcmElement *elem = newDicomElement(DCM_SOPInstanceUID);
+#else if  PACKAGE_VERSION_NUMBER == 363
+        DcmElement *elem = DcmItem::newDicomElement(DCM_SOPInstanceUID);
+#endif
+#endif
         elem->putString(qPrintable(sopInstanceUID));
         dcmDatasetToRetrieve->insert(elem, OFTrue);
         retrieveLevel = "IMAGE";
     }
 
-    // Especifiquem a quin nivell es fa el QueryRetrieve
+    //We specify at what level the QueryRetrieve is done
+#ifdef  PACKAGE_VERSION_NUMBER
+#if PACKAGE_VERSION_NUMBER == 361
     DcmElement *elemQueryRetrieveLevel = newDicomElement(DCM_QueryRetrieveLevel);
+#else if  PACKAGE_VERSION_NUMBER == 363
+    DcmElement *elemQueryRetrieveLevel = DcmItem::newDicomElement(DCM_QueryRetrieveLevel);
+#endif
+#endif
+
     elemQueryRetrieveLevel->putString(qPrintable(retrieveLevel));
     dcmDatasetToRetrieve->insert(elemQueryRetrieveLevel, OFTrue);
 
@@ -487,13 +531,13 @@ PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::getDIMSESta
 {
     PACSRequestStatus::RetrieveRequestStatus retrieveRequestStatus;
 
-    // Al PS 3.4, secció C.4.2.1.5, taula C.4-2 podem trobar un descripció dels errors.
-    // Al PS 3.4, secció C.4.2.3.1 es descriu els tipus generals d'error
-    //      Failure o Refused: No s'ha pogut descarregat alguna imatge
-    //      Warning: S'ha pogut descarregar com a mínim una imatge
-    //      Success: Totes les imatges s'han descarregat correctament
+    // In PS 3.4, section C.4.2.1.5, table C.4-2 we can find a description of the errors.
+    // In PS 3.4, section C.4.2.3.1 the general types of error are described
+    // Failure or Refused: Some images could not be downloaded
+    // Warning: At least one image could be downloaded
+    // Success: All images have been downloaded successfully
 
-    // Per a detalls sobre els "related fields" consultar PS 3.7, Annex C - Status Type Enconding
+    // For details on "related fields" see PS 3.7, Annex C - Status Type Enconding
 
     if (dimseStatusCode == STATUS_Success)
     {
@@ -502,29 +546,29 @@ PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::getDIMSESta
 
     switch (dimseStatusCode)
     {
-        case STATUS_MOVE_Failed_MoveDestinationUnknown:
-            retrieveRequestStatus = PACSRequestStatus::RetrieveDestinationAETileUnknown;
-            break;
+    case STATUS_MOVE_Failed_MoveDestinationUnknown:
+        retrieveRequestStatus = PACSRequestStatus::RetrieveDestinationAETileUnknown;
+        break;
 
-        case STATUS_MOVE_Refused_OutOfResourcesNumberOfMatches:
-        case STATUS_MOVE_Refused_OutOfResourcesSubOperations:
-        case STATUS_MOVE_Failed_IdentifierDoesNotMatchSOPClass:
-        case STATUS_MOVE_Failed_UnableToProcess:
-            retrieveRequestStatus = PACSRequestStatus::RetrieveFailureOrRefused;
-            break;
+    case STATUS_MOVE_Refused_OutOfResourcesNumberOfMatches:
+    case STATUS_MOVE_Refused_OutOfResourcesSubOperations:
+    case STATUS_MOVE_Failed_IdentifierDoesNotMatchSOPClass:
+    case STATUS_MOVE_Failed_UnableToProcess:
+        retrieveRequestStatus = PACSRequestStatus::RetrieveFailureOrRefused;
+        break;
 
-        case STATUS_MOVE_Warning_SubOperationsCompleteOneOrMoreFailures:
-            retrieveRequestStatus = PACSRequestStatus::RetrieveSomeDICOMFilesFailed;
-            break;
+    case STATUS_MOVE_Warning_SubOperationsCompleteOneOrMoreFailures:
+        retrieveRequestStatus = PACSRequestStatus::RetrieveSomeDICOMFilesFailed;
+        break;
 
-        case STATUS_MOVE_Cancel_SubOperationsTerminatedDueToCancelIndication:
-            // L'usuari ha sol·licitat cancel·lar la descàrrega
-            retrieveRequestStatus = PACSRequestStatus::RetrieveCancelled;
-            break;
+    case STATUS_MOVE_Cancel_SubOperationsTerminatedDueToCancelIndication:
+        // The user has requested to cancel the download
+        retrieveRequestStatus = PACSRequestStatus::RetrieveCancelled;
+        break;
 
-        default:
-            retrieveRequestStatus = PACSRequestStatus::RetrieveUnknowStatus;
-            break;
+    default:
+        retrieveRequestStatus = PACSRequestStatus::RetrieveUnknowStatus;
+        break;
     }
 
     return retrieveRequestStatus;
@@ -547,7 +591,7 @@ QString RetrieveDICOMFilesFromPACS::getAbsoluteFilePathCompositeInstance(DcmData
         absoluteFilePath += QString(instanceUID) + "/";
     }
 
-    // Comprovem, si el directori de l'estudi ja està creat
+    // Check, if the studio directory is already created
     if (!directory.exists(absoluteFilePath))
     {
         directory.mkdir(absoluteFilePath);
@@ -563,7 +607,7 @@ QString RetrieveDICOMFilesFromPACS::getAbsoluteFilePathCompositeInstance(DcmData
         absoluteFilePath += QString(instanceUID) + "/";
     }
 
-    // Comprovem, si el directori de la sèrie ja està creat, sinó el creem
+    // Let's check, if the directory of the series is already created, otherwise we create it
     if (!directory.exists(absoluteFilePath))
     {
         directory.mkdir(absoluteFilePath);
