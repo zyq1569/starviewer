@@ -215,7 +215,7 @@ bool ExtensionHandler::createExtension(const QString &who)
 bool ExtensionHandler::request(const QString &who)
 {
     //QObject *object = sender();
-    //QAction *act=qobject_cast<QAction*>(sender());//使用Qt的类型转换，将指针恢复为QAction类型
+    //QAction *act=qobject_cast<QAction*>(sender());
     //QVariant str = object->
     QList<Patient*> Patients;
     Patients<<m_mainApp->getCurrentPatient();
