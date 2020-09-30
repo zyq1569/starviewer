@@ -88,7 +88,7 @@ void DicomMaskToDcmDataset::addTagToDcmDatasetAsString(DcmDataset *dcmDataset, c
 #ifdef  PACKAGE_VERSION_NUMBER
 #if PACKAGE_VERSION_NUMBER == 361
         DcmElement *elem = newDicomElement(dcmTagKey);
-#else if  PACKAGE_VERSION_NUMBER == 363
+#else //if  PACKAGE_VERSION_NUMBER == 363
         DcmElement *elem = DcmItem::newDicomElement(dcmTagKey);
 #endif
 #endif
