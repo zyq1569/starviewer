@@ -66,23 +66,23 @@ OFCondition RetrieveDICOMFilesFromPACS::acceptSubAssociation(T_ASC_Network *asso
 //        transferSyntaxes[3] = UID_LittleEndianImplicitTransferSyntax;
 //        numTransferSyntaxes = 4;
 
-        transferSyntaxes[0] = UID_JPEG2000TransferSyntax;
-        transferSyntaxes[1] = UID_JPEG2000LosslessOnlyTransferSyntax;
-        transferSyntaxes[2] = UID_JPEGProcess2_4TransferSyntax;
-        transferSyntaxes[3] = UID_JPEGProcess1TransferSyntax;
-        transferSyntaxes[4] = UID_JPEGProcess14SV1TransferSyntax;
-        transferSyntaxes[5] = UID_JPEGLSLossyTransferSyntax;
-        transferSyntaxes[6] = UID_JPEGLSLosslessTransferSyntax;
-        transferSyntaxes[7] = UID_RLELosslessTransferSyntax;
-        transferSyntaxes[8] = UID_MPEG2MainProfileAtMainLevelTransferSyntax;
-        transferSyntaxes[9] = UID_MPEG2MainProfileAtHighLevelTransferSyntax;
+        transferSyntaxes[0]  = UID_JPEG2000TransferSyntax;
+        transferSyntaxes[1]  = UID_JPEG2000LosslessOnlyTransferSyntax;
+        transferSyntaxes[2]  = UID_JPEGProcess2_4TransferSyntax;
+        transferSyntaxes[3]  = UID_JPEGProcess1TransferSyntax;
+        transferSyntaxes[4]  = UID_JPEGProcess14SV1TransferSyntax;
+        transferSyntaxes[5]  = UID_JPEGLSLossyTransferSyntax;
+        transferSyntaxes[6]  = UID_JPEGLSLosslessTransferSyntax;
+        transferSyntaxes[7]  = UID_RLELosslessTransferSyntax;
+        transferSyntaxes[8]  = UID_MPEG2MainProfileAtMainLevelTransferSyntax;
+        transferSyntaxes[9]  = UID_MPEG2MainProfileAtHighLevelTransferSyntax;
         transferSyntaxes[10] = UID_MPEG4HighProfileLevel4_1TransferSyntax;
         transferSyntaxes[11] = UID_MPEG4BDcompatibleHighProfileLevel4_1TransferSyntax;
         transferSyntaxes[12] = UID_LittleEndianExplicitTransferSyntax;
         transferSyntaxes[13] = UID_BigEndianExplicitTransferSyntax;
         transferSyntaxes[14] = UID_LittleEndianImplicitTransferSyntax;
         transferSyntaxes[15] = UID_DeflatedExplicitVRLittleEndianTransferSyntax;
-        numTransferSyntaxes = 16;
+        numTransferSyntaxes  = 16;
 #else
         // Defined in dcxfer.h
         if (gLocalByteOrder == EBO_LittleEndian)
@@ -111,8 +111,7 @@ OFCondition RetrieveDICOMFilesFromPACS::acceptSubAssociation(T_ASC_Network *asso
             // The array of Storage SOP Class UIDs comes from dcuid.h
             condition = ASC_acceptContextsWithPreferredTransferSyntaxes((*association)->params, dcmAllStorageSOPClassUIDs, numberOfAllDcmStorageSOPClassUIDs,
                                                                         transferSyntaxes, numTransferSyntaxes);
-
-#else if  PACKAGE_VERSION_NUMBER == 363
+#else //if  PACKAGE_VERSION_NUMBER == 363
 
             condition = ASC_acceptContextsWithPreferredTransferSyntaxes((*association)->params, dcmAllStorageSOPClassUIDs, numberOfDcmAllStorageSOPClassUIDs,
                                                                         transferSyntaxes, numTransferSyntaxes);
@@ -483,7 +482,7 @@ DcmDataset* RetrieveDICOMFilesFromPACS::getDcmDatasetOfImagesToRetrieve(const QS
 #ifdef  PACKAGE_VERSION_NUMBER
 #if PACKAGE_VERSION_NUMBER == 361
     DcmElement *elemSpecificCharacterSet = newDicomElement(DCM_SpecificCharacterSet);
-#else if  PACKAGE_VERSION_NUMBER == 363
+#else //if  PACKAGE_VERSION_NUMBER == 363
     DcmElement *elemSpecificCharacterSet = DcmItem::newDicomElement(DCM_SpecificCharacterSet);
 #endif
 #endif
@@ -494,7 +493,7 @@ DcmDataset* RetrieveDICOMFilesFromPACS::getDcmDatasetOfImagesToRetrieve(const QS
 #ifdef  PACKAGE_VERSION_NUMBER
 #if PACKAGE_VERSION_NUMBER == 361
     DcmElement *elem = newDicomElement(DCM_StudyInstanceUID);
-#else if  PACKAGE_VERSION_NUMBER == 363
+#else //if  PACKAGE_VERSION_NUMBER == 363
     DcmElement *elem = DcmItem::newDicomElement(DCM_StudyInstanceUID);
 #endif
 #endif
@@ -507,7 +506,7 @@ DcmDataset* RetrieveDICOMFilesFromPACS::getDcmDatasetOfImagesToRetrieve(const QS
 #ifdef  PACKAGE_VERSION_NUMBER
 #if PACKAGE_VERSION_NUMBER == 361
         DcmElement *elem = newDicomElement(DCM_SeriesInstanceUID);
-#else if  PACKAGE_VERSION_NUMBER == 363
+#else //if  PACKAGE_VERSION_NUMBER == 363
         DcmElement *elem = DcmItem::newDicomElement(DCM_SeriesInstanceUID);
 #endif
 #endif
@@ -521,7 +520,7 @@ DcmDataset* RetrieveDICOMFilesFromPACS::getDcmDatasetOfImagesToRetrieve(const QS
 #ifdef  PACKAGE_VERSION_NUMBER
 #if PACKAGE_VERSION_NUMBER == 361
         DcmElement *elem = newDicomElement(DCM_SOPInstanceUID);
-#else if  PACKAGE_VERSION_NUMBER == 363
+#else //if  PACKAGE_VERSION_NUMBER == 363
         DcmElement *elem = DcmItem::newDicomElement(DCM_SOPInstanceUID);
 #endif
 #endif
@@ -534,7 +533,7 @@ DcmDataset* RetrieveDICOMFilesFromPACS::getDcmDatasetOfImagesToRetrieve(const QS
 #ifdef  PACKAGE_VERSION_NUMBER
 #if PACKAGE_VERSION_NUMBER == 361
     DcmElement *elemQueryRetrieveLevel = newDicomElement(DCM_QueryRetrieveLevel);
-#else if  PACKAGE_VERSION_NUMBER == 363
+#else //if  PACKAGE_VERSION_NUMBER == 363
     DcmElement *elemQueryRetrieveLevel = DcmItem::newDicomElement(DCM_QueryRetrieveLevel);
 #endif
 #endif
