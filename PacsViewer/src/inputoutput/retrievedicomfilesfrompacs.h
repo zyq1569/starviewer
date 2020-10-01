@@ -40,65 +40,67 @@ class DICOMTagReader;
 class PACSConnection;
 
 /**
-    Aquesta classe s'encarrega d'interactuars amb els PACS, responent als serveis move i store
-  */
+    This class is responsible for interacting with PACS, responding to move and store services
+*/
 class RetrieveDICOMFilesFromPACS : public QObject, public DIMSECService {
-Q_OBJECT
+    Q_OBJECT
 public:
     RetrieveDICOMFilesFromPACS(PacsDevice pacs);
 
     /// Starts the download
     PACSRequestStatus::RetrieveRequestStatus retrieve(const QString &studyInstanceUID, const QString &seriesInstanceUID = "", const QString &sopInstanceUID = "");
 
-    /// Cancel·la la descàrrega. La cancel·lació de la descàrrega és assíncrona, quan l'estudi s'ha cancel·lat es retorna l'Status RetrieveCancelled
-    /// El motiu de que sigui assíncron és perquè mentre s'està processant la descàrrega d'una imatge no es pot cancel·lar la descàrrega, només es pot
-    /// fer just després d'haver rebut una imatge.
+    /// Cancel download. Download cancellation is asynchronous, when the studio has been canceled the Status RetrieveCancelled is returned
+    /// The reason it is asynchronous is because while the download of an image is being processed, the download cannot be canceled, only
+    /// do right after receiving an image.
     void requestCancel();
 
-    /// Retorna el número d'imatges descarregades
+    ///Returns the number of downloaded images
     int getNumberOfDICOMFilesRetrieved();
 
 signals:
-    /// Signal que indica que s'ha descarregat un fitxer
+    /// Signal indicating that a file has been downloaded
     void DICOMFileRetrieved(DICOMTagReader *dicomTagReader, int numberOfImagesRetrieved);
 
 private:
-    /// En aquesta funció acceptem la connexió que se'ns sol·licita per transmetre'ns imatges, i indiquem quins transfer syntax suportem
+    /// In this function we accept the connection that is requested to us to transmit images to us,
+    /// and indicate which transfer syntax we support
     OFCondition acceptSubAssociation(T_ASC_Network *associationNetwork, T_ASC_Association **association);
 
-    /// Responem a una petició d'echo
+    ///We respond to an echo request
     OFCondition echoSCP(T_ASC_Association *association, T_DIMSE_Message *dimseMessage, T_ASC_PresentationContextID presentationContextID);
 
-    /// Responem a una petició per guardar una imatge
+    /// We respond to a request to save an image
     OFCondition storeSCP(T_ASC_Association *association, T_DIMSE_Message *messagge, T_ASC_PresentationContextID presentationContextID);
 
-    /// Accepta la connexió que ens fa el PACS, per convertir-nos en un scp
+    ///Accept the connection that the PACS makes to us, to become a scp
     OFCondition subOperationSCP(T_ASC_Association **subAssociation);
 
     /// Guarda una composite instance descarregada
     OFCondition save(DcmFileFormat *fileRetrieved, QString dicomFileAbsolutePath);
 
-    /// Retorna el nom del fitxer amb que s'ha de guardar l'objecte descarregat, composa el path on s'ha de guardar més el nom del fitxer.
-    /// Si el path on s'ha de guardar la imatge no existeix, el crea
+    /// Returns the name of the file to save the downloaded object,
+    /// composes the path where the file name should be saved most.
+    /// If the path where the image is to be saved does not exist, create it
     QString getAbsoluteFilePathCompositeInstance(DcmDataset *imageDataset, QString fileName);
 
-    ///Retorna el DcmDataset amb les dades de l'estudi sol·licitat per descarregar
+    ///Returns the DcmDataset with the study data requested for download
     DcmDataset* getDcmDatasetOfImagesToRetrieve(const QString &studyInstanceUID, const QString &seriesInstanceUID, const QString &sopInstanceUID);
 
-    /// Configura l'objecte MoveRequest per la descàrrega de fitxers DICOM
+    /// Configure the MoveRequest object to download DICOM files
     T_DIMSE_C_MoveRQ getConfiguredMoveRequest(T_ASC_Association *association);
 
     /// Translates DIMSE status code to PACSRequestStatus::RetrieveRequestStatus
     PACSRequestStatus::RetrieveRequestStatus getDIMSEStatusCodeAsRetrieveRequestStatus(unsigned int dimseStatusCode);
 
-    /// Callback de move, semblaria que s'executa cada vegada que s'ha descarregat una imatge
+    ///Callback from move, it would seem to run every time an image has been downloaded
     static void moveCallback(void *callbackData, T_DIMSE_C_MoveRQ *moveRequest, int responseCount, T_DIMSE_C_MoveRSP *moveResponse);
 
-    /// Aquesta funció s'encarrega de guardar cada trama DICOM que rebem
+    /// This function is responsible for saving each DICOM frame we receive
     static void storeSCPCallback(void *callbackData, T_DIMSE_StoreProgress *progress, T_DIMSE_C_StoreRQ *storeRequest, char *imageFileName,
                                  DcmDataset **imageDataSet, T_DIMSE_C_StoreRSP *storeResponse, DcmDataset **statusDetail);
 
-    /// Callback que s'ha executat quan s'inicia un suboperació de descàrrega d'imatges
+    /// Callback that was executed when an image download suboperation was started
     static void subOperationCallback(void *subOperationCallbackData, T_ASC_Network *associationNetwork, T_ASC_Association **subAssociation);
 
 private:

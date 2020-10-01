@@ -34,7 +34,7 @@
 
 namespace udg {
 
-// Constant que contindrà quin Abanstract Syntax de Move utilitzem entre els diversos que hi ha utilitzem
+// Constant that will contain which Abanstract Syntax of Move we use among the various that we use
 static const char *MoveAbstractSyntax = UID_MOVEStudyRootQueryRetrieveInformationModel;
 
 RetrieveDICOMFilesFromPACS::RetrieveDICOMFilesFromPACS(PacsDevice pacs)
@@ -60,11 +60,11 @@ OFCondition RetrieveDICOMFilesFromPACS::acceptSubAssociation(T_ASC_Network *asso
         // If we have compression we ask for it, and we can speed up the download time considerably
         // For now we ask for the lossless compression that every PACS that supports compression has
         // to provide: JPEGLossless: Non-Hierarchical-1stOrderPrediction
-//        transferSyntaxes[0] = UID_JPEGProcess14SV1TransferSyntax;
-//        transferSyntaxes[1] = UID_LittleEndianExplicitTransferSyntax;
-//        transferSyntaxes[2] = UID_BigEndianExplicitTransferSyntax;
-//        transferSyntaxes[3] = UID_LittleEndianImplicitTransferSyntax;
-//        numTransferSyntaxes = 4;
+        //        transferSyntaxes[0] = UID_JPEGProcess14SV1TransferSyntax;
+        //        transferSyntaxes[1] = UID_LittleEndianExplicitTransferSyntax;
+        //        transferSyntaxes[2] = UID_BigEndianExplicitTransferSyntax;
+        //        transferSyntaxes[3] = UID_LittleEndianImplicitTransferSyntax;
+        //        numTransferSyntaxes = 4;
 
         transferSyntaxes[0]  = UID_JPEG2000TransferSyntax;
         transferSyntaxes[1]  = UID_JPEG2000LosslessOnlyTransferSyntax;
@@ -340,10 +340,13 @@ OFCondition RetrieveDICOMFilesFromPACS::subOperationSCP(T_ASC_Association **subA
             ERROR_LOG("Error aborting the connection for which we received the images" + QString(condition.text()));
         }
 
-        // We close the connection with the PACS because according to the DICOM documentation in PS 3.4 (Baseline Behavior of SCP) C.4.2.3.1 if we abort
-        // the connection through which we receive the images, the behavior of the PACS is unknown, for example DCM4CHEE closes the connection with the PACS, but
-        // RAIM_Server does not close it and keeps it from ever leaving this class. Because it is not possible to know in this situation how they will act
-        // the PACS closes the connection to the PACS here.
+        /// We close the connection with the PACS because according to the DICOM documentation in PS 3.4
+        ///(Baseline Behavior of SCP) C.4.2.3.1 if we abort
+        /// the connection through which we receive the images, the behavior of the PACS is unknown,
+        /// for example DCM4CHEE closes the connection with the PACS, but
+        /// RAIM_Server does not close it and keeps it from ever leaving this class.
+        ///  Because it is not possible to know in this situation how they will act
+        /// the PACS closes the connection to the PACS here.
         condition = ASC_abortAssociation(m_pacsConnection->getConnection());
         if (!condition.good())
         {
@@ -377,11 +380,11 @@ void RetrieveDICOMFilesFromPACS::subOperationCallback(void *subOperationCallback
         OFCondition condition = retrieveDICOMFilesFromPACS->acceptSubAssociation(associationNetwork, subAssociation);
         if (!condition.good())
         {
-            ERROR_LOG("S'ha produit un error negociant l'associacio de la connexio DICOM entrant, descripcio error: " + QString(condition.text()));
+            ERROR_LOG("An error occurred while negotiating the association of the incoming DICOM connection, description error: " + QString(condition.text()));
         }
         else
         {
-            INFO_LOG("Rebuda solicitud de connexio pel port de connexions DICOM entrants del PACS.");
+            INFO_LOG("Connection request received by the incoming DICOM connection port of the PACS.");
         }
     }
     else
@@ -454,7 +457,7 @@ PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::retrieve(co
 void RetrieveDICOMFilesFromPACS::requestCancel()
 {
     m_abortIsRequested = true;
-    INFO_LOG("S'ha sol.licitat cancel.lar la descarrega");
+    INFO_LOG("You have been asked to cancel the download");
 }
 
 int RetrieveDICOMFilesFromPACS::getNumberOfDICOMFilesRetrieved()
@@ -601,7 +604,7 @@ QString RetrieveDICOMFilesFromPACS::getAbsoluteFilePathCompositeInstance(DcmData
     dicomQueryStatus = imageDataset->findAndGetString(DCM_StudyInstanceUID, instanceUID, false);
     if (dicomQueryStatus.bad())
     {
-        DEBUG_LOG("Ha fallat l'obtencio de l'UID d'estudi al dataset. Rao: " + QString(dicomQueryStatus.text()));
+        DEBUG_LOG("Failed to get study UID in dataset. Rao: " + QString(dicomQueryStatus.text()));
     }
     else
     {
@@ -617,7 +620,7 @@ QString RetrieveDICOMFilesFromPACS::getAbsoluteFilePathCompositeInstance(DcmData
     dicomQueryStatus = imageDataset->findAndGetString(DCM_SeriesInstanceUID, instanceUID, false);
     if (dicomQueryStatus.bad())
     {
-        DEBUG_LOG("Ha fallat l'obtenció de l'UID de la serie al dataset. Rao: " + QString(dicomQueryStatus.text()));
+        DEBUG_LOG("Failed to get serial UID in dataset. Rao: " + QString(dicomQueryStatus.text()));
     }
     else
     {
