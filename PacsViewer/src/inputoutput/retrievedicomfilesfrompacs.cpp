@@ -18,7 +18,7 @@
 #include <osconfig.h>
 #include <diutil.h>
 #include <dcfilefo.h>
-// Pels tags DcmTagKey DCM_xxxx
+//Pels tags DcmTagKey DCM_xxxx
 #include <dctagkey.h>
 #include <dcdeftag.h>
 
@@ -60,11 +60,11 @@ OFCondition RetrieveDICOMFilesFromPACS::acceptSubAssociation(T_ASC_Network *asso
         // If we have compression we ask for it, and we can speed up the download time considerably
         // For now we ask for the lossless compression that every PACS that supports compression has
         // to provide: JPEGLossless: Non-Hierarchical-1stOrderPrediction
-        //        transferSyntaxes[0] = UID_JPEGProcess14SV1TransferSyntax;
-        //        transferSyntaxes[1] = UID_LittleEndianExplicitTransferSyntax;
-        //        transferSyntaxes[2] = UID_BigEndianExplicitTransferSyntax;
-        //        transferSyntaxes[3] = UID_LittleEndianImplicitTransferSyntax;
-        //        numTransferSyntaxes = 4;
+        //transferSyntaxes[0] = UID_JPEGProcess14SV1TransferSyntax;
+        //transferSyntaxes[1] = UID_LittleEndianExplicitTransferSyntax;
+        //transferSyntaxes[2] = UID_BigEndianExplicitTransferSyntax;
+        //transferSyntaxes[3] = UID_LittleEndianImplicitTransferSyntax;
+        //numTransferSyntaxes = 4;
 
         transferSyntaxes[0]  = UID_JPEG2000TransferSyntax;
         transferSyntaxes[1]  = UID_JPEG2000LosslessOnlyTransferSyntax;
@@ -350,11 +350,11 @@ OFCondition RetrieveDICOMFilesFromPACS::subOperationSCP(T_ASC_Association **subA
         condition = ASC_abortAssociation(m_pacsConnection->getConnection());
         if (!condition.good())
         {
-            ERROR_LOG("Error al abortar la connexio pel amb el PACS" + QString(condition.text()));
+            ERROR_LOG("Error aborting connection to PACS" + QString(condition.text()));
         }
         else
         {
-            INFO_LOG("Abortada la connexio amb el PACS");
+            INFO_LOG("Aborted connection to PACS");
         }
     }
 
@@ -407,7 +407,7 @@ PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::retrieve(co
     // TODO It should be checked that it is a PACS with the retrieve service configured
     if (!m_pacsConnection->connectToPACS(PACSConnection::RetrieveDICOMFiles))
     {
-        ERROR_LOG("S'ha produit un error al intentar connectar al PACS per fer un retrieve. AE Title: " + m_pacs.getAETitle());
+        ERROR_LOG("An error occurred while trying to connect to the PACS for a retrieve. AE Title: " + m_pacs.getAETitle());
         return PACSRequestStatus::RetrieveCanNotConnectToPACS;
     }
 
