@@ -123,16 +123,15 @@ void sendToFirstStarviewerInstanceCommandLineOptions(QtSingleApplication &app)
 int main(int argc, char *argv[])
 {
     // Applying scale factor
+    QVariant cfgValue = udg::Settings().getValue(udg::CoreSettings::ScaleFactor);
+    bool exists;
+    int scaleFactor = cfgValue.toInt(&exists);
+    if (exists && scaleFactor != 1)
     {
-        QVariant cfgValue = udg::Settings().getValue(udg::CoreSettings::ScaleFactor);
-        bool exists;
-        int scaleFactor = cfgValue.toInt(&exists);
-        if (exists && scaleFactor != 1)
-        { // Setting exists and is different than one
-            QString envVar = QString::number(1 + (scaleFactor * 0.125),'f', 3);
-            qputenv("QT_SCALE_FACTOR", envVar.toUtf8());
-            QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-        }
+        // Setting exists and is different than one
+        QString envVar = QString::number(1 + (scaleFactor * 0.125),'f', 3);
+        qputenv("QT_SCALE_FACTOR", envVar.toUtf8());
+        QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     }
 
     // We use QtSingleApplication instead of QtApplication, as it allows us
