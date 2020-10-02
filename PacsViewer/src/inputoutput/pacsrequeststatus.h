@@ -19,28 +19,28 @@
 namespace udg {
 
 /**
-    Classe que defineix els Enum amb els errors que ens poden retornar les diferents Job que es comuniquen amb el PACS
+    Class that defines the Enum with the errors that can return to us the different Jobs that communicate with the PACS
   */
 class PACSRequestStatus {
 
 public:
-    /// SendSomeDICOMFilesFailed - L'enviament d'algunes imatges ha fallat
-    /// SendWarningForSomeImages: Per a StoreSCU indica que totes les imatges s'han enviat però per totes o alguna imatge hem rebut un warning, per exemple
-    ///                           podem rebre un warning perquè el PACS ha guardat amb una transfer syntax diferent les imatges del que les havíem enviat.
-    /// SendAllDICOMFilesFailed : L'enviament de totes les imatges ha fallat
+    /// SendSomeDICOMFilesFailed - Some images failed to send
+    /// SendWarningForSomeImages: For StoreSCU it indicates that all the images have been sent but for all or some image we have received a warning, for example
+    /// we can receive a warning because the PACS has saved the images with a different syntax transfer than we had sent them.
+    /// SendAllDICOMFilesFailed: All images failed to send
     enum SendRequestStatus { SendOk, SendCanNotConnectToPACS, SendAllDICOMFilesFailed, SendWarningForSomeImages, SendSomeDICOMFilesFailed, SendCancelled,
                              SendUnknowStatus, SendPACSConnectionBroken };
 
-    /// Es defineix els tipus d'error que podem tenir al descarregar fitxers DICOM:
-    ///  RetrieveDatabaseError: Indica quan error de base de dades d'Starviewer
-    ///  MoveDestinationAETileUnknownStatus: El PACS no té registrat el nostre AETitle per permetre-li fer descàrregues
-    ///  MoveWarningStatus: Ha fallat la descàrrega d'algun dels fitxers sol·licitats
-    ///  RetrieveIncomingDICOMConnectionsPortInUse: El port per rebre les connexions entrants per rebre els fitxers està en ús
+    /// Defines the types of errors we may have when downloading DICOM files:
+    /// RetrieveDatabaseError: Indicates when Starviewer database error
+    /// MoveDestinationAETileUnknownStatus: PACS does not have our AETitle registered to allow you to download
+    /// MoveWarningStatus: Failed to download any of the requested files
+    /// RetrieveIncomingDICOMConnectionsPortInUse: The port to receive incoming connections to receive files is in use
     enum RetrieveRequestStatus { RetrieveOk, RetrieveDatabaseError, RetrieveCanNotConnectToPACS, RetrieveNoEnoughSpace, RetrieveErrorFreeingSpace,
                                  RetrievePatientInconsistent, RetrieveDestinationAETileUnknown, RetrieveIncomingDICOMConnectionsPortInUse,
                                  RetrieveFailureOrRefused, RetrieveSomeDICOMFilesFailed, RetrieveCancelled, RetrieveUnknowStatus };
 
-    /// Errors que es poden produir al fer Queries al PACS
+    ///Errors that can occur when doing Queries in PACS
     enum QueryRequestStatus { QueryOk, QueryCanNotConnectToPACS, QueryFailedOrRefused, QueryCancelled, QueryUnknowStatus };
 
 };
