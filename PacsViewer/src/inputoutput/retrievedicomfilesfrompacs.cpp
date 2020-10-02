@@ -216,7 +216,14 @@ void RetrieveDICOMFilesFromPACS::storeSCPCallback(void *callbackData, T_DIMSE_St
                 if (storeResponse->DimseStatus == STATUS_Success)
                 {
                     // Which SOP class and SOP instance?
-                    if (!DU_findSOPClassAndInstanceInDataSet(*imageDataSet, sopClass, sopInstance, correctUIDPadding))
+                    //if (!DU_findSOPClassAndInstanceInDataSet(*imageDataSet, sopClass, sopInstance, correctUIDPadding))
+#ifdef  PACKAGE_VERSION_NUMBER
+#if PACKAGE_VERSION_NUMBER == 361
+                    if (!DU_findSOPClassAndInstanceInDataSet(dcmff.getDataset(), sopClass, sopInstance, OFFalse))
+#else if  PACKAGE_VERSION_NUMBER == 365
+                    if (!DU_findSOPClassAndInstanceInDataSet(*imageDataSet, sopClass,sizeof(sopClass), sopInstance, sizeof(correctUIDPadding)))
+#endif
+#endif
                     {
                         storeResponse->DimseStatus = STATUS_STORE_Error_CannotUnderstand;
                         ERROR_LOG(QString("Sop class and sop instance not found for image %1").arg(storeSCPCallbackData->fileName));
@@ -426,8 +433,13 @@ PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::retrieve(co
 
     // Set the destination of the images to us
     T_DIMSE_C_MoveRQ moveRequest = getConfiguredMoveRequest(association);
+#ifdef  PACKAGE_VERSION_NUMBER
+#if PACKAGE_VERSION_NUMBER == 361
     ASC_getAPTitles(association->params, moveRequest.MoveDestination, NULL, NULL);
-
+#else if  PACKAGE_VERSION_NUMBER == 365
+    ASC_getAPTitles(association->params, moveRequest.MoveDestination, sizeof(moveRequest.MoveDestination), NULL, 0, NULL, 0);
+#endif
+#endif
     OFCondition condition = DIMSE_moveUser(association, presentationContextID, &moveRequest, dcmDatasetToRetrieve, moveCallback, &moveSCPCallbackData,
                                            DIMSE_BLOCKING, 0, m_pacsConnection->getNetwork(), subOperationCallback, this, &moveResponse, &statusDetail,
                                            NULL /*responseIdentifiers*/);

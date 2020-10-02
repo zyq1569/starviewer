@@ -32,11 +32,11 @@
 
 namespace udg {
 
-// Constant que contindrà quin Abanstract Syntax de Find utilitzem entre els diversos que hi ha utilitzem
+//Constant that will contain which Abanstract Syntax of Find we use among the various that we use
 static const char *FindStudyAbstractSyntax = UID_FINDStudyRootQueryRetrieveInformationModel;
 
 QueryPacs::QueryPacs(PacsDevice pacsDevice)
- : DIMSECService()
+    : DIMSECService()
 {
     m_pacsDevice = pacsDevice;
     m_pacsConnection = NULL;
@@ -51,7 +51,7 @@ QueryPacs::QueryPacs(PacsDevice pacsDevice)
 
 QueryPacs::~QueryPacs()
 {
-    //Esborrem els llistats de resultats de cerca que no ens hagin demanat a través dels mètodes get
+    //We delete listings of search results that we were not asked for through the get methods
     if (!m_patientStudyListGot)
     {
         foreach(Patient *patient, m_patientStudyList)
@@ -73,7 +73,7 @@ QueryPacs::~QueryPacs()
 }
 
 void QueryPacs::foundMatchCallback(void *callbackData, T_DIMSE_C_FindRQ *request, int responseCount, T_DIMSE_C_FindRSP *rsp,
-    DcmDataset *responseIdentifiers)
+                                   DcmDataset *responseIdentifiers)
 {
     Q_UNUSED(rsp);
     Q_UNUSED(responseCount);
@@ -82,10 +82,10 @@ void QueryPacs::foundMatchCallback(void *callbackData, T_DIMSE_C_FindRQ *request
 
     if (queryPacsCaller->m_cancelQuery)
     {
-        // Hem de comprovar si ja haviem demanat cancel·lar la Query. És degut a que tot i que demanem cancel·lar la query actual
-        // el PACS ens envia els dataset que havia posat a la pila de la xarxa just abans de rebre el cancel·lar la query, per tant
-        // pot ser que tot i havent demanat cancel·lar la query rebem algun resultat més, per això comprovem si ja havíem demanat
-        // cancel·lar la query per no tornar-la  demanar, quan rebem aquests resultats que ja s'havien posat a la pila de la xarxa.
+        // We need to check if we have already asked to cancel the Query. This is because even though we ask you to cancel the current query
+        // the PACS sends us the datasets it had put in the network stack just before receiving the query cancellation, therefore
+        // it may be that despite having asked to cancel the query we receive some more results, so we check if we had already asked
+        // cancel the query so as not to ask for it again, when we receive these results that had already been placed in the network stack.
         // http://forum.dcmtk.org/viewtopic.php?t=2143
         if (!queryPacsCaller->m_cancelRequestSent)
         {
@@ -100,18 +100,18 @@ void QueryPacs::foundMatchCallback(void *callbackData, T_DIMSE_C_FindRQ *request
 
         if (queryRetrieveLevel == "STUDY")
         {
-            // En el cas que l'objecte que cercàvem fos un estudi
+            // In the event that the object we were looking for was a study
             queryPacsCaller->addPatientStudy(dicomTagReader);
         }
         else if (queryRetrieveLevel == "SERIES")
         {
-            // Si la query retorna un objecte sèrie
+            // If the query returns a serial object
             queryPacsCaller->addPatientStudy(dicomTagReader);
             queryPacsCaller->addSeries(dicomTagReader);
         }
         else if (queryRetrieveLevel == "IMAGE")
         {
-            // Si la query retorna un objecte imatge
+            // If the query returns an image object
             queryPacsCaller->addPatientStudy(dicomTagReader);
             queryPacsCaller->addSeries(dicomTagReader);
             queryPacsCaller->addImage(dicomTagReader);
@@ -127,7 +127,7 @@ PACSRequestStatus::QueryRequestStatus QueryPacs::query()
 
     if (!m_pacsConnection->connectToPACS(PACSConnection::Query))
     {
-        ERROR_LOG("S'ha produit un error al intentar connectar al PACS per fer query. AE Title: " + m_pacsDevice.getAETitle());
+        ERROR_LOG("An error occurred while trying to connect to PACS to query. AE Title: " + m_pacsDevice.getAETitle());
         delete m_pacsConnection;
         return PACSRequestStatus::QueryCanNotConnectToPACS;
     }
@@ -136,7 +136,7 @@ PACSRequestStatus::QueryRequestStatus QueryPacs::query()
     m_presId = ASC_findAcceptedPresentationContextID(m_pacsConnection->getConnection(), FindStudyAbstractSyntax);
     if (m_presId == 0)
     {
-        ERROR_LOG("El PACS no ha acceptat el nivell de cerca d'estudis FINDStudyRootQueryRetrieveInformationModel");
+        ERROR_LOG("PACS has not accepted the FINDStudyRootQueryRetrieveInformationModel study search level");
         delete m_pacsConnection;
         return PACSRequestStatus::QueryFailedOrRefused;
     }
@@ -151,14 +151,23 @@ PACSRequestStatus::QueryRequestStatus QueryPacs::query()
     DcmDataset *dcmDatasetToQuery = DicomMaskToDcmDataset().getDicomMaskAsDcmDataset(m_dicomMask);
 
     // Finally conduct transmission of data
+    //    OFCondition condition = DIMSE_findUser(m_pacsConnection->getConnection(), m_presId, &findRequest, dcmDatasetToQuery, foundMatchCallback, this, DIMSE_NONBLOCKING,
+    //                                           Settings().getValue(InputOutputSettings::PACSConnectionTimeout).toInt(), &findResponse, &statusDetail);
+#ifdef  PACKAGE_VERSION_NUMBER
+#if PACKAGE_VERSION_NUMBER < 365
     OFCondition condition = DIMSE_findUser(m_pacsConnection->getConnection(), m_presId, &findRequest, dcmDatasetToQuery, foundMatchCallback, this, DIMSE_NONBLOCKING,
                                            Settings().getValue(InputOutputSettings::PACSConnectionTimeout).toInt(), &findResponse, &statusDetail);
-
+#else //if  PACKAGE_VERSION_NUMBER == 365
+    int responseCount = 0;
+    OFCondition condition = DIMSE_findUser(m_pacsConnection->getConnection(), m_presId, &findRequest, dcmDatasetToQuery,responseCount, foundMatchCallback,
+                                           this,DIMSE_NONBLOCKING,Settings().getValue(InputOutputSettings::PACSConnectionTimeout).toInt(), &findResponse, &statusDetail);
+#endif
+#endif
     m_pacsConnection->disconnect();
 
     if (!condition.good())
     {
-        ERROR_LOG(QString("Error al fer una consulta al PACS %1, descripcio error: %2").arg(m_pacsDevice.getAETitle(), condition.text()));
+        ERROR_LOG(QString("Error querying PACS% 1, error description:% 2").arg(m_pacsDevice.getAETitle(), condition.text()));
     }
 
     PACSRequestStatus::QueryRequestStatus queryRequestStatus = getDIMSEStatusCodeAsQueryRequestStatus(findResponse.DimseStatus);
@@ -187,23 +196,24 @@ PACSRequestStatus::QueryRequestStatus QueryPacs::query(const DicomMask &mask)
 
 void QueryPacs::cancelQuery()
 {
-    // Indiquem que s'ha de cancel·lar la query, el mètode foundMatchCallback, comprova el flag cada vegada que rep un resultat DICOM
-    // que compleix amb la màscara de cerca
+    /// We indicate that the query must be canceled, the foundMatchCallback method,
+    /// checks the flag each time it receives a DICOM result
+    /// that matches the search mask
     m_cancelQuery = true;
 }
 
 void QueryPacs::cancelQuery(T_DIMSE_C_FindRQ *request)
 {
-    INFO_LOG(QString("Demanem cancel.lar al PACS %1 l'actual query").arg(m_pacsDevice.getAETitle()));
+    INFO_LOG(QString("Please cancel PACS% 1 for the current query").arg(m_pacsDevice.getAETitle()));
 
-    // Tots els PACS està obligats pel DICOM Conformance a implementar la cancel·lació
+    // All PACS are required by DICOM Conformance to implement the cancellation
     OFCondition cond = DIMSE_sendCancelRequest(m_pacsConnection->getConnection(), m_presId, request->MessageID);
     if (cond.bad())
     {
-        ERROR_LOG("S'ha produit el seguent error al cancel.lar la query: " + QString(cond.text()));
-        INFO_LOG(QString("Aborto la connexio amb el PACS %1").arg(m_pacsDevice.getAETitle()));
+        ERROR_LOG("The following error occurred while canceling the query: " + QString(cond.text()));
+        INFO_LOG(QString("I abort the connection to the PACS %1").arg(m_pacsDevice.getAETitle()));
 
-        // Si hi hagut un error demanant el cancel·lar, abortem l'associació, d'aquesta manera segur que cancel·lem la query
+        // If there was an error asking you to cancel, we aborted the association, so we are sure to cancel the query
         ASC_abortAssociation(m_pacsConnection->getConnection());
     }
 }
@@ -224,8 +234,9 @@ void QueryPacs::addSeries(DICOMTagReader *dicomTagReader)
     Series *series = CreateInformationModelObject::createSeries(dicomTagReader);
     series->setDICOMSource(m_resultsDICOMSource);
 
-    // TODO: Si ens fan una cerca a nivell d'imatge inserirem la mateixa serie tantes vegades com images tenim, s'hauria de comprovar si ja conté
-    // la sèrie la llista abans d'afegir-la
+    /// TODO: If we do an image level search we will insert the same series as
+    /// many times as we have images, we should check if it already contains
+    /// the series the list before adding it
     m_seriesList.append(series);
 }
 
@@ -257,8 +268,8 @@ QList<Image*> QueryPacs::getQueryResultsAsImageList()
 
 PACSRequestStatus::QueryRequestStatus QueryPacs::getDIMSEStatusCodeAsQueryRequestStatus(unsigned int dimseStatusCode)
 {
-    // Al PS 3.4, secció C.4.1.1.4, taula C.4-1 podem trobar un descripció dels errors.
-    // Per a detalls sobre els "related fields" consultar PS 3.7, Annex C - Status Type Enconding
+    // In PS 3.4, section C.4.1.1.4, table C.4-1 we can find a description of the errors.
+    // For details on "related fields" see PS 3.7, Annex C - Status Type Enconding
 
     if (dimseStatusCode == STATUS_Success)
     {
@@ -269,20 +280,20 @@ PACSRequestStatus::QueryRequestStatus QueryPacs::getDIMSEStatusCodeAsQueryReques
 
     switch (dimseStatusCode)
     {
-        case STATUS_FIND_Refused_OutOfResources:
-        case STATUS_FIND_Failed_IdentifierDoesNotMatchSOPClass:
-        case STATUS_FIND_Failed_UnableToProcess:
-            queryRequestStatus = PACSRequestStatus::QueryFailedOrRefused;
-            break;
+    case STATUS_FIND_Refused_OutOfResources:
+    case STATUS_FIND_Failed_IdentifierDoesNotMatchSOPClass:
+    case STATUS_FIND_Failed_UnableToProcess:
+        queryRequestStatus = PACSRequestStatus::QueryFailedOrRefused;
+        break;
 
-        case STATUS_FIND_Cancel_MatchingTerminatedDueToCancelRequest:
-            // L'usuari ha sol·licitat cancel·lar la descàrrega
-            queryRequestStatus = PACSRequestStatus::QueryCancelled;
-            break;
+    case STATUS_FIND_Cancel_MatchingTerminatedDueToCancelRequest:
+        //The user has requested to cancel the download
+        queryRequestStatus = PACSRequestStatus::QueryCancelled;
+        break;
 
-        default:
-            queryRequestStatus = PACSRequestStatus::QueryUnknowStatus;
-            break;
+    default:
+        queryRequestStatus = PACSRequestStatus::QueryUnknowStatus;
+        break;
     }
 
     return queryRequestStatus;
