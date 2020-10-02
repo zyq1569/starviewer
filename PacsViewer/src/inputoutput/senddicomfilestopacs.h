@@ -34,34 +34,38 @@ class Image;
 class PACSConnection;
 
 class SendDICOMFilesToPACS : public QObject, public DIMSECService {
-Q_OBJECT
+    Q_OBJECT
 public:
     SendDICOMFilesToPACS(PacsDevice pacsDevice);
 
-    /// Retorna el PACS que s'ha passat al constructor i amb el qual es fa el send de fitxers DICOM
+    /// Returns the PACS that was passed to the constructor
+    /// and with which the DICOM file is sent
     PacsDevice getPacs();
 
-    /// Guarda les imatges que s'especifiquen a la llista en el pacs establert per la connexió
-    /// @param ImageListStore de les imatges a enviar al PACS
-    /// @return indica estat del mètode
+    /// Saves the images specified in the list in the pacs set by the connection
+    /// @param ImageListStore of images to send to PACS
+    /// @return indicates method status
     PACSRequestStatus::SendRequestStatus send(QList<Image*> imageListToSend);
 
-    /// Demanem cancel·lar l'enviament d'imatges. La cancel·lació de les imatges és assíncrona no es duu a terme fins que ha finalitzat l'enviament de la
-    /// imatge que s'estava enviant al moment de demananr la cancel·lació
+    /// Please cancel sending images. Cancellation of
+    /// images is asynchronous is not carried out until the sending of the
+    /// image that was being sent at the time of requesting cancellation
     void requestCancel();
 
-    /// Retorna el número d'imatges enviades correctament
+    ///Returns the number of images sent successfully
     int getNumberOfDICOMFilesSentSuccesfully();
 
-    /// Retorna el número d'imatges que l'enviament ha fallat
+    ///Returns the number of images that failed to send
     int getNumberOfDICOMFilesSentFailed();
 
-    /// Retorna el número d'imatges que s'ha enviat però han donat warning, pot donar warning per exemple en el cas que el PACS modifiqui alguna dada de
-    /// la imatge
+    /// Returns the number of images sent but warned,
+    /// can give warning for example in case the PACS modifies some data of
+    /// the picture
     int getNumberOfDICOMFilesSentWarning();
 
 signals:
-   /// Sinal que indica que s'ha fet l'enviament de la imatge passada per paràmetre al PACS, i el número d'imatges que es porten enviades
+    /// Signal indicating that the past image has been sent
+    /// per parameter in the PACS, and the number of images that are sent
     void DICOMFileSent(Image *image, int numberOfDICOMFilesSent);
 
 protected:
@@ -74,19 +78,21 @@ private:
     /// Creates and returns a PACS connection to the given PACS device.
     virtual PACSConnection* createPACSConnection(const PacsDevice &pacsDevice) const;
 
-    /// Removes images from the list when multiple images point to the same file, so that at the end each file is present only once.
+    /// Removes images from the list when multiple images
+    /// point to the same file, so that at the end each file is present only once.
     void removeDuplicateFiles(QList<Image*> &imageList) const;
 
-    /// Inicialitze els comptadors d'imatges per controlar quantes han fallat/s'han enviat....
+    /// Initialize image counters to control how many failed / were sent ....
     void initialitzeDICOMFilesCounters(int numberOfDICOMFilesToSend);
 
-    /// Processa un resposta del Store SCP que no ha tingut l'Status Successfull
+    /// Process a Store SCP response that did not have Successfull Status
     void processResponseFromStoreSCP(unsigned int dimseStatusCode, QString filePathDicomObjectStoredFailed);
 
-    /// Envia una image al PACS amb l'associació passada per paràmetre, retorna si la imatge s'ha enviat correctament
+    /// Send an image to the PACS with the association passed by parameter,
+    /// returns if the image was sent successfully
     virtual bool storeSCU(T_ASC_Association *association, QString filePathToStore);
 
-    /// Retorna un Status indicant com ha finalitzat l'operació C-Store
+    /// Returns a Status indicating how the C-Store operation ended
     PACSRequestStatus::SendRequestStatus getStatusStoreSCU();
 
 private:
