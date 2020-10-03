@@ -33,51 +33,56 @@ class PACSJob;
 typedef QSharedPointer<PACSJob> PACSJobPointer;
 
 /**
-    Classe base de la qual herederan totes les operacions que es facin amb el PACS. Aquesta classe conté els mètodes basics que s'han d'heredar.
-
-    Aquesta classe hereda de ThreadWeaver::Job per així tenir automàticament la gestió de les cues que implementa, i permetre que les operacions
-    amb el PACS s'executin en un thread independent.
-  */
+Base class from which they will inherit all the operations that
+are done with the PACS. This class contains the basic methods to be inherited.
+This class inherits from ThreadWeaver :: Job in order
+to automatically have the queue management it implements, and allow operations
+with the PACS run in a separate thread.
+*/
 class PACSJob : public QObject, public ThreadWeaver::Job {
-Q_OBJECT
+    Q_OBJECT
 public:
     enum PACSJobType { SendDICOMFilesToPACSJobType, RetrieveDICOMFilesFromPACSJobType, QueryPACS };
 
-    /// Constructor de la classe
+    /// Class builder
     PACSJob(PacsDevice pacsDevice);
 
-    /// Retorna l'identificador del PACSJob aquest identificador és únic per tots els PACSJob
+    /// Returns the PACSJob identifier this identifier is unique for all PACSJob
     int getPACSJobID();
 
-    /// Retorna el PacsDevice amb el qual s'ha construït el PACSJob
+    /// Returns the PacsDevice with which the PACSJob was built
     PacsDevice getPacsDevice();
 
-    /// Indica quin tipus de PACSJob és l'objecte
+    /// Indicates what type of PACSJob the object is
     virtual PACSJob::PACSJobType getPACSJobType() = 0;
 
-    /// Mètode heredad de Job que serveix per cancel·lar l'execució del job actual. Si el job no s'està executant i està encara encuant pendent d'executar-se
-    /// aquest mètode no farà res per això s'aconsella no utilitzar aquest mètode, en lloc seu utilitzar requestCancelPACSJob de PACSManager que en el cas
-    /// que el job s'estigui executa sol·licita que es pari l'execució i si està encuat el desencua perquè no s'arribi a executar.
+    /// Inherited Job method that is used to cancel the execution of the current job.
+    /// If the job is not running and is still running
+    /// this method will do nothing so it is advised not to use this method,
+    /// instead use requestCancelPACSJob from PACSManager than in the case
+    /// that the job is executed requests that the execution be stopped
+    ///  and if it is blocked it disengages it so that it is not executed.
     void requestAbort();
 
-    /// Retorna si s'ha sol·licitat abortar el job
+    /// Returns if the job abort was requested
     bool isAbortRequested();
 
-    /// Mètode heredat de Job, s'executa just abans de desencuar el job, si ens densencuen vol dir que el job no s'executarà per tant
-    /// des d'aquest mètode emetem el signal PACSJobCancelled
+    /// Inherited Job method, runs just before unsetting the job,
+    /// if they thicken us it means that the job will not run therefore
+    /// from this method we emit the PACSJobCancelled signal
     void aboutToBeDequeued(ThreadWeaver::QueueAPI *weaver);
 
     /// Sets the self pointer reference of this job.
     void setSelfPointer(const PACSJobPointer &self);
 
 signals:
-    /// Signal que s'emet quan un PACSJob ha començat a executar-se
+    /// Signal that is emitted when a PACSJob has started running
     void PACSJobStarted(PACSJobPointer);
 
-    /// Signal que s'emet quan un PACSJob ha acabat d'executar-se
+    ///Signal that is emitted when a PACSJob has finished running
     void PACSJobFinished(PACSJobPointer);
 
-    /// Signal que s'emet quan un PACSJob s'ha cancel·lat
+    ///Signal that is emitted when a PACSJob has been canceled
     void PACSJobCancelled(PACSJobPointer);
 
 protected:
@@ -85,13 +90,14 @@ protected:
     virtual void defaultEnd(const ThreadWeaver::JobPointer &job, ThreadWeaver::Thread *thread);
 
 protected:
-    /// Weak reference to a shared pointer of the job itself. It is needed to emit the PACSJobCancelled() signal with a shared pointer from aboutToBeDequeued().
+    /// Weak reference to a shared pointer of the job itself.
+    /// It is needed to emit the PACSJobCancelled() signal with a shared pointer from aboutToBeDequeued().
     /// Since it's a weak pointer it won't keep the job alive.
     /// TODO This should be removed by redesigning the PACS jobs architecture.
     QWeakPointer<PACSJob> m_selfPointer;
 
 private:
-    /// Mètode que han de reimplementar les classes filles per cancel·lar l'execució del job actual
+    /// Method that the child classes must reimplement to cancel the execution of the current job
     virtual void requestCancelJob() = 0;
 
 private:

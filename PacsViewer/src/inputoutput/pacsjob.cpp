@@ -43,8 +43,9 @@ int PACSJob::getPACSJobID()
 
 void PACSJob::aboutToBeDequeued(ThreadWeaver::QueueAPI *)
 {
-    // Si ens desenqueuen de la cua de jobs pendents d'executar, vol dir que aquest Job no s'executarà, per tant emetem signal indicant que
-    // ens han cancel·lat
+    /// If we get ripped off from the queue of pending jobs,
+    /// means that this Job will not run, so we emit signal indicating that
+    /// we have been canceled
     emit PACSJobCancelled(m_selfPointer.toStrongRef());
 }
 

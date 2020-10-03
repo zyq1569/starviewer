@@ -80,10 +80,13 @@ PMIB_TCPTABLE_OWNER_MODULE WindowsPortInUseByAnotherApplication::getTCPTables()
     PVOID tcpTable = NULL;
     DWORD size = 0;
     DWORD result = 0;
-    // First of all, we need to find the size of the TCP table and save it to size, once we have it, we can do the malloc and go back
-    // to call the function to retrieve the table correctly.
-    // The problem is because the function does not return the size carefully (it always returns a different value),
-    // therefore we can look for it with a while and when the variable pTCPTable is met it will be instantiated correctly.
+    /// First of all, we need to find the size of the TCP table and save it to size,
+    ///  once we have it, we can do the malloc and go back
+    /// to call the function to retrieve the table correctly.
+    /// The problem is because the function does not return the
+    /// size carefully (it always returns a different value),
+    /// therefore we can look for it with a while and when the
+    /// variable pTCPTable is met it will be instantiated correctly.
     bool found = false;
     while (!found)
     {
