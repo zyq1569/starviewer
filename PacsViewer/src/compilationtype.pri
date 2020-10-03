@@ -25,7 +25,7 @@ win32 {
         CONFIG -= console
     }
 
-#    LIBS += -lws2_32 #dcmtk-3.6.3 need
+    LIBS += -lws2_32 #dcmtk-3.6.3 need
     # Required since Qt 5.6 to use OpenGl directly
     LIBS += opengl32.lib glu32.lib
     # Required since Qt 5.6 by ITKCommon

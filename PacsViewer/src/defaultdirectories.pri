@@ -14,16 +14,16 @@ isEmpty(SDK_INSTALL_PREFIX){
 DCMTKLIBDIR = $$(DCMTKLIBDIR)
 isEmpty(DCMTKLIBDIR){
     unix:DCMTKLIBDIR = $$SDK_INSTALL_PREFIX/lib
-    win32:DCMTKLIBDIR = $$SDK_INSTALL_PREFIX/dcmtk/3.6.1_20120515/lib
-#win32:DCMTKLIBDIR = $$SDK_INSTALL_PREFIX/dcmtk/3.6.3/lib
-#win32:DCMTKLIBDIR = $$SDK_INSTALL_PREFIX/dcmtk/3.6.5/lib
+#    win32:DCMTKLIBDIR = $$SDK_INSTALL_PREFIX/dcmtk/3.6.1_20120515/lib
+#    win32:DCMTKLIBDIR = $$SDK_INSTALL_PREFIX/dcmtk/3.6.3/lib
+     win32:DCMTKLIBDIR = $$SDK_INSTALL_PREFIX/dcmtk/3.6.5/lib
 }
 DCMTKINCLUDEDIR = $$(DCMTKINCLUDEDIR)
 isEmpty(DCMTKINCLUDEDIR){
     unix:DCMTKINCLUDEDIR = $$SDK_INSTALL_PREFIX/include/dcmtk
-    win32:DCMTKINCLUDEDIR = $$SDK_INSTALL_PREFIX/dcmtk/3.6.1_20120515/include/dcmtk
-# win32:DCMTKINCLUDEDIR = $$SDK_INSTALL_PREFIX/dcmtk/3.6.3/include/dcmtk
-# win32:DCMTKINCLUDEDIR = $$SDK_INSTALL_PREFIX/dcmtk/3.6.5/include/dcmtk
+#    win32:DCMTKINCLUDEDIR = $$SDK_INSTALL_PREFIX/dcmtk/3.6.1_20120515/include/dcmtk
+#    win32:DCMTKINCLUDEDIR = $$SDK_INSTALL_PREFIX/dcmtk/3.6.3/include/dcmtk
+     win32:DCMTKINCLUDEDIR = $$SDK_INSTALL_PREFIX/dcmtk/3.6.5/include/dcmtk
 }
 
 
@@ -93,7 +93,7 @@ CUDAINCLUDEDIR = $$(CUDAINCLUDEDIR)
 isEmpty(CUDAINCLUDEDIR){
     unix:CUDAINCLUDEDIR = /usr/local/cuda/include
 }
-# De moment cal el CUDA SDK, però s'hauria de poder treballar sense ell
+#The CUDA SDK is needed at the moment, but you should be able to work without it
 CUDASDKINCLUDEDIR = $$(CUDASDKINCLUDEDIR)
 isEmpty(CUDASDKINCLUDEDIR){
     unix:CUDASDKINCLUDEDIR = /usr/local/cuda-sdk/common/inc
