@@ -19,7 +19,7 @@
 
 namespace udg {
 
-// Definició de les claus
+// Definition of the keys
 const QString ShortcutsBase("Shortcuts/");
 const QString Shortcuts::SlicingMouseTool(ShortcutsBase + "SlicingMouseTool");
 const QString Shortcuts::SlicingWheelTool(ShortcutsBase + "SlicingWheelTool");
