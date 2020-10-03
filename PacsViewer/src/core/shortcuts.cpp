@@ -192,6 +192,7 @@ void Shortcuts::init()
 
     shortcutsList.clear();
     shortcutsList.append(QString("Ctrl+R"));
+    shortcutsList.append(QString("ESC"));
     settingsRegistry->addSetting(RestoreTool, shortcutsList);
 
     shortcutsList.clear();
