@@ -18,20 +18,20 @@
 namespace udg {
 
 /**
-    Classe que s'encarrega de comprovar si un port està en ús per una aplicació que no sigui starviewer.
-  */
+    Class that is responsible for checking if a port is in use by an application other than starviewer.
+*/
 class PortInUseByAnotherApplication {
 public:
     virtual ~PortInUseByAnotherApplication();
 
-    /// Crea una nova instància d'alguna de les subclasses que implementa la interfície
+    /// Creates a new instance of one of the subclasses that the interface implements
     static PortInUseByAnotherApplication* newInstance();
 
-    /// Comprova si el port està en ús per una aplicació que no sigui Starviewer
+    ///Check if the port is in use by a non-Starviewer application
     virtual bool isPortInUseByAnotherApplication(int port, bool &error);
 
 protected:
-    // Constructor privat per obligar a utilitzar el mètode newInstance
+    // Private constructor to force to use the newInstance method
     PortInUseByAnotherApplication();
 };
 
