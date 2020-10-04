@@ -83,7 +83,7 @@ QList<PacsDevice> QPacsList::getSelectedPacs()
     {
         PacsDevice pacs;
         item = qPacsList.at(i);
-        // Fem el query per cercar la informació del PACS
+        // We do the query to look up the PACS information
         pacs = pacsDeviceManager.getPACSDeviceByID(item->text(0));
         // Insert in the list
         selectedPacsList.append(pacs);

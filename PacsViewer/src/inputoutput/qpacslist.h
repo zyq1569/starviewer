@@ -26,42 +26,45 @@ class Status;
 class PacsDevice;
 
 /**
-    Interfície que mostra els PACS els quals es pot connectar l'aplicació, permet seleccionar quins es vol connectar l'usuari
-  */
+Interface showing the PACS to which the application can connect,
+allows you to select which ones the user wants to connect
+ */
 class QPacsList : public QWidget, private Ui::QPacsListBase {
-Q_OBJECT
+    Q_OBJECT
 public:
-    /// Constructor de la classe
+    /// Class builder
     QPacsList(QWidget *parent = 0);
 
-    /// Retorna els pacs seleccionats per l'usuari
+    /// Returns user-selected packs
     QList<PacsDevice> getSelectedPacs();
 
-    /// Neteja els elements seleccionats de la llista
+    ///Clears selected items from the list
     void clearSelection();
 
-    /// Destructor de la classe
+    /// Class Destroyer
     ~QPacsList();
 
-    /// Especifica/Retorna per quin Filtre es filtren els PACS mostrats, per defecte si no s'especifica no es filtra.
+    /// Specifies / Returns by which Filter the displayed PACS are filtered,
+    /// by default if not specified is not filtered.
     void setFilterPACSByService(PacsDeviceManager::FilterPACSByService);
     PacsDeviceManager::FilterPACSByService getFilterPACSByService();
 
-    /// Especifica/Retorna si els PACS que estan marcats com a PACS per cercar per defecte s'han de mostrar ressaltats. Per defecte s'hi mostren
+    /// Specifies / Returns whether PACS that are marked as
+    /// PACS to search by default should be highlighted. By default they are displayed
     void setShowQueryPacsDefaultHighlighted(bool showHighlighted);
     bool getShowQueryPacsDefaultHighlighted();
 
 public slots:
-    /// Carrega al ListView la Llista de Pacs disponibles
+    /// Upload the List of Available Packs to ListView
     void refresh();
 
 signals:
-    /// Emitted when a PACS is selected or deselected.
+    ///Emitted when a PACS is selected or deselected.
     void pacsSelectionChanged();
 
 private slots:
-    /// Fa que el PACS que està en l'item del Tree Widget quedi com a un dels PACS per defecte
-    /// si aquest element està seleccionat per l'usuari
+    /// Makes the PACS in the Tree Widget item one of the default PACS
+    /// if this item is selected by the user
     void setDefaultPACS(QTreeWidgetItem *item);
 
 private:
