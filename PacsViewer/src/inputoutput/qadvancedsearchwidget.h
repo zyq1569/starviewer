@@ -29,37 +29,42 @@ namespace udg {
 class DicomMask;
 
 /**
-    Classe de cerca bàsica d'elemens
-  */
+   Basic item search class
+*/
 class QAdvancedSearchWidget : public QWidget, private Ui::QAdvancedSearchWidgetBase {
-Q_OBJECT
+    Q_OBJECT
 public:
     QAdvancedSearchWidget(QWidget *parent = 0);
 
-    /// Neteja els camps de la cerca bàsica
+    /// Clear the basic search fields
     void clear();
-    /// Construeix la màscara de cerca
+    /// Build the search mask
     DicomMask buildDicomMask();
 
 private slots:
-    /// Posa un * al tab el qual pertany el control que se li ha donat valor, per a que l'usuari sàpiga quin tabs ha posat valors de cerca
+    /// Put an * in the tab which belongs to the control that has been given value,
+    /// so that the user knows which tabs have set search values
     void updateAdvancedSearchModifiedStatus();
 
-    ///Quan canvia la data del QDateEdit a partir quina data de naixament s'ha de cercar, actualizem el QDateEdit de fins quina data s'ha de cercar amb
-    ///la mateixa data
+    /// When you change the date of QDateEdit from which date of birth to search,
+    /// update QDateEdit to what date to search with
+    /// the same date
     void fromPatientBirthDateChanged();
-    //Quan canvia la data comprova que la data desde no sigui major a aquesta, si ho és assigna a la data des de la mateixa que la data fins
+    /// When you change the date check that the date from is not greater than this,
+    /// if it is assigned to the date from the same as the date to
     void toPatientBirthDateChanged();
 
 private:
     
     void initialize();
 
-    /// Crea les connexions entre signals i slots
+    /// Creates connections between signals and slots
     void createConnections();
 
-    ///Converteix un string en format de data DICOM YYYYMMDD-YYYYMMDD, YYYYMMDD-, YYYYMMDD, ... a un Rang de dates en que s'ha de fer la cerca. 
-    ///Si l'String no té el format DICOM de data correcte Retorna QDate() invàlids (Consultar PS 3.5 el Value Representation DA per veure quin format pot tenir)    
+    /// Convert a string to DICOM date format YYYYMMDD-YYYYMMDD, YYYYMMDD-, YYYYMMDD,
+    /// ... to a Date range in which to search.
+    /// If the String does not have the correct date DICOM format Returns invalid QDate ()
+    /// (Consult PS 3.5 the Value Representation DA to see what format it can have)
     QPair<QDate, QDate> getDateRangeToSearchFromString(QString dateRangeAsDICOMFormat);
 
     ///Converteix un string en format de temps DICOM HHMMSS-HHMMSS, HHMMSS-, HHMMSS, ... a un rang de Time en que s'ha de fer la cerca
