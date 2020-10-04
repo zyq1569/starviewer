@@ -21,8 +21,8 @@
 namespace udg {
 
 /**
-    Classe que conté utilitats vàries utilitzades per la classe inputoutput
-  */
+   Class that contains various utilities used by the inputoutput class
+*/
 class Utils {
 
 public:
