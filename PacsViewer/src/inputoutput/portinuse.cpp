@@ -49,7 +49,7 @@ bool PortInUse::isPortInUse(int port)
     }
     else
     {
-        // No s'hauria de donar un error diferent a AddressInUseError, de totes maneres per seguretat el loggagem
+        /// AddressInUseError should not be given a different error, anyway for security logging
         ERROR_LOG("No s'ha pogut comprovat correctament si el port " + QString().setNum(port) + " està en ús, per error: " + errorString);
         m_errorString = errorString;
         m_status = PortInUse::PortCheckError;
@@ -63,10 +63,10 @@ PortInUse::PortInUseOwner PortInUse::getOwner()
 {
     PortInUse::PortInUseOwner owner = PortInUse::PortUsedByUnknown;
 
-    // En cas que el port estigui en ús, cal mirar si l'ha obert Starviewer o una altra aplicació
+    // In case the port is in use, you need to see if it has been opened by Starviewer or another application
     if (m_status == PortInUse::PortIsInUse)
     {
-        // S'instancia un objecte de la calsse segons el sistema operatiu
+        //Instantiate an object of the class according to the operating system
         PortInUseByAnotherApplication *portInUse = createPortInUseByAnotherApplication();
         bool error;
         bool inUse = portInUse->isPortInUseByAnotherApplication(m_lastPortChecked, error);
@@ -74,12 +74,12 @@ PortInUse::PortInUseOwner PortInUse::getOwner()
         {
             if (inUse)
             {
-                // Port obert per una altra aplicació
+                // Open port for another application
                 owner = PortInUse::PortUsedByOther;
             }
             else
             {
-                // port obert per Starviewer
+                // port opened by Starviewer
                 owner = PortInUse::PortUsedByStarviewer;
             }
         }
@@ -95,7 +95,7 @@ bool PortInUse::isPortAvailable(int port, QAbstractSocket::SocketError &serverEr
     QTcpServer tcpServer;
     bool result;
 
-    /// Result serà cert si el port està lliure, pertant s'ha de retorna l'oposat
+    /// Result will be true if the port is free, so the opposite must be returned
     result = tcpServer.listen(QHostAddress::Any, port);
     serverError = tcpServer.serverError();
     errorString = tcpServer.errorString();
