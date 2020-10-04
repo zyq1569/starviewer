@@ -29,7 +29,7 @@ public:
 
     DiagnosisTestResult run();
 
-    ///Retorna descripcio del test
+    ///Returns test description
     QString getDescription();
 
 protected:
