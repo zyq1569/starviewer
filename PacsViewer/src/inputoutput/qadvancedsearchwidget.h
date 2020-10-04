@@ -67,16 +67,17 @@ private:
     /// (Consult PS 3.5 the Value Representation DA to see what format it can have)
     QPair<QDate, QDate> getDateRangeToSearchFromString(QString dateRangeAsDICOMFormat);
 
-    ///Converteix un string en format de temps DICOM HHMMSS-HHMMSS, HHMMSS-, HHMMSS, ... a un rang de Time en que s'ha de fer la cerca
-    ///Si l'String no té el format DICOM de temps correcte Retorna QTime() invàlids (Consultar PS 3.5 el Value Representation TM per veure quin format pot tenir)
+    /// Converts a string to DICOM time format HHMMSS-HHMMSS, HHMMSS-, HHMMSS, ... to a Time range in which to search
+    /// If the String does not have the correct time DICOM format Returns QTime ()
+    /// invalid (Consult PS 3.5 the Value Representation TM to see what format it can have)
     QPair<QTime, QTime> getTimeRangeToSearchFromString(QString timeRangeAsDICOMFormat);
 
-    ///Ens indica si el QObject és un QLineEdit enabled i conté text
+    ///Tells us if the QObject is a QLineEdit enabled and contains text
     bool isQLineEditEnabledAndIsNotEmpty(QObject *);
-    ///Ens indica si el QOjbect és un QCheckBox i conté text
+    ///Tells us if the QOjbect is a QCheckBox and contains text
     bool isQCheckboxAndIsChecked(QObject *);
 
-    ///Retorna el Widgets del control que he afegit nosaltres a la UI
+    ///Returns the Control Widgets I added to the UI
     QList<QObject*> getMemberWidgets();
 
 private:
