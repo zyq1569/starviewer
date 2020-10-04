@@ -34,21 +34,23 @@ class Patient;
 class QTreeWidgetWithSeparatorLine;
 
 class QRelatedStudiesWidget : public QFrame {
-Q_OBJECT
+    Q_OBJECT
 public:
     QRelatedStudiesWidget(RelatedStudiesManager *relatedStudiesManager, QWidget *parent = 0);
     ~QRelatedStudiesWidget();
 
-    /// Mètode per buscar els estudis relacionat amb el pacient.
+    /// Method for searching for patient-related studies.
     void searchStudiesOf(Patient *patient);
 
-    /// Sets the study with the given studyUID as the current study. If the selected prior study is newer than this one, it is deselected.
+    /// Sets the study with the given studyUID as the current study.
+    /// If the selected prior study is newer than this one, it is deselected.
     void setCurrentStudy(const QString &studyUID);
 
 public slots:
     virtual void setVisible(bool visible);
 
-    /// Actualitza la llista marcant aquells estudis que ja estan en memòria perquè sigui fàcil identificar-los i no es puguin tornar a descarregar.
+    /// Update the list by checking those studies that are already in
+    /// memory so that it is easy to identify them and they cannot be re-downloaded.
     void updateList();
 
     /// If no prior study is selected, it tries to select one taking into account the properties of the current study.
@@ -56,10 +58,10 @@ public slots:
     void toggleComparativeMode();
 
 signals:
-    /// S'emet només quan no hi ha altres estudis ja descarregant-se.
+    ///It is broadcast only when no other studies are already being downloaded.
     void downloadingStudies();
 
-    /// S'emet quan s'han acabat de descarregar tots els estudis demanats.
+    /// It is broadcast when all the requested studies have been downloaded.
     void studiesDownloaded();
 
     /// Emit the StudyInstanceUID of the studies selected as the current and prior study.
