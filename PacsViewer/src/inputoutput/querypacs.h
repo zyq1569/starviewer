@@ -25,7 +25,8 @@
 #include "dicommask.h"
 #include "dicomsource.h"
 #include "dimsecservice.h"
-/// This class helps to interactive with the pacs, allow us to find studies in the pacs setting a search mask. Very important for this class a connection
+/// This class helps to interactive with the pacs, allow us to find studies
+/// in the pacs setting a search mask. Very important for this class a connection
 /// and a mask search must be setted befoer query Studies
 
 class DcmDataset;
@@ -44,45 +45,52 @@ class PACSConnection;
 
 class QueryPacs : public DIMSECService {
 public:
-    /// Constructor de la classe
+    ///Class builder
     QueryPacs(PacsDevice pacsDevice);
     ~QueryPacs();
 
-    /// Cerca els estudis que compleixin la màscara passada
+    /// Look for studies that meet the past mask
     PACSRequestStatus::QueryRequestStatus query(const DicomMask &mask);
 
-    /// Indiquem que la consulta actual s'ha de cancel·lar.
-    /// La cancel·lació de la query no es fa immediatament quan s'invoca el mètode, aquest mètode actualitza un flag, que cada vegada
-    /// que rebem un element DICOM que compleix la màscara es comprova, si el flag indica que s'ha demanat cancel·lar llavors es
-    /// cancel·la la query
+    /// We indicate that the current query should be canceled.
+    /// The query is not canceled immediately when the method is invoked,
+    /// this method updates a flag, which every time
+    /// that we receive a DICOM element that meets the mask is checked,
+    /// if the flag indicates that it has been requested to be canceled then es
+    /// cancel the query
     void cancelQuery();
 
-    ///Retornen els pacients amb els estudis trobats. La classe que demani els resultats de cerca d'estudis, és responsable d'eliminar els objects retornats aquest mètode
+    /// Patients return with the studies found. The class requesting the study search results,
+    /// is responsible for removing returned objects this method
     QList<Patient*> getQueryResultsAsPatientStudyList();
-    ///Retornen les sèries trobades. La classe que demani els resultats de cerca de sèries, és responsable d'eliminar els objects retornats aquest mètode
+    /// Return the found series. The class requesting the series search results,
+    /// is responsible for removing returned objects this method
     QList<Series*> getQueryResultsAsSeriesList();
-    ///Retornen les imatges trobades. La classe que demani els resultats de cerca d'imatge, és responsable d'eliminar els objects retornats aquest mètode
+    /// Return the found images. The class requesting the image search results,
+    /// is responsible for removing returned objects this method
     QList<Image*> getQueryResultsAsImageList();
 
 private:
-    /// Fa el query al pacs
+    /// Query the pacs
     PACSRequestStatus::QueryRequestStatus query();
 
-    /// Aquest és un mètode que és cridat en callback per les dcmtk, per cada objecte dicom que es trobi en el PACS que compleix la query dcmtk el crida.
-    /// Aquest mètode ens insereix la llista d'estudis, sèries o imatges l'objecte dicom trobat en funció del nivell del que sigui l'objecte.
+    /// This is a method that is called callback by dcmtk,
+    /// for each object I say is in the PACS that fulfills the query dcmtk calls it.
+    /// This method inserts the list of studies,
+    /// series or images the dicom object found depending on the level of what the object is.
     static void foundMatchCallback(void *callbackData, T_DIMSE_C_FindRQ *request, int responseCount, T_DIMSE_C_FindRSP *rsp, DcmDataset *responseIdentifiers);
 
-    /// Cancel·la la consulta actual
+    ///Cancel the current query
     void cancelQuery(T_DIMSE_C_FindRQ *request);
 
-    /// Afegeix l'objecte a la llista d'estudis si no hi existeix
+    ///Add the object to the study list if it does not exist
     void addPatientStudy(DICOMTagReader *dicomTagReader);
-    /// Afegeix l'objecte dicom a la llista de sèries si no hi existeix
+    /// Adds the dicom object to the series list if it does not exist
     void addSeries(DICOMTagReader *dicomTagReader);
-    /// Afegeix l'objecte dicom a la llista d'imatges si no hi existeix
+    /// Adds the dicom object to the image list if it does not exist
     void addImage(DICOMTagReader *dicomTagReader);
 
-    /// Converteix la respota rebuda per partl del PACS a QueryRequestStatus
+    ///Converts the response received by the PACS to Query Request Status
     PACSRequestStatus::QueryRequestStatus getDIMSEStatusCodeAsQueryRequestStatus(unsigned int dimseStatusCode);
 
 private:
@@ -95,15 +103,15 @@ private:
     QList<Series*> m_seriesList;
     QList<Image*> m_imageList;
 
-    // Flag que indica si s'ha de cancel·lar la query actual
+    // Flag indicating whether the current query should be canceled
     bool m_cancelQuery;
-    // Indica si hem demanat la cancel·lació de la consulta actual
+    // Indicates whether we have requested the cancellation of the current query
     bool m_cancelRequestSent;
 
-    // Indicarà de quin PACS hem obtingut estudis, sèries, imatges
+    // It will indicate from which PACS we have obtained studies, series, images
     DICOMSource m_resultsDICOMSource;
 
-    /// Indiquen si s'ha fet un get de la llista de resultats 
+    /// Indicate whether a get from the results list has been made
     bool m_patientStudyListGot;
     bool m_seriesListGot;
     bool m_imageListGot;
