@@ -78,8 +78,8 @@ private:
     /// Steps that are executed in the second stage of processing.
     QList<PatientFillerStep*> m_secondStageSteps;
 
-    /// S'encarrega de guardar l'input durant tota l'execucció dels mòduls. S'utilitza
-    /// en cas que es processin fitxer individualment.
+    /// It is in charge of saving the input during all the execution of the modules. Is used
+    /// in case file is processed individually.
     PatientFillerInput *m_patientFillerInput;
 
     /// Counts the number of processed files.
