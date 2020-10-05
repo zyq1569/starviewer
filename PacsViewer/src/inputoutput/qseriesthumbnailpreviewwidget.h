@@ -22,55 +22,56 @@ namespace udg {
 class Series;
 
 /**
-    Ens mostrar una previsualització en forma de thumbnail de les sèries passades al Widget.
-  */
+   Show us a thumbnail preview of past series in the Widget.
+*/
 class QSeriesThumbnailPreviewWidget : public QWidget, private Ui::QSeriesThumbnailPreviewWidgetBase {
-Q_OBJECT
+    Q_OBJECT
 public:
-    /// Constructor de la classe
+    /// Class builder
     QSeriesThumbnailPreviewWidget(QWidget *parent = 0);
 
-    /// Insereix l'informació d'una sèrie
+    /// Inserts information from a series
     void insertSeries(QString studyInstanceUID, Series *series);
 
-    /// Esborra de la llista la serie amb el UID passat per paràmetre
+    /// Deletes the series from the list with the UID passed by parameter
     void removeSeries(const QString &seriesInstanceUID);
 
 public slots:
-    /// Estableix quina és la série seleccionada
+    ///Sets which series is selected
     void setCurrentSeries(const QString &seriesUID);
 
-    /// Neteja el widget i el deixa sense cap thumbnail de Series
+    ///Clears the widget and leaves it without any Series thumbnail
     void clear();
 
 signals:
-    /// Quan seleccionem una sèrie emeiteix una signal per a que el QStudyTreeWidget, tingui seleccionada la mateixa sèrie
+    /// When we select a series it emits a signal
+    /// for QStudyTreeWidget to have the same series selected
     void seriesThumbnailClicked(const QString studyInstanceUID, const QString seriesInstanceUID);
 
-    /// Quan es fa doble click emiteix un signal, perquè la sèrie sigui visualitzada
+    /// When double-clicked it emits a signal, so that the series is displayed
     void seriesThumbnailDoubleClicked(QString studyInstanceUID, QString seriesInstanceUID);
 
 private:
-    /// Crea les connexions
+    /// Create connections
     void createConnections();
 
-    /// Retorna la descripció pel thumbnail de la sèrie
+    /// Returns the description by the thumbnail of the series
     QString getSeriesThumbnailDescription(Series *series);
 
 private slots:
-    /// Slot que s'activa quan s'ha fet click sobre un thumbnail
+    /// Slot that is activated when a thumbnail is clicked
     void seriesClicked(QString IDThumbnail);
 
-    /// Slot que s'activa quan s'ha fet doble click sobre un thumbnail
+    /// Slot that is activated when a double click has been made on a thumbnail
     void seriesDoubleClicked(QString IDThumbnail);
 
 private:
-    //Guardem per cada sèrie a quin estudi pertany
+    //We save for each series to which studio it belongs
     QHash<QString, QString> m_studyInstanceUIDBySeriesInstanceUID;
 
-    //Modalitats de sèries que no són images, com (KO, PR, SR)
+    //Modalities of series that are not images, like (KO, PR, SR)
     QStringList m_DICOMModalitiesNonImage;
-    //Indica a quina ha estat la última fila que hem inseritat una sèrie que era una imatge
+    //Indicates to which last row we inserted a series that was an image
     int m_positionOfLastInsertedThumbnail;
 };
 
