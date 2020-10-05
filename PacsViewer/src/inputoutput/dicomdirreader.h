@@ -31,51 +31,53 @@ class Image;
 class Status;
 
 /**
-    Aquesta classe permet llegir un dicomdir i consultar-ne els seus elements.
-    Accedint a través de l'estructura d'arbres que representen els dicomdir Pacient/Estudi/Series/Imatges, accedim a la informació el Dicomdir per a
-    realitzar cerques.
-  */
+This class allows you to read a dicomdir and consult its elements.
+Accessing through the tree structure representing the dicomdirs
+Patient / Study / Series / Images, we access the Dicomdir information for
+perform searches.
+*/
 class DICOMDIRReader {
 public:
     DICOMDIRReader();
     ~DICOMDIRReader();
 
-    /// Obre un directori domcidr
-    /// @param dicomdirPath directori on es troba el dicomdir
-    /// @return estat del mètode
+    /// Open a domcidr directory
+    /// @param dicomdirPath directory where dicomdir is located
+    /// @return method state
     Status open(const QString &dicomdirFilePath);
 
-    /// Retorna la llista d'estudis que conté el dicomdir
-    /// @param outResultsStudyList llista amb els estudis que conté el dicomdir
-    /// @param studyMask màscara de cerca dels estudis a cercar dins el dicomdir
-    /// @return estat del mètode
+    /// Returns the list of studies contained in the dicomdir
+    /// @param outResultsStudyList list of studies contained in dicomdir
+    /// @param studyMask search mask for studies to search within the dicomdir
+    /// @return method state
     Status readStudies(QList<Patient*> &outResultsStudyList, DicomMask studyMask);
 
-    /// Retorna la llista de sèries d'un estudi que estigui en el dicomdir
-    /// @param studyUID UID de l'estudi del qual es vol consultar les sèries
-    /// @param outResultsSeriesList llista amb les sèries que conté l'estudi
-    /// @return estat del mètode
+    /// Returns the list of series of a study that is in the dicomdir
+    /// @param studyUID UID of the study whose series you want to consult
+    /// @param outResultsSeriesList lists the series that the study contains
+    /// @return method state
     Status readSeries (const QString &studyUID, const QString &seriesUID, QList<Series*> &outResultsSeriesList);
 
-    /// Retorna la llista d'imatges que conté un estudi
-    /// @param seriesUID UID de la serie que volem obtenir les imatges
-    /// @param imageList Llistat de les imatges que conté
-    /// @return estat del mètode
+    /// Returns the list of images contained in a studio
+    /// @param seriesUID UID of the series we want to get the images
+    /// @param imageList List of images it contains
+    /// @return method state
     Status readImages(const QString &seriesUID, const QString &sopInstanceUID, QList<Image*> &outResultsImageList);
 
-    /// Retorna el path del dicomdir
-    /// @return path del dicomdir
+    /// Returns the path of the dicomdir
+    /// @return path of dicomdir
     QString getDicomdirFilePath();
 
     ///
-    /// Ens retorna tots els arxius que formen aquell estudi
-    /// TODO mètode de conveniència per no haver de fer bucles raros a queryscreen i treure una dependència més de DICOMSeries/Study, etc
-    /// @param studyUID UID de l'estudi del qual volem els arxius
-    /// @return Una llista amb els paths absoluts dels arxius en qüestió
+    /// It returns all the files that make up that study
+    /// EVERY method of convenience for not having to do weird loops
+    /// to queryscreen and remove one more dependency from DICOMSeries / Study, etc
+    /// @param studyUID UID of the study whose files we want
+    /// @return A list of the absolute paths of the files in question
     QStringList getFiles(const QString &studyUID);
 
-    /// Retorna l'estructura Patient per l'estudi que compleixi la màscara que se li passi.
-    /// En la màscara només es té en compte el StudyInstanceUID.
+    /// Returns the Patient structure for the study that meets the mask passed to him.
+    /// Only the StudyInstanceUID is considered in the mask.
     Patient* retrieve(DicomMask maskToRetrieve);
 
 private:
@@ -83,48 +85,55 @@ private:
     QString m_dicomdirAbsolutePath, m_dicomdirFileName;
     bool m_dicomFilesInLowerCase;
 
-    /// Comprova que un pacient compleixi amb la màscara (comprova que compleixi el  Patient Name i Patient ID)
+    ///Check that a patient complies with the mask (check that they comply with Patient Name and Patient ID)
     bool matchPatientToDicomMask(Patient *patient, DicomMask *mask);
 
-    /// Comprova si un estudi compleix la màscara, pels camps StudyUID, StudyDate
+    /// Check if a study meets the mask, by the fields StudyUID, StudyDate
     bool matchStudyToDicomMask(Study *study, DicomMask *mask);
 
-    /// Comprova que els dos StudyUID el de la màscara i el de l'estudi facin matching. Si l'estudi UID de la màscara està buit, per defecte retorna cert.
-    /// En aquest cas fem wildcard matching
+    /// Check that the two StudyUIDs in the mask and in the study match.
+    /// If the mask UID study is empty, it returns true by default.
+    /// In this case we do wildcard matching
     bool matchDicomMaskToStudyUID(DicomMask *mask, Study *study);
 
-    /// Comprova que els dos PatientId el de la màscara i el de l'estudi facin matching. Si el Patient Id de la màscara està buit, per defecte retorna cert.
-    /// En aquest cas fem wildcard matching
+    /// Check that the two PatientId in the mask and in the study match.
+    /// If the Patient Id of the mask is empty, it returns true by default.
+    /// In this case we do wildcard matching
     bool matchDicomMaskToPatientId(DicomMask *mask, Patient *patient);
 
-    /// Comprova que la data de la màscara i la de l'estudi facin matching. Si la studyMaskDate és buida retorna cert per defecte
+    /// Check that the date of the mask and that of the studio match.
+    /// If the studyMaskDate is empty it returns true by default
     bool matchDicomMaskToStudyDate(DicomMask *mask, Study *study);
 
-    /// Comprova que el nom del pacient de la màscara i el de l'estudi facin matching. Si la studyMaskPatientName és buida retorna cert per defecte.
-    /// En aquest cas fem wildcard matching
+    /// Check that the name of the patient in the mask and that of the study match.
+    /// and the studyMaskPatientName is empty returns true by default.
+    /// In this case we do wildcard matching
     bool matchDicomMaskToPatientName(DicomMask *mask, Patient *patient);
 
-    /// A partir d'un DcmDirectoryRecord retorna les dades d'un Pacient
+    /// From a DcmDirectoryRecord returns the data of a Patient
     Patient* fillPatient(DcmDirectoryRecord *dcmDirectoryRecordPatient);
 
-    /// A partir d'un DcmDirectoryRecord retorna les dades d'un Study
+    /// From a DcmDirectoryRecord returns the data from a Study
     Study* fillStudy(DcmDirectoryRecord *dcmDirectoryRecordStudy);
 
-    /// A partir d'un DcmDirectoryRecord retorna les dades d'un Series
+    ///From a DcmDirectoryRecord returns data from a Series
     Series* fillSeries(DcmDirectoryRecord *dcmDirectoryRecordSeries);
 
-    /// A partir d'un DcmDirectoryRecord retorna les dades d'un Image
+    /// From a DcmDirectoryRecord returns the data of an Image
     Image* fillImage(DcmDirectoryRecord *dcmDirectoryRecordImage);
 
-    /// Canvia les '\' per '/'. Això es degut a que les dcmtk retornen el path de la imatge en format Windows amb els directoris separats per '\'. En el cas
-    /// de linux les hem de passar a '/'
-    /// TODO aquest mètode es pot substituir per QDir::toNativeSeparators() o similar que retornarà els separadors adequats al sistema
+    /// Change the '\' to '/'. This is because the dcmtk return the path of
+    /// the image in Windows format with the directories separated by '\'. In the case
+    /// from linux we have to pass them to '/'
+    /// ALL this method can be replaced by QDir :: toNativeSeparators () or similar
+    /// which will return the appropriate separators to the system
     /// @param original path original
-    /// @return path amb '/'
+    /// @return path with '/'
     QString backSlashToSlash(const QString &original);
 
-    /// Ens construeix el Path relatiu d'una imatge, posa les '/' correctament i posa en minúscules o majúscules el nom del fitxer en funció de si el dicomdir
-    /// conté els fitxers en minúscula o majúscula
+    /// Build us the relative Path of an image, put the '/'
+    /// correctly and capitalize the file name depending on whether the dicomdir
+    /// contains lowercase or uppercase files
     QString buildImageRelativePath(const QString &relativePath);
 };
 
