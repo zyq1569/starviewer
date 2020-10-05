@@ -68,33 +68,33 @@ signals:
     void workingStudiesChanged(const QString&, const QString&);
 
 private:
-    /// Creació de connexions
+    /// Creating connections
     void createConnections();
-    /// Inicialització del QTreeWidget on es visualitzaran els estudis relacionats
+    /// Initialization of the QTreeWidget where the related studies will be displayed
     void initializeTree();
-    /// Inicialització del widget mostrat quan s'estan cercant estudis relacionats.
+    /// Initialize the widget displayed when searching for related studies.
     void initializeLookingForStudiesWidget();
-    /// Insereix un estudi a l'arbre i genera el contenidor associat a aquest estudi.
+    /// Inserts a study into the tree and generates the container associated with that study.
     void insertStudyToTree(Study *study);
-    /// Actualitza l'amplada del QTreeWidget per aconseguir que l'scroll horitzontal no apareixi i tota la info sigui visible.
+    /// Update the width of the QTreeWidget to make the horizontal scroll not appear and all info to be visible.
     void updateWidgetWidth();
-    /// Actualitza l'alçada del QTreeWidget per aconseguir que es vegi el màxim de contingut possible.
-    /// Nota: Perquè funcioni correctament el QRelatedStudiesWidget ha de ser visible.
+    /// Update the height of the QTreeWidget to get as much content as possible.
+    /// Note: The QRelatedStudiesWidget must be visible for it to work properly.
     void updateWidgetHeight();
 
-    /// Metodes encarregats de controlar quan s'han d'emetre els signals \sa downloadingStudies i \sa studiesDownloaded;
+    /// Methods to control when the signals \ sa downloadingStudies and \ sa studiesDownloaded;
     void increaseNumberOfDownladingStudies();
     void decreaseNumberOfDownladingStudies();
 
     void initializeSearch();
 
-    /// Ressalta el QTreeWidgetItem posant el text que conté a negreta
+    /// Highlight the QTreeWidgetItem by putting the text it contains in bold
     void highlightQTreeWidgetItem(QTreeWidgetItem *item);
 
-    /// Treu del llistat de modalitats les modalitats que no són d'imatge
+    /// Remove non-image modes from the list of modes
     QStringList removeNonImageModalities(const QStringList &studiesModalities);
-    
-    /// Indica si s'ha de ressaltar l'estudi en el QTreeWidget
+
+    /// Whether to highlight the study in the QTreeWidget
     bool hasToHighlightStudy(Study *study);
 
     /// Make visible only those radio buttons that can be clicked taking into account
@@ -105,17 +105,17 @@ private:
     /// Evaluate if both current and prior studies are loaded to notify the user has changed the working studies
     void notifyWorkingStudiesChangedIfReady();
 
-    /// Insereix els estudis a l'arbre.
+    /// Insert the studies in the tree.
     void insertStudiesToTree(const QList<Study*> &studiesList);
 
 private slots:
     /// Slot executed when the query is finished
     void queryStudiesFinished(const QList<Study*> &studiesList);
 
-    /// Invoca la descàrrega i càrrega de l'estudi identificat amb l'uid proporcionat.
+    /// Invokes the download and upload of the study identified with the provided uid.
     void retrieveAndLoadStudy(const QString &studyInstanceUID);
 
-    /// Actualitzen l'estat de l'objecte i la interfície de l'estudi en qüestió.
+    /// They update the status of the object and the interface of the study in question.
     void studyRetrieveStarted(QString studyInstanceUID);
     void studyRetrieveFinished(QString studyInstanceUID);
     void studyRetrieveFailed(QString studyInstanceUID);
@@ -130,11 +130,11 @@ private slots:
     void onStudyAdded(Study *study);
 
 private:
-    /// Enumeració creada per tal de saber si els signals que emet QueryScreen pertanyen a alguna de les peticions d'aquesta classe
+    /// Enumeration created to determine if the signals that QueryScreen emits belong to any of the requests in this class
     enum Status { Initialized = 0, Pending = 1, Downloading = 2, Finished = 3, Failed = 4, Cancelled = 5 };
     enum Columns { CurrentStudy = 0, PriorStudy = 1, DownloadingStatus = 2, DownloadButton = 3, Modality = 4, Description = 5, Date = 6, Name = 7 };
 
-    /// Contenidor d'objectes associats a l'estudi que serveix per facilitar la intercomunicació
+    /// Container of objects associated with the study that serves to facilitate intercommunication
     struct StudyInfo
     {
         Study *study;
@@ -146,25 +146,25 @@ private:
         QRadioButton *priorRadioButton;
     };
 
-    /// Estructura que s'encarrega de guardar els contenidors associats a cada Study
+    /// Structure that is responsible for storing the containers associated with each Study
     QHash<QString, StudyInfo*> m_infomationPerStudy;
-    /// Widget utilitzat per mostrar la llista dels estudis relacionats
+    /// Widget used to display the list of related studies
     QTreeWidgetWithSeparatorLine *m_relatedStudiesTree;
-    /// Widget que apareix quan s'està fent la consulta dels possibles estudis relacionats.
+    /// Widget that appears when querying possible related studies.
     QWidget *m_lookingForStudiesWidget;
-    /// Objecte encarregat de cercar estudis relacionats
+    /// Object in charge of looking for related studies
     RelatedStudiesManager *m_relatedStudiesManager;
-    /// Mapper utilitzat per saber cada botó de descàrrega a quin estudi està associat.
+    /// Mapper used to know which download button is associated with which studio.
     QSignalMapper *m_signalMapper;
-    /// Mapper utilitzat per saber cada botó de descàrrega a quin estudi està associat.
+    /// Mapper used to know which download button is associated with which studio.
     QSignalMapper *m_currentStudySignalMapper;
-    /// Mapper utilitzat per saber cada botó de descàrrega a quin estudi està associat.
+    /// Mapper used to know which download button is associated with which studio.
     QSignalMapper *m_priorStudySignalMapper;
-    /// Objecte utilitzat per invocar la descàrrega d'estudis.
+    /// Object used to invoke the download of studies.
     QueryScreen *m_queryScreen;
-    /// Ens permet saber els estudis que s'estan descarregant.
+    /// Allows us to know which studies are being downloaded.
     int m_numberOfDownloadingStudies;
-    /// Pacient associat a la última cerca feta.
+    /// Patient associated with the last search performed.
     Patient *m_patient;
 
     /// Button groups for current and prior radio buttons
@@ -175,7 +175,7 @@ private:
     QString m_studyInstanceUIDOfCurrentStudy;
     QString m_studyInstanceUIDOfPriorStudy;
 
-    ///Llistat amb les modalitats dels estudis que hem de ressalar
+    /// List with the modalities of the studies that we have to highlight
     QStringList m_modalitiesOfStudiesToHighlight;
 };
 

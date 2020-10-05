@@ -31,7 +31,7 @@
 namespace udg {
 
 QRelatedStudiesWidget::QRelatedStudiesWidget(RelatedStudiesManager *relatedStudiesManager, QWidget *parent)
-   : QFrame(parent)
+    : QFrame(parent)
 {
     Q_ASSERT(relatedStudiesManager);
     
@@ -268,12 +268,12 @@ void QRelatedStudiesWidget::createConnections()
 void QRelatedStudiesWidget::initializeTree()
 {
 
-    // Inicialitzem la capçalera
+    // Let's initialize the header
     QStringList labels;
     labels << tr("Current") << tr("Prior") << "" << "" << tr("Modality") << tr("Description") << tr("Date") << tr("Name");
     m_relatedStudiesTree->setHeaderLabels(labels);
 
-    // Fem 8 columnes perquè la primera l'amagarem
+    // We make 8 columns because we will hide the first one
     m_relatedStudiesTree->setColumnCount(8);
     m_relatedStudiesTree->setRootIsDecorated(false);
     m_relatedStudiesTree->setItemsExpandable(false);
@@ -285,10 +285,10 @@ void QRelatedStudiesWidget::initializeTree()
     m_relatedStudiesTree->setUniformRowHeights(true);
     m_relatedStudiesTree->setSortingEnabled(true);
 
-    // Ordenem els estudis per data i hora
+    //We sort the studies by date and time
     m_relatedStudiesTree->sortItems(Date, Qt::DescendingOrder);
 
-    // El farem visible quan rebem la llista d'estudis previs
+    //We will make it visible when we receive the list of previous studies
     m_relatedStudiesTree->setVisible(false);
 }
 
@@ -312,7 +312,7 @@ void QRelatedStudiesWidget::insertStudyToTree(Study *study)
 {
     QTreeWidgetItem *item = new QTreeWidgetItem();
 
-    // Afegim l'item al widget
+    // We add the item to the widget
     m_relatedStudiesTree->addTopLevelItem(item);
     item->setFlags(Qt::ItemIsEnabled);
 
@@ -357,12 +357,13 @@ void QRelatedStudiesWidget::insertStudyToTree(Study *study)
 
     m_relatedStudiesTree->setItemWidget(item, DownloadingStatus, statusWidget);
 
-    // Posem el botó en un Layout amb Margin 2 per a que els Items del QTreeWidget no estiguin tant junts i el control sigui més llegible
+    /// We put the button in a Layout with Margin 2 so that the Items of the
+    /// QTreeWidget are not so close together and the control is more readable
     QIcon dowloadIcon(QString(":/images/icons/visibility.svg"));
     QPushButton *downloadButton = new QPushButton(dowloadIcon, QString(""));
     QWidget *downloadButtonWidget = new QWidget(m_relatedStudiesTree);
     QVBoxLayout *downloadButtonLayout = new QVBoxLayout(downloadButtonWidget);
-    //Apliquem 1px més de layout per la línia separadora 
+    //We apply 1px more layout for the dividing line
     downloadButtonLayout->setContentsMargins(0, 2, 0, 1);
     downloadButtonLayout->addWidget(downloadButton);
 
@@ -376,7 +377,7 @@ void QRelatedStudiesWidget::insertStudyToTree(Study *study)
 
     m_relatedStudiesTree->setItemWidget(item, DownloadButton, downloadButtonWidget);
 
-    // Guardem informació relacionada amb l'estudi per facilitar la feina
+    //We store information related to the study to facilitate the work
     StudyInfo *relatedStudyInfo = new StudyInfo;
     relatedStudyInfo->item = item;
     relatedStudyInfo->study = study;
@@ -433,7 +434,7 @@ void QRelatedStudiesWidget::insertStudiesToTree(const QList<Study*> &studiesList
             StudyInfo *studyInfo = m_infomationPerStudy.value(study->getInstanceUID());
             if (studyInfo == NULL)
             {
-                //Sempre hauria de ser més gran de 0
+                //It should always be greater than 0
                 insertStudyToTree(study);
             }
             else
@@ -470,29 +471,29 @@ void QRelatedStudiesWidget::retrieveAndLoadStudy(const QString &studyInstanceUID
 
     switch (m_relatedStudiesManager->loadStudy(studyInfo->study))
     {
-        case RelatedStudiesManager::Loaded:
-            studyInfo->status = Finished;
-            studyInfo->statusIcon->setPixmap(QPixmap(":/images/icons/dialog-ok-apply.svg"));
-            notifyWorkingStudiesChangedIfReady();
-            break;
+    case RelatedStudiesManager::Loaded:
+        studyInfo->status = Finished;
+        studyInfo->statusIcon->setPixmap(QPixmap(":/images/icons/dialog-ok-apply.svg"));
+        notifyWorkingStudiesChangedIfReady();
+        break;
 
-        case RelatedStudiesManager::Failed:
-            studyInfo->status = Failed;
-            studyInfo->statusIcon->setPixmap(QPixmap(":/images/icons/dialog-cancel.svg"));
-            studyInfo->downloadButton->setEnabled(true);
-            break;
+    case RelatedStudiesManager::Failed:
+        studyInfo->status = Failed;
+        studyInfo->statusIcon->setPixmap(QPixmap(":/images/icons/dialog-cancel.svg"));
+        studyInfo->downloadButton->setEnabled(true);
+        break;
 
-        case RelatedStudiesManager::Retrieving:
-        {
-            studyInfo->status = Pending;
+    case RelatedStudiesManager::Retrieving:
+    {
+        studyInfo->status = Pending;
 
-            QMovie *statusAnimation = new QMovie();
-            studyInfo->statusIcon->setMovie(statusAnimation);
-            statusAnimation->setFileName(":/images/animations/loader.gif");
-            statusAnimation->start();
+        QMovie *statusAnimation = new QMovie();
+        studyInfo->statusIcon->setMovie(statusAnimation);
+        statusAnimation->setFileName(":/images/animations/loader.gif");
+        statusAnimation->start();
 
-            this->increaseNumberOfDownladingStudies();
-        }
+        this->increaseNumberOfDownladingStudies();
+    }
     }
 }
 
@@ -500,7 +501,7 @@ void QRelatedStudiesWidget::studyRetrieveStarted(QString studyInstanceUID)
 {
     StudyInfo *studyInfo = m_infomationPerStudy.value(studyInstanceUID);
 
-    // Comprovem que el signal capturat de QueryScreen sigui nostre
+    // We check that the captured QueryScreen signal is ours
     if (studyInfo != NULL)
     {
         if (studyInfo->status == Pending)
@@ -514,7 +515,7 @@ void QRelatedStudiesWidget::studyRetrieveFinished(QString studyInstanceUID)
 {
     StudyInfo *studyInfo = m_infomationPerStudy.value(studyInstanceUID);
 
-    // Comprovem que el signal capturat de QueryScreen sigui nostre
+    // We check that the captured QueryScreen signal is ours
     if (studyInfo != NULL)
     {
         if (studyInfo->status == Downloading)
@@ -532,7 +533,7 @@ void QRelatedStudiesWidget::studyRetrieveFailed(QString studyInstanceUID)
 {
     StudyInfo *studyInfo = m_infomationPerStudy.value(studyInstanceUID);
 
-    // Comprovem que el signal capturat de QueryScreen sigui nostre
+    //We check that the captured QueryScreen signal is ours
     if (studyInfo != NULL)
     {
         if (studyInfo->status == Downloading)
@@ -550,7 +551,7 @@ void QRelatedStudiesWidget::studyRetrieveCancelled(QString studyInstanceUID)
 {
     StudyInfo *studyInfo = m_infomationPerStudy.value(studyInstanceUID);
 
-    // Comprovem que el signal capturat de QueryScreen sigui nostre
+    // We check that the captured QueryScreen signal is ours
     if (studyInfo != NULL)
     {
         if (studyInfo->status == Downloading || studyInfo->status == Pending)
@@ -667,8 +668,10 @@ void QRelatedStudiesWidget::updateVisibleCurrentRadioButtons()
             }
         }
     }
-    // Don't use processEvents() here because it can cause a crash if the application is closed while studies are being inserted:
-    // the close event is processed and this object is deleted, but then the execution continues with an invalid 'this' pointer
+    ///Don't use processEvents() here because it can cause a crash if the
+    ///application is closed while studies are being inserted:
+    ///the close event is processed and this object is deleted,
+    ///but then the execution continues with an invalid 'this' pointer
 }
 
 void QRelatedStudiesWidget::updateVisiblePriorRadioButtons()
@@ -696,8 +699,8 @@ void QRelatedStudiesWidget::updateVisiblePriorRadioButtons()
             }
         }
     }
-    // Don't use processEvents() here because it can cause a crash if the application is closed while studies are being inserted:
-    // the close event is processed and this object is deleted, but then the execution continues with an invalid 'this' pointer
+    /// Don't use processEvents() here because it can cause a crash if the application is closed while studies are being inserted:
+    /// the close event is processed and this object is deleted, but then the execution continues with an invalid 'this' pointer
 }
 
 void QRelatedStudiesWidget::onStudyAdded(Study *study)
