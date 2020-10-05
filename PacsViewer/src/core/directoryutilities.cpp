@@ -38,11 +38,11 @@ bool DirectoryUtilities::deleteDirectory(const QString &directoryPath, bool dele
     {
         if (deleteRootDirectory)
         {
-            ERROR_LOG("Hi ha hagut errors en l'esborrat del directori i del seu contingut de " + directoryPath);
+            ERROR_LOG("There were errors deleting the directory and its contents" + directoryPath);
         }
         else
         {
-            ERROR_LOG("Hi ha hagut errors en l'esborrat del contingut del directori " + directoryPath);
+            ERROR_LOG("There were errors deleting the contents of the directory" + directoryPath);
         }
     }
     return result;
@@ -55,7 +55,7 @@ bool DirectoryUtilities::copyDirectory(const QString &sourceDirectoryPath, const
 
     if (!sourceDirectory.exists())
     {
-        ERROR_LOG(QString("El directori origen %1 no existeix").arg(sourceDirectoryPath));
+        ERROR_LOG(QString("Source directory% 1 does not exist").arg(sourceDirectoryPath));
         return false;
     }
 
@@ -63,12 +63,12 @@ bool DirectoryUtilities::copyDirectory(const QString &sourceDirectoryPath, const
     {
         if (!destinationDirectory.mkdir(destinationDirectoryPath))
         {
-            ERROR_LOG("No s'ha pogut crear el directori " + destinationDirectoryPath);
+            ERROR_LOG("Could not create directory" + destinationDirectoryPath);
             return false;
         }
     }
 
-    // Copiem els fitxers del directori
+    // We copy the files from the directory
     files = sourceDirectory.entryList(QDir::Files);
     for (int i = 0; i < files.count(); i++)
     {
@@ -77,12 +77,12 @@ bool DirectoryUtilities::copyDirectory(const QString &sourceDirectoryPath, const
 
         if (!QFile::copy(sourceFile, destinationFile))
         {
-            ERROR_LOG(QString("No s'ha pogut copiar l'arxiu %1 al seu destí %2").arg(sourceFile, destinationFile));
+            ERROR_LOG(QString("Could not copy file% 1 to destination% 2").arg(sourceFile, destinationFile));
             return false;
         }
     }
 
-    // Copiem els subdirectoris
+    // We copy the subdirectories
     directories = sourceDirectory.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
     for (int i = 0; i < directories.count(); i++)
     {
@@ -126,7 +126,7 @@ bool DirectoryUtilities::removeDirectory(const QDir &dir, bool deleteRootDirecto
                 if (!file.remove())
                 {
                     ok = false;
-                    ERROR_LOG("No s'ha pogut esborrar el fitxer " + path);
+                    ERROR_LOG("The file could not be deleted" + path);
                 }
                 else
                 {
@@ -141,7 +141,7 @@ bool DirectoryUtilities::removeDirectory(const QDir &dir, bool deleteRootDirecto
             if (!dir.rmdir(dir.absolutePath()))
             {
                 ok = false;
-                ERROR_LOG("No s'ha pogut esborrar el directori " + dir.absolutePath());
+                ERROR_LOG("The directory could not be deleted " + dir.absolutePath());
             }
         }
     }

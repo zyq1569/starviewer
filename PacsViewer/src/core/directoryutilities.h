@@ -23,25 +23,25 @@ class QDir;
 namespace udg {
 
 /**
-    Classe que encapsula operacions d'utilitat amb directoris
-  */
+Class that encapsulates utility operations with directories
+*/
 class DirectoryUtilities : public QObject {
-Q_OBJECT
+    Q_OBJECT
 public:
     DirectoryUtilities();
     ~DirectoryUtilities();
 
-    /// Esborra el contingut del directori i el directori passat per paràmetres
-    /// @param directoryPath Path del directori a esborrar
-    /// @param deleteRootDirectory Indica si s'ha d'esborrar només el contingu del directori o també el directori arrel passat per paràmetre. Si fals només
-    /// s'esborra el contingut, si és cert s'esborra el contingut i el directori passat per paràmetre
-    /// @return Indica si l'operacio s'ha realitzat amb èxit
+    /// Clears the contents of the directory and the directory passed by parameters
+    /// @param directoryPath Path of the directory to delete
+    /// @param deleteRootDirectory Indicates whether to delete only the contents of the directory or also the root directory passed by parameter. If false only
+    /// deletes the content, if true deletes the content and the directory passed by parameter
+    /// @return Indicates whether the operation was successful
     bool deleteDirectory(const QString &directoryPath, bool deleteRootDirectory);
 
-    /// Copia el directori origen al directori destí
+    /// Copy the source directory to the destination directory
     static bool copyDirectory(const QString &sourceDirectory, const QString &sourceDestination);
     
-    /// Ens indica si un directori està buit
+    ///Tells us if a directory is empty
     bool isDirectoryEmpty(const QString &directoryPath);
 
 signals:
