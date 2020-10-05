@@ -51,20 +51,20 @@ QString DisplayShutter::getShapeAsDICOMString() const
 {
     switch (m_shape)
     {
-        case DisplayShutter::UndefinedShape:
-            return "";
+    case DisplayShutter::UndefinedShape:
+        return "";
 
-        case DisplayShutter::RectangularShape:
-            return "RECTANGULAR";
+    case DisplayShutter::RectangularShape:
+        return "RECTANGULAR";
 
-        case DisplayShutter::CircularShape:
-            return "CIRCULAR";
+    case DisplayShutter::CircularShape:
+        return "CIRCULAR";
 
-        case DisplayShutter::PolygonalShape:
-            return "POLYGONAL";
+    case DisplayShutter::PolygonalShape:
+        return "POLYGONAL";
 
-        default:
-            return "";
+    default:
+        return "";
     }
 }
 
@@ -80,8 +80,8 @@ unsigned short int DisplayShutter::getShutterValue() const
 
 QColor DisplayShutter::getShutterValueAsQColor() const
 {
-    // El rang de valors del shutter pot anar de 0 a 65535 (0xFFFF)
-    // Cal escalar aquest valor al rang que accepta QColor en format HSV que va de 0 a 255 (0xFF)
+    // The shutter value range can range from 0 to 65535 (0xFFFF)
+    // This value must be scaled to the range accepted by QColor in HSV format from 0 to 255 (0xFF)
     return QColor::fromHsv(0, 0, (m_shutterValue * 255) / 0xFFFF);
 }
 
@@ -149,7 +149,7 @@ bool DisplayShutter::setPoints(const QPoint &topLeft, const QPoint &bottomRight)
     }
     
     m_shutterPolygon.clear();
-    m_shutterPolygon << topLeft; 
+    m_shutterPolygon << topLeft;
     m_shutterPolygon << QPoint(bottomRight.x(), topLeft.y());
     m_shutterPolygon << bottomRight;
     m_shutterPolygon << QPoint(topLeft.x(), bottomRight.y());
@@ -187,47 +187,47 @@ bool DisplayShutter::setPoints(const QString &pointsString)
     
     switch (m_shape)
     {
-        case RectangularShape:
-            {
-                if (pointsList.count() != 2)
-                {
-                    return false;
-                }
-                
-                QStringList topLeft = pointsList.at(0).split(",");
-                QStringList bottomRight = pointsList.at(1).split(",");
-                return setPoints(QPoint(topLeft.at(0).toInt(), topLeft.at(1).toInt()), QPoint(bottomRight.at(0).toInt(), bottomRight.at(1).toInt()));
-            }
-            break;
-
-        case CircularShape:
-            {
-                if (pointsList.count() != 2)
-                {
-                    return false;
-                }
-                
-                QStringList centre = pointsList.at(0).split(",");
-                return setPoints(QPoint(centre.at(0).toInt(), centre.at(1).toInt()), pointsList.at(1).toInt());
-            }
-            break;
-
-        case PolygonalShape:
-            {
-                QPolygon polygon;
-                
-                for (int i = 0; i < pointsList.count(); ++i)
-                {
-                    QStringList point = pointsList.at(i).split(",");
-                    polygon << QPoint(point.at(0).toInt(), point.at(1).toInt());
-                }
-                
-                return setPoints(polygon);
-            }
-            break;
-
-        case UndefinedShape:
+    case RectangularShape:
+    {
+        if (pointsList.count() != 2)
+        {
             return false;
+        }
+
+        QStringList topLeft = pointsList.at(0).split(",");
+        QStringList bottomRight = pointsList.at(1).split(",");
+        return setPoints(QPoint(topLeft.at(0).toInt(), topLeft.at(1).toInt()), QPoint(bottomRight.at(0).toInt(), bottomRight.at(1).toInt()));
+    }
+        break;
+
+    case CircularShape:
+    {
+        if (pointsList.count() != 2)
+        {
+            return false;
+        }
+
+        QStringList centre = pointsList.at(0).split(",");
+        return setPoints(QPoint(centre.at(0).toInt(), centre.at(1).toInt()), pointsList.at(1).toInt());
+    }
+        break;
+
+    case PolygonalShape:
+    {
+        QPolygon polygon;
+
+        for (int i = 0; i < pointsList.count(); ++i)
+        {
+            QStringList point = pointsList.at(i).split(",");
+            polygon << QPoint(point.at(0).toInt(), point.at(1).toInt());
+        }
+
+        return setPoints(polygon);
+    }
+        break;
+
+    case UndefinedShape:
+        return false;
     }
 
     return false;
@@ -244,38 +244,38 @@ QString DisplayShutter::getPointsAsString() const
     
     switch (m_shape)
     {
-        case DisplayShutter::UndefinedShape:
-            break;
+    case DisplayShutter::UndefinedShape:
+        break;
 
-        case DisplayShutter::RectangularShape:
-            {
-                QPoint topLeft = m_shutterPolygon.at(0);
-                QPoint bottomRight = m_shutterPolygon.at(2);
-                pointsString = QString("%1,%2;%3,%4").arg(topLeft.x()).arg(topLeft.y()).arg(bottomRight.x()).arg(bottomRight.y());
-            }
-            break;
+    case DisplayShutter::RectangularShape:
+    {
+        QPoint topLeft = m_shutterPolygon.at(0);
+        QPoint bottomRight = m_shutterPolygon.at(2);
+        pointsString = QString("%1,%2;%3,%4").arg(topLeft.x()).arg(topLeft.y()).arg(bottomRight.x()).arg(bottomRight.y());
+    }
+        break;
 
-        case DisplayShutter::CircularShape:
-            {
-                QPoint firstPoint = m_shutterPolygon.first();
-                QPoint midPoint = m_shutterPolygon.at(m_shutterPolygon.count() / 2);
+    case DisplayShutter::CircularShape:
+    {
+        QPoint firstPoint = m_shutterPolygon.first();
+        QPoint midPoint = m_shutterPolygon.at(m_shutterPolygon.count() / 2);
 
-                int radius = abs(firstPoint.x() - midPoint.x()) / 2;
-                QPoint centre;
-                centre.setX(firstPoint.x() - radius);
-                centre.setY(firstPoint.y());
-                pointsString = QString("%1,%2;%3").arg(centre.x()).arg(centre.y()).arg(radius);
-            }
-            break;
+        int radius = abs(firstPoint.x() - midPoint.x()) / 2;
+        QPoint centre;
+        centre.setX(firstPoint.x() - radius);
+        centre.setY(firstPoint.y());
+        pointsString = QString("%1,%2;%3").arg(centre.x()).arg(centre.y()).arg(radius);
+    }
+        break;
 
-        case DisplayShutter::PolygonalShape:
-            foreach(const QPoint &point, m_shutterPolygon)
-            {
-                pointsString += QString("%1,%2;").arg(point.x()).arg(point.y());
-            }
-            // Eliminem el ; final per complir amb el format
-            pointsString.chop(1);
-            break;
+    case DisplayShutter::PolygonalShape:
+        foreach(const QPoint &point, m_shutterPolygon)
+        {
+            pointsString += QString("%1,%2;").arg(point.x()).arg(point.y());
+        }
+        // We eliminate the; final to comply with the format
+        pointsString.chop(1);
+        break;
     }
 
     return pointsString;
@@ -363,25 +363,25 @@ bool DisplayShutter::shapeMatchesPointsStringFormat(ShapeType shape, const QStri
     const QString PointPatternString(IntegerPatternString + "," + IntegerPatternString);
     switch (shape)
     {
-        case RectangularShape:
-            // 2 punts separats per ;
-            expression.setPattern(PointPatternString + ";" + PointPatternString);
-            break;
-            
-        case CircularShape:
-            // Centre;radi
-            expression.setPattern(PointPatternString + ";" + IntegerPatternString);
-            break;
+    case RectangularShape:
+        //2 points separated by;
+        expression.setPattern(PointPatternString + ";" + PointPatternString);
+        break;
 
-        case PolygonalShape:
-            // Com a mínim 3 punts separats per ;
-            expression.setPattern("(" + PointPatternString + ";){2,}" + PointPatternString);
-            break;
+    case CircularShape:
+        // Center, works
+        expression.setPattern(PointPatternString + ";" + IntegerPatternString);
+        break;
 
-        case UndefinedShape:
-            // Si no hi ha forma definida, no hi ha cap patró vàlid
-            return false;
-            break;
+    case PolygonalShape:
+        // At least 3 points separated by;
+        expression.setPattern("(" + PointPatternString + ";){2,}" + PointPatternString);
+        break;
+
+    case UndefinedShape:
+        // If there is no defined shape, there is no valid pattern
+        return false;
+        break;
     }
 
     return expression.exactMatch(pointsString);

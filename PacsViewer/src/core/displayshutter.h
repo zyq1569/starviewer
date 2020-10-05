@@ -27,9 +27,9 @@ class vtkImageData;
 namespace udg {
 
 /*
-    Un display shutter consisteix en una forma geomètrica (cercle, rectangle o polígon)
-    que defineix la zona que ha de ser visible en la imatge que s'associa. La part continguda dins de la forma és la visible i la
-    que queda fora és la part oclosa.
+A shutter display consists of a geometric shape (circle, rectangle or polygon)
+ which defines the area that should be visible in the associated image. The part contained within the form is the visible and the
+ what is left out is the occluded part.
  */
 class DisplayShutter {
 public:
@@ -38,70 +38,74 @@ public:
 
     enum ShapeType { UndefinedShape = 0, RectangularShape, PolygonalShape, CircularShape };
     
-    /// Assigna/Obtè la forma del shutter
+    /// Assign / Get the shape of the shutter
     void setShape(ShapeType shape);
     ShapeType getShape() const;
 
-    /// Ens retorna la forma en una cadena de text segons els valors establerts pel DICOM
+    /// It returns the form to us in a text string according to the values established by the DICOM
     QString getShapeAsDICOMString() const;
     
-    /// Valor de gris amb el que s'hauria de pintar la part opaca del shutter
+    /// Value of gray with which the opaque part of the shutter should be painted
     void setShutterValue(unsigned short int value);
     unsigned short int getShutterValue() const;
 
-    /// Ens retorna el valor del shutter en forma de QColor
+    /// It returns the value of the shutter in the form of QColor
     QColor getShutterValueAsQColor() const;
     
-    /// Mètodes per assignar els punts per cada tipus de forma. En cas que el format de punts no es correspongui
-    /// amb la forma ja assignada, retornarà fals i no es guardarà cap punt. En cas que no s'hagi definit cap forma
-    /// (shape = UndefinedShape) el mètode assignarà automàticament la forma que pertoqui per aquell mètode guardant els punts indicats.
-    
-    /// Assigna el centre i el radi per la forma circular
+    /// Methods for assigning points for each type of shape. In case the dot format does not match
+    /// with the form already assigned, it will return false and no points will be saved. In case no form has been defined
+    /// (shape = UndefinedShape) the method will automatically assign the appropriate shape
+    /// by that method saving the indicated points.
+    /// Assign the center and radius to the circular shape
     bool setPoints(const QPoint &centre, int radius);
     
-    /// Assigna els vèrtexs per la forma poligonal
+    ///Assign the vertices to the polygonal shape
     bool setPoints(const QVector<QPoint> &vertices);
     
-    /// Assigna els punts superior esquerre i inferior dret que defineixen la forma rectangular
+    /// Assign the upper left and lower right points that define the rectangular shape
     bool setPoints(const QPoint &topLeft, const QPoint &bottomRight);
 
-    /// Assigna els punts en format text. Cada punt tindrà la forma x,x, dos valors enters (x) separats per coma (,) 
-    /// Cada punt dins de la llista anirà separat per punt i coma (;)
-    /// Per la forma rectangular tindrem 2 punts corresponents al punt superior esquerre i al punt inferior dret del rectangle
-    /// Per la forma circular el format serà centre;radi on radi serà un valor enter
-    /// Per la forma poligonal el format serà un llistat de punts amb un mínim de 3 elements
-    /// En cas que el format de punts no es correspongui amb la forma del shutter, retornarà fals, cert altrament
-    /// Si la forma és indefinida, tractarà de veure si es correspon amb algun format de punts definit i li assignarà en cas de trobar-ne correspondència
+    /// Assign points in text format. Each point will have the form x, x, two integer values (x) separated by commas (,)
+    /// Each dot in the list will be separated by semicolons (;)
+    /// For the rectangular shape we will have 2 points corresponding to the point
+    /// upper left and at the lower right point of the rectangle
+    /// For the circular shape the format will be center, radius where radius will be an integer value
+    /// For the polygonal shape the format will be a list of points with a minimum of 3 elements
+    /// In case the dot format does not match the shape of the shutter, it will return false, otherwise true
+    /// If the form is indefinite, it will try to see if it corresponds
+    /// with some defined point format and will assign it in case you find a match
     bool setPoints(const QString &pointsString);
     
     /// Retorna el shutter en forma de QPolygon
     QPolygon getAsQPolygon() const;
 
-    /// Retorna els punts del shutter en format d'string. El format serà el mateix que el de setPoints(const QString &)
+    /// Returns the shutter points in string format. He
+    /// format will be the same as setPoints (const QString &)
     QString getPointsAsString() const;
 
-    /// Retorna el shutter com una QImage de mides width i height
+    ///Returns the shutter as a QImage of width and height sizes
     QImage getAsQImage(int width, int height) const;
 
     /// Returns the shutter in vtkImageData format, with extent defined by given width and height.
     vtkSmartPointer<vtkImageData> getAsVtkImageData(int width, int height) const;
     
-    /// Donada una llista de shutters, ens retorna el shutter resultant de la intersecció d'aquests. 
-    /// En quant al color resultant, serà la mitjana de tots els shutters de la llista.
+    ///Given a list of shutters, it returns the shutter resulting from the intersection of these.
+    /// As for the resulting color, it will be the average of all the shutters in the list.
     static DisplayShutter intersection(const QList<DisplayShutter> &shuttersList);
 
 private:
-    /// Comprova que el format de l'string de punts és correcte segons la forma donada
+    /// Check that the format of the dot string is correct according to the given shape
     bool shapeMatchesPointsStringFormat(ShapeType shape, const QString &pointsString);
 
 private:
     /// Forma del shutter
     ShapeType m_shape;
 
-    /// Polígon que defineix el shutter. Independentment de la forma que tingui definida sempre es guardarà internament com un polígon.
+    /// Polygon that defines the shutter. Regardless of
+    /// the shape you have defined will always be saved internally as a polygon.
     QPolygon m_shutterPolygon;
     
-    /// Valor de gris amb el que s'ha de pintar la part opaca del shutter
+    ///Value of gray with which to paint the opaque part of the shutter
     unsigned short int m_shutterValue;
 };
 
