@@ -5,12 +5,12 @@ INITIALIZE_EASYLOGGINGPP
 #include <QDir>
 #include <QApplication>
 
-// Definicions globals d'aplicació
+// Global definitions of application
 #include "starviewerapplication.h"
 #include <QProcess>
 
 
-/// Imprimim l'ajuda del programa
+/// We print the program help
 void printHelp()
 {
     printf("Invalid arguments: you must specify one parameter, the accession number of the study to retrieve.\n\n");
@@ -19,27 +19,27 @@ void printHelp()
 
 QString getStarviewerExecutableFilePath()
 {
-    #ifdef _WIN32
-        // En windows per poder executar l'starviewer hem de tenir en compte que si està en algun directori que conte espais
-        // com el directori C:\Program Files\Starviewer\starviewer.exe, hem de posar el path entre cometes
-        // per a que no ho interpreti com a paràmetres, per exemple "C:\Program Files\Starviewer\starviewer.exe"
+#ifdef _WIN32
+    // In windows to be able to run the starviewer we must keep in mind that if it is in a directory that contains spaces
+    // like the C: \ Program Files \ Starviewer \ starviewer.exe directory, we have to put the path in quotes
+    // so that it does not interpret it as parameters, for example "C: \ Program Files \ Starviewer \ starviewer.exe"
 
-        // Afegim les cometes per si algun dels directori conté espai
-        return "\"" + QCoreApplication::applicationDirPath() + "/starviewer.exe" + "\"";
-    #else
-        return QCoreApplication::applicationDirPath() + "/starviewer";
-    #endif
+    // We add quotes in case any of the directory contains space
+    return "\"" + QCoreApplication::applicationDirPath() + "/starviewer.exe" + "\"";
+#else
+    return QCoreApplication::applicationDirPath() + "/starviewer";
+#endif
 }
 
-/// Engega un starviewer passant-li per comandes de línia el accessionNumber del estudi a descarragar
+/// Start a starviewer by going through line commands the accessionNumber of the studio to download
 void retrieveStudy(QString accessionNumber)
 {
     QProcess process;
     QString starviewerCommandLine = " -accessionnumber " + accessionNumber;
 
-    // Executem una instància del Starviewer utiltizant la opció de línia de comandes -accessionnumber "valor del accessio number"
+    //We run an instance of Starviewer using the command line option -accessionnumber "accessio value number"
 
-    INFO_LOG("Starviewer_sapwrapper::S'iniciara nova instancia del Starviewer per demanar descarrega de l'estudi amb accession number" + accessionNumber);
+    INFO_LOG("Starviewer_sapwrapper::New instance of Starviewer will start to request download of the studio with accession number" + accessionNumber);
     process.startDetached(getStarviewerExecutableFilePath() + starviewerCommandLine);
 }
 
@@ -60,12 +60,12 @@ int main(int argc, char *argv[])
 
     if (parametersList.count() == 2)
     {
-        // Hem d'agafar el segon paràmetre perquè el primer és el nom del programa
+        // We need to take the second parameter because the first is the name of the program
         retrieveStudy(parametersList.at(1));
     }
     else
     {
-        INFO_LOG(QString("StarviewerSAPWrapper::Número de parametres incorrecte, s'han passat %1 parametres").arg(QString().setNum(argc - 1)));
+        INFO_LOG(QString("StarviewerSAPWrapper :: Incorrect number of parameters,% 1 parameters passed").arg(QString().setNum(argc - 1)));
         printHelp();
     }
 
