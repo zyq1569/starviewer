@@ -28,74 +28,77 @@ namespace udg {
 
 
 /**
-    Aquesta classe és un widget quen ens permet la previsualització de thumbnails. Hi podem afegir thumbnails, treure, saber quin és el seleccionat,...
-  */
+This class is a widget that allows us to preview thumbnails.
+We can add thumbnails, remove, know which is selected, ...
+*/
 class QThumbnailsPreviewWidget : public QWidget, private Ui::QThumbnailsPreviewWidgetBase {
-Q_OBJECT
+    Q_OBJECT
 public:
-    /// Constructor de la classe
+    ///Class builder
     QThumbnailsPreviewWidget(QWidget *parent = 0);
 
-    /// Ens afegeix el thumbnail al final. El paràmetre ID és un identificador únic del thumbnail.
+    /// We add the thumbnail at the end. The ID parameter is a unique identifier of the thumbnail.
     void append(QString IDThumbnail, const QPixmap &thumbnail, QString thumbnailDescription);
 
-    /// Ens insereix el thumbnail a la posició especificada. Si la posició és més gran que el número d'elements actuals, l'insereix al final
+    /// Inserts the thumbnail to the specified position.
+    /// If the position is greater than the number of current items, insert it at the end
     void insert(int position, QString IDThumbnail, const QPixmap &thumbnail, QString thumbnailDescription);
 
-    /// Treu el thumbnail de la previsualització.
+    /// Remove thumbnail from preview.
     void remove(QString IDThumbnail);
 
-    /// Selecciona el Thumbnail amb l'ID passat
+    /// Select Thumbnail with last ID
     void setCurrentThumbnail(QString IDThumbnail);
 
-    /// Retorna el ID del Thumbnail Seleccionat
+    ///Returns the selected Thumbnail ID
     QStringList getSelectedThumbnailsID();
 
-    /// Assigna/Obté el mode de selecció dels Thumbnails del control. Per defecte el valor és SingleSelection
+    /// Assigns / Gets the selection mode of the control's Thumbnails. The default value is SingleSelection
     void setSelectionMode(QAbstractItemView::SelectionMode selectionMode);
     QAbstractItemView::SelectionMode getSelectionMode();
 
 public slots:
-    /// Neteja el ListWidget de sèries
+    ///Clean the ListWidget of series
     void clear();
 
 signals:
-    /// Signal que s'emet quan han clickat un thumbnail
+    /// Signal that is emitted when they have clicked a thumbnail
     void thumbnailClicked(const QString &IDThumbnail);
-    /// Signal que s'emet quan han fet doble click sobre un thumbnail
+    /// Signal that is emitted when they have double clicked on a thumbnail
     void thumbnailDoubleClicked(const QString IDThumbnail);
 
 private:
-    /// Ens crea un QListWidgetItem a partir de les dades passades
+    /// We create a QListWidgetItem from the past data
     QListWidgetItem* createQListWidgetItem(QString IDThumbnail, const QPixmap &thumbnail, QString thumbnailDescription);
 
-    /// Retorna un getQListWidgetItem a partir del seu ID, si no el troba retorna null
+    /// Returns a getQListWidgetItem from its ID, if it does not find it returns null
     QListWidgetItem *getQListWidgetItem(QString IDThumbnail);
 
-    /// Crea les connexions dels signals i slots
+    ///Creates signal and slot connections
     void createConnections();
 
 private slots:
-    /// Slot que s'activa quant es selecciona una serie, emiteix signal a QStudyTreeWidget, perquè selecciona la mateixa serie que el QSeriesListWidget
-    ///  @param serie Seleccionada
+    /// Slot that is activated when a series is selected,
+    /// sends signal to QStudyTreeWidget, because it selects the same series as QSeriesListWidget
+    /// @param selected series
     void itemClicked(QListWidgetItem *item);
 
-    /// Slot que s'activa quant es fa doblec
-    ///  @param item de la serie Seleccionada
+    /// Slot that is activated when folding is done
+    /// @param item of the Selected series
     void itemDoubleClicked(QListWidgetItem *item);
 
 private:
-    /// Mida de la imatge escalada a l'eix x
+    ///Image size scaled x-axis
     static const int scaledSeriesSizeX;
-    /// Mida de la imatge escalada a l'eix y
+    ///Image size scaled on y axis
     static const int scaledSeriesSizeY;
 
-    /// Guardem per cada sèrie a quin estudi pertany
+    /// We save for each series to which studio it belongs
     QHash<QString, QString> m_HashSeriesStudy;
-    /// Modalitats de sèries que no són images, com (KO, PR, SR)
+    ///Modalities of series that are not images, like (KO, PR, SR)
     QStringList m_nonDicomImageSeriesList;
 
-    // Indica a quina ha estat la última fila que hem inseritat una sèrie que era una imatge
+    //Indicates to which last row we inserted a series that was an image
     int m_lastInsertedImageRow;
 };
 

@@ -23,12 +23,12 @@ const int QThumbnailsPreviewWidget::scaledSeriesSizeX = 100;
 const int QThumbnailsPreviewWidget::scaledSeriesSizeY = 100;
 
 QThumbnailsPreviewWidget::QThumbnailsPreviewWidget(QWidget *parent)
- : QWidget(parent)
+    : QWidget(parent)
 {
     setupUi(this);
     QSize size;
 
-    // Definim la mida de la imatge que mostrem
+    // We define the size of the image we show
     size.setHeight(scaledSeriesSizeY);
     size.setWidth(scaledSeriesSizeX);
     m_thumbnailsPreviewWidget->setIconSize(size);
