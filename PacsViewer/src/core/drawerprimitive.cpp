@@ -19,8 +19,8 @@
 namespace udg {
 
 DrawerPrimitive::DrawerPrimitive(QObject *parent)
-: QObject(parent), m_internalRepresentation(VTKRepresentation), m_isVisible(true), m_coordinateSystem(WorldCoordinateSystem), m_color(QColor(255, 165, 0)),
-  m_isFilled(false), m_linePattern(ContinuousLinePattern), m_lineWidth(2.0), m_opacity(1.0), m_modified(false), m_referenceCount(0), m_coordinate(0)
+    : QObject(parent), m_internalRepresentation(VTKRepresentation), m_isVisible(true), m_coordinateSystem(WorldCoordinateSystem), m_color(QColor(255, 165, 0)),
+      m_isFilled(false), m_linePattern(ContinuousLinePattern), m_lineWidth(2.0), m_opacity(1.0), m_modified(false), m_referenceCount(0), m_coordinate(0)
 {
     m_isErasable = true;
     connect(this, SIGNAL(changed()), SLOT(setModified()));
@@ -141,7 +141,7 @@ bool DrawerPrimitive::isModified() const
     return m_modified;
 }
 
-// HACK Mètodes de sucedani d'smart pointer
+//HACK Smart pointer substitute methods
 void DrawerPrimitive::increaseReferenceCount()
 {
     m_referenceCount++;
@@ -165,7 +165,7 @@ bool DrawerPrimitive::hasOwners() const
     return m_referenceCount > 0;
 }
 
-// FI Mètodes de sucedani d'smart pointer
+// FI Smart pointer substitute methods
 
 void DrawerPrimitive::setModified(bool modified)
 {
@@ -181,13 +181,13 @@ vtkCoordinate* DrawerPrimitive::getVtkCoordinateObject()
     m_coordinate = vtkCoordinate::New();
     switch (m_coordinateSystem)
     {
-        case WorldCoordinateSystem:
-            m_coordinate->SetCoordinateSystemToWorld();
-            break;
+    case WorldCoordinateSystem:
+        m_coordinate->SetCoordinateSystemToWorld();
+        break;
 
-        case DisplayCoordinateSystem:
-            m_coordinate->SetCoordinateSystemToDisplay();
-            break;
+    case DisplayCoordinateSystem:
+        m_coordinate->SetCoordinateSystemToDisplay();
+        break;
     }
     return m_coordinate;
 }
