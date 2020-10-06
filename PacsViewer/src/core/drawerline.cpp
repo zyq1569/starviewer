@@ -25,7 +25,8 @@
 namespace udg {
 
 DrawerLine::DrawerLine(QObject *parent)
- : DrawerPrimitive(parent), m_vtkLineSource(0), m_vtkActor(0), m_vtkBackgroundActor(0), m_vtkMapper(0), m_vtkPropAssembly(0)
+    : DrawerPrimitive(parent), m_vtkLineSource(0), m_vtkActor(0),
+      m_vtkBackgroundActor(0), m_vtkMapper(0), m_vtkPropAssembly(0)
 {
 }
 
@@ -88,13 +89,13 @@ vtkProp* DrawerLine::getAsVtkProp()
     {
         m_vtkPropAssembly = vtkPropAssembly::New();
 
-        // Creem el pipeline de l'm_vtkActor
+        // We create the m_vtkActor pipeline
         m_vtkActor = vtkActor2D::New();
         m_vtkBackgroundActor = vtkActor2D::New();
         m_vtkLineSource = vtkLineSource::New();
         m_vtkMapper = vtkPolyDataMapper2D::New();
 
-        // Assignem els punts a la línia
+        // We assign the points to the line
         m_vtkLineSource->SetPoint1(m_firstPoint);
         m_vtkLineSource->SetPoint2(m_secondPoint);
 
@@ -102,7 +103,7 @@ vtkProp* DrawerLine::getAsVtkProp()
         m_vtkBackgroundActor->SetMapper(m_vtkMapper);
         m_vtkMapper->SetInputConnection(m_vtkLineSource->GetOutputPort());
 
-        // Li donem els atributs
+        // We give it the attributes
         updateVtkActorProperties();
 
         m_vtkPropAssembly->AddPart(m_vtkBackgroundActor);
@@ -125,12 +126,12 @@ void DrawerLine::update()
 {
     switch (m_internalRepresentation)
     {
-        case VTKRepresentation:
-            updateVtkProp();
-            break;
+    case VTKRepresentation:
+        updateVtkProp();
+        break;
 
-        case OpenGLRepresentation:
-            break;
+    case OpenGLRepresentation:
+        break;
     }
 }
 
@@ -138,7 +139,7 @@ void DrawerLine::updateVtkProp()
 {
     if (m_vtkPropAssembly)
     {
-        // Assignem els punts a la línia
+        // We assign the points to the line
         m_vtkLineSource->SetPoint1(m_firstPoint);
         m_vtkLineSource->SetPoint2(m_secondPoint);
         updateVtkActorProperties();
@@ -146,7 +147,7 @@ void DrawerLine::updateVtkProp()
     }
     else
     {
-        DEBUG_LOG("No es pot actualitzar la línia, ja que encara no s'ha creat!");
+        DEBUG_LOG("The line cannot be updated because it has not yet been created!");
     }
 }
 
@@ -155,22 +156,22 @@ void DrawerLine::updateVtkActorProperties()
     vtkProperty2D *properties = m_vtkActor->GetProperty();
     vtkProperty2D *propertiesBackground = m_vtkBackgroundActor->GetProperty();
 
-    // Sistema de coordenades
+    //Coordinate system
     m_vtkMapper->SetTransformCoordinate(this->getVtkCoordinateObject());
 
-    // Estil de la línia
+    // Line style
     properties->SetLineStipplePattern(m_linePattern);
     propertiesBackground->SetLineStipplePattern(m_linePattern);
 
-    // Assignem gruix de la línia
+    // We assign line thickness
     properties->SetLineWidth(m_lineWidth);
     propertiesBackground->SetLineWidth(m_lineWidth + 2);
 
-    // Assignem opacitat de la línia
+    // We assign opacity of the line
     properties->SetOpacity(m_opacity);
     propertiesBackground->SetOpacity(m_opacity);
 
-    // Mirem la visibilitat de l'm_vtkActor
+    //Let's look at the visibility of the m_vtkActor
     m_vtkActor->SetVisibility(this->isVisible());
     m_vtkBackgroundActor->SetVisibility(this->isVisible());
 

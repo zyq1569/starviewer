@@ -25,31 +25,31 @@ class vtkPropAssembly;
 namespace udg {
 
 /**
-    Primitiva de línia per al Drawer
-  */
+    Line Primitive for Drawer
+*/
 class DrawerLine : public DrawerPrimitive {
-Q_OBJECT
+    Q_OBJECT
 public:
     DrawerLine(QObject *parent = 0);
     ~DrawerLine();
 
-    /// Afegim el primer punt de la línia
+    /// We add the first point of the line
     void setFirstPoint(double point[3]);
     void setFirstPoint(double x, double y, double z);
 
-    /// Afegim el segon punt de la línia
+    ///We add the second point of the line
     void setSecondPoint(double point[3]);
     void setSecondPoint(double x, double y, double z);
 
     vtkProp* getAsVtkProp();
 
-    /// Retorna el primer punt de la línia
+    /// Returns the first point of the line
     double* getFirstPoint();
 
-    /// Retorna el segon punt de la línia
+    /// Returns the second point of the line
     double* getSecondPoint();
 
-    /// Calcula la distància que té respecte al punt passat per paràmetre
+    ///Calculates the distance it has from the past point per parameter
     double getDistanceToPoint(double *point3D, double closestPoint[3]);
 
     void getBounds(double bounds[6]);
@@ -61,23 +61,23 @@ protected slots:
     void updateVtkProp();
 
 private:
-    /// Mètode intern per transformar les propietats de la primitiva a propietats de vtk
+    /// Internal method for transforming the properties of the primitive to properties of vtk
     void updateVtkActorProperties();
 
 private:
-    /// Primer punt de la línia
+    /// First point of the line
     double m_firstPoint[3];
 
-    /// Segon punt de la línia
+    ///Second point of the line
     double m_secondPoint[3];
 
-    /// Estructures de vtk, per construir la línia
+    /// Vtk structures, to build the line
     vtkLineSource *m_vtkLineSource;
     vtkActor2D *m_vtkActor;
     vtkActor2D *m_vtkBackgroundActor;
     vtkPolyDataMapper2D *m_vtkMapper;
 
-    /// vtkProp per agrupar l'actor i el background per simular el contorn
+    /// vtkProp to group the actor and the background to simulate the outline
     vtkPropAssembly *m_vtkPropAssembly;
 };
 
