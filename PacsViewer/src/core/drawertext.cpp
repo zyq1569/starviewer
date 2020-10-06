@@ -64,10 +64,10 @@ vtkProp* DrawerText::getAsVtkProp()
 {
     if (!m_vtkActor)
     {
-        // Creem el pipeline de l'm_vtkActor
+        //We create the m_vtkActor pipeline
         m_vtkActor = vtkTextActor::New();
 
-        // Assignem el text
+        // We assign the text
         if (!m_text.isEmpty())
         {
             m_vtkActor->SetInput(m_text.toUtf8().constData());
@@ -81,11 +81,11 @@ vtkProp* DrawerText::getAsVtkProp()
             m_vtkActor->VisibilityOff();
         }
 
-        // Assignem la posició en pantalla
+        // We assign the position on the screen
         m_vtkActor->GetPositionCoordinate()->SetCoordinateSystemToWorld();
         m_vtkActor->GetPositionCoordinate()->SetValue(m_attachPoint);
 
-        // Li donem els atributs
+        // We give it the attributes
         updateVtkActorProperties();
     }
     return m_vtkActor;
@@ -95,12 +95,12 @@ void DrawerText::update()
 {
     switch (m_internalRepresentation)
     {
-        case VTKRepresentation:
-            updateVtkProp();
-            break;
+    case VTKRepresentation:
+        updateVtkProp();
+        break;
 
-        case OpenGLRepresentation:
-            break;
+    case OpenGLRepresentation:
+        break;
     }
 }
 
@@ -108,7 +108,7 @@ void DrawerText::updateVtkProp()
 {
     if (m_vtkActor)
     {
-        // Assignem el text
+        // We assign the text
         if (!m_text.isEmpty())
         {
             m_vtkActor->SetInput(m_text.toUtf8().constData());
@@ -121,7 +121,7 @@ void DrawerText::updateVtkProp()
         {
             m_vtkActor->VisibilityOff();
         }
-        // Assignem la posició en pantalla
+        // We assign the position on the screen
         m_vtkActor->GetPositionCoordinate()->SetCoordinateSystemToWorld();
         m_vtkActor->GetPositionCoordinate()->SetValue(m_attachPoint);
         updateVtkActorProperties();
@@ -129,7 +129,7 @@ void DrawerText::updateVtkProp()
     }
     else
     {
-        DEBUG_LOG("No es pot actualitzar la línia, ja que encara no s'ha creat!");
+        DEBUG_LOG("The line cannot be updated because it has not yet been created!");
     }
 }
 
@@ -137,10 +137,10 @@ void DrawerText::updateVtkActorProperties()
 {
     vtkTextProperty *properties = m_vtkActor->GetTextProperty();
 
-    // Sistema de coordenades
+    //Coordinate system
     m_vtkActor->GetPositionCoordinate()->SetReferenceCoordinate(this->getVtkCoordinateObject());
 
-    // Mirem si s'ha d'escalar el text
+    // Let's see if the text should be scaled
     if (m_scaled)
     {
         m_vtkActor->SetTextScaleModeToViewport();
@@ -150,13 +150,13 @@ void DrawerText::updateVtkActorProperties()
         m_vtkActor->SetTextScaleModeToNone();
     }
 
-    // Mirem l'opacitat
+    //Let's look at the opacity
     properties->SetOpacity(m_opacity);
 
     // Assignem color
     properties->SetColor(m_color.redF(), m_color.greenF(), m_color.blueF());
 
-    // Mirem l'opacitat
+    // Let's look at the opacity
     properties->SetBackgroundOpacity(m_backgroundOpacity);
 
     // Assignem color
@@ -192,7 +192,7 @@ void DrawerText::updateVtkActorProperties()
         properties->ItalicOff();
     }
 
-    // Assignem el tipus de font al text
+    //We assign the font type to the text
     if (m_fontFamily == "Arial")
     {
         properties->SetFontFamilyToArial();
@@ -207,13 +207,13 @@ void DrawerText::updateVtkActorProperties()
     }
     else
     {
-        DEBUG_LOG("Tipus de font no reconegut a l'intentar crear text!!");
+        DEBUG_LOG("Unrecognized font type when trying to create text!!");
     }
 
-    // Assignem el tamany de la font
+    //We assign the font size
     properties->SetFontSize(m_fontSize);
 
-    // Assignem el tipus de justificació horitzontal
+    // We assign the type of horizontal justification
     if (m_horizontalJustification == "Left")
     {
         properties->SetJustificationToLeft();
@@ -228,10 +228,10 @@ void DrawerText::updateVtkActorProperties()
     }
     else
     {
-        DEBUG_LOG("Tipus de justificació horitzontal no reconegut a l'intentar crear text!!");
+        DEBUG_LOG("Unrecognized horizontal justification type when trying to create text!!");
     }
 
-    // Assignem el tipus de justificació vertical
+    //We assign the type of vertical justification
     if (m_verticalJustification == "Top")
     {
         properties->SetVerticalJustificationToTop();
@@ -246,10 +246,10 @@ void DrawerText::updateVtkActorProperties()
     }
     else
     {
-        DEBUG_LOG("Tipus de justificació vertical no reconegut a l'intentar crear text!!");
+        DEBUG_LOG("Unrecognized vertical justification type when trying to create text!!");
     }
 
-    // Mirem la visibilitat de l'actor
+    // We look at the visibility of the actor
     m_vtkActor->SetVisibility(this->isVisible());
 }
 
@@ -438,8 +438,8 @@ bool DrawerText::isInside(const double *point3D)
     this->getBounds(bounds);
 
     if (((point3D[0] >= bounds[0] && point3D[0] <= bounds[1]) || qAbs(point3D[0] - bounds[0]) < 0.0001) &&
-        ((point3D[1] >= bounds[2] && point3D[1] <= bounds[3]) || qAbs(point3D[1] - bounds[2]) < 0.0001) &&
-        ((point3D[2] >= bounds[4] && point3D[2] <= bounds[5]) || qAbs(point3D[2] - bounds[4]) < 0.0001))
+            ((point3D[1] >= bounds[2] && point3D[1] <= bounds[3]) || qAbs(point3D[1] - bounds[2]) < 0.0001) &&
+            ((point3D[2] >= bounds[4] && point3D[2] <= bounds[5]) || qAbs(point3D[2] - bounds[4]) < 0.0001))
     {
         return true;
     }
@@ -465,7 +465,8 @@ void DrawerText::getBounds(double bounds[6])
             double size[2];
             m_vtkActor->GetSize(viewport, size);
 
-            auto displayToWorld = [=](double x, double y, double z) -> Vector3 {
+            auto displayToWorld = [=](double x, double y, double z) -> Vector3
+            {
                 double homogeneousWorldPoint[4];
                 viewport->SetDisplayPoint(x, y, z);
                 viewport->DisplayToWorld();
@@ -476,25 +477,25 @@ void DrawerText::getBounds(double bounds[6])
                     divisor = homogeneousWorldPoint[3];
                 }
                 Vector3 worldPoint(homogeneousWorldPoint[0] / divisor,
-                                   homogeneousWorldPoint[1] / divisor,
-                                   homogeneousWorldPoint[2] / divisor);
+                        homogeneousWorldPoint[1] / divisor,
+                        homogeneousWorldPoint[2] / divisor);
                 return worldPoint;
             };
 
             double left = 0;
             switch (m_vtkActor->GetTextProperty()->GetJustification())
             {
-                case VTK_TEXT_LEFT: left = attachPointDisplay[0]; break;
-                case VTK_TEXT_CENTERED: left = attachPointDisplay[0] - size[0] / 2; break;
-                case VTK_TEXT_RIGHT: left = attachPointDisplay[0] - size[0]; break;
+            case VTK_TEXT_LEFT: left = attachPointDisplay[0]; break;
+            case VTK_TEXT_CENTERED: left = attachPointDisplay[0] - size[0] / 2; break;
+            case VTK_TEXT_RIGHT: left = attachPointDisplay[0] - size[0]; break;
             }
             double right = left + size[0];
             double top = 0;
             switch (m_vtkActor->GetTextProperty()->GetVerticalJustification())
             {
-                case VTK_TEXT_BOTTOM: top = attachPointDisplay[1] + size[1]; break;
-                case VTK_TEXT_CENTERED: top = attachPointDisplay[1] + size[1] / 2; break;
-                case VTK_TEXT_TOP: top = attachPointDisplay[1]; break;
+            case VTK_TEXT_BOTTOM: top = attachPointDisplay[1] + size[1]; break;
+            case VTK_TEXT_CENTERED: top = attachPointDisplay[1] + size[1] / 2; break;
+            case VTK_TEXT_TOP: top = attachPointDisplay[1]; break;
             }
             double bottom = top - size[1];
 
