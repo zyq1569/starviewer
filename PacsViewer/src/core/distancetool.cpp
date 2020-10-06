@@ -24,7 +24,7 @@
 namespace udg {
 
 DistanceTool::DistanceTool(QViewer *viewer, QObject *parent)
- : GenericDistanceTool(viewer, parent)
+    : GenericDistanceTool(viewer, parent)
 {
     m_toolName = "DistanceTool";
 
@@ -40,8 +40,8 @@ DistanceTool::~DistanceTool()
 void DistanceTool::deleteTemporalRepresentation()
 {
     bool hasToRefresh = false;
-    // Cal decrementar el reference count perquè
-    // l'annotació s'esborri si "matem" l'eina
+    // You need to decrease the reference count because
+    // the annotation is deleted if we "kill" the tool
     if (m_distanceLine)
     {
         m_distanceLine->decreaseReferenceCount();
@@ -88,14 +88,15 @@ void DistanceTool::annotateNewPoint()
     if (!m_distanceLine)
     {
         m_distanceLine = new DrawerLine;
-        // Així evitem que durant l'edició la primitiva pugui ser esborrada per events externs
+        /// This way we avoid that during the edition the primitive one
+        /// may be deleted due to external events
         m_distanceLine->increaseReferenceCount();
     }
 
     double clickedWorldPoint[3];
     m_2DViewer->getEventWorldCoordinate(clickedWorldPoint);
 
-    // Afegim el punt
+    //We add the point
     if (m_lineState == NoPointFixed)
     {
         m_distanceLine->setFirstPoint(clickedWorldPoint);
@@ -109,16 +110,16 @@ void DistanceTool::annotateNewPoint()
         m_distanceLine->setSecondPoint(clickedWorldPoint);
         m_distanceLine->update();
 
-        // Posem el text
+        //We put the text
         drawMeasurement();
         
-        // Alliberem la primitiva perquè pugui ser esborrada
+        // We release the primitive so that it can be erased
         m_distanceLine->decreaseReferenceCount();
         m_2DViewer->getDrawer()->erasePrimitive(m_distanceLine);
         equalizeDepth();
-        // Coloquem la primitiva en el pla corresponent
+        //We place the primitive in the corresponding plane
         m_2DViewer->getDrawer()->draw(m_distanceLine, m_2DViewer->getView(), m_2DViewer->getCurrentSlice());
-        // Reiniciem l'estat de la tool
+        //We restart the tool state
         m_lineState = NoPointFixed;
         m_distanceLine = NULL;
     }
@@ -141,7 +142,7 @@ void DistanceTool::initialize()
 {
     if (m_distanceLine)
     {
-        // Així alliberem la primitiva perquè pugui ser esborrada
+        // Thus we release the primitive so that it can be erased
         m_distanceLine->decreaseReferenceCount();
         delete m_distanceLine;
     }
@@ -151,7 +152,7 @@ void DistanceTool::initialize()
 
 void DistanceTool::equalizeDepth()
 {
-    // Assignem al primer punt la z del segon
+    // We assign to the first point the z of the second
     int zIndex = m_2DViewer->getView().getZIndex();
     double z = m_distanceLine->getSecondPoint()[zIndex];
     double *firstPoint = m_distanceLine->getFirstPoint();
