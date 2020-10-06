@@ -25,7 +25,7 @@
 namespace udg {
 
 DrawerCrossHair::DrawerCrossHair(QObject *parent)
-: DrawerPrimitive(parent)
+    : DrawerPrimitive(parent)
 {
     m_vtkPropAssembly = NULL;
     m_lineUp = new DrawerLine();
@@ -52,27 +52,27 @@ void DrawerCrossHair::setCentrePoint(double x, double y, double z)
     m_centrePoint[1] = y;
     m_centrePoint[2] = z;
 
-    // Assignem els punts a la línia 1
+    // We assign the points to line  1
     m_lineUp->setFirstPoint(m_centrePoint[0], m_centrePoint[1] - 6, m_centrePoint[2]);
     m_lineUp->setSecondPoint(m_centrePoint[0], m_centrePoint[1] - 1, m_centrePoint[2]);
 
-    // Assignem els punts a la línia 2
+    // We assign the points to line 2
     m_lineDown->setFirstPoint(m_centrePoint[0], m_centrePoint[1] + 6, m_centrePoint[2]);
     m_lineDown->setSecondPoint(m_centrePoint[0], m_centrePoint[1] + 1, m_centrePoint[2]);
 
-    // Assignem els punts a la línia 3
+    //We assign the points to line 3
     m_lineLeft->setFirstPoint(m_centrePoint[0] - 6, m_centrePoint[1], m_centrePoint[2]);
     m_lineLeft->setSecondPoint(m_centrePoint[0] - 1, m_centrePoint[1], m_centrePoint[2]);
 
-    // Assignem els punts a la línia 4
+    //We assign the points to line 4
     m_lineRight->setFirstPoint(m_centrePoint[0] + 6, m_centrePoint[1], m_centrePoint[2]);
     m_lineRight->setSecondPoint(m_centrePoint[0] + 1, m_centrePoint[1], m_centrePoint[2]);
 
-    // Assignem els punts a la línia 5
+    // We assign the points to line5
     m_lineBack->setFirstPoint(m_centrePoint[0], m_centrePoint[1], m_centrePoint[2] - 6);
     m_lineBack->setSecondPoint(m_centrePoint[0], m_centrePoint[1], m_centrePoint[2] - 1);
 
-    // Assignem els punts a la línia 6
+    // We assign the points to line 6
     m_lineFront->setFirstPoint(m_centrePoint[0], m_centrePoint[1], m_centrePoint[2] + 6);
     m_lineFront->setSecondPoint(m_centrePoint[0], m_centrePoint[1], m_centrePoint[2] + 1);
 
@@ -85,7 +85,7 @@ vtkPropAssembly* DrawerCrossHair::getAsVtkPropAssembly()
     {
         m_vtkPropAssembly = vtkPropAssembly::New();
 
-        // Li donem els atributs
+        // We give it the attributes
         updateVtkActorProperties();
 
         m_vtkPropAssembly->AddPart(m_lineUp->getAsVtkProp());
@@ -128,7 +128,7 @@ void DrawerCrossHair::updateVtkProp()
     }
     else
     {
-        DEBUG_LOG("No es pot actualitzar la línia, ja que encara no s'ha creat!");
+        DEBUG_LOG("The line cannot be updated because it has not yet been created!");
     }
 }
 

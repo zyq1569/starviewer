@@ -24,15 +24,15 @@ class vtkPropAssembly;
 namespace udg {
 
 /**
-    Primitiva que dibuixa un "Crosshair", és a dir, una creueta per situar un punt.
-  */
+   Primitive that draws a "Crosshair", that is, a cross to place a point.
+*/
 class DrawerCrossHair : public DrawerPrimitive {
-Q_OBJECT
+    Q_OBJECT
 public:
     DrawerCrossHair(QObject *parent = 0);
     ~DrawerCrossHair();
 
-    /// Afegim el primer punt de la línia
+    /// We add the first point of the line
     void setCentrePoint(double x, double y, double z);
 
     vtkPropAssembly* getAsVtkPropAssembly();
@@ -52,14 +52,14 @@ protected slots:
     void updateVtkProp();
 
 private:
-    /// Mètode intern per transformar les propietats de la primitiva a propietats de vtk
+    /// Internal method for transforming the properties of the primitive to properties of vtk
     void updateVtkActorProperties();
 
 private:
-    /// Centre de la crosshair.
+    /// Center of the crosshair.
     double m_centrePoint[3];
 
-    /// Línies per construir el crosshair
+    ///Lines to build the crosshair
     DrawerLine *m_lineUp;
     DrawerLine *m_lineDown;
     DrawerLine *m_lineLeft;
