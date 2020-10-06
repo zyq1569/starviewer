@@ -29,8 +29,9 @@
 namespace udg {
 
 DrawerPolygon::DrawerPolygon(QObject *parent)
- : DrawerPrimitive(parent), m_pointsChanged(false), m_vtkPolyData(0), m_vtkPoints(0), m_vtkCellArray(0), m_vtkActor(0), m_vtkBackgroundActor(0), m_vtkMapper(0),
-   m_vtkPropAssembly(0)
+    : DrawerPrimitive(parent), m_pointsChanged(false), m_vtkPolyData(0),
+      m_vtkPoints(0), m_vtkCellArray(0), m_vtkActor(0), m_vtkBackgroundActor(0), m_vtkMapper(0),
+      m_vtkPropAssembly(0)
 {
 }
 
@@ -144,18 +145,19 @@ void DrawerPolygon::update()
 {
     switch (m_internalRepresentation)
     {
-        case VTKRepresentation:
-            updateVtkProp();
-            break;
+    case VTKRepresentation:
+        updateVtkProp();
+        break;
 
-        case OpenGLRepresentation:
-            break;
+    case OpenGLRepresentation:
+        break;
     }
 }
 
 void DrawerPolygon::updateVtkProp()
 {
-    // La pipeline s'ha de construir la primera vegada, tant si hi ha hagut modificacions com si no
+    /// The pipeline must be built the first time,
+    /// whether or not there have been any changes
     if (!m_vtkPropAssembly)
     {
         buildVtkPipeline();
@@ -168,7 +170,7 @@ void DrawerPolygon::updateVtkProp()
         this->setModified(false);
     }
 
-    // Si hi ha hagut modificacions dels punts reconstruïm els polígons de VTK
+    //If there have been modifications of the points we reconstruct the VTK polygons
     if (m_pointsChanged)
     {
         buildVtkPoints();
@@ -194,8 +196,8 @@ void DrawerPolygon::buildVtkPipeline()
 
 void DrawerPolygon::buildVtkPoints()
 {
-    // Primer comprovem si el polígon és tancat. En cas que l'últim i el primer no coincideixin, l'afegim
-    // TODO es podria comprovar si com a mínim té tres punts, sinó, no es pot considerar polígon
+    // First we check if the polygon is closed. In case the last and the first do not match, we add it
+    // TODO could be checked if it has at least three points, otherwise it cannot be considered a polygon
     bool extraVertix = false;
     if (!m_pointsList.isEmpty())
     {
@@ -207,7 +209,7 @@ void DrawerPolygon::buildVtkPoints()
         }
     }
 
-    // Especifiquem el nombre de vèrtexs que té el polígon
+    // We specify the number of vertices that the polygon has
     int numberOfVertices = m_pointsList.count() + (extraVertix ? 1 : 0);
     m_vtkCellArray->Reset();
 
@@ -244,7 +246,7 @@ void DrawerPolygon::buildVtkPoints()
         }
 
         m_vtkPolyData->Initialize();
-        // Assignem els punts al polydata
+        //We assign the points to the polydata
         m_vtkPolyData->SetPoints(m_vtkPoints);
         m_vtkPolyData->SetPolys(m_vtkCellArray);
     }
@@ -256,7 +258,7 @@ void DrawerPolygon::buildVtkPoints()
         }
         m_vtkPoints->SetNumberOfPoints(numberOfVertices);
 
-        // Donem els punts/vèrtexs
+        // We give the points / vertices
         int i = 0;
         foreach (const QVector<double> &vertix, m_pointsList)
         {
@@ -267,12 +269,12 @@ void DrawerPolygon::buildVtkPoints()
 
         if (extraVertix)
         {
-            // Tornem a afegir el primer punt
+            // Let's add the first point again
             m_vtkPoints->InsertPoint(numberOfVertices - 1, m_pointsList.at(0).data());
             m_vtkCellArray->InsertCellPoint(numberOfVertices - 1);
         }
         m_vtkPolyData->Initialize();
-        // Assignem els punts al polydata
+        //We assign the points to the polydata
         m_vtkPolyData->SetPoints(m_vtkPoints);
         m_vtkPolyData->SetLines(m_vtkCellArray);
     }

@@ -29,31 +29,32 @@ class vtkPropAssembly;
 namespace udg {
 
 /**
-    Primitiva de polígon per al Drawer
-  */
+   Polygon primitive for the Drawer
+*/
 class DrawerPolygon : public DrawerPrimitive {
-Q_OBJECT
+    Q_OBJECT
 public:
     DrawerPolygon(QObject *parent = 0);
     ~DrawerPolygon();
 
-    /// Afegim un vèrtex al polígon.
-    /// @param point[] Punt que defineix el vèrtex del polígon
+    /// We add a vertex to the polygon.
+    /// @param point [] Point that defines the vertex of the polygon
     void addVertix(double point[3]);
     void addVertix(double x, double y, double z);
 
-    /// Buida la llista de vèrtexs
+    /// Empty the list of vertices
     void removeVertices();
 
-    /// Assigna el valor del vèrtex i-éssim del polígon. En aquest cas equival a
-    /// actualitzar el valor d'aquest punt indicat. Si 'i' està fora de rang,
-    /// s'afegeix el vèrtex donat al final, tal com si fessim addVertix(point)
-    /// @param i índex del vèrtex que volem modificar
-    /// @param point[] coordenades del vèrtex
+    /// Assigns the value of the i-th vertex of the polygon. In this case it is equivalent to
+    /// update the value of this indicated point. If 'i' is out of range,
+    /// add the given vertex at the end, as if we were addVertix (point)
+    /// @param and index of the vertex we want to modify
+    /// @param point [] vertex coordinates
     void setVertix(int i, double point[3]);
     void setVertix(int i, double x, double y, double z);
 
-    /// Ens retorna l'i-èssim vèrtex del polígon. Si l'índex està fora de rang ens retornarà un array sense inicialitzar
+    /// Returns the i-th vertex of the polygon.
+    /// If the index is out of range it will return an uninitialized array
     const double* getVertix(int i) const;
 
     /// Returns the segments of the polygon
@@ -61,10 +62,10 @@ public:
     
     vtkProp* getAsVtkProp();
 
-    /// Ens retorna el nombre de punts que té el polígon
+    /// It returns the number of points that the polygon has
     int getNumberOfPoints() const;
 
-    /// Calcula la distància que té respecte al punt passat per paràmetre
+    /// Calculates the distance it has from the past point per parameter
     double getDistanceToPoint(double *point3D, double closestPoint[3]);
 
     void getBounds(double [6]);
@@ -84,20 +85,21 @@ protected slots:
 
 private:
 
-    /// Mètode intern per construir la pipeline de VTK.
+    /// Internal method to build the VTK pipeline.
     void buildVtkPipeline();
-    /// Mètode intern per passar de la llista de punts a l'estructura vtk pertinent
+    /// Internal method for moving from the list of points to the relevant vtk structure
     void buildVtkPoints();
-    /// Mètode intern per transformar les propietats de la primitiva a propietats de vtk
+    /// Internal method for transforming the properties of the primitive to properties of vtk
     void updateVtkActorProperties();
 
 private:
-    /// Llista de punts del polígon
+    /// List of points of the polygon
     QList<QVector<double> > m_pointsList;
-    /// Indica si els punts han canviat des de l'última vegada que s'ha actualitzat la representació de VTK.
+    /// Indicates whether points have changed since
+    /// since the last time the VTK rendering was updated.
     bool m_pointsChanged;
 
-    /// Estructures de vtk, per construir el polígon
+    /// Vtk structures, to build the polygon
     vtkPolyData *m_vtkPolyData;
     vtkPoints *m_vtkPoints;
     vtkCellArray *m_vtkCellArray;
@@ -105,7 +107,7 @@ private:
     vtkActor2D *m_vtkBackgroundActor;
     vtkPolyDataMapper2D *m_vtkMapper;
 
-    /// vtkProp per agrupar l'actor i el background per simular el contorn
+    /// vtkProp to group the actor and the background to simulate the outline
     vtkPropAssembly *m_vtkPropAssembly;
 };
 
