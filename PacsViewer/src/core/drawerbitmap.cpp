@@ -28,7 +28,7 @@
 namespace udg {
 
 DrawerBitmap::DrawerBitmap(QObject *parent)
- : DrawerPrimitive(parent)
+    : DrawerPrimitive(parent)
 {
     m_origin[0] = m_origin[1] = m_origin[2] = 0.0;
     m_spacing[0] = m_spacing[1] = m_spacing[2] = 1.0;
@@ -58,7 +58,7 @@ void DrawerBitmap::setSpacing(double spacing[3])
 void DrawerBitmap::setData(unsigned int width, unsigned int height, unsigned char *data)
 {
     m_width = width;
-    m_height = height;    
+    m_height = height;
     m_data = data;
 }
 
@@ -88,22 +88,23 @@ vtkProp* DrawerBitmap::getAsVtkProp()
             imageDataCreator.setSpacing(m_spacing);
             vtkSmartPointer<vtkImageData> imageData = imageDataCreator.createVtkImageData(m_width, m_height, 1, m_data);
 
-            // Construim LUT per aplicar transparències: fet a partir del codi de http://www.vtk.org/Wiki/VTK/Examples/Cxx/Images/Transparency
+            /// We build LUT to apply transparencies: made from the
+            /// code of http://www.vtk.org/Wiki/VTK/Examples/Cxx/Images/Transparency
             vtkSmartPointer<vtkLookupTable> lookupTable = vtkSmartPointer<vtkLookupTable>::New();
             lookupTable->SetNumberOfTableValues(2);
             lookupTable->SetRange(0.0, 1.0);
-            // Valor 0 té m_backgroundOpacity i color  m_backgroundColor
-            lookupTable->SetTableValue(0, m_backgroundColor.redF(), m_backgroundColor.greenF(), m_backgroundColor.blueF(), m_backgroundOpacity); 
-            // Valor 1 és opac amb color m_foregroundColor
+            // Valor 0 has m_backgroundOpacity i color  m_backgroundColor
+            lookupTable->SetTableValue(0, m_backgroundColor.redF(), m_backgroundColor.greenF(), m_backgroundColor.blueF(), m_backgroundOpacity);
+            // Value 1 has opaque with color m_foregroundColor
             lookupTable->SetTableValue(1, m_foregroundColor.redF(), m_foregroundColor.greenF(), m_foregroundColor.blueF(), 1.0);
             lookupTable->Build();
- 
+
             vtkSmartPointer<vtkImageMapToColors> mapTransparency = vtkSmartPointer<vtkImageMapToColors>::New();
             mapTransparency->SetLookupTable(lookupTable);
             mapTransparency->SetInputData(imageData);
             mapTransparency->PassAlphaToOutputOn();
- 
-            // Creem l'actor
+
+            // We create the actor
             m_imageActor = vtkSmartPointer<vtkImageActor>::New();
             mapTransparency->Update();
             m_imageActor->SetInputData(mapTransparency->GetOutput());
@@ -112,7 +113,7 @@ vtkProp* DrawerBitmap::getAsVtkProp()
         }
         else
         {
-            DEBUG_LOG("Error al passar les dades del bitmap a format vtkImageActor o bé no hi ha dades");
+            DEBUG_LOG("Error passing bitmap data to vtkImageActor format or no data");
         }
     }
 
@@ -121,13 +122,15 @@ vtkProp* DrawerBitmap::getAsVtkProp()
 
 double DrawerBitmap::getDistanceToPoint(double *point3D, double closestPoint[3])
 {
-    // Si el punt es troba dins del requadre del bitmap (només coordenades X,Y), retornarem distància 0 i com a closestPoint el point3D
-    // Si el punt es troba fora del requadre del bitmap, la distància serà la d'aquella a l'aresta més propera al punt
+    /// If the point is inside the bitmap box (X, Y coordinates only),
+    /// we will return distance 0 and as closestPoint the point3D
+    /// If the dot is outside the bitmap box,
+    /// the distance will be the distance to the edge closest to the point
     double bounds[6];
     getBounds(bounds);
 
-    if (point3D[0] >= bounds[0] && point3D[0] <= bounds[1] && 
-        point3D[1] >= bounds[2] && point3D[1] <= bounds[3])
+    if (point3D[0] >= bounds[0] && point3D[0] <= bounds[1] &&
+            point3D[1] >= bounds[2] && point3D[1] <= bounds[3])
     {
         memcpy(closestPoint, point3D, 3 * sizeof(double));
         return 0.0;
@@ -189,12 +192,12 @@ void DrawerBitmap::update()
 {
     switch (m_internalRepresentation)
     {
-        case VTKRepresentation:
-            updateVtkProp();
-            break;
+    case VTKRepresentation:
+        updateVtkProp();
+        break;
 
-        case OpenGLRepresentation:
-            break;
+    case OpenGLRepresentation:
+        break;
     }
 }
 
@@ -202,13 +205,14 @@ void DrawerBitmap::updateVtkProp()
 {
     if (m_imageActor)
     {
-        // TODO De moment únicament contemplem que un cop creat el bitmap, l'únic que podrem modificar serà la seva visibilitat
+        /// TODO At the moment we only see that once the bitmap is created,
+        /// the only thing we can modify will be its visibility
         m_imageActor->SetVisibility(this->isVisible());
         this->setModified(false);
     }
     else
     {
-        DEBUG_LOG("No es pot actualitzar el bitmap, ja que l'actor encara no s'ha creat");
+        DEBUG_LOG("The bitmap cannot be updated, as the actor has not yet been created");
     }
 }
 

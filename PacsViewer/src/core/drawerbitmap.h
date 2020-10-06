@@ -25,36 +25,37 @@ class vtkImageActor;
 namespace udg {
 
 /**
-    Classe que representa una primitiva per mapa de bits. Aquest mapa té una produnditat de color d'1 bit,
-    per tant només accepta dos valors diferents. El bitmap vindrà definit per la seva longitud, alçada i dades (array de bytes).
-    
-    Ens permet definir quin és el color de fons (background), la seva opacitat i quin és el color principal (foreground).
-    Es prendrà el valor 0 com a valor de fons, qualsevol altre valor diferent, serà pres com el color principal.
+Class that represents a primitive by bitmap. This map has a 1-bit color depth.
+therefore it only accepts two different values. The bitmap will be defined by its length, height and data (byte array).
 
-    També ens permet assignar un origen i spacing per poder-lo ajustar sobre la imatge que l'estem veient.
+It allows us to define what is the background color (background), its opacity and what is the main color (foreground).
+The value 0 will be taken as the background value, any other different value will be taken as the main color.
+
+It also allows us to assign a source and spacing so we can adjust it to the image we are seeing.
  */
 class DrawerBitmap : public DrawerPrimitive {
-Q_OBJECT
+    Q_OBJECT
 public:
     DrawerBitmap(QObject *parent = 0);
     ~DrawerBitmap();
 
-    /// Assigna l'origen TODO Potser amb dimensió 2 seria suficient
+    ///Assign the origin TODO Maybe with dimension 2 it would be enough
     void setOrigin(double origin[3]);
     
-    /// Assigna l'espaiat TODO Potser amb dimensió 2 seria suficient
+    ///Assign spacing TODO Maybe with dimension 2 it would be enough
     void setSpacing(double spacing[3]);
 
-    /// Assigna les mides del bitmap i les seves dades. El nombre d'elements que es comptabilitzaran de data seran width * height
+    ///Assign bitmap sizes and their data.
+    /// The number of elements to be counted from date will be width * height
     void setData(unsigned int width, unsigned int height, unsigned char *data);
     
-    /// Determina l'opacitat del valor de background
+    /// Determines the opacity of the background value
     void setBackgroundOpacity(double opacity);
 
-    /// Determina el color amb que es mapeja el color de fons
+    /// Determines the color with which the background color is mapped
     void setBackgroundColor(const QColor &color);
 
-    /// Determina el color amb que es mapeja el color principal
+    /// Determines the color with which the main color is mapped
     void setForegroundColor(const QColor &color);
 
     vtkProp* getAsVtkProp();
@@ -70,28 +71,28 @@ protected slots:
     void updateVtkProp();
 
 private:
-    /// Origen del bitmap
+    /// Bitmap source
     double m_origin[3];
 
-    /// Espaiat del bitmap
+    ///Bitmap spacing
     double m_spacing[3];
 
-    /// Mides del bitmap
+    ///Bitmap sizes
     unsigned int m_width, m_height;
     
-    /// Array amb les dades del bitmap
+    /// Array with bitmap data
     unsigned char *m_data;
     
-    /// Opacitat del valor de background. El seu valor per defecte serà 0.0, és a dir transparent
+    /// Opacity of the background value. Its default value will be 0.0, ie transparent
     double m_backgroundOpacity;
 
-    /// Color amb el que es pintarà el valor de fons. El seu valor per defecte serà Qt::black
+    /// Color with which the background value will be painted. Its default value will be Qt :: black
     QColor m_backgroundColor;
 
-    /// Color amb el que es pintarà el que no sigui el fons. El seu valor per defecte serà Qt::white
+    ///Color with which to paint what is not the background. Its default value will be Qt :: white
     QColor m_foregroundColor;
 
-    /// Actor vtk amb el que pintarem el bitmap
+    /// Vtk actor with which we will paint the bitmap
     vtkSmartPointer<vtkImageActor> m_imageActor;
 };
 
