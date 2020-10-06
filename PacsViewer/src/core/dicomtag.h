@@ -21,8 +21,8 @@ namespace udg {
 
 /**
 Class to represent a DICOM tag.
-     A tag consists of integers, the group, and the element. Ex: (0020,0022)
-  */
+A tag consists of integers, the group, and the element. Ex: (0020,0022)
+*/
 class DICOMTag {
 
 public:
@@ -51,7 +51,8 @@ public:
     bool operator==(const DICOMTag &tag) const;
     /// Returns true if group or element are different.
     bool operator!=(const DICOMTag &tag) const;
-    /// Returns true if this' group is smaller than tag's group or if groups are equal and this' element is smaller than tag's element.
+    /// Returns true if this' group is smaller than tag's group or if groups
+    /// are equal and this' element is smaller than tag's element.
     bool operator<(const DICOMTag &tag) const;
 
 private:
