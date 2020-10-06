@@ -513,7 +513,8 @@ void DICOMTagReader::logStatusForTagOperation(const DICOMTag &tag, const OFCondi
 
     if (QString::compare(status.text(), "Tag Not Found", Qt::CaseInsensitive) != 0)
     {
-        DEBUG_LOG(QString("The following problem occurred while trying to get the tag %1 :: %2").arg(tag.getKeyAsQString()).arg(status.text()));
+        DEBUG_LOG(QString("The following problem occurred while trying to get the tag %1 :: %2")
+                  .arg(tag.getKeyAsQString()).arg(status.text()));
     }
 }
 
