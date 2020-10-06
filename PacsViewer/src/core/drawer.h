@@ -26,8 +26,8 @@ namespace udg {
 class DrawerPrimitive;
 
 /**
-    Classe encarregada de pintar els objectes de primitiva gràfica en el viewer assignat
-  */
+    Class responsible for painting graphic primitive objects in the assigned viewer
+*/
 class Drawer : public QObject {
     Q_OBJECT
 public:

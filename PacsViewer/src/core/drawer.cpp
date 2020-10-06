@@ -23,7 +23,7 @@
 namespace udg {
 
 Drawer::Drawer(Q2DViewer *viewer, QObject *parent)
- : QObject(parent), m_currentPlane(OrthogonalPlane::YZPlane), m_currentSlice(0)
+    : QObject(parent), m_currentPlane(OrthogonalPlane::YZPlane), m_currentSlice(0)
 {
     m_2DViewer = viewer;
     connect(m_2DViewer, SIGNAL(sliceChanged(int)), SLOT(refresh()));
@@ -38,26 +38,26 @@ void Drawer::draw(DrawerPrimitive *primitive, const OrthogonalPlane &plane, int 
 {
     switch (plane)
     {
-        case OrthogonalPlane::XYPlane:
-            m_XYPlanePrimitives.insert(slice, primitive);
-            break;
+    case OrthogonalPlane::XYPlane:
+        m_XYPlanePrimitives.insert(slice, primitive);
+        break;
 
-        case OrthogonalPlane::YZPlane:
-            m_YZPlanePrimitives.insert(slice, primitive);
-            break;
+    case OrthogonalPlane::YZPlane:
+        m_YZPlanePrimitives.insert(slice, primitive);
+        break;
 
-        case OrthogonalPlane::XZPlane:
-            m_XZPlanePrimitives.insert(slice, primitive);
-            break;
+    case OrthogonalPlane::XZPlane:
+        m_XZPlanePrimitives.insert(slice, primitive);
+        break;
 
-        default:
-            DEBUG_LOG("Pla no definit!");
-            return;
-            break;
+    default:
+        DEBUG_LOG("Pla no definit!");
+        return;
+        break;
     }
 
-    // Segons quin sigui el pla actual caldrà comprovar
-    // la visibilitat de la primitiva segons la llesca
+    // Depending on the current plan, it will be necessary to check
+    // the visibility of the primitive according to the slice
     if (m_2DViewer->getView() == plane)
     {
         if (slice < 0 || m_2DViewer->getCurrentSlice() == slice)
@@ -70,7 +70,7 @@ void Drawer::draw(DrawerPrimitive *primitive, const OrthogonalPlane &plane, int 
         }
     }
 
-    // Procedim a "pintar-la"
+    // We proceed to "paint it"
     renderPrimitive(primitive);
 }
 
@@ -78,7 +78,7 @@ void Drawer::draw(DrawerPrimitive *primitive)
 {
     m_top2DPlanePrimitives << primitive;
 
-    // Procedim a "pintar-la"
+    //We proceed to "paint it"
     renderPrimitive(primitive);
 }
 
@@ -87,28 +87,28 @@ void Drawer::clearViewer()
     QMultiMap<int, DrawerPrimitive*> primitivesContainer;
     switch (m_currentPlane)
     {
-        case OrthogonalPlane::XYPlane:
-            primitivesContainer = m_XYPlanePrimitives;
-            break;
+    case OrthogonalPlane::XYPlane:
+        primitivesContainer = m_XYPlanePrimitives;
+        break;
 
-        case OrthogonalPlane::YZPlane:
-            primitivesContainer = m_YZPlanePrimitives;
-            break;
+    case OrthogonalPlane::YZPlane:
+        primitivesContainer = m_YZPlanePrimitives;
+        break;
 
-        case OrthogonalPlane::XZPlane:
-            primitivesContainer = m_XZPlanePrimitives;
-            break;
+    case OrthogonalPlane::XZPlane:
+        primitivesContainer = m_XZPlanePrimitives;
+        break;
 
-        default:
-            DEBUG_LOG("Pla no definit!");
-            return;
-            break;
+    default:
+        DEBUG_LOG("Pla no definit!");
+        return;
+        break;
     }
 
-    // Obtenim les primitives de la vista i llesca actuals
+    //We get the primitives from the current view and slice
     QList<DrawerPrimitive*> list = primitivesContainer.values(m_currentSlice);
-    // Eliminem totes aquelles primitives que estiguin a la llista, que no tinguin "propietaris" i que siguin esborrables
-    // Al fer delete es cridarà el mètode erasePrimitive() que ja s'encarrega de fer la "feina bruta"
+    // We remove all primitives that are in the list, that do not have "owners" and that are erasable
+    // Deleting will call the erasePrimitive () method that is already in charge of doing the "dirty work"
     foreach (DrawerPrimitive *primitive, list)
     {
         if (!primitive->hasOwners() && primitive->isErasable())
@@ -121,7 +121,7 @@ void Drawer::clearViewer()
 
 void Drawer::addToGroup(DrawerPrimitive *primitive, const QString &groupName)
 {
-    // No comprovem si ja existeix ni si està en cap altre de les llistes, no cal.
+    // We do not check if it already exists or if it is in any other of the lists, it is not necessary.
     m_primitiveGroups.insert(groupName, primitive);
 }
 
@@ -131,7 +131,8 @@ void Drawer::refresh()
     {
         if (m_currentSlice != m_2DViewer->getCurrentSlice())
         {
-            // Cal fer invisible el que es veia en aquest pla i llesca i fer visible el que hi ha a la nova llesca
+            ///It is necessary to make invisible what was seen in
+            ///this plan and slice and to make visible what is in the new slice
             hide(m_currentPlane, m_currentSlice);
             m_currentSlice = m_2DViewer->getCurrentSlice();
             show(m_currentPlane, m_currentSlice);
@@ -139,7 +140,8 @@ void Drawer::refresh()
     }
     else
     {
-        // Cal fer invisible el que es veia en aquest pla i llesca i fer visible el que hi ha al nou pla i llesca
+        /// It is necessary to make invisible what was seen in this plan and
+        /// slice and to make visible what is in the new plan and slice
         hide(m_currentPlane, m_currentSlice);
         m_currentSlice = m_2DViewer->getCurrentSlice();
         m_currentPlane = m_2DViewer->getView();
@@ -159,8 +161,8 @@ void Drawer::removeAllPrimitives()
 
     foreach (DrawerPrimitive *primitive, list)
     {
-        // TODO Atenció amb aquest tractament pel sucedani d'smart pointer.
-        // Només esborrarem si ningú és propietari, però no comprovarem si són "erasable" o no
+        // TODOAttention with this treatment for the smart pointer substitute.
+        // We'll only delete if no one owns it, but we won't check if they are "erasable" or not
         if (!primitive->hasOwners())
         {
             m_2DViewer->getRenderer()->RemoveViewProp(primitive->getAsVtkProp());
@@ -175,15 +177,15 @@ void Drawer::erasePrimitive(DrawerPrimitive *primitive)
     {
         return;
     }
-    // TODO Atenció amb aquest tractament pel sucedani d'smart pointer.
-    // HACK Només esborrarem si ningú és propietari
+    // TODO Attention with this treatment for the smart pointer substitute.
+    // HACK We will only delete if no one owns it
     if (primitive->hasOwners())
     {
-        DEBUG_LOG("No esborrem la primitiva. Tenim propietaris");
+        DEBUG_LOG("We do not erase the primitive. We have owners");
         return;
     }
 
-    // Mirem si està en algun grup
+    //Let’s see if he’s in any group
     QMutableMapIterator<QString, DrawerPrimitive*> groupsIterator(m_primitiveGroups);
     while (groupsIterator.hasNext())
     {
@@ -194,26 +196,26 @@ void Drawer::erasePrimitive(DrawerPrimitive *primitive)
         }
     }
 
-    // Busquem en el pla axial
+    // We look in the axial plane
     if (erasePrimitiveFromContainer(primitive, m_XYPlanePrimitives))
     {
-        // En principi una mateixa primitiva només estarà en una de les llistes
+        // In principle the same primitive will only be in one of the lists
         return;
     }
 
-    // Busquem en el pla sagital
+    //We look in the sagittal plane
     if (erasePrimitiveFromContainer(primitive, m_YZPlanePrimitives))
     {
         return;
     }
 
-    // Busquem en el pla coronal
+    // We look at the coronal plane
     if (erasePrimitiveFromContainer(primitive, m_XZPlanePrimitives))
     {
         return;
     }
 
-    // Busquem en la capa superior
+    // We look in the top layer
     if (m_top2DPlanePrimitives.contains(primitive))
     {
         m_top2DPlanePrimitives.removeAt(m_top2DPlanePrimitives.indexOf(primitive));
@@ -227,17 +229,17 @@ void Drawer::hide(const OrthogonalPlane &plane, int slice)
     QList<DrawerPrimitive*> primitivesList;
     switch (plane)
     {
-        case OrthogonalPlane::XYPlane:
-            primitivesList = m_XYPlanePrimitives.values(slice);
-            break;
+    case OrthogonalPlane::XYPlane:
+        primitivesList = m_XYPlanePrimitives.values(slice);
+        break;
 
-        case OrthogonalPlane::YZPlane:
-            primitivesList = m_YZPlanePrimitives.values(slice);
-            break;
+    case OrthogonalPlane::YZPlane:
+        primitivesList = m_YZPlanePrimitives.values(slice);
+        break;
 
-        case OrthogonalPlane::XZPlane:
-            primitivesList = m_XZPlanePrimitives.values(slice);
-            break;
+    case OrthogonalPlane::XZPlane:
+        primitivesList = m_XZPlanePrimitives.values(slice);
+        break;
     }
     foreach (DrawerPrimitive *primitive, primitivesList)
     {
@@ -254,17 +256,17 @@ void Drawer::show(const OrthogonalPlane &plane, int slice)
     QList<DrawerPrimitive*> primitivesList;
     switch (plane)
     {
-        case OrthogonalPlane::XYPlane:
-            primitivesList = m_XYPlanePrimitives.values(slice);
-            break;
+    case OrthogonalPlane::XYPlane:
+        primitivesList = m_XYPlanePrimitives.values(slice);
+        break;
 
-        case OrthogonalPlane::YZPlane:
-            primitivesList = m_YZPlanePrimitives.values(slice);
-            break;
+    case OrthogonalPlane::YZPlane:
+        primitivesList = m_YZPlanePrimitives.values(slice);
+        break;
 
-        case OrthogonalPlane::XZPlane:
-            primitivesList = m_XZPlanePrimitives.values(slice);
-            break;
+    case OrthogonalPlane::XZPlane:
+        primitivesList = m_XZPlanePrimitives.values(slice);
+        break;
     }
 
     foreach (DrawerPrimitive *primitive, primitivesList)
@@ -310,17 +312,17 @@ void Drawer::enableGroup(const QString &groupName)
     int currentSlice = m_2DViewer->getCurrentSlice();
     switch (m_2DViewer->getView())
     {
-        case OrthogonalPlane::XYPlane:
-            currentVisiblePrimitives = m_XYPlanePrimitives.values(currentSlice);
-            break;
+    case OrthogonalPlane::XYPlane:
+        currentVisiblePrimitives = m_XYPlanePrimitives.values(currentSlice);
+        break;
 
-        case OrthogonalPlane::YZPlane:
-            currentVisiblePrimitives = m_YZPlanePrimitives.values(currentSlice);
-            break;
+    case OrthogonalPlane::YZPlane:
+        currentVisiblePrimitives = m_YZPlanePrimitives.values(currentSlice);
+        break;
 
-        case OrthogonalPlane::XZPlane:
-            currentVisiblePrimitives = m_XZPlanePrimitives.values(currentSlice);
-            break;
+    case OrthogonalPlane::XZPlane:
+        currentVisiblePrimitives = m_XZPlanePrimitives.values(currentSlice);
+        break;
     }
     currentVisiblePrimitives << m_top2DPlanePrimitives;
 
@@ -328,7 +330,8 @@ void Drawer::enableGroup(const QString &groupName)
     QList<DrawerPrimitive*> groupPrimitives = m_primitiveGroups.values(groupName);
     foreach (DrawerPrimitive *primitive, groupPrimitives)
     {
-        // Si la primitiva compleix les condicions de visibilitat per estat enable la farem visible
+        /// If the primitive meets the visibility conditions
+        /// by enable status we will make it visible
         if (currentVisiblePrimitives.contains(primitive))
         {
             if (primitive->isModified() || !primitive->isVisible())
@@ -339,7 +342,7 @@ void Drawer::enableGroup(const QString &groupName)
             }
         }
 
-        // L'eliminem de la llista de primitives disabled
+        //We remove it from the list of disabled primitives
         m_disabledPrimitives.remove(primitive);
     }
 
@@ -359,20 +362,20 @@ DrawerPrimitive* Drawer::getNearestErasablePrimitiveToPoint(double point[3], con
 
     switch (view)
     {
-        case OrthogonalPlane::XYPlane:
-            primitivesList = m_XYPlanePrimitives.values(slice);
-            break;
+    case OrthogonalPlane::XYPlane:
+        primitivesList = m_XYPlanePrimitives.values(slice);
+        break;
 
-        case OrthogonalPlane::YZPlane:
-            primitivesList = m_YZPlanePrimitives.values(slice);
-            break;
+    case OrthogonalPlane::YZPlane:
+        primitivesList = m_YZPlanePrimitives.values(slice);
+        break;
 
-        case OrthogonalPlane::XZPlane:
-            primitivesList = m_XZPlanePrimitives.values(slice);
-            break;
+    case OrthogonalPlane::XZPlane:
+        primitivesList = m_XZPlanePrimitives.values(slice);
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 
     double localClosestPoint[3];
@@ -400,20 +403,20 @@ void Drawer::erasePrimitivesInsideBounds(double bounds[6], const OrthogonalPlane
 
     switch (view)
     {
-        case OrthogonalPlane::XYPlane:
-            primitivesList = m_XYPlanePrimitives.values(slice);
-            break;
+    case OrthogonalPlane::XYPlane:
+        primitivesList = m_XYPlanePrimitives.values(slice);
+        break;
 
-        case OrthogonalPlane::YZPlane:
-            primitivesList = m_YZPlanePrimitives.values(slice);
-            break;
+    case OrthogonalPlane::YZPlane:
+        primitivesList = m_YZPlanePrimitives.values(slice);
+        break;
 
-        case OrthogonalPlane::XZPlane:
-            primitivesList = m_XZPlanePrimitives.values(slice);
-            break;
+    case OrthogonalPlane::XZPlane:
+        primitivesList = m_XZPlanePrimitives.values(slice);
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 
     foreach (DrawerPrimitive *primitive, primitivesList)
@@ -430,8 +433,8 @@ void Drawer::erasePrimitivesInsideBounds(double bounds[6], const OrthogonalPlane
 
 bool Drawer::isPrimitiveInside(DrawerPrimitive *primitive, const OrthogonalPlane &view, double bounds[6])
 {
-    // Comprovem que els bounds de la primitiva estiguin continguts
-    // dins dels que ens han passat per paràmetre
+    // We check that the bounds of the primitive are contained
+    // within those that have passed us by parameter
     double primitiveBounds[6];
     primitive->getBounds(primitiveBounds);
 
@@ -440,7 +443,7 @@ bool Drawer::isPrimitiveInside(DrawerPrimitive *primitive, const OrthogonalPlane
 
     bool inside = false;
     if (bounds[xIndex * 2] <= primitiveBounds[xIndex * 2] && bounds[xIndex * 2 + 1] >= primitiveBounds[xIndex * 2 + 1] &&
-        bounds[yIndex * 2] <= primitiveBounds[yIndex * 2] && bounds[yIndex * 2 + 1] >= primitiveBounds[yIndex * 2 + 1])
+            bounds[yIndex * 2] <= primitiveBounds[yIndex * 2] && bounds[yIndex * 2 + 1] >= primitiveBounds[yIndex * 2 + 1])
     {
         inside = true;
     }
