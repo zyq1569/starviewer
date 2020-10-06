@@ -28,48 +28,48 @@ class vtkPropAssembly;
 namespace udg {
 
 /**
-    Primitiva de polilínia pel Drawer
-  */
+    Polyline primitive for the Drawer
+*/
 class DrawerPolyline : public DrawerPrimitive {
-Q_OBJECT
+    Q_OBJECT
 public:
     DrawerPolyline(QObject *parent = 0);
     ~DrawerPolyline();
 
-    /// Afegim un punt a la polilínia.
-    /// @param point[] Punt que defineix el punt
+    /// We add a point to the polyline.
+    /// @param point [] Point that defines the point
     void addPoint(double point[3]);
 
-    /// Assigna el valor del punt i-éssim de la polilínia. En aquest cas equival a
-    /// actualitzar el valor d'aquest punt indicat. Si 'i' està fora de rang,
-    /// s'afegeix el punt donat al final, tal com si fessim addPoint(point)
-    /// @param i índex del point que volem modificar
-    /// @param point[] coordenades del point
+    /// Assign the value of the i-th point of the polyline. In this case it is equivalent to
+    /// update the value of this indicated point. If 'i' is out of range,
+    /// the given point is added at the end, as if we were doing addPoint (point)
+    /// @param and index of the point we want to modify
+    /// @param point [] point coordinates
     void setPoint(int i, double point[3]);
 
-    /// Elimina el punt i-éssim de la polilínia. Si 'i' està fora de rang,
-    /// no s'esborrarà cap punt de la polilínia.
-    /// @param i índex del point que volem modificar
+    /// Remove the i-th point from the polyline. If 'i' is out of range,
+    /// no point in the polyline will be deleted.
+    /// @param and index of the point we want to modify
     void removePoint(int i);
 
-    /// Retorna la polilínia com a objecte VTK de representació
+    /// Returns the polyline as the VTK representation object
     vtkProp* getAsVtkProp();
 
-    /// Retorna el nombre de punts que te la polilinia
+    /// Returns the number of points that the polyline has
     int getNumberOfPoints();
 
-    /// Retorna l'i-essim punt de la polilinia en cas de que existeixi.
+    /// Returns the i-th point of the polyline in case it exists.
     double* getPoint(int position);
 
-    /// Esborra tots els punts de la polilinia
+    /// Delete all points in the polyline
     void deleteAllPoints();
 
-    /// Calcula la distància que té respecte al punt passat per paràmetre
+    /// Calculates the distance it has from the past point per parameter
     double getDistanceToPoint(double *point3D, double closestPoint[3]);
 
     void getBounds(double bounds[6]);
 
-    /// Retorna la llista de punts de la polilínia
+    ///Returns the polyline dot list
     QList<QVector<double> > getPointsList();
 
 public slots:
@@ -79,17 +79,17 @@ protected slots:
     void updateVtkProp();
 
 private:
-    /// Mètode intern per passar de la llista de punts a l'estructura vtk pertinent
+    /// Internal method for moving from the list of points to the relevant vtk structure
     void buildVtkPoints();
 
-    /// Mètode intern per transformar les propietats de la primitiva a propietats de vtk
+    /// Internal method for transforming the properties of the primitive to properties of vtk
     void updateVtkActorProperties();
 
 private:
-    /// Llista de punts de la polilínia
+    ///List of polyline points
     QList<QVector<double> > m_pointsList;
 
-    /// Estructures de vtk, per construir la polilínia
+    /// Vtk structures, to build the polyline
     vtkPolyData *m_vtkPolydata;
     vtkPoints *m_vtkPoints;
     vtkCellArray *m_vtkCellArray;
@@ -97,7 +97,7 @@ private:
     vtkActor2D *m_vtkBackgroundActor;
     vtkPolyDataMapper2D *m_vtkMapper;
 
-    /// vtkProp per agrupar l'actor i el background per simular el contorn
+    /// vtkProp to group the actor and the background to simulate the outline
     vtkPropAssembly *m_vtkPropAssembly;
 };
 

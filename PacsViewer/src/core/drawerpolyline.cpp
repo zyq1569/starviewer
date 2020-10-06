@@ -28,7 +28,7 @@
 namespace udg {
 
 DrawerPolyline::DrawerPolyline(QObject *parent)
- : DrawerPrimitive(parent), m_vtkPolydata(0), m_vtkPoints(0), m_vtkCellArray(0), m_vtkActor(0), m_vtkBackgroundActor(0), m_vtkMapper(0), m_vtkPropAssembly(0)
+    : DrawerPrimitive(parent), m_vtkPolydata(0), m_vtkPoints(0), m_vtkCellArray(0), m_vtkActor(0), m_vtkBackgroundActor(0), m_vtkMapper(0), m_vtkPropAssembly(0)
 {
     m_vtkActor = NULL;
 }
@@ -128,7 +128,7 @@ vtkProp* DrawerPolyline::getAsVtkProp()
         m_vtkPropAssembly = vtkPropAssembly::New();
 
         buildVtkPoints();
-        // Creem el pipeline de l'm_vtkActor
+        // We create the m_vtkActor pipeline
         m_vtkActor = vtkActor2D::New();
         m_vtkBackgroundActor = vtkActor2D::New();
         m_vtkMapper = vtkPolyDataMapper2D::New();
@@ -136,7 +136,7 @@ vtkProp* DrawerPolyline::getAsVtkProp()
         m_vtkActor->SetMapper(m_vtkMapper);
         m_vtkBackgroundActor->SetMapper(m_vtkMapper);
         m_vtkMapper->SetInputData(m_vtkPolydata);
-        // Li donem els atributs
+        // We give it the attributes
         updateVtkActorProperties();
 
         m_vtkPropAssembly->AddPart(m_vtkBackgroundActor);
@@ -149,12 +149,12 @@ void DrawerPolyline::update()
 {
     switch (m_internalRepresentation)
     {
-        case VTKRepresentation:
-            updateVtkProp();
-            break;
+    case VTKRepresentation:
+        updateVtkProp();
+        break;
 
-        case OpenGLRepresentation:
-            break;
+    case OpenGLRepresentation:
+        break;
     }
 }
 
@@ -169,7 +169,7 @@ void DrawerPolyline::updateVtkProp()
     }
     else
     {
-        DEBUG_LOG("No es pot actualitzar la polilínia, ja que encara no s'ha creat!");
+        DEBUG_LOG("Unable to update polyline as not yet created!");
     }
 }
 
@@ -182,12 +182,12 @@ void DrawerPolyline::buildVtkPoints()
         m_vtkCellArray = vtkCellArray::New();
     }
 
-    // Especifiquem el nombre de vèrtexs que té la polilinia
+    //We specify the number of vertices that the polyline has
     int numberOfVertices = m_pointsList.count();
     m_vtkCellArray->InsertNextCell(numberOfVertices);
     m_vtkPoints->SetNumberOfPoints(numberOfVertices);
 
-    // Donem els punts
+    // Let's give the points
     int i = 0;
     foreach (const QVector<double> &vertix, m_pointsList)
     {
@@ -196,7 +196,7 @@ void DrawerPolyline::buildVtkPoints()
         i++;
     }
 
-    // Assignem els punts al polydata
+    // We assign the points to the polydata
     m_vtkPolydata->SetPoints(m_vtkPoints);
 
     m_vtkPolydata->SetLines(m_vtkCellArray);
@@ -204,18 +204,18 @@ void DrawerPolyline::buildVtkPoints()
 
 void DrawerPolyline::updateVtkActorProperties()
 {
-    // Sistema de coordenades
+    // Coordinate system
     m_vtkMapper->SetTransformCoordinate(this->getVtkCoordinateObject());
-    // Estil de la línia
+    // Line style
     m_vtkActor->GetProperty()->SetLineStipplePattern(m_linePattern);
     m_vtkBackgroundActor->GetProperty()->SetLineStipplePattern(m_linePattern);
-    // Assignem gruix de la línia
+    // We assign line thickness
     m_vtkActor->GetProperty()->SetLineWidth(m_lineWidth);
     m_vtkBackgroundActor->GetProperty()->SetLineWidth(m_lineWidth + 2);
-    // Assignem opacitat de la línia
+    // We assign opacity of the line
     m_vtkActor->GetProperty()->SetOpacity(m_opacity);
     m_vtkBackgroundActor->GetProperty()->SetOpacity(m_opacity);
-    // Mirem la visibilitat de l'm_vtkActor
+    //Let's look at the visibility of the m_vtkActor
     m_vtkActor->SetVisibility(this->isVisible());
     m_vtkBackgroundActor->SetVisibility(this->isVisible());
     // Assignem color
