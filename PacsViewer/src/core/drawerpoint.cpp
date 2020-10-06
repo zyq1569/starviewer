@@ -23,7 +23,7 @@
 namespace udg {
 
 DrawerPoint::DrawerPoint(QObject *parent)
-: DrawerPrimitive(parent), m_pointRadius(2.0), m_pointActor(0), m_pointSphere(0), m_pointMapper(0)
+    : DrawerPrimitive(parent), m_pointRadius(2.0), m_pointActor(0), m_pointSphere(0), m_pointMapper(0)
 {
 }
 
@@ -70,7 +70,7 @@ vtkProp* DrawerPoint::getAsVtkProp()
 {
     if (!m_pointActor)
     {
-        // Creem el pipeline de l'm_vtkActor
+        // We create the m_vtkActor pipeline
         m_pointActor = vtkActor::New();
         m_pointSphere = vtkSphereSource::New();
         m_pointMapper = vtkPolyDataMapper::New();
@@ -78,7 +78,7 @@ vtkProp* DrawerPoint::getAsVtkProp()
         m_pointActor->SetMapper(m_pointMapper);
     }
 
-    // Li donem els atributs
+    // We give it the attributes
     m_pointSphere->SetCenter(m_position);
 
     updateVtkActorProperties();
@@ -90,12 +90,12 @@ void DrawerPoint::update()
 {
     switch (m_internalRepresentation)
     {
-        case VTKRepresentation:
-            updateVtkProp();
-            break;
+    case VTKRepresentation:
+        updateVtkProp();
+        break;
 
-        case OpenGLRepresentation:
-            break;
+    case OpenGLRepresentation:
+        break;
     }
 }
 
@@ -103,14 +103,14 @@ void DrawerPoint::updateVtkProp()
 {
     if (m_pointActor)
     {
-        // Assignem les propietats del punt
+        // We assign the properties of the point
         m_pointSphere->SetCenter(m_position);
         updateVtkActorProperties();
         this->setModified(false);
     }
     else
     {
-        DEBUG_LOG("No es pot actualitzar el punt, ja que encara no s'ha creat!");
+        DEBUG_LOG("The point cannot be updated, as it has not yet been created!");
     }
 }
 
@@ -118,15 +118,15 @@ void DrawerPoint::updateVtkActorProperties()
 {
     vtkProperty *properties = m_pointActor->GetProperty();
 
-    // Sistema de coordenades
-    // TODO És un mapper 3D i per això no disposa d'aquest mètode Caldria veure si això pot suposar algun
-    // problema amb la gestió dels sistemes de coordenades
-    // m_pointMapper->SetTransformCoordinate(this->getVtkCoordinateObject());
+    // Coordinate system
+    // TODO It is a 3D mapper and therefore does not have this method It remains to be seen if this can mean any
+    // problem with the management of coordinate systems
+    // m_pointMapper-> SetTransformCoordinate (this-> getVtkCoordinateObject ());
 
-    // Assignem gruix de l'esfera
+    // Assign thickness of the sphere
     m_pointSphere->SetRadius(m_pointRadius);
 
-    // Assignem opacitat al punt
+    //We assign opacity to the point
     properties->SetOpacity(m_opacity);
 
     // Mirem la visibilitat de l'm_vtkActor
@@ -144,7 +144,7 @@ double DrawerPoint::getDistanceToPoint(double *point3D, double closestPoint[3])
     closestPoint[2] = m_position[2];
 
     return sqrt((point3D[0] - m_position[0]) * (point3D[0] - m_position[0]) + (point3D[1] - m_position[1]) * (point3D[1] - m_position[1]) +
-                (point3D[2] - m_position[2]) * (point3D[2] - m_position[2]));
+            (point3D[2] - m_position[2]) * (point3D[2] - m_position[2]));
 }
 
 void DrawerPoint::getBounds(double bounds[6])

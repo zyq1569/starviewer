@@ -26,26 +26,26 @@ class vtkPolyDataMapper;
 namespace udg {
 
 /**
-    Primitiva de punt
-  */
+   Knitted primitive
+*/
 class DrawerPoint : public DrawerPrimitive {
-Q_OBJECT
+    Q_OBJECT
 public:
     DrawerPoint(QObject *parent = 0);
     ~DrawerPoint();
 
-    /// Assignem el punt
+    /// We assign the point
     void setPosition(double point[3]);
     void setPosition(QVector<double> point);
 
-    /// Li assignem el radi a la circumferència que defineix el punt
+    ///We assign the radius to the circle that defines the point
     void setRadius(double radius);
 
     vtkProp* getAsVtkProp();
 
     void getBounds(double bounds[6]);
 
-    /// Calcula la distància que té respecte al punt passat per paràmetre
+    /// Calculates the distance it has from the past point per parameter
     double getDistanceToPoint(double *point3D, double closestPoint[3]);
 
 public slots:
@@ -55,23 +55,23 @@ protected slots:
     void updateVtkProp();
 
 private:
-    /// Mètode intern per transformar les propietats de la primitiva a propietats de vtk
+    ///Internal method for transforming the properties of the primitive to properties of vtk
     void updateVtkActorProperties();
 
 private:
-    /// Posició del punt
+    ///Point position
     double m_position[3];
 
-    /// Radi de la circumferència amb la que dibuixem el punt
+    /// Radius of the circle with which we draw the point
     double m_pointRadius;
 
-    /// Actor que dibuixa la llavor
+    /// Actor drawing the seed
     vtkActor *m_pointActor;
 
-    /// Esfera que representa en punt de la llavor
+    ///Sphere representing point of the seed
     vtkSphereSource *m_pointSphere;
 
-    /// Mapejador del punt
+    ///Point mapper
     vtkPolyDataMapper *m_pointMapper;
 };
 
