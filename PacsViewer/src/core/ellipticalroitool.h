@@ -23,10 +23,10 @@ class Q2DViewer;
 class DrawerText;
 
 /**
-    Tool per calcular l'àrea i la mitjana de grisos d'un òval
-  */
+    Tool for calculating the area and average of grays of an oval
+*/
 class EllipticalROITool : public ROITool {
-Q_OBJECT
+    Q_OBJECT
 public:
     EllipticalROITool(QViewer *viewer, QObject *parent = 0);
     ~EllipticalROITool();
@@ -37,40 +37,40 @@ protected:
     virtual void setTextPosition(DrawerText *text);
 
 private:
-    /// Estats de la Tool
+    /// Tool states
     enum { Ready, FirstPointFixed };
 
-    /// Gestiona les accions a realitzar quan es clica el ratolí
+    /// Manage actions to be performed when the mouse is clicked
     void handlePointAddition();
 
-    /// Simula la forma de l'el·lipse quan tenim el primer punt i movem el mouse
+    ///It simulates the shape of the ellipse when we have the first point and move the mouse
     void simulateEllipse();
 
-    /// Calcula el centre de l'el·lipse a partir dels punts introduits mitjançant la interacció de l'usuari
+    /// Calculates the center of the ellipse from the points entered by user interaction
     void computeEllipseCentre(double centre[3]);
 
-    /// Actualitza els punts del polígon perquè resulti el dibuix de l'òval
+    ///Update the points of the polygon to make the drawing of the oval
     void updatePolygonPoints();
 
-    /// Dona el dibuix de l'òval per finalitzat
+    /// Give the drawing of the oval finished
     void closeForm();
 
-    /// Elimina la representacio temporal de la tool
+    /// Removes the temporary representation from the tool
     void deleteTemporalRepresentation();
 
-    /// Equalitza la profunditat dels elements que formen l'el·lipse final.
+    /// Equalizes the depth of the elements that make up the final ellipse.
     void equalizeDepth();
 
 private slots:
-    /// Inicialitza la tool
+    ///Initialize the tool
     void initialize();
 
 private:
-    /// Punts que annotem de la interacció de l'usuari per crear l'òval
+    /// Points we write down from user interaction to create the oval
     double m_firstPoint[3];
     double m_secondPoint[3];
 
-    /// Estat de la tool
+    ///Tool status
     int m_state;
 };
 

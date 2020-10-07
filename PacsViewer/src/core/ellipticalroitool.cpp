@@ -27,7 +27,7 @@
 namespace udg {
 
 EllipticalROITool::EllipticalROITool(QViewer *viewer, QObject *parent)
- : ROITool(viewer, parent), m_state(Ready)
+    : ROITool(viewer, parent), m_state(Ready)
 {
     m_toolName = "EllipticalROITool";
 
@@ -61,24 +61,24 @@ void EllipticalROITool::handleEvent(long unsigned eventID)
 
     switch (eventID)
     {
-        case vtkCommand::LeftButtonPressEvent:
-            handlePointAddition();
-            break;
+    case vtkCommand::LeftButtonPressEvent:
+        handlePointAddition();
+        break;
 
-        case vtkCommand::MouseMoveEvent:
-            simulateEllipse();
-            break;
+    case vtkCommand::MouseMoveEvent:
+        simulateEllipse();
+        break;
 
-        case vtkCommand::LeftButtonReleaseEvent:
-            closeForm();
-            break;
-        case vtkCommand::KeyPressEvent:
-            int keyCode = m_2DViewer->getInteractor()->GetKeyCode();
-            if (keyCode == 27) // ESC
-            {
-                deleteTemporalRepresentation();
-            }
-            break;
+    case vtkCommand::LeftButtonReleaseEvent:
+        closeForm();
+        break;
+    case vtkCommand::KeyPressEvent:
+        int keyCode = m_2DViewer->getInteractor()->GetKeyCode();
+        if (keyCode == 27) // ESC
+        {
+            deleteTemporalRepresentation();
+        }
+        break;
     }
 }
 
@@ -126,9 +126,9 @@ void EllipticalROITool::setTextPosition(DrawerText *text)
     }
 
     double attachmentPointInDisplay[3];
-    // Passem attachmentPoint a coordenades de display
+    // We pass attachmentPoint to display coordinates
     m_2DViewer->computeWorldToDisplay(attachmentPoint[0], attachmentPoint[1], attachmentPoint[2], attachmentPointInDisplay);
-    // Apliquem el padding i tornem a coordenades de món
+    // We apply padding and return to world coordinates
     m_2DViewer->computeDisplayToWorld(attachmentPointInDisplay[0], attachmentPointInDisplay[1] + paddingY, attachmentPointInDisplay[2], attachmentPoint);
 
     text->setAttachmentPoint(attachmentPoint);
@@ -151,20 +151,20 @@ void EllipticalROITool::simulateEllipse()
 {
     if (m_state == FirstPointFixed)
     {
-        // Obtenim el segon punt
+        // We get the second point
         m_2DViewer->getEventWorldCoordinate(m_secondPoint);
         m_2DViewer->putCoordinateInCurrentImageBounds(m_secondPoint);
 
-        // Si encara no havíem creat el polígon, ho fem
+        // If we hadn’t created the polygon yet, we do
         if (!m_roiPolygon)
         {
             m_roiPolygon = new DrawerPolygon;
-            // Així evitem que la primitiva pugui ser esborrada durant l'edició per events externs
+            //This prevents the primitive from being deleted during editing by external events
             m_roiPolygon->increaseReferenceCount();
             m_2DViewer->getDrawer()->draw(m_roiPolygon);
         }
 
-        // Actualitzem la forma i renderitzem
+        // We update the form and render
         updatePolygonPoints();
         m_2DViewer->render();
     }
@@ -186,7 +186,7 @@ void EllipticalROITool::updatePolygonPoints()
     int xIndex, yIndex, zIndex;
     m_2DViewer->getView().getXYZIndexes(xIndex, yIndex, zIndex);
 
-    // Algorisme pel càlcul de l'el·lipse, extret de http://en.wikipedia.org/wiki/Ellipse#Ellipses_in_computer_graphics
+    //Algorithm for calculating the ellipse, extracted from http://en.wikipedia.org/wiki/Ellipse#Elipses_in_computer_graphics
     double xRadius = (m_secondPoint[xIndex] - m_firstPoint[xIndex]) * 0.5;
     double yRadius = (m_secondPoint[yIndex] - m_firstPoint[yIndex]) * 0.5;
     double depthValue = centre[zIndex];
@@ -218,18 +218,20 @@ void EllipticalROITool::updatePolygonPoints()
 
 void EllipticalROITool::closeForm()
 {
-    // Cal comprovar si hi ha un objecte creat ja que podria ser que no s'hagués creat si s'hagués realitzat un doble clic,
-    // per exemple, ja que no s'hauria passat per l'event de mouse move, que és quan es crea la primitiva.
+    /// It is necessary to check if there is an object created as
+    /// it could not have been created if a double click had been made,
+    /// for example, since it would not have gone through the mouse move event,
+    ///  which is when the primitive is created.
     if (m_roiPolygon)
     {
         equalizeDepth();
         printData();
-        // Alliberem la primitiva perquè pugui ser esborrada
+        // We release the primitive so that it can be erased
         m_roiPolygon->decreaseReferenceCount();
-        // Pintem la primitiva al lloc corresponent
+        // We paint the primitive in the corresponding place
         m_2DViewer->getDrawer()->erasePrimitive(m_roiPolygon);
         m_2DViewer->getDrawer()->draw(m_roiPolygon, m_2DViewer->getView(), m_2DViewer->getCurrentSlice());
-        // Inicialitzem el punter a 0
+        //We initialize the pointer to 0
         m_roiPolygon = 0;
     }
 
@@ -238,7 +240,7 @@ void EllipticalROITool::closeForm()
 
 void EllipticalROITool::initialize()
 {
-    // Alliberem les primitives perquè puguin ser esborrades
+    // We release the primitives so that they can be erased
     if (!m_roiPolygon.isNull())
     {
         m_roiPolygon->decreaseReferenceCount();
