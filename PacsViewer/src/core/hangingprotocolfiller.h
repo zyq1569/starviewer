@@ -25,14 +25,16 @@ class Series;
 class Study;
 
 /**
- * @brief The HangingProtocolFiller class provides the methods needed to assign images to hanging protocol image sets according to their restrictions.
- */
+ * @brief The HangingProtocolFiller class provides the methods needed to
+ * assign images to hanging protocol image sets according to their restrictions.
+*/
 class HangingProtocolFiller
 {
 public:
     /// Fills the given hanging protocol with images and series from the given current study and prior studies.
     void fill(HangingProtocol *hangingProtocol, Study *currentStudy, const QList<Study*> &priorStudies);
-    /// Fills the given image set with images and series from the given study. It's intended to be used when a prior study has been downloaded.
+    /// Fills the given image set with images and series from the given study.
+    /// It's intended to be used when a prior study has been downloaded.
     void fillImageSetWithStudy(HangingProtocolImageSet *imageSet, const Study *study);
 
 private:
@@ -47,7 +49,8 @@ private:
     void findUsedSeries(HangingProtocol *hangingProtocol);
 
 private:
-    /// Set of all the series used by the hanging protocol that is currently being filled. It's used to satisfy the allDifferent property of an image set.
+    /// Set of all the series used by the hanging protocol that is currently being filled.
+    ///  It's used to satisfy the allDifferent property of an image set.
     QSet<const Series*> m_usedSeries;
 
 };

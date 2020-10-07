@@ -31,7 +31,7 @@ Image* getImageByIndexInStudyModality(const Study *study, int index, const QStri
 {
     QList<Image*> allImagesInStudy;
 
-    // TODO Es podria millorar amb una cerca fins a la imatge que està a l'índex, envers d'un recorregut agafant-les totes
+    // TODO Es could improve with a search to the image that is in the index, towards a route taking them all
 
     foreach (Series *series, study->getSeries())
     {
@@ -51,7 +51,7 @@ Image* getImageByIndexInStudyModality(const Study *study, int index, const QStri
     }
 }
 
-// Cert si la imatge compleix les restriccions
+// True if the image meets the restrictions
 bool isValidImage(const Image *image, const HangingProtocolImageSet *imageSet)
 {
     if (!image)
@@ -63,7 +63,8 @@ bool isValidImage(const Image *image, const HangingProtocolImageSet *imageSet)
     return imageSet->getRestrictionExpression().test(image);
 }
 
-// This method is to temporally preserve backwards compatibility with the imageNumberInStudyModality tag. Should be removed when it isn't needed anymore.
+/// This method is to temporally preserve backwards compatibility with the
+/// imageNumberInStudyModality tag. Should be removed when it isn't needed anymore.
 void fillImageSetWithImageNumberInStudyModality(HangingProtocolImageSet *imageSet, const Study *currentStudy)
 {
     QStringList modalities = imageSet->getHangingProtocol()->getHangingProtocolMask()->getProtocolList();
@@ -77,8 +78,8 @@ void fillImageSetWithImageNumberInStudyModality(HangingProtocolImageSet *imageSe
     }
     else
     {
-        // Segur que no hi ha cap més imatge vàlida
-        // Important, no hi posem cap serie!
+        // Surely there are no more valid images
+        // Important, we don't put any series in it!
         imageSet->setSeriesToDisplay(0);
         imageSet->setImageToDisplay(0);
     }
@@ -104,7 +105,8 @@ QList<Study*> getPriorStudies(const Study *currentStudy, const QList<Study*> &pr
     return studies;
 }
 
-// Returns the applicable study for the given image set according to its abstract prior value, chosen from the current study and the prior studies.
+/// Returns the applicable study for the given image set according to its abstract prior value,
+//chosen from the current study and the prior studies.
 Study* getCurrentOrPriorStudy(const HangingProtocolImageSet *imageSet, Study *currentStudy, const QList<Study*> &allPriorStudies)
 {
     if (imageSet->getAbstractPriorValue() == 0)
@@ -156,11 +158,11 @@ void HangingProtocolFiller::fillImageSetWithStudy(HangingProtocolImageSet *image
 
 void HangingProtocolFiller::fillImageSet(HangingProtocolImageSet *imageSet, Study *currentStudy, const QList<Study*> &priorStudies)
 {
-    // Pot ser que busquem una imatge en concret, llavors no cal examinar totes les sèries i/o totes les imatges
-    // Només pot ser vàlida una imatge
+    // We may be looking for a specific image, so it is not necessary to examine all the series and / or all the images
+    // Only one image can be valid
     if (imageSet->getImageNumberInStudyModality() != -1)
     {
-        // HACK! This shall be removed in the future.
+        // HACK!This shall be removed in the future.
         fillImageSetWithImageNumberInStudyModality(imageSet, currentStudy);
         return;
     }
