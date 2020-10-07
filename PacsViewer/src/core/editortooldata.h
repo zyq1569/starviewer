@@ -30,7 +30,7 @@ public:
     int getVolumeVoxels();
 
 private:
-    /// Hi guardem la posició de la llavor
+    /// We store the position of the seed
     int m_volumeCont;
 
 };
