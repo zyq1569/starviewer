@@ -25,15 +25,15 @@ class DrawerPolygon;
 class DrawerPrimitive;
 
 /**
-    Tool per esborrar primitives i annotacions de pantalla.
-    Si es fa un clic, busca la primitiva més propera al punt clicat i si està dins d'un llindar l'esborra.
-    També es pot clicar en un punt i arrossegar-lo per dibuixar un requadre, esborrant totes les primitives que
-    estiguin dins de l'àrea que delimita el requadre dibuixat.
-  */
+Tool for deleting primitives and screen annotations.
+If you click, it looks for the primitive closest to the clicked point and if it is within a threshold it clears it.
+You can also click on a point and drag it to draw a box, deleting all the primitives that
+are within the area delimiting the drawn box.
+*/
 class EraserTool : public Tool {
-Q_OBJECT
+    Q_OBJECT
 public:
-    /// Possibles estats de la tool
+    ///Possible tool states
     enum { StartClick, None };
 
     EraserTool(QViewer *viewer, QObject *parent = 0);
@@ -42,41 +42,42 @@ public:
     void handleEvent(unsigned long eventID);
 
 private:
-    /// Inicia el procés de determinació de la zona d'esborrat
+    ///Start the process of determining the deletion zone
     void startEraserAction();
 
-    /// Dibuixa l'àrea d'esborrat
+    ///Draw the erase area
     void drawAreaOfErasure();
 
-    /// Cercarà quina és la primitiva més propera, i si està lo suficientment aprop l'esborrarà.
+    /// It will look for the closest primitive, and if it is close enough it will delete it.
     void erasePrimitive();
 
-    /// Determina quina primitiva es pot esborrar amb el punt, vista i llesca donats.
-    /// @param point Coordenada de món a partir de la qual volem determinar si hi ha una primitiva pròxima
-    /// @param view Vista actual del model (Axial, Sagital, Coronal)
-    /// @param slice Llesca d'on volem obtenir la primitiva
-    /// @return La primitiva que estigui propera al punt determinat, dins d'un llindar determinat.
-    /// Si el punt no és prou proper segons el llindar o no hi ha primitives en aquella llesca, la primitiva retornada serà nul·la.
+    /// Determine which primitive can be deleted with the given point, view, and slice.
+    /// @param point Coordinate of world from which we want to determine if there is a near primitive
+    /// @param view Current model view (Axial, Sagittal, Coronal)
+    /// @param slice Slice where we want to get the primitive
+    /// @return The primitive that is close to the given point, within a certain threshold.
+    /// If the point is not close enough according to the threshold or there are no primitives in that slice,
+    /// the returned primitive will be null.
     DrawerPrimitive* getErasablePrimitive(double point[3], const OrthogonalPlane &view, int slice);
 
 private slots:
-    /// Slot que torna la tool al seu estat inicial
+    /// Slot that returns the tool to its initial state
     void reset();
 
 private:
-    /// Viewer 2D sobre el qual treballem
+    ///2D viewer we are working on
     Q2DViewer *m_2DViewer;
 
-    /// Ens permet determinar l'estat de la tool
+    ///It allows us to determine the status of the tool
     int m_state;
 
-    /// Primer punt de l'àrea d'esborrat
+    ///First point of the erasure area
     double m_startPoint[3];
 
-    /// Darrer punt de l'àrea d'esborrat
+    /// Last point of the erasure area
     double m_endPoint[3];
 
-    /// Polígon que ens marca la zona d'esborrat.
+    ///Polygon that marks the erasure area.
     DrawerPolygon *m_polygon;
 };
 

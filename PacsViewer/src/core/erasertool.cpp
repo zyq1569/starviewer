@@ -23,7 +23,7 @@
 namespace udg {
 
 EraserTool::EraserTool(QViewer *viewer, QObject *parent)
- : Tool(viewer, parent), m_state(None), m_polygon(0)
+    : Tool(viewer, parent), m_state(None), m_polygon(0)
 {
     m_toolName = "EraserTool";
     m_hasSharedData = false;
@@ -37,7 +37,7 @@ EraserTool::~EraserTool()
 {
     if (m_polygon)
     {
-        // Així alliberem la primitiva perquè pugui ser esborrada
+        //Thus we release the primitive so that it can be erased
         m_polygon->decreaseReferenceCount();
         delete m_polygon;
     }
@@ -47,30 +47,30 @@ void EraserTool::handleEvent(unsigned long eventID)
 {
     switch (eventID)
     {
-        case vtkCommand::LeftButtonPressEvent:
-            startEraserAction();
-            break;
+    case vtkCommand::LeftButtonPressEvent:
+        startEraserAction();
+        break;
 
-        case vtkCommand::MouseMoveEvent:
-            drawAreaOfErasure();
-            break;
+    case vtkCommand::MouseMoveEvent:
+        drawAreaOfErasure();
+        break;
 
-        case vtkCommand::LeftButtonReleaseEvent:
-            erasePrimitive();
-            reset();
-            m_2DViewer->render();
-            break;
+    case vtkCommand::LeftButtonReleaseEvent:
+        erasePrimitive();
+        reset();
+        m_2DViewer->render();
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 }
 
 void EraserTool::startEraserAction()
 {
     m_2DViewer->getEventWorldCoordinate(m_startPoint);
-    // A l'agafar el primer punt inicialitzem l'start i l'end point per igual
-    // simplement per què així és més segur que no tenir un valor arbitrari a endPoint
+    // When we take the first point we initialize the start and the end point equally
+    // simply why this is safer than not having an arbitrary value in endPoint
     m_endPoint[0] = m_startPoint[0];
     m_endPoint[1] = m_startPoint[1];
     m_endPoint[2] = m_startPoint[2];
@@ -88,7 +88,7 @@ void EraserTool::drawAreaOfErasure()
         m_2DViewer->getEventWorldCoordinate(m_endPoint);
         m_2DViewer->getView().getXYZIndexes(xIndex, yIndex, zIndex);
 
-        // Calculem el segon punt i el tercer
+        // We calculate the second point and the third
         p2[xIndex] = m_endPoint[xIndex];
         p2[yIndex] = m_startPoint[yIndex];
         p2[zIndex] = m_2DViewer->getCurrentSlice();
@@ -100,7 +100,7 @@ void EraserTool::drawAreaOfErasure()
         if (!m_polygon)
         {
             m_polygon = new DrawerPolygon;
-            // Així evitem que durant l'edició la primitiva pugui ser esborrada per events externs
+            // This prevents the primitive from being deleted by external events during editing
             m_polygon->increaseReferenceCount();
             m_polygon->addVertix(p2);
             m_polygon->addVertix(m_endPoint);
@@ -110,12 +110,12 @@ void EraserTool::drawAreaOfErasure()
         }
         else
         {
-            // Assignem els punts del polígon
+            // We assign the points of the polygon
             m_polygon->setVertix(0, p2);
             m_polygon->setVertix(1, m_endPoint);
             m_polygon->setVertix(2, p3);
             m_polygon->setVertix(3, m_startPoint);
-            // Actualitzem els atributs de la polilinia
+            // We update the attributes of the polyline
             m_polygon->update();
             m_2DViewer->render();
         }
@@ -155,7 +155,8 @@ DrawerPrimitive* EraserTool::getErasablePrimitive(double point[3], const Orthogo
         m_2DViewer->computeWorldToDisplay(closestPoint[0], closestPoint[1], closestPoint[2], closestDisplayPoint);
 
         double displayDistance = MathTools::getDistance3D(displayPoint, closestDisplayPoint);
-        // Si la distància entre els punts no està dins d'un llindar determinat, no considerem que la primitiva es pugui esborrar
+        /// If the distance between the points is not within a certain threshold,
+        /// we do not consider that the primitive can be erased
         double proximityThreshold = 5.0;
         if (displayDistance > proximityThreshold)
         {
@@ -170,7 +171,7 @@ void EraserTool::reset()
 {
     if (m_polygon)
     {
-        // Així alliberem la primitiva perquè pugui ser esborrada
+        //Thus we release the primitive so that it can be erased
         m_polygon->decreaseReferenceCount();
         delete m_polygon;
         m_polygon = NULL;
