@@ -25,7 +25,7 @@ class Volume;
 /**
 Context where an extension is executed. It allows access to information
 that may be useful to the extension such as the Patient object, the window where it runs, the "readers".
-   */
+*/
 class ExtensionContext {
 public:
     ExtensionContext();
