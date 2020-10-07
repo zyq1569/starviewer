@@ -23,7 +23,8 @@ class Image;
 class Series;
 
 /**
- * @brief The HangingProtocolImageSetRestriction class represents a criterion that an image or series must satisfy to be selected for an image set.
+ * @brief The HangingProtocolImageSetRestriction class represents a criterion
+ * that an image or series must satisfy to be selected for an image set.
  *
  * It is loosely based on an item of the DICOM Image Set Selector Sequence (0072,0022).
  */

@@ -129,14 +129,15 @@ bool HangingProtocolImageSetRestriction::test(const Image *image) const
     }
     else if (getSelectorAttribute() == "Laterality")
     {
-        // Atenció! Aquest atribut està definit a nivell de sèries
+        // Attention! This attribute is defined at the series level
         return QString(image->getParentSeries()->getLaterality()) == getSelectorValue();
     }
     else if (getSelectorAttribute() == "PatientOrientation")
     {
         return image->getPatientOrientation().getDICOMFormattedPatientOrientation().contains(QRegularExpression(getSelectorValue()));
     }
-    // TODO Es podria canviar el nom, ja que és massa genèric. Seria més adequat ViewCodeMeaning per exemple
+    /// TODO The name could be changed as it is too generic.
+    /// ViewCodeMeaning would be more appropriate for example
     else if (getSelectorAttribute() == "CodeMeaning")
     {
         return image->getViewCodeMeaning().contains(QRegularExpression(getSelectorValue()));
