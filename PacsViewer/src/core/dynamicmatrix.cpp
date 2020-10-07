@@ -30,13 +30,13 @@ DynamicMatrix::DynamicMatrix()
 
 void DynamicMatrix::setValue(int row, int column, int value)
 {
-    // Primer de tot mirar si la posició on volem posar el valor està a la matriu
-    // Si no hi és expandim la matriu
+    // First of all look if the position where we want to put the value is in the matrix
+    // If it is not there we expand the matrix
     int listSelected = row + m_indexRow;
-    // Si la fila es passa del rang actual per baix, afegir una nova QList a l'inici de la llista
+    // If the row goes below the current range, add a new QList to the beginning of the list
     if (listSelected < 0)
     {
-        // Emplenar la nova llista de -1
+        //Fill in the new list of -1
         for (int i = m_indexRow; i < -1 * row; i++)
         {
             QList<int> list;
@@ -49,7 +49,8 @@ void DynamicMatrix::setValue(int row, int column, int value)
         }
         listSelected = row + m_indexRow;
     }
-    // Si la fila es passa del rang actual per dalt, afegir una nova QLista al final de la llista
+    /// If the row is passed the current range above,
+    /// add a new QList to the end of the list
     else if (listSelected >= m_matrix.count())
     {
         for (int i = m_matrix.count() - 1; i < listSelected; i++)
@@ -62,8 +63,8 @@ void DynamicMatrix::setValue(int row, int column, int value)
             m_matrix.append(list);
         }
     }
-    // Si la columna es passa de rang per l'esquerra, afegir tants -1 com calgui a l'inici de cada una
-    // de les llistes
+    // If the column is skipped to the left, add as many -1 as needed at the beginning of each
+    // of the lists
     int columnSelected = column + m_indexColumn;
     if (columnSelected < 0)
     {
@@ -78,7 +79,7 @@ void DynamicMatrix::setValue(int row, int column, int value)
         }
         columnSelected = column + m_indexColumn;
     }
-    // Si la columna es passa per la dreta, afegir tants -1 com calgui al final de cada una de les llistes
+    /// If the column goes to the right, add as many -1 as needed at the end of each of the lists
     else if (columnSelected >= m_columnCount)
     {
         for (int i = m_columnCount - 1; i < columnSelected; i++)
@@ -91,19 +92,19 @@ void DynamicMatrix::setValue(int row, int column, int value)
         }
     }
 
-    // Ara la matriu ja es prou gran com per que si fem l'acces directe no caigui fora
+    // Now the array is large enough that if we do the shortcut it does not fall out
     m_matrix[listSelected][columnSelected] = value;
 }
 
 int DynamicMatrix::getValue(int row, int column) const
 {
-    // Calcular la fila i columna real a la que volem accedir
+    // Calculate the actual row and column that we want to access
     int rowSelected = m_indexRow + row;
     int columnSelected = m_indexColumn + column;
-    // Com que la matriu és quadrada, mirar si la casella que volem està dins els limits de la matriu
+    // Since the matrix is square, look to see if the box we want is within the limits of the matrix
     if (rowSelected < 0 || rowSelected > m_matrix.count() || columnSelected < 0 || columnSelected > m_columnCount)
     {
-        // Si no troba el valor retorna -1
+        //If it does not find the value it returns -1
         return -1;
     }
     else
@@ -114,7 +115,7 @@ int DynamicMatrix::getValue(int row, int column) const
 
 QList<int> DynamicMatrix::getLeftColumn() const
 {
-    // Retorna una llista amb el primer valor de cada fila
+    //Returns a list with the first value in each row
     QList<int> result;
     for (int i = m_matrix.count() - 1; i >= 0; i--)
     {
@@ -125,7 +126,7 @@ QList<int> DynamicMatrix::getLeftColumn() const
 
 QList<int> DynamicMatrix::getRightColumn() const
 {
-    // Retorna una llista amb l'últim valor de cada fila
+    //Returns a list with the last value in each row
     QList<int> result;
     for (int i = m_matrix.count() - 1; i >= 0; i--)
     {
@@ -136,31 +137,31 @@ QList<int> DynamicMatrix::getRightColumn() const
 
 QList<int> DynamicMatrix::getTopRow() const
 {
-    // Retorna una llista amb la fila superior (que és l'última QList)
+    // Returns a list with the top row (which is the last QList)
     return m_matrix[m_matrix.count() - 1];
 }
 
 QList<int> DynamicMatrix::getBottomRow() const
 {
-    // Retorna una llista amb la fila inferior (que és la primera QList)
+    //Returns a list with the bottom row (which is the first QList)
     return m_matrix[0];
 }
 
 void DynamicMatrix::print()
 {
-    // Exemple de resultat:
+    // Example result:
     // ######
-    //  0 1 2
-    //  5   6
+    // 0 1 2
+    // 5 6
     // ######
-    // Escriure una linia de # superior
+    // Write a # upper line
     QString result("");
     for (int j = 0; j < m_columnCount; j++)
     {
         result = result + QString("##");
     }
     DEBUG_LOG(result);
-    // Escriure la matriu
+    // Write the matrix
     for (int i = m_matrix.count() - 1; i >= 0; i--)
     {
         result = QString("");
@@ -177,7 +178,7 @@ void DynamicMatrix::print()
         }
         DEBUG_LOG(result);
     }
-    // Escriure una linia de # inferior
+    //Write a # bottom line
     result = QString("");
     for (int j = 0; j < m_columnCount; j++)
     {
@@ -188,7 +189,7 @@ void DynamicMatrix::print()
 
 bool DynamicMatrix::isMaximizable() const
 {
-    // Si hi ha més d'una columna o més d'una fila
+    // If there is more than one column or more than one row
     return m_columnCount > 1 || m_matrix.count() > 1;
 }
 
