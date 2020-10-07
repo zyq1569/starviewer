@@ -42,13 +42,13 @@ EditorTool::EditorTool(QViewer *viewer, QObject *parent)
     m_myData = new EditorToolData;
 
     m_2DViewer = Q2DViewer::castFromQViewer(viewer);
-    // Ens assegurem que desde la creació tenim un viewer vàlid
+    // We make sure that since creation we have a valid viewer
     Q_ASSERT(m_2DViewer);
 
     m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/pencil.svg")));
     this->initialize();
 
-    // \TODO:cada cop que canvïi l'input a l'overlay cal fer algunes inicialitzacions
+    // \TODO:every time you change the input to the overlay you need to do some initializations
     connect(m_2DViewer, SIGNAL(overlayChanged()), SLOT(initialize()));
 }
 
@@ -73,7 +73,7 @@ void EditorTool::initialize()
         }
         else
         {
-            // En cas que siguin iguals
+            // In case they are the same
             double windowWidth = m_2DViewer->getCurrentVoiLut().getWindowLevel().getWidth();
             m_insideValue = (int)(range[0] + windowWidth);
         }
