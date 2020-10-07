@@ -118,7 +118,8 @@ bool ExternalApplication::launch(const QHash<QString,QString> &replacements) con
     }
     else if (this->getType() == Command)
     {
-        if (success = QProcess::startDetached(replacedUrl)) //Ninja code: assignation inside an if condition.
+        ///Ninja code: assignation inside an if condition.
+        if (success = QProcess::startDetached(replacedUrl))
         {
             INFO_LOG("Running command " + replacedUrl);
         }
