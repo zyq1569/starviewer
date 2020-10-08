@@ -33,7 +33,7 @@ void ImageOverlayReader::setFilename(const QString &filename)
 {
     m_filename = filename;
 }
-  
+
 bool ImageOverlayReader::read()
 {
     m_overlaysList.clear();
@@ -59,8 +59,8 @@ gdcm::Image ImageOverlayReader::getGDCMImageFromFile(const QString &filename)
     imageReader.SetFileName(qPrintable(filename));
     if (!imageReader.Read())
     {
-        ERROR_LOG("Ha fallat la lectura del fitxer: " + filename + " [ImageOverlayReader]");
-        DEBUG_LOG("Ha fallat la lectura del fitxer: " + filename);
+        ERROR_LOG("Failed to read file: " + filename + " [ImageOverlayReader]");
+        DEBUG_LOG("Failed to read file: " + filename);
         return gdcm::Image();
     }
     

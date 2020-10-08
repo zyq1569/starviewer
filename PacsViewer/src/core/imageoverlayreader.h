@@ -28,42 +28,43 @@ namespace udg {
 class ImageOverlay;
 
 /**
-    Classe per llegir overlays a través d'un arxiu. Per llegir els overlays caldrà assignar primer el nom de l'arxiu
-    del que volem llegir els overlays i després fer-ne la lectura. Un cop feta la lectura podrem obtenir els overlays amb getOverlays()
-    
-    Exemple:
-    \code
-    ImageOverlayReader reader;
-    reader.setFilename("C:\samples\image.dcm");
-    if (read())
-    {
-        return reader.getOverlays();
-    }
-    \endcode
+Class to read overlays through a file. To read the overlays you must first assign the file name
+of what we want to read the overlays and then read them. Once done
+reading we can get overlays with getOverlays ()
+
+Exemple:
+\code
+ImageOverlayReader reader;
+reader.setFilename("C:\samples\image.dcm");
+if (read())
+{
+    return reader.getOverlays();
+}
+\endcode
  */
 class ImageOverlayReader {
 public:
     ImageOverlayReader();
     ~ImageOverlayReader();
 
-    /// Nom del fitxer a partir del que hem de llegir l'overlay
+    /// File name from which we should read the overlay
     void setFilename(const QString &filename);
 
-    /// Un cop donat un nom d'arxiu, en llegeix els overlays. Retorna fals en cas d'error, cert altrament
+    /// Once given a file name, read the overlays. Returns false in case of error, true otherwise
     bool read();
 
-    /// Retorna la llista d'overlays llegits
+    /// Returns the list of read overlays
     QList<ImageOverlay> getOverlays() const;
 
 private:
-    /// Ens retorna una gdcm::Image a partir del nom de fitxer especificat. Retornarà nul en cas d'error
+    /// Returns us a gdcm :: Image from the specified filename. It will return null in case of error
     virtual gdcm::Image getGDCMImageFromFile(const QString &filename);
 
 private:
-    /// Nom de l'arxiu del que hem de llegir els overlays
+    ///File name from which we should read the overlays
     QString m_filename;
 
-    /// Llista d'overlays llegits
+    /// List of overlays read
     QList<ImageOverlay> m_overlaysList;
 };
 
