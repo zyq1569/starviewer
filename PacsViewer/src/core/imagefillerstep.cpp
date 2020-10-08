@@ -44,8 +44,9 @@ int getNumberOfFrames(const DICOMTagReader *dicomReader)
 // Depends on image having Image Orientation Patient.
 void fillPatientOrientation(Image *image, const DICOMTagReader *dicomReader)
 {
-    // Orientació de pacient
-    // L'obtenim a partir del tag DICOM si existeix, sinó el calculem a partir d'ImageOrientation
+    /// Patient guidance
+    /// We get it from the DICOM tag if it exists,
+    ///  otherwise we calculate it from ImageOrientation
     PatientOrientation patientOrientation;
     QString value = dicomReader->getValueAttributeAsQString(DICOMPatientOrientation);
     if (!value.isEmpty())
@@ -65,10 +66,11 @@ void fillVoiLuts(Image *image, const C *voiLutsContainer)
 {
     QList<VoiLut> voiLutList;
 
-    // Normal: Llegim els valors de window level, tipus 1C i les respectives descripcions de ww/wl si n'hi ha (tipus 3)
-    //         Aquests es troben a VOI LUT Module (C.11.2)
-    //         El mòdul és opcional a CR, CT, MR, NM, US, US MF, SC, XA, RF, RF IM i PET i és condicional a SC MF GB, SC MF GW, DX, MG i IO
-    // Enhanced:  Frame VOI LUT Macro (C.7.6.16.2.10)
+    /// Normal: Llegim els valors de window level, tipus 1C i les respectives descripcions de ww/wl si n'hi ha (tipus 3)
+    ///         Aquests es troben a VOI LUT Module (C.11.2)
+    ///         El mòdul és opcional a CR, CT, MR, NM, US,
+    /// US MF, SC, XA, RF, RF IM i PET i és condicional a SC MF GB, SC MF GW, DX, MG i IO
+    /// Enhanced:  Frame VOI LUT Macro (C.7.6.16.2.10)
 
     // Obtenim Window Center (1C normal, 1 enhanced)
     QString windowCenterString = voiLutsContainer->getValueAttributeAsQString(DICOMWindowCenter);
@@ -124,11 +126,12 @@ void fillDisplayShutterInformation(Image *image, const C *displayShutterContaine
     }
     else
     {
-        // Si no hi ha el valor shutter shape llavors és que no tenim shutters, no cal mirar cap tag més
+        /// If there is no shutter shape value then it is
+        /// we don't have shutters, no need to look at any more tags
         return;
     }
 
-    // Obtenim el valor de presentació (3)
+    // We get the presentation value (3)
     unsigned short presentationValue = 0;
     dicomValue = displayShutterContainer->getValueAttribute(DICOMShutterPresentationValue);
     if (dicomValue)
@@ -136,11 +139,11 @@ void fillDisplayShutterInformation(Image *image, const C *displayShutterContaine
         presentationValue = dicomValue->getValueAsQString().toUShort();
     }
 
-    // Segons els valors de shutterShape, omplirem la informació de cada forma del shutter
+    // According to the values of shutterShape, we will fill in the information of each shape of the shutter
     if (shutterShape.contains("RECTANGULAR"))
     {
         int minX, maxX, minY, maxY;
-        // Obtenim Shutter Left Vertical Edge, requerit quan shutter shape conté RECTANGULAR
+        //We get Shutter Left Vertical Edge, required when shutter shape contains RECTANGULAR
         dicomValue = displayShutterContainer->getValueAttribute(DICOMShutterLeftVerticalEdge);
         if (dicomValue)
         {
@@ -148,10 +151,10 @@ void fillDisplayShutterInformation(Image *image, const C *displayShutterContaine
         }
         else
         {
-            ERROR_LOG("No s'ha trobat el tag Shutter Left Vertical Edge en un arxiu que se suposa que l'ha de tenir!");
+            ERROR_LOG("The tag Shutter Left Vertical Edge was not found in a file that is supposed to have it!");
         }
 
-        // Obtenim Shutter Right Vertical Edge, requerit quan shutter shape conté RECTANGULAR
+        // We get Shutter Right Vertical Edge, required when shutter shape contains RECTANGULAR
         dicomValue = displayShutterContainer->getValueAttribute(DICOMShutterRightVerticalEdge);
         if (dicomValue)
         {
@@ -162,7 +165,7 @@ void fillDisplayShutterInformation(Image *image, const C *displayShutterContaine
             ERROR_LOG("No s'ha trobat el tag Shutter Right Vertical Edge en un arxiu que se suposa que l'ha de tenir!");
         }
 
-        // Obtenim Shutter Upper Horizontal Edge, requerit quan shutter shape conté RECTANGULAR
+        //We get Shutter Upper Horizontal Edge, required when shutter shape contains RECTANGULAR
         dicomValue = displayShutterContainer->getValueAttribute(DICOMShutterUpperHorizontalEdge);
         if (dicomValue)
         {
@@ -173,7 +176,7 @@ void fillDisplayShutterInformation(Image *image, const C *displayShutterContaine
             ERROR_LOG("No s'ha trobat el tag Shutter Upper Horizontal Edge en un arxiu que se suposa que l'ha de tenir!");
         }
 
-        // Obtenim Shutter Lower Horizontal Edge, requerit quan shutter shape conté RECTANGULAR
+        // We get Shutter Lower Horizontal Edge, required when shutter shape contains RECTANGULAR
         dicomValue = displayShutterContainer->getValueAttribute(DICOMShutterLowerHorizontalEdge);
         if (dicomValue)
         {
@@ -181,7 +184,7 @@ void fillDisplayShutterInformation(Image *image, const C *displayShutterContaine
         }
         else
         {
-            ERROR_LOG("No s'ha trobat el tag Shutter Lower Horizontal Edge en un arxiu que se suposa que l'ha de tenir!");
+            ERROR_LOG("Shutter Lower Horizontal Edge tag not found in file supposed to have it!");
         }
 
         DisplayShutter rectangularShutter;
@@ -194,7 +197,7 @@ void fillDisplayShutterInformation(Image *image, const C *displayShutterContaine
 
     if (shutterShape.contains("CIRCULAR"))
     {
-        // Obtenim Radius of Circular Shutter, requerit quan shutter shape conté CIRCULAR
+        //We obtain Radius of Circular Shutter, required when shutter shape contains CIRCULAR
         int radius = 0;
         dicomValue = displayShutterContainer->getValueAttribute(DICOMRadiusOfCircularShutter);
         if (dicomValue)
@@ -203,10 +206,10 @@ void fillDisplayShutterInformation(Image *image, const C *displayShutterContaine
         }
         else
         {
-            ERROR_LOG("No s'ha trobat el tag Radius of Circular Shutter en un arxiu que se suposa que l'ha de tenir!");
+            ERROR_LOG("The Radius of Circular Shutter tag was not found in a file that is supposed to have it!");
         }
 
-        // Obtenim Center of Circular Shutter, requerit quan shutter shape conté CIRCULAR
+        // We get Center of Circular Shutter, required when shutter shape contains CIRCULAR
         QPoint centre;
         dicomValue = displayShutterContainer->getValueAttribute(DICOMCenterOfCircularShutter);
         if (dicomValue)
@@ -214,7 +217,7 @@ void fillDisplayShutterInformation(Image *image, const C *displayShutterContaine
             QStringList centreStringList = dicomValue->getValueAsQString().split("\\");
             if (centreStringList.count() != 2)
             {
-                ERROR_LOG("L'atribut Center of Circular Shutter està en un format inesperat: " + dicomValue->getValueAsQString());
+                ERROR_LOG("The Center of Circular Shutter attribute is in an unexpected format: " + dicomValue->getValueAsQString());
             }
             else
             {
@@ -225,7 +228,7 @@ void fillDisplayShutterInformation(Image *image, const C *displayShutterContaine
         }
         else
         {
-            ERROR_LOG("No s'ha trobat el tag Radius of Circular Shutter en un arxiu que se suposa que l'ha de tenir!");
+            ERROR_LOG("The Radius of Circular Shutter tag was not found in a file that is supposed to have it!");
         }
 
         DisplayShutter circularShutter;
@@ -240,14 +243,14 @@ void fillDisplayShutterInformation(Image *image, const C *displayShutterContaine
     {
         QVector<QPoint> polygonVertices;
 
-        // Obtenim Vertices of the Polygonal Shutter, requerit quan shutter shape conté POLYGONAL
+        // We obtain Vertices of the Polygonal Shutter, required when shutter shape contains POLYGONAL
         dicomValue = displayShutterContainer->getValueAttribute(DICOMVerticesOfThePolygonalShutter);
         if (dicomValue)
         {
             QStringList vertices = dicomValue->getValueAsQString().split("\\");
             if (MathTools::isOdd(vertices.count()))
             {
-                ERROR_LOG("L'atribut Vertices of the Polygonal Shutter està en un format inesperat: " + dicomValue->getValueAsQString());
+                ERROR_LOG("The Vertices of the Polygonal Shutter attribute is in an unexpected format: " + dicomValue->getValueAsQString());
             }
             else
             {
@@ -260,7 +263,7 @@ void fillDisplayShutterInformation(Image *image, const C *displayShutterContaine
         }
         else
         {
-            ERROR_LOG("No s'ha trobat el tag Vertices of the Polygonal Shutter en un arxiu que se suposa que l'ha de tenir!");
+            ERROR_LOG("The tag Vertices of the Polygonal Shutter was not found in a file that is supposed to have it!");
         }
 
         DisplayShutter polygonalShutter;
@@ -309,7 +312,7 @@ QList<Image*> ImageFillerStep::processDICOMFile(const DICOMTagReader *dicomReade
     bool ok = dicomReader->tagExists(DICOMPixelData);
     if (ok)
     {
-        // Comprovem si la imatge és enhanced o no per tal de cridar el mètode específic més adient
+        // We check if the image is enhanced or not in order to call the most appropriate specific method
         if (isEnhancedImageSOPClass(dicomReader->getValueAttributeAsQString(DICOMSOPClassUID)))
         {
             generatedImages = processEnhancedDICOMFile(dicomReader);
@@ -324,7 +327,7 @@ QList<Image*> ImageFillerStep::processDICOMFile(const DICOMTagReader *dicomReade
                 image->setFrameNumber(frameNumber);
                 processImage(image, dicomReader);
 
-                // Afegirem la imatge a la llista si aquesta s'ha pogut afegir a la corresponent sèrie
+                // We will add the image to the list if it could be added to the corresponding series
                 if (m_input->getCurrentSeries()->addImage(image))
                 {
                     generatedImages << image;
@@ -341,10 +344,10 @@ QList<Image*> ImageFillerStep::processDICOMFile(const DICOMTagReader *dicomReade
 
 void ImageFillerStep::fillCommonImageInformation(Image *image, const DICOMTagReader *dicomReader)
 {
-    // El path on es troba la imatge a disc
+    // The path where the disk image is located
     image->setPath(dicomReader->getFileName());
 
-    // DICOMSource del que prové la imatge
+    //DICOMSource from which the image comes
     image->setDICOMSource(m_input->getDICOMSource());
 
     // C.12.1 SOP Common Module
@@ -366,8 +369,8 @@ void ImageFillerStep::fillCommonImageInformation(Image *image, const DICOMTagRea
     // C.8.19.2 Enhanced XA/XRF Image Module
     image->setImageType(dicomReader->getValueAttributeAsQString(DICOMImageType));
 
-    // Obtenim l'hora en que es va crear/obtenir la píxel data
-    // C.7.6.1 General Image Module (present a totes les modalitats no enhanced, excepte 3D XA, 3D CF i OPT)
+    // We get the time the pixel was created / obtained
+    // C.7.6.1 General Image Module (present in all non-enhanced modes except 3D XA, 3D CF and OPT)
     // C.7.6.16 Multi-Frame Functional Groups Module
     image->setImageTime(dicomReader->getValueAttributeAsQString(DICOMContentTime));
 
@@ -384,19 +387,19 @@ void ImageFillerStep::processImage(Image *image, const DICOMTagReader *dicomRead
 {
     QString value;
 
-    // Omplim la informació comuna
+    //We fill in the common information
     fillCommonImageInformation(image, dicomReader);
 
-    // Calculem el pixel spacing
+    //We calculate the pixel spacing
     computePixelSpacing(image, dicomReader);
     // Fill other information
     checkAndSetEstimatedRadiographicMagnificationFactor(image, dicomReader);
 
-    // Calculem propietats del pla imatge
+    // We calculate properties of the image plane
 
-    // Propietats d'Image Plane Module (C.7.6.2) (Requerit per CT,MR i PET)
+    // Image Plane Module Properties (C.7.6.2) (Required by CT, MR and PET)
 
-    // Obtenim Slice Thickness, tipus 2
+    // We get Slice Thickness, type 2
     value = dicomReader->getValueAttributeAsQString(DICOMSliceThickness);
     if (!value.isEmpty())
     {
@@ -474,10 +477,10 @@ void ImageFillerStep::processImage(Image *image, const DICOMTagReader *dicomRead
         else
         {
             // General Image Module (C.7.6.1)
-            // Requerit a pràcticament totes les modalitats no-enhanced, conté el tag Patient Orientation
+            // Required in virtually all non-enhanced modes, it contains the Patient Orientation tag
 
-            // Com que no tenim ImageOrientationPatient no podem generar la informació de Patient Orientation
-            // Per tant, anem a buscar el valor del tag PatientOrientation, de tipus 2C
+            // Because we do not have ImageOrientationPatient we cannot generate Patient Orientation information
+            // So let's look for the value of the PatientOrientation tag, type 2C
             value = dicomReader->getValueAttributeAsQString(DICOMPatientOrientation);
 
             PatientOrientation patientOrientation;
@@ -485,10 +488,9 @@ void ImageFillerStep::processImage(Image *image, const DICOMTagReader *dicomRead
             image->setPatientOrientation(patientOrientation);
         }
     }
+    // We get data from the Grayscale Pipeline
 
-    // Obtenim dades del Grayscale Pipeline
-
-    // Obtenim Rescale Slope i Rescale Intercept, tipus 1/1C segons el mòdul
+    // We get Rescale Slope and Rescale Intercept, type 1 / 1C according to the module
     value = dicomReader->getValueAttributeAsQString(DICOMRescaleSlope);
     if (value.toDouble() == 0)
     {
@@ -503,25 +505,26 @@ void ImageFillerStep::processImage(Image *image, const DICOMTagReader *dicomRead
 
     fillVoiLuts(image, dicomReader);
 
-    // Propietats útils pels hanging protocols
+    // Useful properties for hanging protocols
     value = dicomReader->getValueAttributeAsQString(DICOMImageLaterality);
     if (!value.isEmpty())
     {
         image->setImageLaterality(value.at(0));
     }
-    // De moment només ho aprofitarem per mammografia, però pot ser vàlid per altres modalitats
-    // Per definició, només hauríem de tenir un ítem
+    // For now we will only use it for mammography, but it may be valid for other modalities
+    // By definition, we should only have one item
     DICOMSequenceItem *viewCodeSequenceItem = dicomReader->getFirstSequenceItem(DICOMViewCodeSequence);
     if (viewCodeSequenceItem)
     {
         image->setViewCodeMeaning(viewCodeSequenceItem->getValueAttribute(DICOMCodeMeaning)->getValueAsQString());
     }
 
-    // Només pel cas que sigui DX tindrem aquest atribut a nivell d'imatge
+    // Just in case it is DX we will have this image level attribute
     image->setViewPosition(dicomReader->getValueAttributeAsQString(DICOMViewPosition));
 
-    // Display Shutter Module (C.7.6.11)
-    // Omple la informació referent als Display Shutters que podem trobar en imatges de modalitat CR, XA, RF, DX, MG i IO
+    /// Display Shutter Module (C.7.6.11)
+    /// Fill in the information regarding the Display Shutters
+    /// which can be found in CR, XA, RF, DX, MG and IO mode images
     fillDisplayShutterInformation(image, dicomReader);
 }
 
@@ -534,7 +537,7 @@ QList<Image*> ImageFillerStep::processEnhancedDICOMFile(const DICOMTagReader *di
     {
         Image *image = new Image();
         fillCommonImageInformation(image, dicomReader);
-        // Li assignem el nº de frame i el nº de volum al que pertany
+        //We assign the frame node and the volume node to which it belongs
         image->setFrameNumber(frameNumber);
 
         // Afegirem la imatge a la llista si aquesta s'ha pogut afegir a la corresponent sèrie
@@ -544,11 +547,11 @@ QList<Image*> ImageFillerStep::processEnhancedDICOMFile(const DICOMTagReader *di
         }
     }
 
-    // Tractem la Shared Functional Groups Sequence
+    //We deal with the Shared Functional Groups Sequence
     DICOMSequenceAttribute *sharedFunctionalGroupsSequence = dicomReader->getSequenceAttribute(DICOMSharedFunctionalGroupsSequence);
     if (sharedFunctionalGroupsSequence)
     {
-        // Aquesta seqüència pot contenir un ítem o cap
+        // This sequence may contain an item or head
         QList<DICOMSequenceItem*> sharedItems = sharedFunctionalGroupsSequence->getItems();
         if (!sharedItems.isEmpty())
         {
@@ -560,9 +563,9 @@ QList<Image*> ImageFillerStep::processEnhancedDICOMFile(const DICOMTagReader *di
     }
     else
     {
-        ERROR_LOG("No hem trobat la Shared Functional Groups Sequence en un arxiu DICOM que es presuposa Enhanced");
+        ERROR_LOG("We did not find the Shared Functional Groups Sequence in a DICOM file that is assumed to be Enhanced");
     }
-    // Tractem la Per-Frame Functional Groups Sequence
+    //We deal with the Per-Frame Functional Groups Sequence
     DICOMSequenceAttribute *perFrameFunctionalGroupsSequence = dicomReader->getSequenceAttribute(DICOMPerFrameFunctionalGroupsSequence);
     if (perFrameFunctionalGroupsSequence)
     {
@@ -576,7 +579,7 @@ QList<Image*> ImageFillerStep::processEnhancedDICOMFile(const DICOMTagReader *di
     }
     else
     {
-        ERROR_LOG("No hem trobat la per-frame Functional Groups Sequence en un arxiu DICOM que es presuposa Enhanced");
+        ERROR_LOG("We did not find the per-frame Functional Groups Sequence in a DICOM file that is assumed to be Enhanced");
     }
 
     return generatedImages;
@@ -584,13 +587,13 @@ QList<Image*> ImageFillerStep::processEnhancedDICOMFile(const DICOMTagReader *di
 
 void ImageFillerStep::fillFunctionalGroupsInformation(Image *image, DICOMSequenceItem *frameItem)
 {
-    // Hi ha alguns atributs que els haurem de buscar en llocs diferents segons la modalitat
+    // There are some attributes that we will have to look for in different places depending on the modality
     QString sopClassUID = m_input->getDICOMFile()->getValueAttributeAsQString(DICOMSOPClassUID);
 
-    // Atributs de CT i MR i MG Breast Tomosyntesis
+    // Attributes of CT and MRi MG Breast Tomosynthesis
     if (sopClassUID == UIDEnhancedCTImageStorage || sopClassUID == UIDEnhancedMRImageStorage || sopClassUID == UIDBreastTomosynthesisImageStorage)
     {
-        // Per obtenir el Frame Type, haurem de seleccionar la seqüència adient, segons la modalitat
+        //To obtain the Frame Type, we must select the appropriate sequence, depending on the mode
         DICOMSequenceAttribute *imageFrameTypeSequence = 0;
         if (sopClassUID == UIDEnhancedCTImageStorage)
         {
@@ -608,15 +611,15 @@ void ImageFillerStep::fillFunctionalGroupsInformation(Image *image, DICOMSequenc
             imageFrameTypeSequence = frameItem->getSequenceAttribute(DICOMXRay3DFrameTypeSequence);
         }
 
-        // Un cop seleccionada la seqüència adient, obtenim els valors
+        // Once the appropriate sequence is selected, we obtain the values
         if (imageFrameTypeSequence)
         {
-            // Segons DICOM només es permet que contingui un sol ítem
+            // According to DICOM it is only allowed to contain a single item
             QList<DICOMSequenceItem*> imageFrameTypeItems = imageFrameTypeSequence->getItems();
             if (!imageFrameTypeItems.empty())
             {
                 DICOMSequenceItem *item = imageFrameTypeItems.at(0);
-                // Obtenim el Frame Type (1)
+                // We get the Frame Type (1)
                 DICOMValueAttribute *dicomValue = item->getValueAttribute(DICOMFrameType);
                 if (dicomValue)
                 {
@@ -630,17 +633,17 @@ void ImageFillerStep::fillFunctionalGroupsInformation(Image *image, DICOMSequenc
         }
 
         // Pixel Measures Module - C.7.6.16.2.1
-        // Segons DICOM només es permet que contingui un sol ítem
+        // According to DICOM it is only allowed to contain a single item
         if (DICOMSequenceItem *item = frameItem->getFirstSequenceItem(DICOMPixelMeasuresSequence))
         {
-            // Obtenim el Pixel Spacing (1C)
+            // We get the Pixel Spacing (1C)
             DICOMValueAttribute *dicomValue = item->getValueAttribute(DICOMPixelSpacing);
             if (dicomValue)
             {
                 validateAndSetSpacingAttribute(image, dicomValue->getValueAsQString());
             }
 
-            // Obtenim l'Slice Thickness (1C)
+            //We get the Slice Thickness (1C)
             dicomValue = item->getValueAttribute(DICOMSliceThickness);
             if (dicomValue)
             {
@@ -648,18 +651,18 @@ void ImageFillerStep::fillFunctionalGroupsInformation(Image *image, DICOMSequenc
             }
         }
 
-        // Plane Orientation Module - C.7.6.16.2.4
-        // Segons DICOM només es permet que contingui un sol ítem
+        //Plane Orientation Module - C.7.6.16.2.4
+        // According to DICOM it is only allowed to contain a single item
         if (DICOMSequenceItem *item = frameItem->getFirstSequenceItem(DICOMPlaneOrientationSequence))
         {
-            // Obtenim Image Orientation (Patient) (1C) + assignació del "Patient Orientation"
+            //We get Image Orientation (Patient) (1C) + "Patient Orientation" assignment
             DICOMValueAttribute *dicomValue = item->getValueAttribute(DICOMImageOrientationPatient);
             if (dicomValue)
             {
                 ImageOrientation imageOrientation;
                 imageOrientation.setDICOMFormattedImageOrientation(dicomValue->getValueAsQString());
                 image->setImageOrientationPatient(imageOrientation);
-                // Li passem l'ImageOrientation obtingut per crear les etiquetes d'orientació
+                // We pass the ImageOrientation obtained to create the orientation tags
                 PatientOrientation patientOrientation;
                 patientOrientation.setPatientOrientationFromImageOrientation(image->getImageOrientationPatient());
                 image->setPatientOrientation(patientOrientation);
@@ -667,7 +670,7 @@ void ImageFillerStep::fillFunctionalGroupsInformation(Image *image, DICOMSequenc
         }
 
         // Plane Position Module - C.7.6.16.2.3
-        // Segons DICOM només es permet que contingui un sol ítem
+        // According to DICOM it is only allowed to contain a single item
         if (DICOMSequenceItem *item = frameItem->getFirstSequenceItem(DICOMPlanePositionSequence))
         {
             // Obtenim Image Position (Patient) (1C)
@@ -686,15 +689,15 @@ void ImageFillerStep::fillFunctionalGroupsInformation(Image *image, DICOMSequenc
                 }
                 else
                 {
-                    DEBUG_LOG("El valor està buit quan hauria de contenir algun valor!");
+                    DEBUG_LOG("Value is empty when it should contain some value!");
                 }
             }
         }
 
         // CT Pixel Value Transformation Module - C.8.15.3.10 - Enhanced CT
         // Pixel Value Transformation Module - C.7.6.16.2.9 - Enhanced MR
-        // Contenen la mateixa informació. El primer és simplement l'especialització pels CT
-        // Segons DICOM només es permet que contingui un sol ítem
+        // They contain the same information. The first is simply specialization for CTs
+        // According to DICOM it is only allowed to contain a single item
         if (DICOMSequenceItem *item = frameItem->getFirstSequenceItem(DICOMPixelValueTransformationSequence))
         {
             // Obtenim Rescale Intercept (1)
@@ -719,7 +722,7 @@ void ImageFillerStep::fillFunctionalGroupsInformation(Image *image, DICOMSequenc
             }
         }
     }
-    // Atributs d'XA i XRF
+    // XA and XRF attributes
     else if (sopClassUID == UIDEnhancedXAImageStorage || sopClassUID == UIDEnhancedXRFImageStorage)
     {
         // XA/XRF Frame Pixel Data Properties Macro - C.8.19.6.4
@@ -739,7 +742,7 @@ void ImageFillerStep::fillFunctionalGroupsInformation(Image *image, DICOMSequenc
             }
         }
         // X-Ray Object Thickness Macro - C.8.19.6.7
-        // Segons DICOM només es permet que contingui un sol ítem
+        // According to DICOM it is only allowed to contain a single item
         if (DICOMSequenceItem *item = frameItem->getFirstSequenceItem(DICOMObjectThicknessSequence))
         {
             // Obtenim Calculated Anatomy Thickness (1)
@@ -755,9 +758,9 @@ void ImageFillerStep::fillFunctionalGroupsInformation(Image *image, DICOMSequenc
         }
 
         // Patient Orientation in Frame Macro - C.7.6.16.2.15
-        // Requerit si C-arm Positioner Tabletop Relationship està present i és igual a YES
-        // Podria estar present tot i que no es compleixi l'anterior condició
-        // Segons DICOM només es permet que contingui un sol ítem
+        // Required if C-arm Positioner Tabletop Relationship is present and equal to YES
+        // It could be present even if the previous condition is not met
+        // According to DICOM it is only allowed to contain a single item
         if (DICOMSequenceItem *item = frameItem->getFirstSequenceItem(DICOMPatientOrientationInFrameSequence))
         {
             // Obtenim Patient Orientation (1)
@@ -770,35 +773,35 @@ void ImageFillerStep::fillFunctionalGroupsInformation(Image *image, DICOMSequenc
             }
             else
             {
-                ERROR_LOG("No s'ha trobat el tag Patient Orientation en una seqüència que se suposa que l'ha de tenir!");
+                ERROR_LOG("The Patient Orientation tag was not found in a sequence that is supposed to have it!");
             }
         }
     }
 
     // Frame Display Shutter Macro (C.7.6.16.2.16)
-    // Es pot trobar a les modalitats Enhanced: XA, XRF i US Volume
+    // It can be found in the Enhanced modes: XA, XRF and US Volume
     if (sopClassUID == UIDEnhancedXAImageStorage || sopClassUID == UIDEnhancedXRFImageStorage || sopClassUID == UIDEnhancedUSVolumeStorage)
     {
-        // Segons DICOM només es permet que contingui un sol ítem
+        // According to DICOM it is only allowed to contain a single item
         if (DICOMSequenceItem *item = frameItem->getFirstSequenceItem(DICOMFrameDisplayShutterSequence))
         {
             fillDisplayShutterInformation(image, item);
         }
     }
     
-    // A continuació llegim els tags/mòduls que es troben a totes les modalitats enhanced (MR/CT/XA/XRF)
+    // Below we read the tags / modules found in all enhanced modes (MR / CT / XA / XRF)
 
-    // Frame VOI LUT Macro (C.7.6.16.2.10) or Frame VOI LUT With LUT Macro (C.7.6.16.2.10b)
-    // Segons DICOM només es permet que contingui un sol ítem
+    // Frame YOU LUT Macro (C.7.6.16.2.10) or Frame YOU LUT With LUT Macro (C.7.6.16.2.10b)
+    // According to DICOM it is only allowed to contain a single item
     if (DICOMSequenceItem *item = frameItem->getFirstSequenceItem(DICOMFrameVOILUTSequence))
     {
         fillVoiLuts(image, item);
     }
 
-    // Atributs que fem servir pels hanging protocols
+    // Attributes we use for hanging protocols
 
     // Frame Anatomy Module (C.7.6.16.2.8)
-    // Segons DICOM només es permet que contingui un sol ítem
+    // According to DICOM it is only allowed to contain a single item
     if (DICOMSequenceItem *item = frameItem->getFirstSequenceItem(DICOMFrameAnatomySequence))
     {
         // Obtenim Frame Laterality (1)
@@ -809,7 +812,7 @@ void ImageFillerStep::fillFunctionalGroupsInformation(Image *image, DICOMSequenc
         }
         else
         {
-            ERROR_LOG("No s'ha trobat el tag Frame Laterality en una seqüència que se suposa que l'ha de tenir!");
+            ERROR_LOG("The Frame Laterality tag was not found in a sequence that is supposed to have it!");
         }
     }
 }
@@ -839,33 +842,33 @@ unsigned short ImageFillerStep::getNumberOfOverlays(const DICOMTagReader *dicomR
 
 void ImageFillerStep::computePixelSpacing(Image *image, const DICOMTagReader *dicomReader)
 {
-    // Obtenim el pixel spacing segons la modalitat que estem tractant
+    // We get the pixel spacing according to the modality we are dealing with
     QString pixelSpacing;
     QString imagerPixelSpacing;
     QString modality = dicomReader->getValueAttributeAsQString(DICOMModality);
 
-    // Per modalitats CT, MR i PET el pixel spacing el trobem
-    // a Image Plane Module (C.7.6.2), al tag Pixel Spacing, tipus 1
+    // For CT, MR and PET modalities we find pixel spacing
+    // a Image Plane Module (C.7.6.2), in the Pixel Spacing tag, type 1
     if (modality == "CT" || modality == "MR" || modality == "PT")
     {
         pixelSpacing = dicomReader->getValueAttributeAsQString(DICOMPixelSpacing);
     }
     else if (modality == "US")
     {
-        // En el cas de la modalitat US, hem de fer alguns càlculs extra per tal obtenir un pixel spacing aproximat
+        //In the case of the US mode, we need to do some extra calculations in order to get an approximate pixel spacing
         DICOMSequenceAttribute *ultraSoundsRegionsSequence = dicomReader->getSequenceAttribute(DICOMSequenceOfUltrasoundRegions);
-        // Ho hem de comprovar perquè és opcional.
+        // We have to check it because it is optional.
         if (ultraSoundsRegionsSequence)
         {
-            // Aquesta seqüència pot tenir més d'un ítem. TODO Nosaltres només tractem el primer, però ho hauríem de fer per tots,
-            // ja que defineix més d'una regió i podríem estar obtenint informació equivocada
+            // This sequence can have more than one item. EVERYTHING We only try the first one, but we should do it for everyone,
+            // since it defines more than one region and we could be getting the wrong information
             QList<DICOMSequenceItem*> items = ultraSoundsRegionsSequence->getItems();
             if (!items.isEmpty())
             {
                 int physicalUnitsX = items.at(0)->getValueAttribute(DICOMPhysicalUnitsXDirection)->getValueAsInt();
                 int physicalUnitsY = items.at(0)->getValueAttribute(DICOMPhysicalUnitsYDirection)->getValueAsInt();
 
-                // 3 significa que les unitats son cm
+                // 3 means that the units are cm
                 if (physicalUnitsX == 3 && physicalUnitsY == 3)
                 {
                     double physicalDeltaX = items.at(0)->getValueAttribute(DICOMPhysicalDeltaX)->getValueAsDouble();
@@ -972,8 +975,8 @@ void ImageFillerStep::checkAndSetEstimatedRadiographicMagnificationFactor(Image 
 bool ImageFillerStep::isEnhancedImageSOPClass(const QString &sopClassUID)
 {
     return (sopClassUID == UIDEnhancedCTImageStorage || sopClassUID == UIDEnhancedMRImageStorage || sopClassUID == UIDEnhancedXAImageStorage ||
-        sopClassUID == UIDEnhancedXRFImageStorage || sopClassUID == UIDEnhancedUSVolumeStorage || sopClassUID == UIDEnhancedMRColorImageStorage ||
-        sopClassUID == UIDEnhancedPETImageStorage || sopClassUID == UIDBreastTomosynthesisImageStorage);
+            sopClassUID == UIDEnhancedXRFImageStorage || sopClassUID == UIDEnhancedUSVolumeStorage || sopClassUID == UIDEnhancedMRColorImageStorage ||
+            sopClassUID == UIDEnhancedPETImageStorage || sopClassUID == UIDBreastTomosynthesisImageStorage);
 }
 
 void ImageFillerStep::validateAndSetSpacingAttribute(Image *image, const QString &spacing, const DICOMTag &tag)
@@ -1002,7 +1005,7 @@ void ImageFillerStep::validateAndSetSpacingAttribute(Image *image, const QString
     }
     else
     {
-        DEBUG_LOG("No s'ha trobat cap valor de pixel spacing definit de forma estàndar esperada: " + spacing);
+        DEBUG_LOG("No standard defined pixel spacing value found: " + spacing);
     }
 }
 

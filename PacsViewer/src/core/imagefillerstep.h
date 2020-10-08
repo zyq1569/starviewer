@@ -37,37 +37,37 @@ public:
     virtual bool fillIndividually() override;
 
 private:
-    /// Mètode per processar la informació específica de pacient,series i imatge
+    /// Method for processing patient-specific information, series and image
     void processImage(Image *image, const DICOMTagReader *dicomReader);
 
-    /// Mètode encarregat de processar el fitxer DICOM per extreure'n el conjunt de les imatges
-    /// que el conformen, omplint la informació necessària
+    /// Method responsible for processing the DICOM file to extract the set of images
+    /// that make it up, filling in the necessary information
     QList<Image*> processDICOMFile(const DICOMTagReader *dicomReader);
 
-    /// Mètode específic per processar els arxius que siguin de tipus Enhanced
+    /// Specific method for processing files that are of the Enhanced type
     QList<Image*> processEnhancedDICOMFile(const DICOMTagReader *dicomReader);
 
-    /// Omple la informació comú a totes les imatges.
-    /// Image i dicomReader han de ser objectes vàlids.
+    /// Fill in the information common to all images.
+    /// Image and dicomReader must be valid objects.
     void fillCommonImageInformation(Image *image, const DICOMTagReader *dicomReader);
 
-    /// Omple l'image donat amb la informació dels functional groups continguts en l'ítem proporcionat
-    /// Aquest mètode està pensat per fer-se servir amb els ítems obtinguts
-    /// tant amb la Shared Functional Groups Sequence com amb la Per-Frame Functional Groups Sequence
+    /// Fill in the given image with the information of the functional groups contained in the item provided
+    /// This method is intended to be used with the items obtained
+    /// with both the Shared Functional Groups Sequence and the Per-Frame Functional Groups Sequence
     void fillFunctionalGroupsInformation(Image *image, DICOMSequenceItem *frameItem);
 
-    /// Retorna quants overlays hi ha en el dataset proporcionat
+    ///Returns how many overlays are in the provided dataset
     unsigned short getNumberOfOverlays(const DICOMTagReader *dicomReader);
     
-    /// Calcula el pixel spacing i se l'assigna a l'image donada en cas de que aquest es pugui calcular
-    /// @param image Image a la que li assignarem el pixel spacing
-    /// @param dicomReader Reader de DICOM que conté la font de dades de la Image associada
+    /// Calculates the pixel spacing and assigns it to the given image in case it can be calculated
+    /// @param image Image to which we will assign pixel spacing
+    /// @param dicomReader Reader from DICOM that contains the data source of the associated Image
     void computePixelSpacing(Image *image, const DICOMTagReader *dicomReader);
 
     /// Checks and sets the Estimated Radiographic Magnification Factor tag for the corresponding modalities
     void checkAndSetEstimatedRadiographicMagnificationFactor(Image *image, const DICOMTagReader *dicomReader);
 
-    /// Ens diu si el SOP Class UID es correspon amb el d'una imatge enhanced
+    ///It tells us if the SOP Class UID corresponds to that of an enhanced image
     bool isEnhancedImageSOPClass(const QString &sopClassUID);
 
     /// Validates the spacing string and sets it to the given image if it's well formatted.
