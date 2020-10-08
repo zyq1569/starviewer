@@ -19,7 +19,7 @@
 namespace udg {
 
 ImageOrientationOperationsMapper::ImageOrientationOperationsMapper()
- : m_clockwiseTurns(0), m_horizontalFlip(false), m_hasToUpdateOperations(false)
+    : m_clockwiseTurns(0), m_horizontalFlip(false), m_hasToUpdateOperations(false)
 {
     initializeOrientationTable();
 }
@@ -60,7 +60,7 @@ bool ImageOrientationOperationsMapper::requiresHorizontalFlip()
 
 void ImageOrientationOperationsMapper::initializeOrientationTable()
 {
-    // Expressem les possibles operacions amb constants
+    // We express the possible operations with constants
     const QString Rotate90Degrees("1,0");
     const QString Rotate180Degrees("2,0");
     const QString Rotate270Degrees("3,0");
@@ -69,8 +69,8 @@ void ImageOrientationOperationsMapper::initializeOrientationTable()
     const QString Rotate180DegreesAndFlip("2,1");
     const QString Rotate270DegreesAndFlip("3,1");
 
-    // Mapeig de les operacions per la vista sagital
-    // Definim les etiquetes possibles d'orientació
+    // Mapping of operations by sagittal vision
+    // We define the possible targeting labels
     const QString AnteriorFeet(PatientOrientation::AnteriorLabel + "\\" + PatientOrientation::FeetLabel);
     const QString AnteriorHead(PatientOrientation::AnteriorLabel + "\\" + PatientOrientation::HeadLabel);
     const QString PosteriorFeet(PatientOrientation::PosteriorLabel + "\\" + PatientOrientation::FeetLabel);
@@ -80,7 +80,7 @@ void ImageOrientationOperationsMapper::initializeOrientationTable()
     const QString HeadAnterior(PatientOrientation::HeadLabel + "\\" + PatientOrientation::AnteriorLabel);
     const QString HeadPosterior(PatientOrientation::HeadLabel + "\\" + PatientOrientation::PosteriorLabel);
 
-    // Per passar de AF -> AH calen 2 rotacions i 1 flip horitzontal
+    // To switch from AF -> AH you need 2 rotations and 1 horizontal flip
     m_orientationMappingTable.insert(AnteriorFeet + "-" + AnteriorHead, Rotate180DegreesAndFlip);
     m_orientationMappingTable.insert(AnteriorFeet + "-" + PosteriorFeet, Flip);
     m_orientationMappingTable.insert(AnteriorFeet + "-" + PosteriorHead, Rotate180Degrees);
@@ -145,8 +145,8 @@ void ImageOrientationOperationsMapper::initializeOrientationTable()
     m_orientationMappingTable.insert(HeadPosterior + "-" + HeadAnterior, Rotate180DegreesAndFlip);
     m_orientationMappingTable.insert(HeadPosterior + "-" + FeetPosterior, Flip);
 
-    // Mappeig de les operacions per la vista axial
-    // Definim les etiquetes possibles d'orientació
+    // Mapping operations by axial view
+    // We define the possible targeting labels
     const QString AnteriorRight(PatientOrientation::AnteriorLabel + "\\" + PatientOrientation::RightLabel);
     const QString AnteriorLeft(PatientOrientation::AnteriorLabel + "\\" + PatientOrientation::LeftLabel);
     const QString PosteriorRight(PatientOrientation::PosteriorLabel + "\\" + PatientOrientation::RightLabel);
@@ -220,8 +220,8 @@ void ImageOrientationOperationsMapper::initializeOrientationTable()
     m_orientationMappingTable.insert(LeftPosterior + "-" + LeftAnterior, Rotate180DegreesAndFlip);
     m_orientationMappingTable.insert(LeftPosterior + "-" + RightPosterior, Flip);
 
-    // Mapeig de les operacions per la vista coronal
-    // Definim les etiquetes possibles d'orientació
+    // Mapping operations by coronal view
+    // We define the possible targeting labels
     const QString RightFeet(PatientOrientation::RightLabel + "\\" + PatientOrientation::FeetLabel);
     const QString RightHead(PatientOrientation::RightLabel + "\\" + PatientOrientation::HeadLabel);
     const QString LeftFeet(PatientOrientation::LeftLabel + "\\" + PatientOrientation::FeetLabel);
@@ -298,10 +298,10 @@ void ImageOrientationOperationsMapper::initializeOrientationTable()
 
 void ImageOrientationOperationsMapper::updateOperations()
 {
-    // La orientació podria tenir més d'una lletra per row
-    // com per exemple RA\AL en un tall que sigui oblicu
-    // Per evitar això i no fer una llista enorme de transformacions,
-    // agafarem només la primera lletra del row i de la columna ja que així ja és suficient
+    // Orientation could have more than one letter per row
+    // such as RA \ AL in a cut that is oblique
+    // To avoid this and not make a huge list of transformations,
+    // we will take only the first letter of the row and the column since that is enough
     QString initialRowLabel = m_initialOrientation.getRowDirectionLabel().left(1);
     QString initialColumnLabel = m_initialOrientation.getColumnDirectionLabel().left(1);
 
@@ -314,9 +314,9 @@ void ImageOrientationOperationsMapper::updateOperations()
     if (!operations.isEmpty())
     {
         QStringList listOfOperations = operations.split(",");
-        // Assignem el nombre de rotacions
+        // We assign the number of rotations
         m_clockwiseTurns = listOfOperations[0].toInt();
-        // Assignem el flip horitzontal si n'hi ha
+        //We assign the horizontal flip if any
         if (listOfOperations[1].toInt())
         {
             m_horizontalFlip = true;
@@ -328,7 +328,7 @@ void ImageOrientationOperationsMapper::updateOperations()
     }
     else
     {
-        // Si no es troben combinacions, resetejem les operacions perquè aquesta sigui neutra si s'aplica
+        //If no combinations are found, we reset the operations so that it is neutral if applied
         m_clockwiseTurns = 0;
         m_horizontalFlip = false;
     }

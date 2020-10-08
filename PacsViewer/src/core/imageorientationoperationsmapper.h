@@ -20,66 +20,66 @@
 namespace udg {
 
 /**
-    Aquesta classe s'encarrega de dir-nos quines operacions de rotació i flip hem d'aplicar
-    sobre una imatge 2D donades la orientació inicial i la orientació desitjada.
+This class is in charge of telling us which rotation and flip operations we need to apply
+on a 2D image given the initial orientation and the desired orientation.
 
-    Per fer-ho indicarem la orientació inicial i la desitjada a través dels mètodes setInitialOrientation()
-    i setDesiredOrientation(). Un cop assignades les orientacions preguntarem les operacions que cal
-    aplicar sobre la imatge 2D per obtenir la orientació que es desitji.
+To do this we will indicate the initial and desired orientation through the setInitialOrientation () methods
+and setDesiredOrientation (). Once the guidelines have been assigned, we will ask for the necessary operations
+apply on the 2D image to get the desired orientation.
 
-    L'ordre en que s'apliquin les operacions indicades *és únic* i ha de ser estrictament el següent:
-       1. Aplicar rotacions
-       2. Aplicar flips
+The order in which the indicated operations are applied * is unique * and must be strictly as follows:
+1. Apply rotations
+2. Apply flips
 
-    Aquesta classe només contempla operacions possibles dins d'un mateix pla 2D, per tant no ens pot donar
-    una fòrmula que passi una imatge adquirida en axial a sagital, per exemple.
-    En aquests casos, getNumberOfClockwiseTurnsToApply() i requiresHorizontalFlip() retornaran 0 i fals respectivament.
-  */
+This class only contemplates possible operations within the same 2D plan, so it cannot give us
+a formula that passes an acquired image in axial to sagittal, e.g.
+In these cases, getNumberOfClockwiseTurnsToApply () and requiresHorizontalFlip () will return 0 and false respectively.
+*/
 class ImageOrientationOperationsMapper {
 public:
     ImageOrientationOperationsMapper();
     ~ImageOrientationOperationsMapper();
 
-    /// Indica la orientació inicial
+    /// Indicates initial orientation
     void setInitialOrientation(const PatientOrientation &initialOrientation);
 
-    /// Indica la orientació desitjada
+    /// Indicates the desired orientation
     void setDesiredOrientation(const PatientOrientation &desiredOrientation);
 
-    /// Ens retorna el número de girs a aplicar en el sentit de les agulles del rellotge
-    /// Els valors possibles són 0, 1, 2 ó 3
+    /// Returns the number of turns to be applied clockwise
+    /// Possible values are 0, 1, 2 or 3
     int getNumberOfClockwiseTurnsToApply();
 
-    /// Ens indica si cal aplicar un flip horitzontal o no
+    /// Tells us whether to apply a horizontal flip or not
     bool requiresHorizontalFlip();
 
 private:
-    /// Inicialitza els valors de la taula on mapejarem les operacions
-    /// a realitzar segons les possibles orientacions
+    /// Initialize the values of the table where we will map the operations
+    /// to be performed according to the possible orientations
     void initializeOrientationTable();
 
-    /// Actualitza les operacions a realitzar segons les orientacions introduides
+    ///Update the operations to be performed according to the guidelines entered
     void updateOperations();
 
 private:
-    /// Orientacions inicial i desitjada
+    /// Initial and desired orientations
     PatientOrientation m_initialOrientation;
     PatientOrientation m_desiredOrientation;
 
-    /// Nombre de girs a aplicar
+    ///Name of girs to apply
     int m_clockwiseTurns;
 
-    /// Indica si cal aplicar flip o no
+    /// Indicates whether to flip or not
     bool m_horizontalFlip;
 
-    /// Ens indicarà si cal trobar les rotacions i flips necessaris per la combinació actual d'orientacions
+    /// It will tell us if we need to find the necessary rotations and flips for the current combination of orientations
     bool m_hasToUpdateOperations;
 
-    /// QMap per guardar les operacions de rotació i flip corresponents segons les orientacions donades.
-    /// La clau és una QString en la que guardarem la orientació inicial i desitjada en el següent format:
-    /// "initialRowDirectionLabel\\initialColumnDirectionLabel-desiredRowDirectionLabel\\desiredColumnDirectionLabel"
-    /// El valor de cada clau serà una QString amb el número de rotacions seguida de un valor que indica
-    /// si es fa flip o no, separats per una coma, com per exemple "3,false"
+    /// QMap to save the corresponding rotation and flip operations according to the given orientations.
+    /// The key is a QString in which we will save the initial and desired orientation in the following format:
+    /// "initialRowDirectionLabel \\ initialColumnDirectionLabel-desiredRowDirectionLabel \\ desiredColumnDirectionLabel"
+    /// The value of each key will be a QString with the number of rotations followed by a value that indicates
+    /// whether to flip or not, separated by a comma, such as "3, false"
     QMap<QString, QString> m_orientationMappingTable;
 };
 
