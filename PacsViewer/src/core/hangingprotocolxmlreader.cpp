@@ -223,7 +223,7 @@ HangingProtocolImageSet* HangingProtocolXMLReader::readImageSet(const QMap<int, 
         }
         else
         {
-            // Saltem l'element perquè no és conegut.
+            // We skip the item because it is not known.
             m_xmlReader.skipCurrentElement();
         }
     }
@@ -247,7 +247,7 @@ HangingProtocolDisplaySet* HangingProtocolXMLReader::readDisplaySet(HangingProto
             }
             else
             {
-                ERROR_LOG(QString("No s'ha trobat l'image set requerit pel display set %1.").arg(displaySet->getIdentifier()));
+                ERROR_LOG(QString("Image set required for display set not found %1.").arg(displaySet->getIdentifier()));
             }
         }
         else if (m_xmlReader.name() == "position")
@@ -300,7 +300,7 @@ HangingProtocolDisplaySet* HangingProtocolXMLReader::readDisplaySet(HangingProto
         }
         else
         {
-            // Saltem l'element perquè no és conegut.
+            // We skip the item because it is not known.
             m_xmlReader.skipCurrentElement();
         }
     }

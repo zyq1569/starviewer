@@ -27,16 +27,18 @@ class HangingProtocolImageSetRestriction;
 
 /**
  * @brief The HangingProtocolXMLReader class can read a HangingProtocol from a XML file.
- */
+*/
 class HangingProtocolXMLReader {
 
 public:
     HangingProtocolXMLReader();
     ~HangingProtocolXMLReader();
 
-    /// Reads and returns a HangingProtocol from the file with the given path. If the hanging protocol can't be read, returns null.
+    /// Reads and returns a HangingProtocol from the file with the given path.
+    /// If the hanging protocol can't be read, returns null.
     HangingProtocol* readFile(const QString &path);
-    /// Reads and returns a HangingProtocol from the given device. If the hanging protocol can't be read, returns null.
+    /// Reads and returns a HangingProtocol from the given device.
+    /// If the hanging protocol can't be read, returns null.
     HangingProtocol* read(QIODevice *device);
 
 private:
