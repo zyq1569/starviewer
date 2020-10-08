@@ -29,79 +29,83 @@ namespace udg {
 class DrawerBitmap;
 
 /**
-    Classe que encapsula l'objecte Overlay del DICOM.
-    Per més informació, consultar apartat C.9 OVERLAYS, PS 3.3.
- */
+Class that encapsulates the DICOM Overlay object.
+For more information, see section C.9 OVERLAYS, PS 3.3.
+*/
 class ImageOverlay {
 public:
     ImageOverlay();
     ~ImageOverlay();
 
-    /// Assigna/obté les files i columnes de l'overlay
+    /// Assigns / obtains rows and columns of the overlay
     void setRows(int rows);
     void setColumns(int columns);
     int getRows() const;
     int getColumns() const;
 
-    /// Assigna/obté l'origen de l'Overlay
+    /// Assigns / obtains the origin of the Overlay
     void setOrigin(int x, int y);
     int getXOrigin() const;
     int getYOrigin() const;
 
-    /// Assigna/retorna les dades de l'overlay
+    ///Assigns / returns overlay data
     void setData(unsigned char *data);
     unsigned char* getData() const;
 
-    /// Retorna cert sii l'overlay és vàlid (si el nombre de files i el nombre de columnes són positius i té dades).
+    /// Returns true if the overlay is valid (if the number
+    /// of rows and the number of columns are positive and has data).
     bool isValid() const;
 
-    /// Crea un overlay més petit dins de la regió donada.
-    /// Si l'overlay no és vàlid o la regió no està completament continguda dins de l'overlay, retorna un overlay invàlid.
+    /// Creates a smaller overlay within the given region.
+    /// If the overlay is invalid or the region is not complete
+    /// contained within the overlay, returns an invalid overlay.
     ImageOverlay createSubOverlay(const QRect &region) const;
 
-    /// Separa l'overlay en overlays més petits que tinguin menys espai desaprofitat per estalviar memòria.
-    /// Si l'overlay no és vàlid o és buit retorna una llista buida.
+    /// Separate overlay into smaller overlays that have less wasted space to save memory.
+    /// If the overlay is invalid or empty it returns an empty list.
     QList<ImageOverlay> split() const;
 
     /// Compara aquest overlay amb un altre i diu si són iguals.
     bool operator ==(const ImageOverlay &overlay) const;
 
-    /// Construeix un ImageOverlay a partir d'un gdcm::Overlay
+    ///Build an ImageOverlay from a gdcm :: Overlay
     static ImageOverlay fromGDCMOverlay(const gdcm::Overlay &gdcmOverlay);
 
-    /// Fusiona una llista d'overlays en un únic overlay
-    /// Només fusionarà aquells overlays que reuneixin les condicions necessàries per considerar-se vàlids, és a dir, 
-    /// que tingui un nombre de files i columnes > 0 i que tingui dades. El paràmetre ok, servirà per indicar els casos 
-    /// en que no s'ha pogut realitzar fusió per algun error. Si el llistat d'Overlays vàlids és buit, retornarà un
-    /// overlay buit, si només hi ha un de sol, retornarà aquest mateix overlay, la fusió dels n overlays altrament. Per aquests casos 
-    /// el valor d'ok serà true. En cas que no hi hagi prou memòria per allotjar un nou buffer per l'overlay fusionat, retornarà un overlay buit i ok false.
+    /// Merge a list of overlays into a single overlay
+    /// It will only merge those overlays that meet the necessary conditions to be considered valid, ie
+    /// that has a number of rows and columns> 0 and that has data. The parameter ok, will serve to indicate the cases
+    /// in which fusion could not be performed due to some error. If the list of valid Overlays is empty, it will return one
+    /// empty overlay, if there is only one, will return that same overlay, merging the n overlays otherwise.
+    /// For these cases
+    /// the value of ok will be true. In case there is not enough memory to host
+    /// a new buffer for the merged overlay will return an empty overlay and ok false.
     static ImageOverlay mergeOverlays(const QList<ImageOverlay> &overlaysList, bool &ok);
 
-    /// Ens retorna l'overlay en format DrawerBitmap per sobreposar sobre una imatge amb l'origin i spacing donats
+    /// Returns the overlay in DrawerBitmap format to overlay on an image with the given source and spacing
     DrawerBitmap* getAsDrawerBitmap(double origin[3], double spacing[3]) const;
 
 private:
-    /// Ús intern per QSharedPointer. Aquest serà el mètode que es cridarà per eliminar 
-    /// TODO Seria convenient tenir definit un deleter genèric definit en una altra classe amb un template
-    /// template <typename T> void arrayDeleter(T array[])
-    /// en cas que tinguem més shared pointers amb punters a arrays
+    /// Internal use for QSharedPointer. This will be the method that will be called to delete
+    /// EVERYTHING It would be convenient to have defined a generic deleter defined in another class with a template
+    /// template <typename T> void arrayDeleter (T array [])
+    /// in case we have more shared pointers with pointers in arrays
     static void deleteDataArray(unsigned char dataArray[]);
 
-    /// Retorna una còpia de les dades de l'overlay a la regió donada.
+    ///Returns a copy of the overlay data to the given region.
     unsigned char* copyDataForSubOverlay(const QRect &region) const;
 
 private:
-    /// Files i columnes de l'overlay
+    ///Overlay rows and columns
     int m_rows, m_columns;
 
-    /// Localització del primer punt de l'overlay respecte als pixels a la imatge, donat com fila\columna.
-    /// El pixel superior esquerre té la coordenada 1\1
-    /// Valors de columna majors que 1 indiquen que l'origen del pla d'overlay és a la dreta de l'origen de la imatge. 
-    /// Valors de fila majors que 1 indiquen que l'origen del pla d'overlay està per sota de l'origen de la imatge.
-    /// Valors per sota de 1 indiquen que l'origen del pla d'overlay està per sobre o a l'esquerra de l'origen de la imatge.
+    /// Location of the first point of the overlay with respect to the pixels in the image, given as row \ column.
+    /// The upper left pixel has the 1 \ 1 coordinate
+    /// Column values greater than 1 indicate that the origin of the overlay plane is to the right of the image source.
+    /// Row values greater than 1 indicate that the origin of the overlay plane is below the source of the image.
+    /// Values below 1 indicate that the origin of the overlay plane is above or to the left of the image source.
     int m_origin[2];
 
-    /// Dades de l'overlay
+    /// DA's S face overlay
     QSharedPointer<unsigned char> m_data;
 };
 

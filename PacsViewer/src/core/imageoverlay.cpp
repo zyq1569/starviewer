@@ -128,8 +128,8 @@ QList<ImageOverlay> ImageOverlay::split() const
 bool ImageOverlay::operator ==(const udg::ImageOverlay &overlay) const
 {
     bool equal = this->m_rows == overlay.m_rows && this->m_columns == overlay.m_columns
-              && this->m_origin[0] == overlay.m_origin[0] && this->m_origin[1] == overlay.m_origin[1]
-              && ((this->m_data && overlay.m_data) || (!this->m_data && !overlay.m_data));
+            && this->m_origin[0] == overlay.m_origin[0] && this->m_origin[1] == overlay.m_origin[1]
+            && ((this->m_data && overlay.m_data) || (!this->m_data && !overlay.m_data));
 
     if (equal && this->m_data)
     {
@@ -164,10 +164,10 @@ ImageOverlay ImageOverlay::fromGDCMOverlay(const gdcm::Overlay &gdcmOverlay)
         {
             imageOverlay.setData(0);
             
-            ERROR_LOG(QString("No hi ha memòria suficient per carregar l'overlay [%1*%2] = %3 bytes")
-                .arg(imageOverlay.getRows()).arg(imageOverlay.getColumns()).arg((unsigned long)imageOverlay.getRows() * imageOverlay.getColumns()));
-            DEBUG_LOG(QString("No hi ha memòria suficient per carregar l'overlay [%1*%2] = %3 bytes")
-                .arg(imageOverlay.getRows()).arg(imageOverlay.getColumns()).arg((unsigned long)imageOverlay.getRows() * imageOverlay.getColumns()));
+            ERROR_LOG(QString("Not enough memory to load overlay [% 1 *% 2] =% 3 bytes")
+                      .arg(imageOverlay.getRows()).arg(imageOverlay.getColumns()).arg((unsigned long)imageOverlay.getRows() * imageOverlay.getColumns()));
+            DEBUG_LOG(QString("Not enough memory to load overlay [% 1 *% 2] =% 3 bytes")
+                      .arg(imageOverlay.getRows()).arg(imageOverlay.getColumns()).arg((unsigned long)imageOverlay.getRows() * imageOverlay.getColumns()));
         }
     }
 
@@ -176,7 +176,7 @@ ImageOverlay ImageOverlay::fromGDCMOverlay(const gdcm::Overlay &gdcmOverlay)
 
 ImageOverlay ImageOverlay::mergeOverlays(const QList<ImageOverlay> &overlaysList, bool &ok)
 {
-    // Fem tria dels overlays que es puguin considerar vàlids
+    // We choose the overlays that can be considered valid
     QList<ImageOverlay> validOverlaysList;
     foreach (const ImageOverlay &overlay, overlaysList)
     {
@@ -200,9 +200,9 @@ ImageOverlay ImageOverlay::mergeOverlays(const QList<ImageOverlay> &overlaysList
         return validOverlaysList.at(0);
     }
     
-    // Tenim 2 o més overlays, per tant caldrà fer fusió
-    
-    // Primer calculem l'origen
+    // We have 2 or more overlays, so we will need to merge
+
+    // First we calculate the origin
     int outOriginX = 1;
     int outOriginY = 1;
     for (int i = 0; i < numberOfValidOverlays; ++i)
@@ -218,7 +218,7 @@ ImageOverlay ImageOverlay::mergeOverlays(const QList<ImageOverlay> &overlaysList
         }
     }
 
-    // Ara calculem files i columnes
+    // Now we calculate rows and columns
     int outColumns = 0;
     int outRows = 0;
     for (int i = 0; i < numberOfValidOverlays; ++i)
@@ -234,7 +234,7 @@ ImageOverlay ImageOverlay::mergeOverlays(const QList<ImageOverlay> &overlaysList
         }
     }
     
-    // Ara creem el nou buffer únic i en fusionem les dades dels diferents overlays existents
+    //We now create the new single buffer and merge the data from the different existing overlays
     unsigned char *data = 0;
     try
     {
@@ -242,18 +242,18 @@ ImageOverlay ImageOverlay::mergeOverlays(const QList<ImageOverlay> &overlaysList
     }
     catch (std::bad_alloc)
     {
-        ERROR_LOG(QString("No hi ha memòria suficient per crear el buffer per l'overlay fusionat [%1*%2] = %3 bytes")
-            .arg(outRows).arg(outColumns).arg((unsigned long)outRows * outColumns));
-        DEBUG_LOG(QString("No hi ha memòria suficient per crear el buffer per l'overlay fusionat [%1*%2] = %3 bytes")
-            .arg(outRows).arg(outColumns).arg((unsigned long)outRows * outColumns));
+        ERROR_LOG(QString("Not enough memory to create buffer for merged overlay [% 1 *% 2] =% 3 bytes")
+                  .arg(outRows).arg(outColumns).arg((unsigned long)outRows * outColumns));
+        DEBUG_LOG(QString("Not enough memory to create buffer for merged overlay [% 1 *% 2] =% 3 bytes")
+                  .arg(outRows).arg(outColumns).arg((unsigned long)outRows * outColumns));
 
         ok = false;
         return ImageOverlay();
     }
 
-    // Hem pogut allotjar les dades, procedim a omplir-les amb les dades dels overlays
+    //We were able to host the data, we proceeded to fill it with the data from the overlays
     memset(data, 0, sizeof(unsigned char) * outColumns * outRows);
-        
+
     int subDataIndex;
     int subDataXIndex;
     int subDataYIndex;
