@@ -24,26 +24,27 @@ class QEvent;
 namespace udg {
 
 /**
-    Item de menu. Envia un senyal quan esta activat i quan és seleccinat. Així com canvia de color al estar activat. Pot guardar informació del tipus QVariant.
-    També es pot escollir el comportament del canvi de color.
-  */
+Menu item. It sends a signal when it is activated and when it is selected.
+As well as changes color when activated. You can save QVariant information.
+You can also choose the behavior of the color change.
+*/
 class ItemMenu : public QFrame {
-Q_OBJECT
+    Q_OBJECT
 public:
     ItemMenu(QWidget *parent = 0);
 
     ~ItemMenu();
 
-    /// Posar una dada
+    ///Put a dice
     void setData(QString data);
 
-    /// Obtenir les dades
+    /// Get the data
     QString getData();
 
-    /// Mètode per fixar que les caselles es quedin seleccionades o es deseleccionin al marxar el mouse
+    /// Method to set the boxes to be selected or deselected when the mouse is left
     void setFixed(bool option);
 
-    /// Mètode per fixar l'element com a seleccionat o no seleccionat
+    /// Method for setting the item as selected or unselected
     void setSelected(bool option);
 
     /// Returns true if this item has the border enabled and false otherwise.
@@ -52,21 +53,21 @@ public:
     void setBorder(bool on);
 
 signals:
-    /// Signal que s'emet al entrar el mouse al widget
+    ///Signal emitted when the mouse enters the widget
     void isActive(ItemMenu *);
 
-    /// Signal que s'emet al seleccionar l'item
+    ///Signal emitted when selecting the item
     void isSelected(ItemMenu *);
 
 protected:
-    /// Sobrecàrrega del mètode que tracta tots els events
+    /// Overloading the method that handles all events
     bool event(QEvent *event);
 
 protected:
-    /// Dades que pot guardar el widget
+    /// Data that the widget can save
     QString m_data;
 
-    /// Atribut que informa si s'ha de quedar seleccionat o s'ha de deseleccionar
+    /// Attribute that informs whether to stay selected or deselected
     bool m_fixed;
 
     /// True if the item is selected and false otherwise.

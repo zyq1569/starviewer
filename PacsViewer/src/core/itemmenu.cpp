@@ -20,7 +20,7 @@ namespace udg {
 
 namespace {
 
-// Returns the appropriate stylesheet according to whether the item is selected and it has border.
+/// Returns the appropriate stylesheet according to whether the item is selected and it has border.
 QString getStyleSheet(bool selected, bool border)
 {
     if (!selected && !border)
