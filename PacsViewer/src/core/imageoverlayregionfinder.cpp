@@ -23,13 +23,14 @@
 
 namespace {
 
-// Retorna la mida de la textura necessària per guardar les dades de la regió, on l'amplada i l'alçada són potències de 2.
+/// Returns the size of the texture needed to save
+/// the data of the region, where the width and height are powers of 2.
 QSize textureSize(const QRect &region)
 {
     return QSize(udg::MathTools::roundUpToPowerOf2(region.width()), udg::MathTools::roundUpToPowerOf2(region.height()));
 }
 
-// Retorna l'àrea d'un rectangle amb la mida donada.
+//Returns the area of a rectangle of the given size.
 int area(const QSize &size)
 {
     return size.width() * size.height();
@@ -40,7 +41,7 @@ int area(const QSize &size)
 namespace udg {
 
 ImageOverlayRegionFinder::ImageOverlayRegionFinder(const ImageOverlay &overlay)
- : m_overlay(overlay)
+    : m_overlay(overlay)
 {
 }
 
@@ -57,14 +58,14 @@ void ImageOverlayRegionFinder::findRegions(bool optimizeForPowersOf2)
     int columns = m_overlay.getColumns();
     unsigned char *data = m_overlay.getData();
 
-    // Màscara que indica els píxels visitats
+    // Mask indicating the pixels visited
     QBitArray mask(rows * columns);
 
     for (int row = 0, i = 0; row < rows; row++)
     {
         for (int column = 0; column < columns; column++, i++)
         {
-            // Si trobem un objecte no tractat
+            // If we find an untreated object
             if (data[i] > 0 && !mask.testBit(i))
             {
                 QRect region = growRegion(row, column, mask);
@@ -84,24 +85,25 @@ const QList<QRect>& ImageOverlayRegionFinder::regions() const
 
 int ImageOverlayRegionFinder::distanceBetweenRegions(const QRect &region1, const QRect &region2)
 {
-    // Mètode inspirat en http://stackoverflow.com/questions/7286832/how-to-find-the-minimum-taxicab-manhattan-distance-between-two-parallel-rectangl
+    /// Method inspired by http://stackoverflow.com/questions/7286832/
+    // how-to-find-the-minimum-taxicab-manhattan-distance-between-two-parallel-rectangl
 
-    // Consideracions:
-    // - No hem d'oblidar que treballem amb píxels.
-    // - La distància són els píxels de separació entre els rectangles (el màxim entre l'horitzontal i la vertical).
-    // - Si hi ha intersecció entre els rectangles, la distància és 0.
-    // - Si no hi ha intersecció però els rectangles es toquen, la distància és 0 (perquè no hi ha cap píxel de separació).
-    //   - Això fa que haguem de restar 1 a tots els càlculs.
-    // - Les coordenades avancen cap a la dreta i cap avall.
-    // - Mantenim region1 com a referència.
+    // Considerations:
+    // - We must not forget that we work with pixels.
+    // - The distance is the pixels of separation between the rectangles (the maximum between the horizontal and the vertical).
+    // - If there is an intersection between the rectangles, the distance is 0.
+    // - If there is no intersection but the rectangles touch, the distance is 0 (because there is no separation pixel).
+    // - This causes us to subtract 1 from all calculations.
+    // - The coordinates advance to the right and down.
+    // - We keep region1 as a reference.
 
-    // Si hi ha intersecció, la distància és 0
+    // If there is an intersection, the distance is 0
     if (region1.intersects(region2))
     {
         return 0;
     }
 
-    // Comprovem si region2 és en una cantonada
+    // Let's check if region2 is in a corner
     if (region1.top() > region2.bottom() && region1.right() < region2.left())
     {
         //  2
@@ -127,7 +129,8 @@ int ImageOverlayRegionFinder::distanceBetweenRegions(const QRect &region1, const
         return qMax(region1.top() - region2.bottom(), region1.left() - region2.right()) - 1;
     }
 
-    // Ara ja sabem que region2 no és en una cantonada, per tant només hem de mesurar la distància en una direcció
+    /// Now we know that region2 is not in a corner,
+    /// therefore we only need to measure the distance in one direction
     if (region1.top() > region2.bottom())
     {
         // 2
@@ -151,7 +154,7 @@ int ImageOverlayRegionFinder::distanceBetweenRegions(const QRect &region1, const
         return region1.left() - region2.right() - 1;
     }
 
-    // No hem d'arribar mai aquí.
+    //We must never get here.
     Q_ASSERT(false);
     return -1;
 }

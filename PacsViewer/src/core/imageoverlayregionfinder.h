@@ -25,45 +25,48 @@ namespace udg {
 class ImageOverlay;
 
 /**
-    Aquesta classe permet trobar regions en un ImageOverlay intentant minimitzar l'àrea buida total però sense fer moltes regions molt petites.
- */
+This class allows you to find regions in an ImageOverlay
+trying to minimize the total empty area but without making many regions very small.
+*/
 class ImageOverlayRegionFinder {
 
 public:
 
     ImageOverlayRegionFinder(const ImageOverlay &overlay);
 
-    /// Troba les regions de l'overlay que contenen objectes i les guarda a la llista de regions.
-    /// Si optimizeForPowersOf2 és cert, ajunta les regions que juntes ocupen menys memòria de textures que per separat, tenint en compte que les textures tenen
-    /// mides que són potències de 2.
+    /// Find the overlay regions that contain objects and save them in the region list.
+    /// If optimizeForPowersOf2 is true, it joins the regions that together occupy less
+    /// memory of textures that separately, given that textures have
+    /// sizes that are powers of 2.
     void findRegions(bool optimizeForPowersOf2);
-    /// Retorna la llista de regions de l'overlay.
+    /// Returns the list of overlay regions.
     const QList<QRect>& regions() const;
 
 protected:
 
-    /// Retorna la distància entre les regions donades, calculada com una distància de Chebyshev (http://en.wikipedia.org/wiki/Chebyshev_distance).
+    /// Returns the distance between the given regions, calculated as
+    /// a distance from Chebyshev (http://en.wikipedia.org/wiki/Chebyshev_distance).
     static int distanceBetweenRegions(const QRect &region1, const QRect &region2);
 
 private:
 
-    /// Retorna l'índex per accedir a les dades a partir de la fila i la columna.
+    ///Returns the index to access the data from the row and column.
     int getDataIndex(int row, int column) const;
-    /// Retorna l'índex de la fila a partir de l'índex de les dades.
+    /// Returns the index of the row from the index of the data.
     int getRowIndex(int i) const;
-    /// Retorna l'índex de la columna a partir de l'índex de les dades.
+    ///Returns the index of the column from the index of the data.
     int getColumnIndex(int i) const;
 
-    /// Fa créixer una regió a partir del píxel indicat. Emplena la màscara i retorna la regió trobada.
+    ///Makes a region grow from the indicated pixel. Fill in the mask and return the found region.
     QRect growRegion(int row, int column, QBitArray &mask);
-    /// Posa a 1 tots els píxels de la màscara que pertanyen a la regió.
+    ///Set to 1 all mask pixels that belong to the region.
     void fillMaskForRegion(QBitArray &mask, const QRect &region);
-    /// Afegeix un padding d'un píxel al voltant de la regió.
+    /// cSet to 1 all mask pixels that belong to the region..
     void addPadding(QRect &region);
-    /// Treu el padding d'un píxel al voltant de la regió.
+    ///Removes one-pixel padding around the region.
     void removePadding(QRect &region);
-    /// Afegeix la regió a la llista, fusionant-la amb altres si són molt properes.
-    /// Si optimizeForPowersOf2 és cert, també les fusiona si juntes aprofiten millor la memòria de textures.
+    /// Add the region to the list, merging it with others if they are very close.
+    /// If optimizeForPowersOf2 is true, it also merges them if together they make better use of texture memory.
     void addRegion(QRect &region, bool optimizeForPowersOf2);
 
 private:
