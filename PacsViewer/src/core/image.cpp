@@ -266,7 +266,7 @@ void Image::addVoiLut(const VoiLut &voiLut)
 {
     if (voiLut.isWindowLevel() && !voiLut.getWindowLevel().isValid())
     {
-        QString logMessage = QString("WW/WL Inconsistent: %1, %2. No s'afegira a la imatge").arg(voiLut.getWindowLevel().getWidth())
+        QString logMessage = QString("WW / WL Inconsistent:% 1,% 2. It will not be added to the image").arg(voiLut.getWindowLevel().getWidth())
                 .arg(voiLut.getWindowLevel().getCenter());
         WARN_LOG(logMessage);
         DEBUG_LOG(logMessage);
@@ -429,7 +429,8 @@ QString Image::getFormattedImageTime() const
     QString formattedTime = m_imageTime;
     if (!formattedTime.isEmpty())
     {
-        /// We follow the suggestion in Table 6.2-1 of Part 5 of the DICOM standard to take into account the format hh: mm: ss.frac
+        /// We follow the suggestion in Table 6.2-1 of Part 5 of the
+                /// DICOM standard to take into account the format hh: mm: ss.frac
         formattedTime = formattedTime.remove(":");
 
         QStringList split = formattedTime.split(".");
@@ -552,7 +553,8 @@ DisplayShutter Image::getDisplayShutterForDisplay()
     /// If we get this far, then it means we need to build the DisplayShutter for display
 
     /// First we remove the shutters that don't make sense to apply
-    /// what would be the rectangular shutters that have a size equal to or larger than the image and those that have no defined shape
+    /// what would be the rectangular shutters that have a size equal
+    /// to or larger than the image and those that have no defined shape
     QList<DisplayShutter> shutterList = this->getDisplayShutters();
     QRect imageRect(1, 1, this->getColumns(), this->getRows());
     for (int i = 0; i < shutterList.count(); ++i)

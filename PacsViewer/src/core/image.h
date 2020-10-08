@@ -37,7 +37,7 @@ class Series;
 
 /**
   Class that encapsulates the properties of an image of a series of the Series class
-  */
+*/
 class Image : public QObject {
     Q_OBJECT
 public:
@@ -264,7 +264,8 @@ public:
     static QStringList getSupportedModalities();
 
 private:
-    /// Read the overlays. If splitOverlays is true, save them by dividing the optimal regions in the m_overlaysSplit list
+    /// Read the overlays. If splitOverlays is true, save them by dividing
+    /// the optimal regions in the m_overlaysSplit list
     /// Otherwise read them separately and save them to the m_overlaysList
     bool readOverlays(bool splitOverlays = true);
 
@@ -279,14 +280,17 @@ private:
     /// Number that identifies the image. (0020,0013) Type 2
     QString m_instanceNumber;
 
-    /// Anatomical orientation of the rows and columns of the image (LR / AP / HF). Required if image does not require Image Orientation (Patient) (0020,0037) i
+    /// Anatomical orientation of the rows and columns of the image (LR / AP / HF).
+    ///  Required if image does not require Image Orientation (Patient) (0020,0037) i
     /// Image Position (Patient) (0020,0032). See C.6.7.1.1.1. (0020,0020) Type 2C.
     PatientOrientation m_patientOrientation;
 
-    // TODO Referenced Image Sequence (0008,1140) Type 3. Sequence that references other images significantly related to these,
-    // as a post-localizer for CT.
+    /// TODO Referenced Image Sequence (0008,1140) Type 3. Sequence that references
+    //other images significantly related to these,
+    /// as a post-localizer for CT.
 
-    // TODO Icon Image Sequence (0088,0200) Type 3. The following icon image is representative of this image. see C.7.6.1.1.6
+    /// TODO Icon Image Sequence (0088,0200) Type 3. The following icon image
+    //is representative of this image. see C.7.6.1.1.6
 
     // Image Plane Module C.6.7.2
     /// Physical distance between the center of each pixel (row, column) in mm. See 10.7.1.3. (0028,0030) Type 1
@@ -299,14 +303,17 @@ private:
 
     /// Estimated Radiographic Magnification Factor (0018,1114)
     /// Ratio of Source Image Receptor Distance (SID) over Source Object Distance (SOD).
-    /// May be present (3) in DX Positioning Module (C.8.11.5) (MG, DX, IO), XA Positioner Module C.8.7.5 (XA),
-    /// XRF Positioner Module C.8.7.6 (RF), and must be present (1) in Breast Tomosynthesis Acquisition Module C.8.21.3.4 (Br To)
+    /// May be present (3) in DX Positioning Module (C.8.11.5) (MG, DX, IO),
+    /// XA Positioner Module C.8.7.5 (XA),
+    /// XRF Positioner Module C.8.7.6 (RF), and must be present (1) in Breast
+    ///  Tomosynthesis Acquisition Module C.8.21.3.4 (Br To)
     double m_estimatedRadiographicMagnificationFactor;
     /// Image orientation vectors with respect to the patient.
     /// See C.6.7.2.1.1. (020,0037) Type 1.
     ImageOrientation m_imageOrientationPatient;
 
-    /// Image position. The x, y, z coordinates the upper left corner (first transmitted pixel) of the image, in mm.
+    /// Image position. The x, y, z coordinates the upper left corner
+    ///  (first transmitted pixel) of the image, in mm.
     /// See C.6.7.2.1.1. (0020,0032) Type 1. \ EVERYTHING aka origin ?.
     double m_imagePositionPatient[3];
 
@@ -324,39 +331,47 @@ private:
     int m_rows;
     int m_columns;
 
-    ///Bits hosted by each pixel. Each sample must have the same number of pixels hosted. See PS 3.5 (0028,0100)
+    ///Bits hosted by each pixel. Each sample must have the
+    ///  same number of pixels hosted. See PS 3.5 (0028,0100)
     int m_bitsAllocated;
 
-    ///Bits stored for each pixel. Each sample must have the same number of pixels stored. See PS 3.5 (0028,0101)
+    ///Bits stored for each pixel. Each sample must have the
+    ///  same number of pixels stored. See PS 3.5 (0028,0101)
     int m_bitsStored;
 
     ///Most significant bit. See PS 3.5. (0028,0102) Type 1
     int m_highBit;
 
-    ///Representation of each sample. Listed values 0000H = unsigned integer, 0001H = complement to 2. (0028,0103) Type 1
+    ///Representation of each sample. Listed values
+    /// 0000H = unsigned integer, 0001H = complement to 2. (0028,0103) Type 1
     int m_pixelRepresentation;
 
     ///MODALITY LUT rescaling values. (0028,1053), (0028,1054). Type 1
     double m_rescaleSlope, m_rescaleIntercept;
 
-    /// VOI LUT rescaling values. (0028,1050), (0028,1051) Type 1C, present if there is no VOI LUT Sequence
-    /// May include "Explanation" of window levels if any, descriptive text. (0028,1055) Type 3.
+    /// VOI LUT rescaling values. (0028,1050), (0028,1051) Type 1C,
+    /// present if there is no VOI LUT Sequence
+    /// May include "Explanation" of window levels if any,
+    /// descriptive text. (0028,1055) Type 3.
     /// Since we can have more than one we will have a list
     QList<VoiLut> m_voiLutList;
     // ALL improve definition
     /// Special situation of the slice in mm. (0020,1041)
     /// SC-> type 3
     /// NM-> type 3
-    /// CT-> The documentation says this field is not included but philips uses it as a Table Position
+    /// CT-> The documentation says this field is not included
+    ///  but philips uses it as a Table Position
     QString m_sliceLocation;
-    /// Image type. You can define us if it is a localizer, for example. Contains values separated by '\\'
+    /// Image type. You can define us if it is a localizer,
+    /// for example. Contains values separated by '\\'
     /// Found in the General Image module C.7.6.1 and in the Enhanced
     /// MR / CT / XA / XRF Image modules (C.8.13.1 / C.8.15.2 / C.8.19.2)
     /// In the case of Enhanced CT / MR images we will fill it with
     /// the FrameType value contained in the functional group CT / MR Image Frame Type
     QString m_imageType;
 
-    /// Radiographic view associated with Patient Position. We find it in the CR Series (C.8.1.1) and DX Positioning (C.8.11.5) modules
+    /// Radiographic view associated with Patient Position.
+    /// We find it in the CR Series (C.8.1.1) and DX Positioning (C.8.11.5) modules
     /// Defined values:
     /// AP = Previous / Back
     /// PA = Previous / Previous
@@ -369,8 +384,10 @@ private:
     QString m_viewPosition;
 
     /// Laterality of the possibly matched part of the body examined.
-    /// We find it in the modules DX Anatomy (C.8.11.2), Mammography Image (C.8.11.7), Intra-oral Image (C.8.11.9) and Ocular Region Imaged (C.8.17.5)
-    /// We also find it in the Frame Anatomy module (C.7.6.16.2.8) common to all enhanced, but the tag is called Frame Laterality instead of Image Laterality.
+    /// We find it in the modules DX Anatomy (C.8.11.2),
+    ///  Mammography Image (C.8.11.7), Intra-oral Image (C.8.11.9) and Ocular Region Imaged (C.8.17.5)
+    /// We also find it in the Frame Anatomy module (C.7.6.16.2.8)
+    /// common to all enhanced, but the tag is called Frame Laterality instead of Image Laterality.
     /// Defined values:
     /// R = right
     /// L = left
@@ -378,9 +395,12 @@ private:
     /// B = both left and right
     QChar m_imageLaterality;
 
-    /// Description of the image view type. Its use will be applied basically for mammography cases defined in
-    /// PS 3.16 - Context ID 4014 (cranio-caudal, medio-lateral oblique, etc ...) but we could extend its use to other types of image
-    /// which also make use of this tag to store this type of information with other possible specific values.
+    /// Description of the image view type. Its use will
+    ///  be applied basically for mammography cases defined in
+    /// PS 3.16 - Context ID 4014 (cranio-caudal, medio-lateral
+    ///  oblique, etc ...) but we could extend its use to other types of image
+    /// which also make use of this tag to store this type
+    /// of information with other possible specific values.
     QString m_viewCodeMeaning;
 
     ///Frame number
@@ -413,8 +433,10 @@ private:
     QDate m_retrievedDate;
     QTime m_retrieveTime;
 
-    /// Acquisition Number (0020,0012). Type 3 in C.7.6.1 General Image Module (type 1 or 2 in other modules).
-    /// A number identifying the single continuous gathering of data over a period of time that resulted in this image.
+    /// Acquisition Number (0020,0012). Type 3 in C.7.6.1
+    /// General Image Module (type 1 or 2 in other modules).
+    /// A number identifying the single continuous gathering
+    ///  of data over a period of time that resulted in this image.
     QString m_acquisitionNumber;
 
     /// Attribute that will tell us how many overlays the image has
