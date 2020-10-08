@@ -21,7 +21,7 @@
 
 namespace udg {
 
-// Constant per definir el que nosaltres considerem un vector buit
+// Constant to define what we consider an empty vector
 const QVector3D EmptyVector(.0,.0,.0);
 
 ImageOrientation::ImageOrientation()
@@ -47,12 +47,12 @@ bool ImageOrientation::setDICOMFormattedImageOrientation(const QString &imageOri
         return true;
     }
 
-    // A partir d'aquí comprovem que hi hagi el número correcte d'elements
+    //From here we check that there is the correct number of elements
     QStringList list = imageOrientation.split(DICOMValueRepresentationConverter::ValuesSeparator);
     if (list.size() != 6)
     {
-        DEBUG_LOG("Image Orientation (Patient) no té els 6 elements esperats. Inconsistència DICOM.");
-        ERROR_LOG("Image Orientation (Patient) no té els 6 elements esperats. Inconsistència DICOM.");
+        DEBUG_LOG("Image Orientation (Patient) does not have the 6 expected items. DICOM inconsistency.");
+        ERROR_LOG("Image Orientation (Patient) does not have the 6 expected items. DICOM inconsistency");
 
         return false;
     }
@@ -63,14 +63,14 @@ bool ImageOrientation::setDICOMFormattedImageOrientation(const QString &imageOri
 
     if (!validValues)
     {
-        DEBUG_LOG("Els valors d'Image Orientation (Patient) no són vàlids. Inconsistència DICOM.");
-        ERROR_LOG("Els valors d'Image Orientation (Patient) no són vàlids. Inconsistència DICOM.");
+        DEBUG_LOG("Image Orientation (Patient) values are invalid. DICOM inconsistency.");
+        ERROR_LOG("Image Orientation (Patient) values are invalid. DICOM inconsistency.");
         
         return false;
     }
 
-    // Arribats a aquest punt, tenim 6 valors i són vàlids
-    // Assignem els valors convertits als corresponents vectors
+    // At this point, we have 6 values and they are valid
+    // We assign the converted values to the corresponding vectors
     QVector3D row(convertedValues.at(0), convertedValues.at(1), convertedValues.at(2));
     QVector3D column(convertedValues.at(3), convertedValues.at(4), convertedValues.at(5));
     setRowAndColumnVectors(row, column);
