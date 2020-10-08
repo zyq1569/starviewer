@@ -18,10 +18,10 @@
 #include <QDir>
 
 #ifdef _WIN32
-    #include <windows.h>
+#include <windows.h>
 #else
-    // Per statvfs
-    #include <sys/statvfs.h>
+// Per statvfs
+#include <sys/statvfs.h>
 #endif // _WIN32
 
 namespace udg {
@@ -61,7 +61,7 @@ qint64 HardDiskInformation::getDirectorySizeInBytes(const QString &directoryPath
     QStringList directoryList;
     qint64 directorySize = 0;
 
-    // Llista de fitxers del directori
+    //Directory file list
     fileInfoList = directory.entryInfoList(QDir::Files);
 
     foreach (const QFileInfo &fileInfo, fileInfoList)
@@ -69,10 +69,10 @@ qint64 HardDiskInformation::getDirectorySizeInBytes(const QString &directoryPath
         directorySize += fileInfo.size();
     }
 
-    // Obtenim llistat de subdirectoris
+    //We get list of subdirectories
     directoryList = directory.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
 
-    // Per cada subdirectori
+    // For each subdirectory
     foreach (const QString &subdirectory, directoryList)
     {
         directorySize += getDirectorySizeInBytes(directoryPath + "/" + subdirectory);
@@ -149,7 +149,7 @@ void HardDiskInformation::logLastError(const QString &additionalInformation)
 {
     QString qtErrorMessage;
 #ifdef Q_OS_WIN32
-    // Obtenim el missatge d'error
+    // We get the error message
     TCHAR errorMessage[512];
     FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, GetLastError(), 0, errorMessage, 1024, NULL);
     // Formatem a QString

@@ -20,60 +20,68 @@
 namespace udg {
 
 /**
-    Classe que ens permet obtenir informació sobre un disc dur. Més concretament ens permet obtenir els Byte, MB, GB d'una partició i quins d'aquests són lliures.
-    Cal tenir present que quan es vol saber l'espai lliure d'un disc dur s'ha d'especificar de quina partició. En windows s'hauria d'especificar la
-    unitat (c:, d:, ...) i un directori i en linux s'ha d'especificar la ruta sensera del directori per saber la partició. Actualment aquesta classe només suporta
-    els sistemes operatius basats en Unix (Linux, Mac OS X ...).
-  */
+Class that allows us to get information about a hard drive. More specifically it allows us to get the Bytes, MB, GB of a partition and which of these are free.
+Keep in mind that when you want to know the free space of a hard drive you must specify from which partition. In windows the
+drive (c :, d :, ...) and a directory and in linux you must specify the full path of the directory to know the partition. Currently this class only supports
+Unix-based operating systems (Linux, Mac OS X ...).
+*/
 class HardDiskInformation {
 public:
-    /// Constructor de la classe
+    /// Class builder
     HardDiskInformation();
 
-    /// Destructor de la classe
+    ///Class Destroyer
     ~HardDiskInformation();
 
-    /// Mètode que ens serveix per saber el número de Bytes total (lliures+ocupats) que hi ha en una partició concreta. Per indicar la
-    /// partició s'ha d'especificar el path absolut a un fitxer o directori que estigui en aquesta.
+    /// Method used to know the total number of Bytes (free + occupied)
+    /// that is on a particular partition. To indicate the
+    /// partition must specify the absolute path to a file or directory that is in it.
     ///
-    /// El mètode no comprova que existeixi el path.
+    /// The method does not check that the path exists.
     ///
-    /// Si hi ha qualsevol error el mètode retornarà 0.
-    /// @param path Indica el path a un directori/fitxer dintre de la partició
-    /// @return El nombre total de bytes que té una partició
+    /// If there is any error the method will return 0.
+    /// @param path Indicates the path to a directory / file within the partition
+    /// @return The total number of bytes that a partition has
     quint64 getTotalNumberOfBytes(const QString &path);
 
-    /// Retorna el número de Bytes d'espai lliure que ens queden en una partició concreta i que poden ser utilitzats per l'usuari. Cal fer
-    /// notar que aquest número pot ser diferent del nombre real de bytes lliures (per exemple en casos que hi hagi quotes per usuari). Per
-    /// indicar la partició s'ha d'especificar el path absolut a un fitxer o directori que estigui en aquesta.
+    /// Returns the number of bytes of free space we have left on a partition
+    /// specific and that can be used by the user. Must do
+    /// note that this number may be different from the actual number of free bytes
+    /// (for example in cases where there are fees per user). Per
+    /// indicate the partition the absolute path must be specified in a file or directory that is in it.
     ///
-    /// El mètode no comprova que existeixi el path.
+    /// The method does not check that the path exists.
     ///
-    /// Si hi ha qualsevol error el mètode retornarà 0.
-    /// @param path Indica el path a un directori/fitxer dintre de la partició
-    /// @return El nombre de bytes lliures que té una partició i poden ser utilitzats per l'usuari que executa el programa
+    /// If there is any error the method will return 0.
+    /// @param path Indicates the path to a directory / file within the partition
+    /// @return The number of free bytes that a partition has and
+    /// can be used by the user running the program
     quint64 getNumberOfFreeBytes(const QString &path);
 
-    /// Es comporta exactament igual que getTotalNumberOfBytes() però retorna MBytes en comptes de Bytes. Cal tenir en compte, però, que
-    /// aquest no és un mètode per saber el número de MBytes amb absoluta precissió (per això fer servir getTotalNumberOfBytes())
-    /// @param path Indica el path a un directori/fitxer dintre de la partició
-    /// @return El nombre de MBytes truncats (ex.: si és 1,9MBytes reals retornarà 1Mbytes)
+    /// It behaves exactly like getTotalNumberOfBytes () but returns
+    /// MBytes instead of Bytes. It should be noted, however, that
+    /// this is not a method to know the absolute number of MBytes
+    /// accuracy (so use getTotalNumberOfBytes ())
+    /// @param path Indicates the path to a directory / file within the partition
+    /// @return The number of truncated MBytes (eg if it is 1.9MBytes real it will return 1Mbytes)
     quint64 getTotalNumberOfMBytes(const QString &path);
 
-    /// Es comporta exactament igual que getNumberOfFreeBytes() però retorna MBytes en comptes de Bytes. Cal tenir en compte, però, que
-    /// aquest no és un mètode per saber el número de MBytes amb absoluta precissió (per això fer servir getNumberOfFreeBytes())
-    /// @param path Indica el path a un directori/fitxer dintre de la partició
-    /// @return El nombre de MBytes lliures truncats (ex.: si és 1,9MBytes reals retornarà 1MByte)
+    /// It behaves exactly like getNumberOfFreeBytes () but returns
+    /// MBytes instead of Bytes. It should be noted, however, that
+    /// this is not a method to know the absolute number of MBytes
+    /// accuracy (so use getNumberOfFreeBytes ())
+    /// @param path Indicates the path to a directory / file within the partition
+    /// @return The number of truncated free MBytes (eg if it is 1.9MBytes real it will return 1MByte)
     quint64 getNumberOfFreeMBytes(const QString &path);
 
-    /// Ens retorna els Bytes que ocupa el contingut del directori donat
+    /// Returns the Bytes that occupy the contents of the given directory
     static qint64 getDirectorySizeInBytes(const QString &directoryPath);
 
 private:
     quint64 getTotalBytesPlataformEspecific(const QString &path);
     quint64 getFreeBytesPlataformEspecific(const QString &path);
 
-    /// Loggeja l'últim error segons la plataforma
+    ///Logs the last error according to the platform
     void logLastError(const QString &additionalInformation);
 
 };
