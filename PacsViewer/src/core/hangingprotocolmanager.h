@@ -39,7 +39,7 @@ class RelatedStudiesManager;
 HP Management Class: Find HP candidates and apply HP.
 Because HPs are modified to assign the series to be displayed,
 a copy of the repository is made.
-  */
+*/
 class HangingProtocolManager : public QObject {
     Q_OBJECT
 public:
