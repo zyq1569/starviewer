@@ -26,32 +26,32 @@ public:
 
     ~HangingProtocolLayout();
 
-    /// Posar el nombre de pantalles
+    ///Enter the name of the screens
     void setNumberOfScreens(int numberOfScreens);
-    /// Posar la llista de píxels en vertical
+    /// Put the pixel list vertically
     void setVerticalPixelsList(const QList<int> &verticalPixelsList);
-    /// Posar la llista de píxels en horitzontal
+    /// Put the pixel list horizontally
     void setHorizontalPixelsList(const QList<int> &horizontalPixelsList);
-    /// Posar la llista de posicions dels visualitzadors
+    /// Put the list of positions of the viewers
     void setDisplayEnvironmentSpatialPositionList(const QStringList &displayEnvironmentSpatialPosition);
-    /// Obtenir el nombre de pantalles
+    /// Get the screen name
     int getNumberOfScreens() const;
-    /// Obtenir la llista de píxels en vertical
+    /// Get the vertical pixel list
     QList<int> getVerticalPixelsList() const;
-    /// Obtenir la llista de píxels en horitzontal
+    /// Get the horizontal pixel list
     QList<int> getHorizontalPixelsList() const;
-    /// Obtenir la llista de posicions dels visualitzadors
+    /// Get the list of viewer positions
     QStringList getDisplayEnvironmentSpatialPositionList() const;
 
 private:
     /// Hanging Protocol Environment Module Attributes
-    /// Nombre de pantalles
+    /// Number of screens
     int m_numberOfScreens;
-    /// Llista de píxels en vertical
+    ///Vertical pixel list
     QList<int> m_verticalPixelsList;
-    /// Llista de píxels en horitzontal
+    ///Horizontal pixel list
     QList<int> m_horizontalPixelsList;
-    /// Llista de posicions dels visualitzadors
+    /// List of viewer positions
     QStringList m_displayEnvironmentSpatialPosition;
 };
 
