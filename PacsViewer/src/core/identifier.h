@@ -20,22 +20,22 @@
 namespace udg {
 
 /**
-    Encapsula un identificador numèric.
-  */
+Encapsulates a numeric identifier.
+*/
 class Identifier {
 public:
     /// Constructor
     Identifier();
     Identifier(int id);
 
-    /// Constructor de còpia
+    ///Copy builder
     Identifier(const Identifier &id);
 
     ~Identifier();
 
-    /// Li assigna un nou valor a l'identificador
+    ///Assigns a new value to the identifier
     void setValue(int newId);
-    /// Ens indica si l'dentificador té un valor vàlid o no
+    ///Tells us if the identifier has a valid value or not
     bool isNull();
 
     int getValue() const
