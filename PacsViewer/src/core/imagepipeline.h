@@ -28,7 +28,8 @@ class VoiLut;
 class WindowLevelFilter;
 
 /**
- * @brief The ImagePipeline class encapsulates the pipeline that applies the filters required to generate the image to be used in Q2DViewer.
+ * @brief The ImagePipeline class encapsulates the pipeline that applies
+ *  the filters required to generate the image to be used in Q2DViewer.
  */
 class ImagePipeline : public Filter {
 
