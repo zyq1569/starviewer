@@ -30,9 +30,9 @@ FirewallAccessTest::~FirewallAccessTest()
 
 DiagnosisTestResult FirewallAccessTest::run()
 {
-    /// Crear el firewall
+    /// Create the firewall
     FirewallAccess *firewall = createFirewall();
-    /// I comprovar si starviewer t access
+    ///I check if starviewer t access
     checkIfStarviewerHaveAccessThroughFirewall(firewall);
     DiagnosisTestResult result;
 
