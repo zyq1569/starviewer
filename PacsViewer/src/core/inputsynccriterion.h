@@ -20,9 +20,9 @@
 namespace udg {
 
 /**
-    Implements the SyncCriterion for the viewers input.
-    The inputs have to be the same to meet the criterion.
- */
+Implements the SyncCriterion for the viewers input.
+The inputs have to be the same to meet the criterion.
+*/
 class InputSyncCriterion : public SyncCriterion {
 public:
     InputSyncCriterion();
