@@ -23,7 +23,7 @@ namespace udg {
 /**
     Implementation of a SyncAction for a patient orientation
     The set patient orientation on setImageOrientation() will be applied when run() is called
- */
+*/
 class ImageOrientationSyncAction : public SyncAction {
 public:
     ImageOrientationSyncAction();
