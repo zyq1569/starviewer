@@ -78,7 +78,8 @@ public:
     bool operator ==(const ImagePlane &imagePlane) const;
     bool operator !=(const ImagePlane &imagePlane) const;
 
-    /// Location of the bounds. Central = middle of the plane, Upper = middle of the plane + thickness/2, Lower = middle of the plane - thickness/2.
+    /// Location of the bounds. Central = middle of the plane,
+    /// Upper = middle of the plane + thickness/2, Lower = middle of the plane - thickness/2.
     enum CornersLocation { Central, Upper, Lower };
 
     /// Contains the 4 corners of an ImagePlane at the specified location.
@@ -104,7 +105,8 @@ public:
     /// \param plane Plane to intersect with this one. It's considered an infinite plane.
     /// \param intersectionPoint1 The first intersection point will be stored here.
     /// \param intersectionPoint2 The second intersection point will be stored here.
-    /// \param cornersLocation Specify which corners of this ImagePlane will be used to compute the intersection (upper by default)
+    /// \param cornersLocation Specify which corners of this ImagePlane will be used
+    ///  to compute the intersection (upper by default)
     ///                        (\a plane is always used with the central location).
     /// \return True if there are intersections, and false otherwise.
     bool getIntersections(const ImagePlane *plane, Vector3 &intersectionPoint1, Vector3 &intersectionPoint2, CornersLocation cornersLocation = Upper) const;
