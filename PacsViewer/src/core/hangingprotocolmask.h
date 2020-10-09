@@ -26,10 +26,10 @@ public:
 
     ~HangingProtocolMask();
 
-    /// Llista de protocols a tractar del hanging protocol
+    /// List of protocols to deal with the hanging protocol
     void setProtocolsList(const QStringList &protocols);
 
-    /// Obtenir la llista de protocols
+    ///Get the list of protocols
     QStringList getProtocolList() const;
 
 private:
