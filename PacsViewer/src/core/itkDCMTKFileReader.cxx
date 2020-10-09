@@ -4,30 +4,30 @@
   Girona 2014. All rights reserved.
   http://starviewer.udg.edu
 
-  This file is part of the Starviewer (Medical Imaging Software) open source project.
-  It is subject to the license terms in the LICENSE file found in the top-level
-  directory of this distribution and at http://starviewer.udg.edu/license. No part of
-  the Starviewer (Medical Imaging Software) open source project, including this file,
-  may be copied, modified, propagated, or distributed except according to the
-  terms contained in the LICENSE file.
+This file is part of the Starviewer (Medical Imaging Software) open source project.
+It is subject to the license terms in the LICENSE file found in the top-level
+directory of this distribution and at http://starviewer.udg.edu/license. No part of
+the Starviewer (Medical Imaging Software) open source project, including this file,
+may be copied, modified, propagated, or distributed except according to the
+terms contained in the LICENSE file.
 
-  This file incorporates work covered by the following copyright and
-  permission notice:
+This file incorporates work covered by the following copyright and
+permission notice:
 
-    Copyright Insight Software Consortium
+Copyright Insight Software Consortium
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-           http://www.apache.org/licenses/LICENSE-2.0.txt
+       http://www.apache.org/licenses/LICENSE-2.0.txt
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
- *************************************************************************************/
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*************************************************************************************/
 
 #include "itkDCMTKFileReader.h"
 #undef HAVE_SSTREAM   // 'twould be nice if people coded without using
@@ -505,7 +505,7 @@ int DCMTKFileReader::GetElementLO(unsigned short group,
 }
 
 /** Get a DecimalString Item as a single string
- */
+*/
 int DCMTKFileReader::GetElementDS(unsigned short group,
                                   unsigned short element,
                                   std::string &target,
@@ -715,7 +715,7 @@ int DCMTKFileReader::GetElementUS(unsigned short group,
     return EXIT_SUCCESS;
 }
 /** Get a DecimalString Item as a single string
-   */
+*/
 int DCMTKFileReader::GetElementCS(unsigned short group,
                                   unsigned short element,
                                   std::string &target,
@@ -804,7 +804,7 @@ int DCMTKFileReader::GetElementPN(unsigned short group,
 }
 
 /** get an IS (Integer String Item
-   */
+*/
 int DCMTKFileReader::GetElementIS(unsigned short group,
                                   unsigned short element,
                                   ::itk::int32_t  &target,
@@ -872,7 +872,7 @@ int DCMTKFileReader::GetElementISorOB(unsigned short group,
 }
 
 /** get an OB OtherByte Item
-   */
+*/
 int DCMTKFileReader::GetElementOB(unsigned short group,
                                   unsigned short element,
                                   std::string &target,
@@ -1250,9 +1250,10 @@ int getFromFunctionalGroupsSequence(DCMTKSequence &functionalGroupsSequence, int
 
 int DCMTKFileReader::GetSpacing(double *spacing)
 {
-    // There are several tags that can have spacing, and we're going from most to least desirable, starting with PixelSpacing, which is guaranteed to be in
-    // patient space.
-    // Imager Pixel spacing is inter-pixel spacing at the sensor front plane.
+    /// There are several tags that can have spacing, and we're going
+    ///  from most to least desirable, starting with PixelSpacing, which is guaranteed to be in
+    /// patient space.
+    /// Imager Pixel spacing is inter-pixel spacing at the sensor front plane.
 
     double _spacing[3] = { 1.0, 1.0, 1.0 };
 
