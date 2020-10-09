@@ -82,12 +82,12 @@ void GenericDistanceTool::drawMeasurement()
 
 void GenericDistanceTool::placeMeasurementText(DrawerText *text)
 {
-    // We place text to the left or right of the second point depending on the way line had been drawn
+    /// We place text to the left or right of the second point depending on the way line had been drawn
     int xIndex = m_2DViewer->getView().getXIndex();
     double *firstPoint = m_distanceLine->getFirstPoint();
     double *secondPoint = m_distanceLine->getSecondPoint();
 
-    // Applying 5-pixel padding
+    /// Applying 5-pixel padding
     const double Padding = 5.0;
     double textPadding;
     if (firstPoint[xIndex] <= secondPoint[xIndex])
@@ -102,9 +102,9 @@ void GenericDistanceTool::placeMeasurementText(DrawerText *text)
     }
 
     double secondPointInDisplay[3];
-    // Converting secondPoint to display coordinates
+    /// Converting secondPoint to display coordinates
     m_2DViewer->computeWorldToDisplay(secondPoint[0], secondPoint[1], secondPoint[2], secondPointInDisplay);
-    // Applying padding and converting back to world coordinates
+    /// Applying padding and converting back to world coordinates
     double attachmentPoint[3];
     m_2DViewer->computeDisplayToWorld(secondPointInDisplay[0] + textPadding, secondPointInDisplay[1], secondPointInDisplay[2], attachmentPoint);
 
