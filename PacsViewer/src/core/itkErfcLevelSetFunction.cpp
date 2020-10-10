@@ -29,63 +29,63 @@ template <class TImageType, class TFeatureImageType, class TMaskImageType>
 void ErfcLevelSetFunction<TImageType, TFeatureImageType, TMaskImageType>
 ::CalculateSpeedImage()
 {
-  typename GradientAnisotropicDiffusionImageFilter<TFeatureImageType, TFeatureImageType>::Pointer
-    diffusion  = GradientAnisotropicDiffusionImageFilter<TFeatureImageType, TFeatureImageType>::New();
-  typename LaplacianImageFilter<TFeatureImageType, TFeatureImageType>::Pointer
-    laplacian = LaplacianImageFilter<TFeatureImageType, TFeatureImageType>::New();
+    typename GradientAnisotropicDiffusionImageFilter<TFeatureImageType, TFeatureImageType>::Pointer
+            diffusion  = GradientAnisotropicDiffusionImageFilter<TFeatureImageType, TFeatureImageType>::New();
+    typename LaplacianImageFilter<TFeatureImageType, TFeatureImageType>::Pointer
+            laplacian = LaplacianImageFilter<TFeatureImageType, TFeatureImageType>::New();
 
-  ImageRegionIterator<FeatureImageType> lit;
-  ImageRegionConstIterator<FeatureImageType>
-    fit(this->GetFeatureImage(), this->GetFeatureImage()->GetRequestedRegion());
-  ImageRegionConstIterator<MaskImageType>
-    mit(this->GetMaskImage(), this->GetMaskImage()->GetRequestedRegion());
-  ImageRegionIterator<ImageType>
-    sit(this->GetSpeedImage(), this->GetFeatureImage()->GetRequestedRegion());
+    ImageRegionIterator<FeatureImageType> lit;
+    ImageRegionConstIterator<FeatureImageType>
+            fit(this->GetFeatureImage(), this->GetFeatureImage()->GetRequestedRegion());
+    ImageRegionConstIterator<MaskImageType>
+            mit(this->GetMaskImage(), this->GetMaskImage()->GetRequestedRegion());
+    ImageRegionIterator<ImageType>
+            sit(this->GetSpeedImage(), this->GetFeatureImage()->GetRequestedRegion());
 
-  if (m_EdgeWeight != 0.0)
+    if (m_EdgeWeight != 0.0)
     {
-    diffusion->SetInput(this->GetFeatureImage());
-    diffusion->SetConductanceParameter(m_SmoothingConductance);
-    diffusion->SetTimeStep(m_SmoothingTimeStep);
-    diffusion->SetNumberOfIterations(m_SmoothingIterations);
+        diffusion->SetInput(this->GetFeatureImage());
+        diffusion->SetConductanceParameter(m_SmoothingConductance);
+        diffusion->SetTimeStep(m_SmoothingTimeStep);
+        diffusion->SetNumberOfIterations(m_SmoothingIterations);
 
-    laplacian->SetInput(diffusion->GetOutput());
-    laplacian->Update();
+        laplacian->SetInput(diffusion->GetOutput());
+        laplacian->Update();
 
-    lit = ImageRegionIterator<FeatureImageType>(laplacian->GetOutput(),
-                                          this->GetFeatureImage()->GetRequestedRegion());
-    lit.GoToBegin();
+        lit = ImageRegionIterator<FeatureImageType>(laplacian->GetOutput(),
+                                                    this->GetFeatureImage()->GetRequestedRegion());
+        lit.GoToBegin();
     }
 
-  // Copy the meta information (spacing and origin) from the feature image
-  this->GetSpeedImage()->CopyInformation(this->GetFeatureImage());
+    // Copy the meta information (spacing and origin) from the feature image
+    this->GetSpeedImage()->CopyInformation(this->GetFeatureImage());
 
-  // Calculate the speed image
-  ScalarValueType upper_threshold = static_cast<ScalarValueType>(m_UpperThreshold);
-  ScalarValueType lower_threshold = static_cast<ScalarValueType>(m_LowerThreshold);
-  ScalarValueType threshold=0;
-  const float sqrt2 = 1.41421356;
-  for ( fit.GoToBegin(), sit.GoToBegin(), mit.GoToBegin(); ! fit.IsAtEnd(); ++sit, ++fit, ++mit)
+    // Calculate the speed image
+    ScalarValueType upper_threshold = static_cast<ScalarValueType>(m_UpperThreshold);
+    ScalarValueType lower_threshold = static_cast<ScalarValueType>(m_LowerThreshold);
+    ScalarValueType threshold=0;
+    const float sqrt2 = 1.41421356;
+    for ( fit.GoToBegin(), sit.GoToBegin(), mit.GoToBegin(); ! fit.IsAtEnd(); ++sit, ++fit, ++mit)
     {
-    if (static_cast<ScalarValueType>(mit.Get()) == m_insideMaskValue)
-      {
-      sit.Set( static_cast<ScalarValueType>(m_multiplier));
-      }
-    else
-      {
-      if(fit.Get() < lower_threshold || fit.Get() > upper_threshold)
+        if (static_cast<ScalarValueType>(mit.Get()) == m_insideMaskValue)
         {
-        sit.Set(static_cast<ScalarValueType>(-1.0*m_multiplier));
+            sit.Set( static_cast<ScalarValueType>(m_multiplier));
         }
-      else
+        else
         {
-        //threshold ranges from -1.0 to 1.0
-        threshold = (erfc(((double)fit.Get() - (m_mean - m_constant*m_variance) ) / (m_variance*sqrt2)) ) - 1.0;
-        //sit.Set(m_multiplier*pow(threshold, m_alpha));
-        sit.Set(m_multiplier*threshold);
+            if(fit.Get() < lower_threshold || fit.Get() > upper_threshold)
+            {
+                sit.Set(static_cast<ScalarValueType>(-1.0*m_multiplier));
+            }
+            else
+            {
+                //threshold ranges from -1.0 to 1.0
+                threshold = (erfc(((double)fit.Get() - (m_mean - m_constant*m_variance) ) / (m_variance*sqrt2)) ) - 1.0;
+                //sit.Set(m_multiplier*pow(threshold, m_alpha));
+                sit.Set(m_multiplier*threshold);
+            }
         }
-      }
-/*    if ( m_EdgeWeight != 0.0)
+        /*    if ( m_EdgeWeight != 0.0)
       {
       sit.Set( static_cast<ScalarValueType>(threshold + m_EdgeWeight * lit.Get()) );
       ++lit;
@@ -107,10 +107,10 @@ double ErfcLevelSetFunction<TImageType, TFeatureImageType, TMaskImageType>
     //--- Nve 14-nov-1998 UU-SAP Utrecht
     // The parameters of the Chebyshev fit
     const double a1 = -1.26551223,   a2 = 1.00002368,
-    a3 =  0.37409196,   a4 = 0.09678418,
-    a5 = -0.18628806,   a6 = 0.27886807,
-    a7 = -1.13520398,   a8 = 1.48851587,
-    a9 = -0.82215223,  a10 = 0.17087277;
+            a3 =  0.37409196,   a4 = 0.09678418,
+            a5 = -0.18628806,   a6 = 0.27886807,
+            a7 = -1.13520398,   a8 = 1.48851587,
+            a9 = -0.82215223,  a10 = 0.17087277;
 
     double v = 1.0; // The return value
     double z = std::fabs(x);
@@ -124,7 +124,7 @@ double ErfcLevelSetFunction<TImageType, TFeatureImageType, TMaskImageType>
     if (x < 0) v = 2.0-v; // erfc(-x)=2-erfc(x)
 
     return v;
- }
+}
 
 
 
