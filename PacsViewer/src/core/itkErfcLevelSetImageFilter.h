@@ -82,167 +82,167 @@ template <class TInputImage,
           class TMaskImage,
           class TOutputPixelType = float >
 class ITK_EXPORT ErfcLevelSetImageFilter
-  : public SegmentationLevelSetImageFilter<TInputImage, TFeatureImage, TOutputPixelType >
+        : public SegmentationLevelSetImageFilter<TInputImage, TFeatureImage, TOutputPixelType >
 {
 public:
-  /** Standard class typedefs */
-  typedef ErfcLevelSetImageFilter Self;
-  typedef  SegmentationLevelSetImageFilter<TInputImage, TFeatureImage, TOutputPixelType > Superclass;
-  typedef SmartPointer<Self>  Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
-  typedef TMaskImage MaskImageType;
-  typedef typename MaskImageType::PixelType MaskPixelType;
+    /** Standard class typedefs */
+    typedef ErfcLevelSetImageFilter Self;
+    typedef  SegmentationLevelSetImageFilter<TInputImage, TFeatureImage, TOutputPixelType > Superclass;
+    typedef SmartPointer<Self>  Pointer;
+    typedef SmartPointer<const Self>  ConstPointer;
+    typedef TMaskImage MaskImageType;
+    typedef typename MaskImageType::PixelType MaskPixelType;
 
-  /** Inherited typedef from the superclass. */
-  typedef typename Superclass::ValueType ValueType;
-  typedef typename Superclass::OutputImageType OutputImageType;
-  typedef typename Superclass::FeatureImageType FeatureImageType;
+    /** Inherited typedef from the superclass. */
+    typedef typename Superclass::ValueType ValueType;
+    typedef typename Superclass::OutputImageType OutputImageType;
+    typedef typename Superclass::FeatureImageType FeatureImageType;
 
-  /** Type of the segmentation function */
-  typedef ErfcLevelSetFunction<OutputImageType, FeatureImageType, MaskImageType> ErfcFunctionType;
-  typedef typename ErfcFunctionType::Pointer ErfcFunctionPointer;
+    /** Type of the segmentation function */
+    typedef ErfcLevelSetFunction<OutputImageType, FeatureImageType, MaskImageType> ErfcFunctionType;
+    typedef typename ErfcFunctionType::Pointer ErfcFunctionPointer;
 
-  /** Run-time type information (and related methods). */
-  itkTypeMacro(ErfcLevelSetImageFilter, SegmentationLevelSetImageFilter);
+    /** Run-time type information (and related methods). */
+    itkTypeMacro(ErfcLevelSetImageFilter, SegmentationLevelSetImageFilter);
 
-  /** Method for creation through the object factory */
-  itkNewMacro(Self);
+    /** Method for creation through the object factory */
+    itkNewMacro(Self);
 
-  /** Get/Set the threshold values that will be used to calculate the speed function. */
-  void SetUpperThreshold(ValueType v)
-  {
-    this->m_ErfcFunction->SetUpperThreshold(v);
-    this->Modified();
-  }
-  void SetLowerThreshold(ValueType v)
-  {
-    this->m_ErfcFunction->SetLowerThreshold(v);
-    this->Modified();
-  }
-  ValueType GetUpperThreshold() const
-  {
-    return m_ErfcFunction->GetUpperThreshold();
-  }
-  ValueType GetLowerThreshold() const
-  {
-    return m_ErfcFunction->GetLowerThreshold();
-  }
+    /** Get/Set the threshold values that will be used to calculate the speed function. */
+    void SetUpperThreshold(ValueType v)
+    {
+        this->m_ErfcFunction->SetUpperThreshold(v);
+        this->Modified();
+    }
+    void SetLowerThreshold(ValueType v)
+    {
+        this->m_ErfcFunction->SetLowerThreshold(v);
+        this->Modified();
+    }
+    ValueType GetUpperThreshold() const
+    {
+        return m_ErfcFunction->GetUpperThreshold();
+    }
+    ValueType GetLowerThreshold() const
+    {
+        return m_ErfcFunction->GetLowerThreshold();
+    }
 
-  /** Set/Get the weight applied to the edge (Laplacian) attractor in the speed
+    /** Set/Get the weight applied to the edge (Laplacian) attractor in the speed
    *  term function. Zero will turn this term off. */
-  void SetEdgeWeight(ValueType v)
-  {
-    this->m_ErfcFunction->SetEdgeWeight(v);
-    this->Modified();
-  }
+    void SetEdgeWeight(ValueType v)
+    {
+        this->m_ErfcFunction->SetEdgeWeight(v);
+        this->Modified();
+    }
     ValueType GetEdgeWeight() const
-  {
-    return m_ErfcFunction->GetEdgeWeight();
-  }
+    {
+        return m_ErfcFunction->GetEdgeWeight();
+    }
 
-  /** Anisotropic diffusion is applied to the FeatureImage before calculating
+    /** Anisotropic diffusion is applied to the FeatureImage before calculating
    * the Laplacian (edge) term. This method sets/gets the number of diffusion
    * iterations. */
-  void SetSmoothingIterations(int v)
-  {
-    this->m_ErfcFunction->SetSmoothingIterations(v);
-    this->Modified();
-  }
-  int GetSmoothingIterations() const
-  {
-    return m_ErfcFunction->GetSmoothingIterations();
-  }
+    void SetSmoothingIterations(int v)
+    {
+        this->m_ErfcFunction->SetSmoothingIterations(v);
+        this->Modified();
+    }
+    int GetSmoothingIterations() const
+    {
+        return m_ErfcFunction->GetSmoothingIterations();
+    }
 
-  /** Anisotropic diffusion is applied to the FeatureImage before calculating
+    /** Anisotropic diffusion is applied to the FeatureImage before calculating
    * the Laplacian (edge) term. This method sets/gets the diffusion time
    * step. */
-  void SetSmoothingTimeStep(ValueType v)
-  {
-    this->m_ErfcFunction->SetSmoothingTimeStep(v);
-    this->Modified();
-  }
-  ValueType GetSmoothingTimeStep() const
-  {
-    return m_ErfcFunction->GetSmoothingTimeStep();
-  }
+    void SetSmoothingTimeStep(ValueType v)
+    {
+        this->m_ErfcFunction->SetSmoothingTimeStep(v);
+        this->Modified();
+    }
+    ValueType GetSmoothingTimeStep() const
+    {
+        return m_ErfcFunction->GetSmoothingTimeStep();
+    }
 
-  /** Anisotropic diffusion is applied to the FeatureImage before calculatign
+    /** Anisotropic diffusion is applied to the FeatureImage before calculatign
    * the Laplacian (edge) term. This method sets/gets the smoothing
    * conductance. */
-  void SetSmoothingConductance(ValueType v)
-  {
-    this->m_ErfcFunction->SetSmoothingConductance(v);
-    this->Modified();
-  }
+    void SetSmoothingConductance(ValueType v)
+    {
+        this->m_ErfcFunction->SetSmoothingConductance(v);
+        this->Modified();
+    }
     ValueType GetSmoothingConductance() const
-  {
-    return m_ErfcFunction->GetSmoothingConductance();
-  }
-
-  void SetMaskImage(const typename MaskImageType::Pointer im)
-  {
-    this->m_ErfcFunction->SetMaskImage(im);
-    this->Modified();
-  }
-  void SetMean(const float i)  {
-    this->m_ErfcFunction->SetMean(i);
-    this->Modified();
+    {
+        return m_ErfcFunction->GetSmoothingConductance();
     }
-  float GetMean() const  {
-      return m_ErfcFunction->GetMean();
-  }
 
-  void SetVariance(const float i)  {
-    this->m_ErfcFunction->SetVariance(i);
-    this->Modified();
+    void SetMaskImage(const typename MaskImageType::Pointer im)
+    {
+        this->m_ErfcFunction->SetMaskImage(im);
+        this->Modified();
     }
-  float GetVariance() const  {
-      return m_ErfcFunction->GetVariance();
-  }
+    void SetMean(const float i)  {
+        this->m_ErfcFunction->SetMean(i);
+        this->Modified();
+    }
+    float GetMean() const  {
+        return m_ErfcFunction->GetMean();
+    }
 
-  void SetConstant(const float i)  {
-    this->m_ErfcFunction->SetConstant(i);
-    this->Modified();
+    void SetVariance(const float i)  {
+        this->m_ErfcFunction->SetVariance(i);
+        this->Modified();
     }
-  float GetCosntant() const  {
-      return m_ErfcFunction->GetConstant();
-  }
+    float GetVariance() const  {
+        return m_ErfcFunction->GetVariance();
+    }
 
-  void SetMultiplier(const float i)  {
-    this->m_ErfcFunction->SetMultiplier(i);
-    this->Modified();
+    void SetConstant(const float i)  {
+        this->m_ErfcFunction->SetConstant(i);
+        this->Modified();
     }
-  float GetMultiplier() const  {
-      return m_ErfcFunction->GetMultiplier();
-  }
+    float GetCosntant() const  {
+        return m_ErfcFunction->GetConstant();
+    }
 
-  void SetAlpha(const float i)  {
-    this->m_ErfcFunction->SetAlpha(i);
-    this->Modified();
+    void SetMultiplier(const float i)  {
+        this->m_ErfcFunction->SetMultiplier(i);
+        this->Modified();
     }
-  float GetAlpha() const  {
-      return m_ErfcFunction->GetAlpha();
-  }
+    float GetMultiplier() const  {
+        return m_ErfcFunction->GetMultiplier();
+    }
 
-  void SetMaskInsideValue(const MaskPixelType i)  {
-    this->m_ErfcFunction->SetMaskInsideValue(i);
-    this->Modified();
+    void SetAlpha(const float i)  {
+        this->m_ErfcFunction->SetAlpha(i);
+        this->Modified();
     }
-  MaskPixelType GetMaskInsideValue() const  {
-      return m_ErfcFunction->GetMaskInsideValue();
-  }
+    float GetAlpha() const  {
+        return m_ErfcFunction->GetAlpha();
+    }
+
+    void SetMaskInsideValue(const MaskPixelType i)  {
+        this->m_ErfcFunction->SetMaskInsideValue(i);
+        this->Modified();
+    }
+    MaskPixelType GetMaskInsideValue() const  {
+        return m_ErfcFunction->GetMaskInsideValue();
+    }
 
 
 protected:
-  ~ErfcLevelSetImageFilter() {}
-  ErfcLevelSetImageFilter();
+    ~ErfcLevelSetImageFilter() {}
+    ErfcLevelSetImageFilter();
 
-  virtual void PrintSelf(std::ostream &os, Indent indent) const;
+    virtual void PrintSelf(std::ostream &os, Indent indent) const;
 
-  ErfcLevelSetImageFilter(const Self &); // purposely not impl.
-  void operator=(const Self&); //purposely not implemented
+    ErfcLevelSetImageFilter(const Self &); // purposely not impl.
+    void operator=(const Self&); //purposely not implemented
 private:
-  ErfcFunctionPointer m_ErfcFunction;
+    ErfcFunctionPointer m_ErfcFunction;
 };
 
 } // end namespace itk

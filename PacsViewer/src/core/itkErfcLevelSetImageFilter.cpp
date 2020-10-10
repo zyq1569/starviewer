@@ -26,20 +26,19 @@ template <class TInputImage, class TFeatureImage, class TMaskImage, class TOutpu
 ErfcLevelSetImageFilter<TInputImage, TFeatureImage, TMaskImage, TOutputType>
 ::ErfcLevelSetImageFilter()
 {
-  m_ErfcFunction = ErfcFunctionType::New();
-  m_ErfcFunction->SetUpperThreshold(0);
-  m_ErfcFunction->SetLowerThreshold(0);
+    m_ErfcFunction = ErfcFunctionType::New();
+    m_ErfcFunction->SetUpperThreshold(0);
+    m_ErfcFunction->SetLowerThreshold(0);
 
-  this->SetSegmentationFunction(m_ErfcFunction);
+    this->SetSegmentationFunction(m_ErfcFunction);
 }
 
 template <class TInputImage, class TFeatureImage, class TMaskImage, class TOutputType>
-void
-ErfcLevelSetImageFilter<TInputImage, TFeatureImage, TMaskImage, TOutputType>
+void ErfcLevelSetImageFilter<TInputImage, TFeatureImage, TMaskImage, TOutputType>
 ::PrintSelf(std::ostream &os, Indent itkNotUsed(indent)) const
 {
-  //Superclass::PrintSelf(os, indent);
-  os << "ErfcFunction: " << m_ErfcFunction;
+    //Superclass::PrintSelf(os, indent);
+    os << "ErfcFunction: " << m_ErfcFunction;
 }
 
 
