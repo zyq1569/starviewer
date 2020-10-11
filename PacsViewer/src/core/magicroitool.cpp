@@ -37,7 +37,7 @@ const int MagicROITool::MagicSize = 3;
 const double MagicROITool::InitialMagicFactor = 0.0;
 
 MagicROITool::MagicROITool(QViewer *viewer, QObject *parent)
-: ROITool(viewer, parent)
+    : ROITool(viewer, parent)
 {
     m_magicFactor = InitialMagicFactor;
     m_minX = 0;
@@ -86,7 +86,7 @@ void MagicROITool::deleteTemporalRepresentation()
 
 void MagicROITool::initialize()
 {
-    // Alliberem les primitives perquè puguin ser esborrades
+    /// We release the primitives so that they can be erased
     if (!m_roiPolygon.isNull())
     {
         m_roiPolygon->decreaseReferenceCount();
@@ -112,22 +112,22 @@ void MagicROITool::handleEvent(unsigned long eventID)
 {
     switch (eventID)
     {
-        case vtkCommand::LeftButtonPressEvent:
-            startRegion();
-            break;
-        case vtkCommand::LeftButtonReleaseEvent:
-            endRegion();
-            break;
-        case vtkCommand::MouseMoveEvent:
-            modifyRegionByFactor();
-            break;
-        case vtkCommand::KeyPressEvent:
-            int keyCode = m_2DViewer->getInteractor()->GetKeyCode();
-            if (keyCode == 27) // ESC
-            {
-                deleteTemporalRepresentation();
-            }
-            break;
+    case vtkCommand::LeftButtonPressEvent:
+        startRegion();
+        break;
+    case vtkCommand::LeftButtonReleaseEvent:
+        endRegion();
+        break;
+    case vtkCommand::MouseMoveEvent:
+        modifyRegionByFactor();
+        break;
+    case vtkCommand::KeyPressEvent:
+        int keyCode = m_2DViewer->getInteractor()->GetKeyCode();
+        if (keyCode == 27) // ESC
+        {
+            deleteTemporalRepresentation();
+        }
+        break;
     }
 }
 
@@ -158,9 +158,9 @@ void MagicROITool::setTextPosition(DrawerText *text)
     text->setVerticalJustification("Top");
 
     double attachmentPointInDisplay[3];
-    // Passem attachmentPoint a coordenades de display
+    ///We pass attachmentPoint to display coordinates
     m_2DViewer->computeWorldToDisplay(attachmentPoint[0], attachmentPoint[1], attachmentPoint[2], attachmentPointInDisplay);
-    // Apliquem el padding i tornem a coordenades de món
+    ///We apply padding and return to world coordinates
     m_2DViewer->computeDisplayToWorld(attachmentPointInDisplay[0], attachmentPointInDisplay[1] + paddingY, attachmentPointInDisplay[2], attachmentPoint);
 
     text->setAttachmentPoint(attachmentPoint);
@@ -224,20 +224,20 @@ void MagicROITool::endRegion()
     {
         this->generateRegion();
         this->printData();
-        // Alliberem la primitiva perquè es pugui esborrar
+        // We release the primitive so that it can be erased
         m_roiPolygon->decreaseReferenceCount();
-        // Col·loquem el dibuix al lloc corresponent
+        // We place the drawing in the appropriate place
         m_2DViewer->getDrawer()->erasePrimitive(m_roiPolygon);
         m_2DViewer->getDrawer()->draw(m_roiPolygon, m_2DViewer->getView(), m_2DViewer->getCurrentSlice());
-        // Re-iniciem el punter
+        // We restart the pointer
         m_roiPolygon = NULL;
     }
 
     if (m_filledRoiPolygon)
     {
-        // Alliberem la primitiva perquè es pugui esborrar
+        //We release the primitive so that it can be erased
         m_filledRoiPolygon->decreaseReferenceCount();
-        // Esborrem el polígon ple del visor i el destruïm
+        // We delete the full polygon from the viewfinder and destroy it
         m_2DViewer->getDrawer()->erasePrimitive(m_filledRoiPolygon);
         delete m_filledRoiPolygon;
         m_filledRoiPolygon = NULL;
@@ -274,7 +274,8 @@ void MagicROITool::modifyRegionByFactor()
     {
         const double ScaleFactor = 0.05;
 
-        // Fem servir la distància al punt inicial que s'ha clicat. Es fa la distància de mahattan que és una bona aproximació i molt més ràpida de calcular
+        /// We use the distance to the starting point that has been clicked.
+        /// The mahattan distance is done which is a good approximation and much faster to calculate
         int displacement =  (m_viewer->getEventPosition() - m_pickedPositionInDisplayCoordinates).manhattanLength();
         m_magicFactor = displacement * ScaleFactor;
         if (m_magicFactor < 0.0)
@@ -290,10 +291,11 @@ void MagicROITool::generateRegion()
 {
     computeMaskBounds();
 
-    // Posem a true els punts on la imatge està dins els llindard i connectat amb la llavor (region growing)
+    /// Set to true the points where the image is within the thresholds
+    /// and connected to the seed (region growing)
     this->computeRegionMask();
 
-    // Trobem els punts frontera i creem el polígon
+    /// We find the boundary points and create the polygon
     this->computePolygon();
 
     m_2DViewer->render();
@@ -338,10 +340,10 @@ VoxelIndex MagicROITool::getPickedPositionVoxelIndex()
 
 void MagicROITool::computeLevelRange()
 {
-    // Calculem la desviació estàndard dins la finestra que ens marca la magic size
+    /// We calculate the standard deviation inside the window that marks the magic size
     double standardDeviation = getStandardDeviation();
     
-    // Calculem els llindars com el valor en el pixel +/- la desviació estàndard * magic factor
+    ///We calculate the thresholds as the value in the pixel +/- the standard deviation * magic factor
     double value = this->getVoxelValue(getPickedPositionVoxelIndex());
     m_lowerLevel = value - m_magicFactor * standardDeviation;
     m_upperLevel = value + m_magicFactor * standardDeviation;
@@ -351,14 +353,14 @@ void MagicROITool::computeRegionMask()
 {
     this->computeLevelRange();
 
-    // Creem la màscara
+    // We create the mask
     if (m_minX == 0 && m_minY == 0)
     {
         m_mask = QVector<bool>((m_maxX + 1) * (m_maxY + 1), false);
     }
     else
     {
-        DEBUG_LOG("ERROR: extension no comença a 0");
+        DEBUG_LOG("ERROR: extension does not start at 0");
     }
     
     VoxelIndex index = getPickedPositionVoxelIndex();   // slice oriented index
@@ -372,13 +374,13 @@ void MagicROITool::computeRegionMask()
     }
     else
     {
-        DEBUG_LOG("Ha petat i sortim");
+        DEBUG_LOG("It cracked and we left");
         return;
     }
 
-    // Comencem el Region Growing
+    // We start the Growing Region
     QVector<int> movements;
-    // First movement \TODO Codi duplicat amb main loop
+    // First movement \ TODO Duplicate code with main loop
     int i = 0;
     bool found = false;
     int maskIndex = 0;
@@ -441,20 +443,20 @@ void MagicROITool::doMovement(int &x, int &y, int movement)
 {
     switch (movement)
     {
-        case MoveRight:
-            x++;
-            break;
-        case MoveLeft:
-            x--;
-            break;
-        case MoveUp:
-            y++;
-            break;
-        case MoveDown:
-            y--;
-            break;
-        default:
-            DEBUG_LOG("Invalid movement");
+    case MoveRight:
+        x++;
+        break;
+    case MoveLeft:
+        x--;
+        break;
+    case MoveUp:
+        y++;
+        break;
+    case MoveDown:
+        y--;
+        break;
+    default:
+        DEBUG_LOG("Invalid movement");
     }
 }
 
@@ -462,20 +464,20 @@ void MagicROITool::undoMovement(int &x, int &y, int movement)
 {
     switch (movement)
     {
-        case MoveRight:
-            x--;
-            break;
-        case MoveLeft:
-            x++;
-            break;
-        case MoveUp:
-            y--;
-            break;
-        case MoveDown:
-            y++;
-            break;
-        default:
-            DEBUG_LOG("Invalid movement");
+    case MoveRight:
+        x--;
+        break;
+    case MoveLeft:
+        x++;
+        break;
+    case MoveUp:
+        y--;
+        break;
+    case MoveDown:
+        y++;
+        break;
+    default:
+        DEBUG_LOG("Invalid movement");
     }
 }
 
@@ -484,7 +486,7 @@ void MagicROITool::computePolygon()
     int i = m_minX;
     int j;
     int maskIndex = 0;
-    // Busquem el primer punt
+    //Let's look for the first point
     bool found = false;
     while ((i <= m_maxX) && !found)
     {
@@ -501,7 +503,7 @@ void MagicROITool::computePolygon()
         ++i;
     }
 
-    // L'índex és -1 pq els hem incrementat una vegada més    
+    // The index is -1 pq we have increased them once again
     int x = i - 1;
     int y = j - 1;
     m_roiPolygon->removeVertices();
@@ -546,40 +548,40 @@ void MagicROITool::getNextIndex(int direction, int x, int y, int &nextX, int &ne
 {
     switch (direction)
     {
-        case LeftDown:
-            nextX = x - 1;
-            nextY = y - 1;
-            break;
-        case Down:
-            nextX = x;
-            nextY = y - 1;
-            break;
-        case RightDown:
-            nextX = x + 1;
-            nextY = y - 1;
-            break;
-        case Right:
-            nextX = x + 1;
-            nextY = y;
-            break;
-        case RightUp:
-            nextX = x + 1;
-            nextY = y + 1;
-            break;
-        case Up:
-            nextX = x;
-            nextY = y + 1;
-            break;
-        case LeftUp:
-            nextX = x - 1;
-            nextY = y + 1;
-            break;
-        case Left:
-            nextX = x - 1;
-            nextY = y;
-            break;
-        default:
-            DEBUG_LOG("ERROR: This direction doesn't exist");
+    case LeftDown:
+        nextX = x - 1;
+        nextY = y - 1;
+        break;
+    case Down:
+        nextX = x;
+        nextY = y - 1;
+        break;
+    case RightDown:
+        nextX = x + 1;
+        nextY = y - 1;
+        break;
+    case Right:
+        nextX = x + 1;
+        nextY = y;
+        break;
+    case RightUp:
+        nextX = x + 1;
+        nextY = y + 1;
+        break;
+    case Up:
+        nextX = x;
+        nextY = y + 1;
+        break;
+    case LeftUp:
+        nextX = x - 1;
+        nextY = y + 1;
+        break;
+    case Left:
+        nextX = x - 1;
+        nextY = y;
+        break;
+    default:
+        DEBUG_LOG("ERROR: This direction doesn't exist");
     }
 }
 
@@ -602,20 +604,20 @@ void MagicROITool::addPoint(int direction, int x, int y)
 
     switch (direction)
     {
-        case Down:
-            p2 = getPixelData().getWorldCoordinate(VoxelIndex(x, y-1, z));
-            break;
-        case Right:
-            p2 = getPixelData().getWorldCoordinate(VoxelIndex(x+1, y, z));
-            break;
-        case Up:
-            p2 = getPixelData().getWorldCoordinate(VoxelIndex(x, y+1, z));
-            break;
-        case Left:
-            p2 = getPixelData().getWorldCoordinate(VoxelIndex(x-1, y, z));
-            break;
-        default:
-            DEBUG_LOG("ERROR: This direction doesn't exist");
+    case Down:
+        p2 = getPixelData().getWorldCoordinate(VoxelIndex(x, y-1, z));
+        break;
+    case Right:
+        p2 = getPixelData().getWorldCoordinate(VoxelIndex(x+1, y, z));
+        break;
+    case Up:
+        p2 = getPixelData().getWorldCoordinate(VoxelIndex(x, y+1, z));
+        break;
+    case Left:
+        p2 = getPixelData().getWorldCoordinate(VoxelIndex(x-1, y, z));
+        break;
+    default:
+        DEBUG_LOG("ERROR: This direction doesn't exist");
     }
 
     Vector3 point = (p1 + p2) * 0.5;
@@ -629,8 +631,8 @@ bool MagicROITool::isLoopReached()
     const double *firstVertix = this->m_roiPolygon->getVertix(0);
     const double *lastVertix = this->m_roiPolygon->getVertix(m_roiPolygon->getNumberOfPoints() - 1);
     return ((qAbs(firstVertix[0] - lastVertix[0]) < 0.0001)
-         && (qAbs(firstVertix[1] - lastVertix[1]) < 0.0001)
-         && (qAbs(firstVertix[2] - lastVertix[2]) < 0.0001));
+            && (qAbs(firstVertix[1] - lastVertix[1]) < 0.0001)
+            && (qAbs(firstVertix[2] - lastVertix[2]) < 0.0001));
 }
 
 double MagicROITool::getStandardDeviation()
@@ -642,7 +644,7 @@ double MagicROITool::getStandardDeviation()
     int maxY = qMin(index.y() + MagicSize, m_maxY);
     int z = index.z();
 
-    // Calculem la mitjana
+    // We calculate the average
     double mean = 0.0;
     double value;
 
@@ -658,7 +660,7 @@ double MagicROITool::getStandardDeviation()
     int numberOfSamples = (maxX - minX + 1) * (maxY - minY + 1);
     mean = mean / (double)numberOfSamples;
 
-    // Calculem la desviació estandard
+    // We calculate the standard deviation
     double deviation = 0.0;
     for (int i = minX; i <= maxX; ++i)
     {

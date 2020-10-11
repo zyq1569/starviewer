@@ -29,12 +29,11 @@ class VolumePixelData;
 class VoxelIndex;
 
 /**
-    Tool que serveix per editar el volum sobreposat en un visor 2D
+   Tool used to edit the superimposed volume in a 2D viewer
 */
 class MagicROITool : public ROITool {
-Q_OBJECT
+    Q_OBJECT
 public:
-    
     // Creixement
     enum { LeftDown, Down, RightDown, Right, RightUp, Up, LeftUp, Left };
     // Moviments
@@ -52,105 +51,108 @@ private:
     /// Returns the current pixel data from the selected input.
     SliceOrientedVolumePixelData getPixelData();
 
-    /// Crida a la generació de la regió màgica
+    /// It calls for the generation of the magical region
     void generateRegion();
 
     /// Gets the index of the input where the magic ROI has to be drawn
     int getROIInputIndex() const;
     
-    /// Returns the slice oriented voxel index in the selected pixel data corresponding to the current picked position.
+    /// Returns the slice oriented voxel index in the selected
+    ///  pixel data corresponding to the current picked position.
     VoxelIndex getPickedPositionVoxelIndex();
     
-    /// Calcula el rang de valors d'intensitat vàlid a partir de \sa #m_magicSize i \see #m_magicFactor
+    /// Calculates the range of valid intensity values from \ sa #m_magicSize and \ see #m_magicFactor
     void computeLevelRange();
 
-    /// Versió iterativa del region Growing
+    /// Iterative version of the Growing region
     void computeRegionMask();
 
-    /// Fer un moviment des d'un índex cap a una direcció
-    /// @param a, @param b índex del volum de la màscara que estem mirant en cada crida
-    /// @param movement direcció en el moviment
+    /// Make a movement from an index to a direction
+    /// @param a, @param b index of the volume of the mask we are looking at in each call
+    /// @param movement direction in movement
     void doMovement(int &a, int &b, int movement);
 
-    /// Desfer un moviment dses d'un índex cap a una direcció
-    /// @param a, @param b índex del volum de la màscara que estem mirant en cada crida
-    /// @param movement direcció en el moviment
+    /// Undo a dses movement from an index to a direction
+    /// @param a, @param b index of the volume of the mask we are looking at in each call
+    /// @param movement direction in movement
     void undoMovement(int &a, int &b, int movement);
 
-    /// Genera el polígon a partir de la màscara
+    ///Generate the polygon from the mask
     void computePolygon();
 
-    /// Mètodes auxiliar per la generació del polígon
+    /// Auxiliary methods for the generation of the polygon
     void getNextIndex(int direction, int x, int y, int &nextX, int &nextY);
     int getNextDirection(int direction);
     int getInverseDirection(int direction);
     void addPoint(int direction, int x, int y);
     bool isLoopReached();
 
-    /// Retorna la desviació estàndard dins la regió marcada per la magicSize
+    /// Returns the standard deviation within the region marked by magicSize
     double getStandardDeviation();
 
-    /// Comença la generació de la regió màgica
+    /// The generation of the magical region begins
     void startRegion();
 
-    /// Calcula la regió definitiva i mostra per pantalla les mesures
+    /// Calculate the final region and display the measurements on the screen
     void endRegion();
 
-    /// Modifica el Magic Factor #m_magicFactor segons el desplaçament del ratolí
+    ///Modify the Magic Factor #m_magicFactor according to the movement of the mouse
     void modifyRegionByFactor();
 
-    /// Calcula els bounds de la màscara
+    /// Calculate the bounds of the mask
     void computeMaskBounds();
 
-    /// Returns the value of the voxel at the given slice oriented voxel index. Only the first component is considered.
+    ///Returns the value of the voxel at the given slice oriented voxel index.
+    /// Only the first component is considered.
     double getVoxelValue(const VoxelIndex &index);
 
-    /// Elimina la representacio temporal de la tool
+    /// Removes the temporary representation from the tool
     void deleteTemporalRepresentation();
 
     /// Returns the mask index corresponding to the given x and y image indices.
     int getMaskVectorIndex(int x, int y) const;
 
-    /// Returns the mask value at the given x and y image indices. If the indices are out of bounds, returns false.
+    /// Returns the mask value at the given x and y image indices.
+    ///  If the indices are out of bounds, returns false.
     bool getMaskValue(int x, int y) const;
 
 private slots:
-    /// Inicialitza la tool
+    /// Initialize the tool
     void initialize();
 
-    /// Reinicia la regió, invalidant l'anterior que hi hagués en curs si existia
+    ///It restarts the region, invalidating the previous one that was in progress if it existed
     void restartRegion();
 
 private:
     /// Possible states of the tool.
     enum State { Ready, Drawing };
 
-    /// Mida de la tool
+    /// mid Adela tool
     static const int MagicSize;
     static const double InitialMagicFactor;
 
     double m_magicFactor;
 
-    /// Màscara de la regió que formarà el polígon
+    ///Mask of the region that will form the polygon
     QVector<bool> m_mask;
 
-    /// Bounds de la màscara
+    /// Bounds of the mask
     int m_minX, m_maxX, m_minY, m_maxY;
     
-    /// Rang de valors que es tindran en compte pel region growing
+    ///Range of values to be taken into account for the growing region
     double m_lowerLevel;
     double m_upperLevel;
 
-    /// Coordenades de món a on s'ha fet el click inicial
+    /// Coordinates of the world where the initial click was made
     double m_pickedPosition[3];
 
-    /// Polígon ple que es mostrarà durant l'edició de la ROI.
+    /// Full polygon that will be displayed during the ROI edition.
     QPointer<DrawerPolygon> m_filledRoiPolygon;
 
-    /// Coordenades de pantalla a on s'ha fet el click inicial
+    /// Screen coordinates where the initial click was made
     QPoint m_pickedPositionInDisplayCoordinates;
 
-    /// Index of the input to draw the magic ROI on
+    ///Index of the input to draw the magic ROI on
     int m_inputIndex;
 
     /// Current state of the tool.
