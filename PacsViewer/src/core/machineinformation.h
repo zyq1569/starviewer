@@ -24,9 +24,9 @@ class MachineInformation
 {
 public:
     MachineInformation();
-    /// Busca la interfície de xarxa i retorna la seva adreça MAC.
+    ///It searches the network interface and returns its MAC address.
     QString getMACAddress();
-    /// Busca el domini de la màquina.
+    ///Look for the domain of the machine.
     QString getDomain();
 private:
     virtual QProcessEnvironment getSystemEnvironment();

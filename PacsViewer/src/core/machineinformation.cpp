@@ -26,7 +26,7 @@ MachineInformation::MachineInformation()
 QString MachineInformation::getMACAddress()
 {
     QString macAdress;
-    // Primer de tot mirar si hi ha interficia de xarxa local
+    ///First of all look for if there is local area network interface
     bool found = false;
     int index = 0;
     QList<QNetworkInterface> allInterfaces = QNetworkInterface::allInterfaces();
@@ -50,7 +50,7 @@ QString MachineInformation::getMACAddress()
         }
     }
 
-    // Dono prioritat a la interfície d'àrea local i després busco la primera interfície vàlida
+    ///I give priority to the local area interface and then look for the first valid interface
     if (macAdress == "")
     {
         found = false;
@@ -61,10 +61,10 @@ QString MachineInformation::getMACAddress()
 
             QNetworkInterface::InterfaceFlags flags = interface.flags();
             bool flagsOk = flags.testFlag(QNetworkInterface::IsUp) && flags.testFlag(QNetworkInterface::IsRunning) &&
-                           !flags.testFlag(QNetworkInterface::IsLoopBack);
+                    !flags.testFlag(QNetworkInterface::IsLoopBack);
 
-            // Per si de cas el bluetooth està engegat i foncionant, fer que no l'agafi
-            // Rarament trobarem una connexió de xarxa que vagi a través d'un dispositiu bluetooth
+            /// Just in case the bluetooth is on and working, make sure it doesn't pick it up
+            /// We rarely find a network connection that goes through a bluetooth device
             if (interface.isValid() && flagsOk && !interface.humanReadableName().toLower().contains("bluetooth"))
             {
                 macAdress += interface.hardwareAddress();
@@ -79,7 +79,7 @@ QString MachineInformation::getMACAddress()
 QString MachineInformation::getDomain()
 {
     QString domain;
-    // En cas que estem a windows, Busquem el groupID
+    //In case we are in windows, we look for the groupID
 #ifdef WIN32
     domain = getSystemEnvironment().value(QString("USERDOMAIN"), QString(""));
 #endif
