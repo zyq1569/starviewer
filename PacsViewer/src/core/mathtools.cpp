@@ -27,7 +27,7 @@
 
 namespace udg {
 
-/// Definició de constants
+/// Definition of constants
 // log_2 e
 const double MathTools::NumberEBase2Logarithm = 1.4426950408889634074;
 // 1/pi
@@ -92,21 +92,21 @@ int MathTools::planeIntersection(double p[3], double n[3], double q[3], double m
     {
         return 0;
     }
-    // Solució extreta de http://vis.eng.uci.edu/courses/eecs104/current/GraphicsMath.pdf, pàg. 64
-    // pla1 definit per (p,n); p: punt del pla, p.ex. origen; n: normal
-    // pla2 definit per (q,m); q: punt del pla, p.ex. origen; m: normal
-    // línia d'intersecció (r,t); r: punt de la recta que pertany a tots dos plans; t: vector director
-    // u: vector perpendicular a n i t;
-    // Cross: producte vectorial
-    // Dot: producte escalar
-    // * : multiplicació de vectors
-    // + : suma de vectors
+    // Solution extracted from http://vis.eng.uci.edu/courses/eecs104/current/GraphicsMath.pdf, p. 64
+    // pla1 defined by (p, n); p: point of the plane, e.g. origin; n: normal
+    // pla2 defined by (q, m); q: point of the plane, e.g. origin; m: normal
+    // intersection line (r, t); r: point on the line belonging to both planes; t: vector director
+    // u: vector perpendicular to n and t;
+    // Cross: vector product
+    // Dot: scalar product
+    // *: multiplication of vectors
+    // +: sum of vectors
     //
-    // ******* FORMULETA *************
+    // ******* FORMULA *************
     //
-    // t = Cross(n,m)
-    // u = Cross(n,t)
-    // r = p + Dot(p-q)*u / Dot(u,m)
+    // t = Cross (n, m)
+    // u = Cross (n, t)
+    // r = p + Dot (p-q) * u / Dot (u, m)
 
     double u[3];
     MathTools::crossProduct(n, m, t);
@@ -207,8 +207,8 @@ double MathTools::getPointToClosestEdgeDistance(double point3D[3], const QList<Q
 
     if (!pointsList.isEmpty())
     {
-        // Recorrem tots els punts del polígon calculant la distància a cadascun dels
-        // segments que uneixen cada vèrtex
+        // We cross all the points of the polygon calculating the distance to each one of the
+        // segments joining each vertex
         double distance;
         double localClosestPoint[3];
         int i = 0;
@@ -231,7 +231,7 @@ double MathTools::getPointToClosestEdgeDistance(double point3D[3], const QList<Q
 
         if (lastToFirstEdge)
         {
-            // Calculem la distància del segment que va de l'últim al primer punt
+            // We calculate the distance of the segment from the last to the first point
             double startPoint[3] = { pointsList.first().data()[0], pointsList.first().data()[1], pointsList.first().data()[2] };
             double endPoint[3] = { pointsList.last().data()[0], pointsList.last().data()[1], pointsList.last().data()[2] };
             distance = MathTools::getPointToFiniteLineDistance(point3D, startPoint, endPoint, localClosestPoint);
@@ -253,7 +253,7 @@ double MathTools::getPointToFiniteLineDistance(double point[3], double lineFirst
 {
     double parametricCoordinate;
 
-    // vtkLine::DistanceToLine() ens retorna la distància al quadrat, per això fem sqrt()
+    //vtkLine :: DistanceToLine () returns the distance squared, so we do sqrt ()
     return sqrt(vtkLine::DistanceToLine(point, lineFirstPoint, lineSecondPoint, parametricCoordinate, closestPoint));
 }
 
@@ -375,7 +375,7 @@ unsigned int MathTools::roundUpToPowerOf2(unsigned int v)
     v |= v >> 8;
     v |= v >> 16;
     v++;
-    // Si v == 0 el codi de sobre retorna 0. Ho solucionem amb aquesta suma.
+    //If v == 0 the envelope code returns 0. We solve it with this sum.
     v += (v == 0);
     return v;
 }
