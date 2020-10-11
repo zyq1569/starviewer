@@ -47,7 +47,8 @@ double LeanBodyMassFormula::computeFemale(int patientsHeightInCm, int patientsWe
     return compute(patientsHeightInCm, patientsWeightInKg, FemaleWeightMultiplier, FemaleFactor);
 }
 
-double LeanBodyMassFormula::compute(int patientsHeightInCm, int patientsWeightInKg, double weightMultiplier, int weighHeightFactor) const
+double LeanBodyMassFormula::compute(int patientsHeightInCm, int patientsWeightInKg,
+                                    double weightMultiplier, int weighHeightFactor) const
 {
     return weightMultiplier * patientsWeightInKg - weighHeightFactor * qPow(static_cast<double>(patientsWeightInKg) / patientsHeightInCm, 2);
 }

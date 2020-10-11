@@ -26,7 +26,7 @@ namespace udg {
 
     [2] Morgan, Denis J. and Bray, Kelly M. Lean Body Mass as a Predictor of Drug Dosage: Implications for Drug Therapy.
         Clinical Pharmacokinetics. 1994, Vol. 26, 4, pp. 292-307.
- */
+*/
 class LeanBodyMassFormula : public Formula {
 public:
     LeanBodyMassFormula();
