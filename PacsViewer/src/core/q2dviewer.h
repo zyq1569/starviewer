@@ -50,24 +50,24 @@ class TransferFunction;
 class TransferFunctionModel;
 
 /**
-    Base class for 2D displays.
+Base class for 2D displays.
 
-    The usual mode of operation will be to view a single volume.
-    Usually to be able to view a volume we will do the following
-    \ code
-    Q2DViewer * visor = new Q2DViewer ();
-    visor-> setInput (volume);
+The usual mode of operation will be to view a single volume.
+Usually to be able to view a volume we will do the following
+\ code
+Q2DViewer * visor = new Q2DViewer ();
+visor-> setInput (volume);
 
-    In case we want to overlap two volumes we must indicate the overlapping volume with the setOverlayInput () method.
-    When we overlap volumes we have 1 way to overlap these volumes, applying a blending,
-    in this case we should use the setOverlapMethod () method indicating one of the options (currently only Blend)
-    \ TODO finish the doc on overlap
+In case we want to overlap two volumes we must indicate the overlapping volume with the setOverlayInput () method.
+When we overlap volumes we have 1 way to overlap these volumes, applying a blending,
+in this case we should use the setOverlapMethod () method indicating one of the options (currently only Blend)
+\ TODO finish the doc on overlap
 
-    By default the display shows the first image in Axial. For the other views (Sagittal and Coronal) it would show the central image
+By default the display shows the first image in Axial. For the other views (Sagittal and Coronal) it would show the central image
 
-    We can choose which textual and reference annotations will appear in the 2D view through the "AnnotationFlags" flags through the methods
-    \ c enableAnnotation () or \ c removeAnnotation () which will make the specified annotation visible or invisible.
-    The default flag is \ c AllAnnotation and therefore all default annotations are displayed.
+We can choose which textual and reference annotations will appear in the 2D view through the "AnnotationFlags" flags through the methods
+\ c enableAnnotation () or \ c removeAnnotation () which will make the specified annotation visible or invisible.
+The default flag is \ c AllAnnotation and therefore all default annotations are displayed.
 */
 class Q2DViewer : public QViewer {
     Q_OBJECT
@@ -84,7 +84,8 @@ public:
     /// It gives us back the view we have in those moments of the volume
     OrthogonalPlane getView() const;
 
-    /// Return the view plane on the specified input. If i is out of range, default constructed value will be returned.
+    /// Return the view plane on the specified input.
+    /// If i is out of range, default constructed value will be returned.
     OrthogonalPlane getViewOnInput(int i) const;
 
     Volume* getMainInput() const;
@@ -123,7 +124,8 @@ public:
     /// @return True if the cursor is inside the image, false otherwise
     bool getCurrentCursorImageCoordinate(double xyz[3]);
 
-    /// Same as getCurrentCursorImageCoordinate with the chance to specify from which input we want to get the coordinate.
+    /// Same as getCurrentCursorImageCoordinate with the chance
+    /// to specify from which input we want to get the coordinate.
     /// If i is out of range, false will be returned
     bool getCurrentCursorImageCoordinateOnInput(double xyz[3], int i);
 
@@ -161,7 +163,8 @@ public:
     /// Returns current anatomical plane as AnatomicalPlaneType
     AnatomicalPlane getCurrentAnatomicalPlane() const;
 
-    /// Returns the space between the slices depending on the current view and whether the thickness is enabled
+    /// Returns the space between the slices depending
+    /// on the current view and whether the thickness is enabled
     double getCurrentSpacingBetweenSlices();
 
     /// Returns the depth (z coordinate value) of the main displayed image
@@ -185,7 +188,8 @@ public:
     int getMinimumSlice() const;
     int getMaximumSlice() const;
 
-    /// Returns the total number of slices on the spatial dimension that has the main input on the current view
+    /// Returns the total number of slices on the spatial
+    /// dimension that has the main input on the current view
     int getNumberOfSlices() const;
 
     /// Returns the total number of phases that has the main input.
@@ -304,7 +308,8 @@ public slots:
 
     /// Specifies the input volume asynchronously.
     /// You can specify a command to run once the volume has been loaded and is about to be displayed.
-    /// Useful for specifying changes to the viewer (slice change, w / l, etc.) without worrying about when the volume has been loaded.
+    /// Useful for specifying changes to the viewer
+    /// (slice change, w / l, etc.) without worrying about when the volume has been loaded.
     void setInputAsynchronously(Volume *volume, QViewerCommand *inputFinishedCommand = 0);
 
     void setInputAsynchronously(const QList<Volume*> &volumes, QViewerCommand *inputFinishedCommand = 0);
@@ -328,7 +333,8 @@ public slots:
     /// Sets the given phase index to the main volume.
     void setPhase(int value);
 
-    /// Sets the given phase index to the volume at the given index. If there isn't a volume at the given index, it does nothing.
+    /// Sets the given phase index to the volume at the given index.
+    /// If there isn't a volume at the given index, it does nothing.
     void setPhaseInVolume(int index, int phase);
 
     /// Indicates the type of volume overlap, by default blending
@@ -341,7 +347,8 @@ public slots:
     /// Sets the VOI LUT for this viewer.
     virtual void setVoiLut(const VoiLut &voiLut);
 
-    /// Sets the given VOI LUT to the volume at the given index. If there isn't a volume at the given index, it does nothing.
+    /// Sets the given VOI LUT to the volume at the given index.
+    /// If there isn't a volume at the given index, it does nothing.
     void setVoiLutInVolume(int index, const VoiLut &voiLut);
 
     /// Sets the transfer function of the main volume.
@@ -457,7 +464,8 @@ protected:
     virtual void setCurrentViewPlane(const OrthogonalPlane &viewPlane);
 
 private:
-    /// Updates image orientation according to the preferred presentation depending on its attributes, like modality.
+    /// Updates image orientation according to the preferred
+    /// presentation depending on its attributes, like modality.
     /// At this moment it is only applying to mammography (MG) images
     void updatePreferredImageOrientation();
 
@@ -488,10 +496,12 @@ private:
 
     /// Apply the appropriate rotation factor according to the turns we indicate.
     /// It doesn’t update the camera or the scene, simply
-    /// is used to set the correct values to the internal variables that control how the image is rotated.
+    /// is used to set the correct values to the internal
+    ///  variables that control how the image is rotated.
     void rotate(int times);
 
-    /// Sets if image should be flipped (horizontally) or not. It does not update the camera nor renders the scene.
+    /// Sets if image should be flipped (horizontally) or not.
+    ///  It does not update the camera nor renders the scene.
     void setFlip(bool flip);
 
     /// Updates the camera, renders and emits the current image orientataion
@@ -513,7 +523,8 @@ private:
     ///If set, run the command set to after specifying input to the viewer
     void executeInputFinishedCommand();
 
-    ///Updates the current image default presets values. It only applies to original acquisition plane.
+    ///Updates the current image default presets values.
+    /// It only applies to original acquisition plane.
     void updateCurrentImageDefaultPresetsInAllInputsOnOriginalAcquisitionPlane();
 
     /// Calls setNewVolumes and excutes the command while catching any exception that may be thrown.
@@ -535,7 +546,8 @@ private:
     /// Updates the slice to display in the secondary volumes to the closest one in the main volume.
     void updateSecondaryVolumesSlices();
 
-    /// Returns the VolumeDisplayUnit of the given index. Returns null if there's no display unit or index is out of range
+    /// Returns the VolumeDisplayUnit of the given index.
+    ///  Returns null if there's no display unit or index is out of range
     VolumeDisplayUnit* getDisplayUnit(int index) const;
 
     VolumeDisplayUnit* getMainDisplayUnit() const;
@@ -585,7 +597,8 @@ private:
     /// Indicates whether or not to apply a horizontal flip to the camera
     bool m_applyFlip;
 
-    /// This variable controls whether the image is flipped from its original orientation. Useful for controlling annotations.
+    /// This variable controls whether the image is flipped
+    /// from its original orientation. Useful for controlling annotations.
     bool m_isImageFlipped;
 
     /// Especialista en dibuixar primitives
@@ -594,7 +607,8 @@ private:
     ///Indicate what type of projection we apply on the slab
     VolumeDisplayUnit::SlabProjectionMode m_slabProjectionMode;
 
-    /// It contains the mapping of operations to be done when I want to move from one orientation to another
+    /// It contains the mapping of operations to be done when
+    ///  I want to move from one orientation to another
     ImageOrientationOperationsMapper *m_imageOrientationOperationsMapper;
 
     ///Position where the image should be aligned (right, left, or centered)
@@ -627,7 +641,8 @@ private:
     /// Handles the textual annotations of the viewer
     Q2DViewerAnnotationHandler *m_annotationsHandler;
 
-    /// Fusion balance stored as a value in the range [0, 100] representing the weight of the second input.
+    /// Fusion balance stored as a value in the range [0, 100]
+    /// representing the weight of the second input.
     int m_fusionBalance;
 
 };

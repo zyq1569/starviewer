@@ -266,8 +266,10 @@ void Q2DViewer::setDefaultOrientation(const AnatomicalPlane &anatomicalPlane)
         return;
     }
 
-    // We apply the standard orientation for the desired projection unless original acquisition is axial and is the same as the desired one
-    // because when the patient is acquired in prono position we don't want to change the acquisition orientation and thus respect the acquired one
+    /// We apply the standard orientation for the desired projection
+    /// unless original acquisition is axial and is the same as the desired one
+    /// because when the patient is acquired in prono position
+    /// we don't want to change the acquisition orientation and thus respect the acquired one
     AnatomicalPlane acquisitionPlane = getMainInput()->getAcquisitionPlane();
     if (acquisitionPlane != AnatomicalPlane::Axial || acquisitionPlane != anatomicalPlane)
     {
