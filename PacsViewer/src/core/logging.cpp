@@ -22,7 +22,7 @@ namespace udg {
 
 void beginLogging()
 {
-    // First we check that the directory ~ / .starviewer / log / exists where we will look for the logs
+    //First we check that the directory ~ / .starviewer / log / exists where we will look for the logs
     //QDir logDir = udg::UserLogsPath;
     QDir logDir = udg::UserCurrentAppPath;//use current work path
     if (!logDir.exists())

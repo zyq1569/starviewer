@@ -37,7 +37,8 @@ public:
     /// Methods to get the points of the line
     Point3D getFirstPoint() const;
     Point3D getSecondPoint() const;
-    /// Returns the i-th point of the line. If index is out of range (< 0 || > 2) a default constructed value is returned.
+    /// Returns the i-th point of the line.
+    /// If index is out of range (< 0 || > 2) a default constructed value is returned.
     Point3D getPoint(int i) const;
 
 private:
