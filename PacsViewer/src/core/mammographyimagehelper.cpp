@@ -35,8 +35,9 @@ const PatientOrientation MammographyImageHelper::getImageOrientationPresentation
 {
     QString projection = getMammographyProjectionLabel(image);
     QString laterality = image->getImageLaterality();
-    // S'han de seguir les recomanacions IHE de presentació d'imatges de Mammografia
-    // IHE Techincal Framework Vol. 2 revision 8.0, apartat 4.16.4.2.2.1.1.2 Image Orientation and Justification
+    /// Mammography imaging recommendations should be followed
+    /// IHE Techincal Framework Vol. 2 revision 8.0,
+    /// section 4.16.4.2.2.1.1.2 Image Orientation and Justification
     PatientOrientation desiredOrientation;
     if (projection == "CC" || projection == "XCC" || projection == "XCCL" || projection == "XCCM" || projection == "FB")
     {
@@ -123,9 +124,10 @@ const QString MammographyImageHelper::getMammographyProjectionLabel(Image *image
     }
 
     QString codeMeaning = image->getViewCodeMeaning();
-    // PS 3.16 - 2008, Page 408, Context ID 4014, View for mammography
-    // TODO Tenir-ho carregat en arxius, maps, etc..
-    // TODO Fer servir millor els codis [Code Value (0008,0100)] en compte dels "code meanings" podria resultar més segur
+    /// PS 3.16 - 2008, Page 408, Context ID 4014, View for mammography
+    /// EVERYTHING Have it uploaded in files, maps, etc ..
+    /// TODO Make better use of codes [Code Value (0008,0100)]
+    /// instead of "code meanings" might be safer
     if (codeMeaning == "medio-lateral")
     {
         projectionLabel = "ML";
