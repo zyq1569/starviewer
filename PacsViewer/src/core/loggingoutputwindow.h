@@ -23,7 +23,7 @@ namespace udg {
  * Subclasse de vtkOutputWindow que redirigeix els missatges d'error de VTK cap al log d'Starviewer.
  *
  * Encara que al nom hi digui "Window", no mostra cap finestra (i vtkOutputWindow per si sola tampoc).
- */
+*/
 class LoggingOutputWindow : public vtkOutputWindow {
 
 public:
@@ -43,8 +43,8 @@ protected:
 
 private:
 
-    LoggingOutputWindow(const LoggingOutputWindow&);    // No s'implementa.
-    void operator=(const LoggingOutputWindow&);         // No s'implementa.
+    LoggingOutputWindow(const LoggingOutputWindow&);    // It is not implemented.
+    void operator=(const LoggingOutputWindow&);         // It is not implemented.
 
 };
 
