@@ -23,26 +23,24 @@ namespace itk
 {
 DCMTKImageIOFactory::DCMTKImageIOFactory()
 {
-  this->RegisterOverride( "itkImageIOBase",
-                          "itkDCMTKImageIO",
-                          "DICOM Image IO",
-                          1,
-                          CreateObjectFunction< DCMTKImageIO >::New() );
+    this->RegisterOverride( "itkImageIOBase",
+                            "itkDCMTKImageIO",
+                            "DICOM Image IO",
+                            1,
+                            CreateObjectFunction< DCMTKImageIO >::New() );
 }
 
 DCMTKImageIOFactory::~DCMTKImageIOFactory()
 {}
 
-const char *
-DCMTKImageIOFactory::GetITKSourceVersion(void) const
+const char * DCMTKImageIOFactory::GetITKSourceVersion(void) const
 {
-  return ITK_SOURCE_VERSION;
+    return ITK_SOURCE_VERSION;
 }
 
-const char *
-DCMTKImageIOFactory::GetDescription() const
+const char * DCMTKImageIOFactory::GetDescription() const
 {
-  return "DCMTK ImageIO Factory, allows the loading of DICOM images into Insight";
+    return "DCMTK ImageIO Factory, allows the loading of DICOM images into Insight";
 }
 
 // Undocumented API used to register during static initialization.
@@ -52,10 +50,10 @@ static bool DCMTKImageIOFactoryHasBeenRegistered;
 
 void DCMTKImageIOFactoryRegister__Private(void)
 {
-  if( ! DCMTKImageIOFactoryHasBeenRegistered )
+    if( ! DCMTKImageIOFactoryHasBeenRegistered )
     {
-    DCMTKImageIOFactoryHasBeenRegistered = true;
-    DCMTKImageIOFactory::RegisterOneFactory();
+        DCMTKImageIOFactoryHasBeenRegistered = true;
+        DCMTKImageIOFactory::RegisterOneFactory();
     }
 }
 
