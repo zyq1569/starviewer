@@ -112,17 +112,20 @@ void LeanBodyMassFormulaCalculator::gatherRequiredParameters(Image *image)
             }
             else
             {
-                DEBUG_LOG("Lean Body Mass cannot be computed with provided Image. Patient's sex could not be retrieved, image's Patient is null.");
+                DEBUG_LOG("Lean Body Mass cannot be computed with provided Image."
+                          " Patient's sex could not be retrieved, image's Patient is null.");
             }
         }
         else
         {
-            DEBUG_LOG("Lean Body Mass cannot be computed with provided Image. Patient's height and weight could not be retrieved, image's Study is null.");
+            DEBUG_LOG("Lean Body Mass cannot be computed with provided Image. "
+                      "Patient's height and weight could not be retrieved, image's Study is null.");
         }
     }
     else
     {
-        DEBUG_LOG("Lean Body Mass cannot be computed with provided Image. Patient's height and weight could not be retrieved, image's Series is null.");
+        DEBUG_LOG("Lean Body Mass cannot be computed with provided Image. "
+                  "Patient's height and weight could not be retrieved, image's Series is null.");
     }
 }
 
