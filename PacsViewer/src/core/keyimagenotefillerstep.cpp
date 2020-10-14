@@ -22,8 +22,7 @@
 
 namespace udg {
 
-KeyImageNoteFillerStep::KeyImageNoteFillerStep()
- : PatientFillerStep()
+KeyImageNoteFillerStep::KeyImageNoteFillerStep():PatientFillerStep()
 {
 }
 
@@ -35,14 +34,14 @@ void KeyImageNoteFillerStep::processKeyImageNote()
 {
     DICOMTagReader dicomReader;
     bool ok = false;
-//     ok = dicomReader.setFile(keyImageNote->getPath());
+    //     ok = dicomReader.setFile(keyImageNote->getPath());
     if (ok)
     {
-        // TODO per implementar
-        DEBUG_LOG("Pendent d'implementació!");
+        // TODO to implement
+        DEBUG_LOG("Pending implementation!");
     }
-//     else
-//         DEBUG_LOG("No s'ha pogut obrir amb el tagReader l'arxiu: " + keyImageNote->getPath());
+    //     else
+    //         DEBUG_LOG("Could not open file with tagReader: " + keyImageNote->getPath());
 }
 
 }
