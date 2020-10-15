@@ -27,7 +27,7 @@
 namespace udg {
 
 MagnifyingGlassTool::MagnifyingGlassTool(QViewer *viewer, QObject *parent)
- : Tool(viewer,parent)
+    : Tool(viewer,parent)
 {
     m_toolName = "MagnifyingGlassTool";
     m_magnifyingRendererIsVisible = false;
@@ -48,26 +48,26 @@ void MagnifyingGlassTool::handleEvent(unsigned long eventID)
 {
     switch (eventID)
     {
-        case vtkCommand::LeftButtonPressEvent:
-            enableConnections();
+    case vtkCommand::LeftButtonPressEvent:
+        enableConnections();
+        updateMagnifiedView();
+        break;
+
+    case vtkCommand::MouseMoveEvent:
+        if (m_magnifyingRendererIsVisible)
+        {
             updateMagnifiedView();
-            break;
+        }
+        break;
 
-        case vtkCommand::MouseMoveEvent:
-            if (m_magnifyingRendererIsVisible)
-            {
-                updateMagnifiedView();
-            }
-            break;
+    case vtkCommand::RightButtonPressEvent:
+    case vtkCommand::LeftButtonReleaseEvent:
+        enableConnections(false);
+        removeMagnifiedRenderer();
+        break;
 
-        case vtkCommand::RightButtonPressEvent:
-        case vtkCommand::LeftButtonReleaseEvent:
-            enableConnections(false);
-            removeMagnifiedRenderer();
-            break;
-
-        default:
-            break;
+    default:
+        break;
     }
 }
 
@@ -106,7 +106,7 @@ double MagnifyingGlassTool::getZoomFactor()
     double factor = settings.getValue(CoreSettings::MagnifyingGlassZoomFactor).toDouble();
     if (factor == 0.0)
     {
-        // En cas que el setting no tingui un valor vàlid, li assignem un valor per defecte de 4.0
+        /// In case the setting does not have a valid value, we assign it a default value of 4.0
         factor = 4.0;
         settings.setValue(CoreSettings::MagnifyingGlassZoomFactor, "4");
     }
@@ -137,7 +137,7 @@ void MagnifyingGlassTool::updateMagnifiedView()
     QRect renderWindowBounds(QPoint(0, 0), renderWindowSize);
     if (!renderWindowBounds.contains(eventPosition))
     {
-        // Si el punt està fora de la render window amaguem i sortim
+        //If the point is outside the render window we hide and exit
         removeMagnifiedRenderer();
         return;
     }
@@ -150,7 +150,7 @@ void MagnifyingGlassTool::updateMagnifiedView()
 
     m_2DViewer->setCursor(QCursor(Qt::BlankCursor));
     
-    // Actualitzem el viewport
+    // We update the viewport
     updateMagnifiedRendererViewport(eventPosition, renderWindowSize);
     updateCamera();
     
@@ -159,7 +159,7 @@ void MagnifyingGlassTool::updateMagnifiedView()
         addMagnifiedRenderer();
     }
     
-    // Actualitzem la posició que enfoca la càmera
+    // We update the position that the camera focuses on
     setFocalPoint(xyz);
     m_magnifiedRenderer->ResetCameraClippingRange();
     m_2DViewer->render();
@@ -167,7 +167,7 @@ void MagnifyingGlassTool::updateMagnifiedView()
 
 void MagnifyingGlassTool::setFocalPoint(const double cursorPosition[3])
 {
-    // Passem el punt a coordenades de display
+    // We pass the point to display coordinates
     double pointInDisplay[3];
     m_2DViewer->computeWorldToDisplay(cursorPosition[0], cursorPosition[1], cursorPosition[2], pointInDisplay);
 
@@ -179,13 +179,14 @@ void MagnifyingGlassTool::setFocalPoint(const double cursorPosition[3])
     double magnifyingWindowHalfWidht = (viewportBounds[2] - viewportBounds[0]) * renderWindowSize.width() / 2.0;
     double magnifyingWindowHalfHeight = (viewportBounds[3] - viewportBounds[1]) * renderWindowSize.height() / 2.0;
 
-    // Calculem la diferencia entre el centre del viewport i on esta el cursor per calcular el punt central real
+    /// We calculate the difference between the center of the viewport
+    /// and where the cursor is to calculate the actual center point
     double offsetXMin = qMax(0.0, magnifyingWindowHalfWidht - pointInDisplay[0]);
     double offsetXMax = qMax(0.0, (pointInDisplay[0] + magnifyingWindowHalfWidht) - renderWindowSize.width());
     double offsetYMin = qMax(0.0, magnifyingWindowHalfHeight - pointInDisplay[1]);
     double offsetYMax = qMax(0.0, (pointInDisplay[1] + magnifyingWindowHalfHeight) - renderWindowSize.height());
 
-    // Apliquem el factor de zoom perque volem la distancia en el render magnificat
+    // We apply the zoom factor because we want the distance in the magnified render
     double zoomFactor = getZoomFactor();
     double offsetX = (offsetXMax - offsetXMin) / zoomFactor;
     double offsetY = (offsetYMax - offsetYMin) / zoomFactor;
@@ -215,14 +216,14 @@ void MagnifyingGlassTool::updateCamera()
     vtkCamera *viewerCamera = m_2DViewer->getRenderer()->GetActiveCamera();
     m_magnifiedCamera->DeepCopy(viewerCamera);
 
-    // Ajustem la càmera a la mateixa proporció que el renderer principal
-    // Cal prendre la proporció del viewport magnificat respecte el viewer en sí
+    // We adjust the camera to the same proportion as the main renderer
+    // You need to take the ratio of the magnified viewport to the viewer itself
     double viewportsProportion;
     double viewportPoints[4];
     m_magnifiedRenderer->GetViewport(viewportPoints);
     viewportsProportion = fabs(viewportPoints[3] - viewportPoints[1]);
 
-    // Fixem el mateix zoom que en el renderer principal
+    // We set the same zoom as in the main renderer
     if (viewerCamera->GetParallelProjection())
     {
         m_magnifiedCamera->SetParallelScale(viewerCamera->GetParallelScale() * viewportsProportion);
@@ -232,7 +233,7 @@ void MagnifyingGlassTool::updateCamera()
         m_magnifiedCamera->SetViewAngle(viewerCamera->GetViewAngle() * viewportsProportion);
     }
     
-    // Apliquem el factor de magnificació
+    // We apply the magnification factor
     m_magnifiedCamera->Zoom(getZoomFactor());
 }
 
