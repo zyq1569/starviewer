@@ -51,3 +51,4 @@ include(../threadweaver.pri)
 include(../compilationtype.pri)
 
 QT += widgets
+QT += network
