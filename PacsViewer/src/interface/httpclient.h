@@ -25,6 +25,11 @@ public slots:
    void networkReplyProgress(qint64 bytesRead, qint64 totalBytes);
 };
 
+enum DownFileType {
+    dcm,
+    json,
+    other
+};
 
 class HttpClient : public QObject
 {
@@ -36,9 +41,9 @@ public:
     void startRequest(const QUrl &requestedUrl);
     void setDwonloadDir(QString dir);
 signals:
-
+public slots:
+    void downloadFile(QUrl url,QString studyuid="",QString seruid = "", QString imguid = "");
 private slots:
-    void downloadFile();
     void cancelDownload();
     void httpFinished();
     void httpReadyRead();

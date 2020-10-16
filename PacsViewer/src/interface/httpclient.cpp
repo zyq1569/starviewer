@@ -37,6 +37,7 @@ void ProgressDialog::networkReplyProgress(qint64 bytesRead, qint64 totalBytes)
 //-----------------------------------------HttpClient------------------------------------------------------------
 HttpClient::HttpClient(QObject *parent, QString dir) : QObject(parent),m_httpRequestAborted(false)
 {
+    m_file = NULL;
     if (dir != "")
     {
         setDwonloadDir(dir);
@@ -64,19 +65,39 @@ void HttpClient::startRequest(const QUrl &requestedUrl)
     connect(m_networkreply, &QIODevice::readyRead, this, &HttpClient::httpReadyRead);
     connect(m_networkreply, &QNetworkReply::finished, this, &HttpClient::httpFinished);
 
-
-    ProgressDialog *progressDialog = new ProgressDialog(m_url, NULL);
-    progressDialog->setAttribute(Qt::WA_DeleteOnClose);
-    connect(progressDialog, &QProgressDialog::canceled, this, &HttpClient::cancelDownload);
-    connect(m_networkreply, &QNetworkReply::downloadProgress, progressDialog, &ProgressDialog::networkReplyProgress);
-    connect(m_networkreply, &QNetworkReply::finished, progressDialog, &ProgressDialog::hide);
-    progressDialog->show();
+    //    ProgressDialog *progressDialog = new ProgressDialog(m_url, NULL);
+    //    progressDialog->setAttribute(Qt::WA_DeleteOnClose);
+    //    connect(progressDialog, &QProgressDialog::canceled, this, &HttpClient::cancelDownload);
+    //    connect(m_networkreply, &QNetworkReply::downloadProgress, progressDialog, &ProgressDialog::networkReplyProgress);
+    //    connect(m_networkreply, &QNetworkReply::finished, progressDialog, &ProgressDialog::hide);
+    //    progressDialog->show();
 
 
 }
 
-void HttpClient::downloadFile()
+void HttpClient::downloadFile(QUrl url,QString studyuid,QString seruid, QString imguid)
 {
+    ///http://127.0.0.1:8080/WADO?
+    /// studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196
+    /// &seriesuid=1.2.840.113619.2.55.3.604688119.969.1252951290.810.4
+    /// &sopinstanceuid=1.2.840.113619.2.55.3.604688119.969.1252951290.968.37
+    DownFileType filetyp = DownFileType::other;
+    if (studyuid != "")
+    {
+        if (seruid != "" && imguid != "")
+        {
+            QString strURL = url.toString()+"/WADO?studyuid="+studyuid+"&seriesuid="+seruid+"&sopinstanceuid="+imguid;
+            url = strURL;
+            filetyp = DownFileType::dcm;
+        }
+        else
+        {
+            QString strURL = url.toString()+"/WADO?studyuid="+studyuid;
+            url = QUrl(strURL);
+            filetyp = DownFileType::json;
+        }
+    }
+    m_url = url;
     const QString urlSpec = m_url.toString().trimmed();
     if (urlSpec.isEmpty())
     {
@@ -86,12 +107,22 @@ void HttpClient::downloadFile()
     const QUrl newUrl = QUrl::fromUserInput(urlSpec);
     if (!newUrl.isValid())
     {
-        QMessageBox::information(NULL, tr("Error"),
-                                 tr("Invalid URL: %1: %2").arg(urlSpec, newUrl.errorString()));
+        QMessageBox::information(NULL, tr("Error"),tr("Invalid URL: %1: %2").arg(urlSpec, newUrl.errorString()));
         return;
     }
 
     QString fileName = newUrl.fileName();
+    switch (filetyp)
+    {
+    case DownFileType::dcm :
+        fileName = imguid+".dcm";
+        break;
+    case DownFileType::json:
+        fileName = studyuid+".json";
+        break;
+    default:
+        break;
+    }
     if (fileName.isEmpty())
     {
         fileName = "temp.tmp";
@@ -100,19 +131,16 @@ void HttpClient::downloadFile()
     QString downloadDirectory = m_downDir;
     bool useDirectory = !downloadDirectory.isEmpty() && QFileInfo(downloadDirectory).isDir();
     if (useDirectory)
+    {
         fileName.prepend(downloadDirectory + '/');
+    }
     if (QFile::exists(fileName))
     {
         if (QMessageBox::question(NULL, tr("Overwrite Existing File"),
                                   tr("There already exists a file called %1%2."
-                                     " Overwrite?")
-                                     .arg(fileName,
-                                          useDirectory
-                                           ? QString()
-                                           : QStringLiteral(" in the current directory")),
-                                     QMessageBox::Yes | QMessageBox::No,
-                                     QMessageBox::No)
-            == QMessageBox::No)
+                                     " Overwrite?").arg(fileName,
+                                                        useDirectory ? QString() : QStringLiteral(" in the current directory")),
+                                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::No)
         {
             return;
         }
@@ -141,6 +169,8 @@ void HttpClient::httpFinished()
         fileinfo.setFile(m_file->fileName());
         m_file->close();
         m_file->reset();
+        delete  m_file;
+        m_file = NULL;
     }
 
     if (m_httpRequestAborted)
@@ -179,20 +209,30 @@ void HttpClient::httpFinished()
         startRequest(redirectedUrl);
         return;
     }
-    QDesktopServices::openUrl(QUrl::fromLocalFile(fileinfo.absoluteFilePath()));
+
+    //QDesktopServices::openUrl(QUrl::fromLocalFile(fileinfo.absoluteFilePath()));
 
 }
 
 bool HttpClient::openFileForWrite(const QString &fileName)
 {
-    QFile *file = new QFile(m_downDir+fileName);
-    if (!file->open(QIODevice::WriteOnly))
+    if (m_file)
+    {
+        delete m_file;
+        m_file = NULL;
+    }
+    //static int i = 0;
+    /*QFile *file = new QFile(fileName+QString::number(i++, 10));*/
+    m_file = new QFile(fileName);
+    if (!m_file->open(QIODevice::WriteOnly))
     {
         QMessageBox::information(NULL, tr("Error"),tr("Unable to save the file %1: %2.").arg(
-                                     QDir::toNativeSeparators(fileName),file->errorString()));
+                                     QDir::toNativeSeparators(fileName),m_file->errorString()));
+        m_file->close();
+        delete m_file;
+        m_file = NULL;
         return false;
     }
-    m_file = file;
     return true;
 }
 
