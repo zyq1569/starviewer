@@ -77,10 +77,15 @@ void HttpClient::startRequest(const QUrl &requestedUrl)
 
 void HttpClient::downloadFile(QUrl url,QString studyuid,QString seruid, QString imguid)
 {
+    /// -------------------------------------------------------------------------
     ///http://127.0.0.1:8080/WADO?
-    /// studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196
-    /// &seriesuid=1.2.840.113619.2.55.3.604688119.969.1252951290.810.4
-    /// &sopinstanceuid=1.2.840.113619.2.55.3.604688119.969.1252951290.968.37
+    ///studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196
+    ///&seriesuid=1.2.840.113619.2.55.3.604688119.969.1252951290.810.4
+    ///&sopinstanceuid=1.2.840.113619.2.55.3.604688119.969.1252951290.968.37
+    /// -------------------------------------------------------------------------
+    ///http://127.0.0.1:8080/WADO?
+    ///studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196&type=json
+    ///-------------------------------------------------------------------------
     DownFileType filetyp = DownFileType::other;
     if (studyuid != "")
     {
@@ -92,7 +97,7 @@ void HttpClient::downloadFile(QUrl url,QString studyuid,QString seruid, QString 
         }
         else
         {
-            QString strURL = url.toString()+"/WADO?studyuid="+studyuid;
+            QString strURL = url.toString()+"/WADO?studyuid="+studyuid+"&type=json";
             url = QUrl(strURL);
             filetyp = DownFileType::json;
         }
