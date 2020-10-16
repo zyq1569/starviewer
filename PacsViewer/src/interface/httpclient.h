@@ -41,9 +41,10 @@ public:
     void startRequest(const QUrl &requestedUrl);
     void setDwonloadDir(QString dir);
     void getStudyDBinfo(QUrl url,QString start,QString end,QString page,QString limit);//start=19700101&end=20191230&page=1&limit=10
+    void getStudyImageFile(QUrl url,QString studyuid="",QString seruid = "", QString imguid = "");
 signals:
 public slots:
-    void downloadFile(QUrl url,QString studyuid="",QString seruid = "", QString imguid = "");
+
 private slots:
     void cancelDownload();
     void httpFinished();

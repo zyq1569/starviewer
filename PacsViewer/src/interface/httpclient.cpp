@@ -126,7 +126,7 @@ void HttpClient::downFileFromWeb(QUrl httpUrl, QString savefilename, QString dow
     startRequest(httpUrl);
 }
 
-void HttpClient::downloadFile(QUrl url,QString studyuid,QString seruid, QString imguid)
+void HttpClient::getStudyImageFile(QUrl url,QString studyuid,QString seruid, QString imguid)
 {
     /// -------------------------------------------------------------------------
     ///http://127.0.0.1:8080/WADO?
