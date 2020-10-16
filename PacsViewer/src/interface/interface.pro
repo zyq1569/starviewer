@@ -7,6 +7,7 @@ TRANSLATIONS += interface_ca_ES.ts \
                 interface_es_ES.ts \
                 interface_en_GB.ts 
 FORMS += qconfigurationdialogbase.ui \
+        authenticationdialog.ui \
         qaboutdialogbase.ui \
         qlicensedialogbase.ui
 HEADERS += qapplicationmainwindow.h \
