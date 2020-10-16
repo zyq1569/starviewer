@@ -14,15 +14,15 @@ class QFile;
 
 //class QNetworkAccessManager;
 
-class ProgressDialog : public QProgressDialog {
+class ProgressDialog : public QProgressDialog
+{
     Q_OBJECT
-
 public:
     explicit ProgressDialog(const QUrl &url, QWidget *parent = nullptr);
     ~ProgressDialog();
 
 public slots:
-   void networkReplyProgress(qint64 bytesRead, qint64 totalBytes);
+    void networkReplyProgress(qint64 bytesRead, qint64 totalBytes);
 };
 
 enum DownFileType {
@@ -37,12 +37,14 @@ class HttpClient : public QObject
 public:
     explicit HttpClient(QObject *parent = nullptr, QString dir = "");
 
+
 public:
-    void startRequest(const QUrl &requestedUrl);
     void setDwonloadDir(QString dir);
     void getStudyDBinfo(QUrl url,QString start,QString end,QString page,QString limit);//start=19700101&end=20191230&page=1&limit=10
     void getStudyImageFile(QUrl url,QString studyuid="",QString seruid = "", QString imguid = "");
+
 signals:
+
 public slots:
 
 private slots:
@@ -57,6 +59,7 @@ private slots:
 private:
     bool openFileForWrite(const QString &fileName);
     void downFileFromWeb(QUrl httpUrl,QString savefilename,QString downDir);
+    void startRequest(const QUrl &requestedUrl);
 private:
     QUrl m_url;
     QNetworkAccessManager m_networkmanager;
@@ -66,7 +69,6 @@ private:
     QString m_downDir;
     DownFileType m_currentfiletype;
     QByteArray m_currentDownData;
-
 
 };
 
