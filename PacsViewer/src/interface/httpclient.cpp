@@ -46,6 +46,7 @@ HttpClient::HttpClient(QObject *parent, QString dir) : QObject(parent),m_httpReq
     {
         m_downDir = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation)+"\\";
     }
+    m_currentfiletype = DownFileType::other;
 }
 
 void HttpClient::setDwonloadDir(QString dir)
@@ -75,65 +76,30 @@ void HttpClient::startRequest(const QUrl &requestedUrl)
 
 }
 
-void HttpClient::downloadFile(QUrl url,QString studyuid,QString seruid, QString imguid)
+void HttpClient::getStudyDBinfo(QUrl url,QString start,QString end,QString page,QString limit)
 {
-    /// -------------------------------------------------------------------------
-    ///http://127.0.0.1:8080/WADO?
-    ///studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196
-    ///&seriesuid=1.2.840.113619.2.55.3.604688119.969.1252951290.810.4
-    ///&sopinstanceuid=1.2.840.113619.2.55.3.604688119.969.1252951290.968.37
-    /// -------------------------------------------------------------------------
-    ///http://127.0.0.1:8080/WADO?
-    ///studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196&type=json
-    ///-------------------------------------------------------------------------
-    DownFileType filetyp = DownFileType::other;
-    if (studyuid != "")
-    {
-        if (seruid != "" && imguid != "")
-        {
-            QString strURL = url.toString()+"/WADO?studyuid="+studyuid+"&seriesuid="+seruid+"&sopinstanceuid="+imguid;
-            url = strURL;
-            filetyp = DownFileType::dcm;
-        }
-        else
-        {
-            QString strURL = url.toString()+"/WADO?studyuid="+studyuid+"&type=json";
-            url = QUrl(strURL);
-            filetyp = DownFileType::json;
-        }
-    }
-    m_url = url;
-    const QString urlSpec = m_url.toString().trimmed();
-    if (urlSpec.isEmpty())
-    {
-        return;
-    }
+    ///http://127.0.0.1:8080/healthsystem/ris/stduyimage/?start=19700101&end=20191230&page=1&limit=10
+    //QString startDate = ui->m_startDate->text();
+    //QString endDate = ui->m_endDate->text();
+    //QString mod = ui->m_StudyModality->currentText();
+    //QUrl url = ui->m_URL->text();
+    QString newUrlStr = url.toString() + "/healthsystem/ris/stduyimage/?start=";
+    newUrlStr += start+"&end="+end+"&page="+page+"&limit="+limit;
+    m_currentfiletype = DownFileType::json;
 
-    const QUrl newUrl = QUrl::fromUserInput(urlSpec);
+    const QUrl newUrl = newUrlStr;
     if (!newUrl.isValid())
     {
-        QMessageBox::information(NULL, tr("Error"),tr("Invalid URL: %1: %2").arg(urlSpec, newUrl.errorString()));
+        QMessageBox::information(NULL, tr("Error"),tr("Invalid URL: %1: %2").arg(newUrlStr, newUrl.errorString()));
         return;
     }
+    downFileFromWeb(newUrl,"studyDb.json",m_downDir);
+}
 
-    QString fileName = newUrl.fileName();
-    switch (filetyp)
-    {
-    case DownFileType::dcm :
-        fileName = imguid+".dcm";
-        break;
-    case DownFileType::json:
-        fileName = studyuid+".json";
-        break;
-    default:
-        break;
-    }
-    if (fileName.isEmpty())
-    {
-        fileName = "temp.tmp";
-    }
-
-    QString downloadDirectory = m_downDir;
+void HttpClient::downFileFromWeb(QUrl httpUrl, QString savefilename, QString downDir)
+{
+    QString fileName = savefilename;
+    QString downloadDirectory = downDir;
     bool useDirectory = !downloadDirectory.isEmpty() && QFileInfo(downloadDirectory).isDir();
     if (useDirectory)
     {
@@ -157,7 +123,69 @@ void HttpClient::downloadFile(QUrl url,QString studyuid,QString seruid, QString 
     }
 
     // schedule the request
-    startRequest(newUrl);
+    startRequest(httpUrl);
+}
+
+void HttpClient::downloadFile(QUrl url,QString studyuid,QString seruid, QString imguid)
+{
+    /// -------------------------------------------------------------------------
+    ///http://127.0.0.1:8080/WADO?
+    ///studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196
+    ///&seriesuid=1.2.840.113619.2.55.3.604688119.969.1252951290.810.4
+    ///&sopinstanceuid=1.2.840.113619.2.55.3.604688119.969.1252951290.968.37
+    /// -------------------------------------------------------------------------
+    ///http://127.0.0.1:8080/WADO?
+    ///studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196&type=json
+    ///-------------------------------------------------------------------------
+    m_currentfiletype = DownFileType::other;
+    if (studyuid != "")
+    {
+        if (seruid != "" && imguid != "")
+        {
+            QString strURL = url.toString()+"/WADO?studyuid="+studyuid+"&seriesuid="+seruid+"&sopinstanceuid="+imguid;
+            url = strURL;
+            m_currentfiletype = DownFileType::dcm;
+        }
+        else
+        {
+            QString strURL = url.toString()+"/WADO?studyuid="+studyuid+"&type=json";
+            url = QUrl(strURL);
+            m_currentfiletype = DownFileType::json;
+        }
+    }
+    m_url = url;
+    const QString urlSpec = m_url.toString().trimmed();
+    if (urlSpec.isEmpty())
+    {
+        return;
+    }
+
+    const QUrl newUrl = QUrl::fromUserInput(urlSpec);
+    if (!newUrl.isValid())
+    {
+        QMessageBox::information(NULL, tr("Error"),tr("Invalid URL: %1: %2").arg(urlSpec, newUrl.errorString()));
+        return;
+    }
+
+    QString fileName = newUrl.fileName();
+    switch (m_currentfiletype)
+    {
+    case DownFileType::dcm :
+        fileName = imguid+".dcm";
+        break;
+    case DownFileType::json:
+        fileName = studyuid+".json";
+        break;
+    default:
+        break;
+    }
+    if (fileName.isEmpty())
+    {
+        fileName = "temp.tmp";
+    }
+
+    downFileFromWeb(newUrl,fileName,m_downDir);
+
 }
 
 void HttpClient::cancelDownload()
@@ -209,13 +237,14 @@ void HttpClient::httpFinished()
         }
         if (!openFileForWrite(fileinfo.absoluteFilePath()))
         {
+            QFile::remove(fileinfo.absoluteFilePath());
             return;
         }
         startRequest(redirectedUrl);
         return;
     }
 
-    //QDesktopServices::openUrl(QUrl::fromLocalFile(fileinfo.absoluteFilePath()));
+    /// test ///QDesktopServices::openUrl(QUrl::fromLocalFile(fileinfo.absoluteFilePath()));
 
 }
 
@@ -226,8 +255,6 @@ bool HttpClient::openFileForWrite(const QString &fileName)
         delete m_file;
         m_file = NULL;
     }
-    //static int i = 0;
-    /*QFile *file = new QFile(fileName+QString::number(i++, 10));*/
     m_file = new QFile(fileName);
     if (!m_file->open(QIODevice::WriteOnly))
     {
@@ -249,7 +276,15 @@ void HttpClient::httpReadyRead()
     // signal of the QNetworkReply
     if (m_file)
     {
-        m_file->write(m_networkreply->readAll());
+        if (m_currentfiletype == DownFileType::json)
+        {
+            m_currentDownData = m_networkreply->readAll();
+            m_file->write(m_currentDownData);
+        }
+        else
+        {
+            m_file->write(m_networkreply->readAll());
+        }
     }
 }
 
