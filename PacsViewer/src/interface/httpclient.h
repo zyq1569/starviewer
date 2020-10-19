@@ -91,6 +91,18 @@ struct StudyInfo
     QList<SeriesInfo> seriesInfoList;
 };
 
+struct HSeries
+{
+    QString SeriesUID;
+    QList <QString> ImageSOPUI;
+};
+struct HStudy
+{
+    QString StudyUID;
+    int imageCount;
+    QList <HSeries> Serieslist;
+};
+
 ///----------------------------------------------------------------------------------------
 struct StudyRowInfo
 {
