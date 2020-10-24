@@ -36,52 +36,61 @@ class QueryPacs;
     Classe que cercar estudis en un dispositiu pacs, creant un nou job utilitzant les threadweaver
   */
 class QueryPacsJob : public PACSJob {
-Q_OBJECT
+    Q_OBJECT
 public:
     /// Indica a quin nivell fem la query
     enum QueryLevel { study, series, image };
 
-    /// Constructor/Desctructor de la classe
-    ///A la DICOMMask per cada camp que volem que el PACS ens retorni li hem d'haver fet el set amb un string empty per strings o Null per dates i hores, sinó la consulta el PACS
-    ///no retornarà la informació d'aquest camp per l'estudi/sèrie/imatge, ja que al PACS no retorna tots els camps sinó només els que se li sol·liciten
+    /// Class Constructor / Descriptor
+    /// To the DICOMMask for each field we want the PACS to return to us
+    /// we must have done the set with an empty string for strings or Null for
+    /// dates and times, otherwise consult the PACS
+    /// will not return the information in this field for studio / series / image,
+    /// since the PACS does not return all the fields but only the ones requested
     QueryPacsJob(PacsDevice parameters, DicomMask mask, QueryLevel queryLevel);
     ~QueryPacsJob();
 
-    /// El codi d'aquest mètode es el que s'executa en un nou thread
+    /// The code for this method is what runs in a new thread
     virtual void run(ThreadWeaver::JobPointer self, ThreadWeaver::Thread *thread);
 
-    /// Retorna el tipus de PACSJob que és l'objecte
+    /// Returns the type of PACSJob that is the object
     PACSJob::PACSJobType getPACSJobType();
 
-    /// Retorna la màscara sobre la que es fa la consulta
+    ///Returns the mask on which the query is made
     DicomMask getDicomMask();
 
-    /// Indica a quin nivell es fa la consulta study, series, image
+    /// Indicates at what level the study, series, image query is made
     QueryLevel getQueryLevel();
 
-    /// Retorna la llista d'estudis trobats que compleixen el criteri de cerca. La classe que demani els resultats de cerca d'estudis, és responsable 
-    /// d'eliminar els objects retornats aquest mètode
+    /// Returns the list of found studies that meet the criteria
+    /// search. The class requesting the study search results is responsible
+    /// to remove returned objects this method
     QList<Patient*> getPatientStudyList();
 
-    /// Retorna la llista de series trobades que compleixen els criteris de cerca. La classe que demani els resultats de cerca de sèries és responsable 
-    /// d'eliminar els objects retornats aquest mètode
+    /// Returns the list of found series that satisfy the
+    /// search criteria. The class requesting the series search results is responsible
+    /// to remove returned objects this method
     QList<Series*> getSeriesList();
 
-    /// Retorna la llista d'imatges trobades que compleixen els criteris de cerca. LLa classe que demani els resultats de cerca d'imatges, és responsable d'eliminar 
-    /// els objects retornats aquest mètode
+    /// Returns the list of found images that meet the
+    /// search criteria. The class that asks for them
+    /// image search results, is responsible for removing
+    /// objects returned this method
     QList<Image*> getImageList();
 
-    /// Retorna l'estat de la consulta
+    ///Returns the status of the query
     PACSRequestStatus::QueryRequestStatus getStatus();
 
-    /// Retorna una descripció de l'estat retornat per la consulta al PACS
+    /// Returns a description of the returned state
+    /// for consultation at PACS
     QString getStatusDescription();
 
 private:
-    /// Demana que es cancel·li la consulta del job
+    ///Requests that the job query be canceled
     void requestCancelJob();
 
-    /// Retorna el Query Level com a QString per poder generar els missatges d'error
+    /// Returns the Query Level as QString to power
+    /// generate error messages
     QString getQueryLevelAsQString();
 
 private:
