@@ -18,32 +18,10 @@
 #include <QJsonArray>
 
 
-ProgressDialog::ProgressDialog(const QUrl &url, QWidget *parent):QProgressDialog(parent)
-{
-    setWindowTitle(tr("Download Progress"));
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-    setLabelText(tr("Downloading %1.").arg(url.toDisplayString()));
-    setMinimum(0);
-    setValue(0);
-    setMinimumDuration(0);
-    setMinimumSize(QSize(400, 75));
-}
-
-ProgressDialog::~ProgressDialog()
-{
-
-}
-
-void ProgressDialog::networkReplyProgress(qint64 bytesRead, qint64 totalBytes)
-{
-    setMaximum(totalBytes);
-    setValue(bytesRead);
-}
-
-
 //-----------------------------------------HttpClient------------------------------------------------------------
 HttpClient::HttpClient(QObject *parent, QString dir) : QObject(parent),m_httpRequestAborted(false)
 {
+    m_parent = parent;
     m_file = nullptr;
     if (dir != "")
     {
@@ -132,6 +110,7 @@ void HttpClient::ParseDwonData()
     }
     else if (m_currentfiletype == DownFileType::studyini && m_currentDownData.size() > 1)
     {
+        qDebug() <<"---step 1/3---: start parse jsonfile : "<< m_url.query();
         HStudy study;
         QJsonParseError jsonError;
         QJsonDocument paserDoc = QJsonDocument::fromJson(m_currentDownData, &jsonError);
@@ -142,6 +121,7 @@ void HttpClient::ParseDwonData()
             study.imageCount = paserObj.take("numImages").toInt();
             QJsonArray array = paserObj.take("seriesList").toArray();
             CreatDir(m_downDir+"/"+study.StudyUID);
+            qDebug() <<"---step 2/3---:  parse dcm studyuid: " <<study.StudyUID;
             QList<HttpInfo> httpinfo;
             int size = array.size();
             for (int i=0; i<size; i++)
@@ -164,13 +144,16 @@ void HttpClient::ParseDwonData()
                 }
                 study.Serieslist.push_back(series);
             }
-            if (m_managethread)
+            qDebug() <<"---step 3/3---:  start to down all dcm files : series size = " << size << " | image filse : count =" <<httpinfo.size();
+            if (!m_managethread)
             {
-                delete  m_managethread;
-                m_managethread = nullptr;
+                m_managethread = new HManageThread();
             }
-            m_managethread = new HManageThread();
             m_managethread->start(httpinfo);
+        }
+        else
+        {
+            qDebug() <<"---error---->parse json fail: "<< m_url.query();
         }
     }
 }
@@ -364,17 +347,17 @@ void HttpClient::downFileFromWeb(QUrl httpUrl, QString savefilename, QString dow
     startRequest(httpUrl);
 }
 
+/// -------------------------------------------------------------------------
+///http://127.0.0.1:8080/WADO?
+///studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196
+///&seriesuid=1.2.840.113619.2.55.3.604688119.969.1252951290.810.4
+///&sopinstanceuid=1.2.840.113619.2.55.3.604688119.969.1252951290.968.37
+/// -------------------------------------------------------------------------
+///http://127.0.0.1:8080/WADO?
+///studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196&type=json
+///-------------------------------------------------------------------------
 void HttpClient::getStudyImageFile(QUrl url,QString studyuid,QString seruid, QString imguid)
 {
-    /// -------------------------------------------------------------------------
-    ///http://127.0.0.1:8080/WADO?
-    ///studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196
-    ///&seriesuid=1.2.840.113619.2.55.3.604688119.969.1252951290.810.4
-    ///&sopinstanceuid=1.2.840.113619.2.55.3.604688119.969.1252951290.968.37
-    /// -------------------------------------------------------------------------
-    ///http://127.0.0.1:8080/WADO?
-    ///studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196&type=json
-    ///-------------------------------------------------------------------------
     if (url.toString() == "" || studyuid == "")
     {
         return;
@@ -487,9 +470,6 @@ void HttpClient::httpFinished()
         return;
     }
     ParseDwonData();
-
-    /// test ///QDesktopServices::openUrl(QUrl::fromLocalFile(fileinfo.absoluteFilePath()));
-
 }
 
 bool HttpClient::openFileForWrite(const QString &fileName)
