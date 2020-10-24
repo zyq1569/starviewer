@@ -29,127 +29,135 @@ class PacsDevice;
 class PacsManager;
 
 /**
-    Aquesta classe crea la interfície princial de cerca, i connecta amb el PACS i la bd dades local per donar els resultats finals
-  */
+Aquesta classe crea la interfície princial de cerca,
+i connecta amb el PACS i la bd dades local per donar els resultats finals
+*/
 class QueryScreen : public QDialog, private Ui::QueryScreenBase {
-Q_OBJECT
+    Q_OBJECT
 public:
     QueryScreen(QWidget *parent = 0);
     ~QueryScreen();
 
-    /// Descarrega l'estudi sol·licitat en el PACS Indicat.
-    /// Mitjançant signal s'indica l'estat del la descarregar
-    ///     signal: studyRetrieveStarted(QString studyInstanceUID) -> Indica que ha començat la descàrrega de l'estudi
-    ///        signal: studyRetrieveFinished(QString studyInstanceUID) -> Indica que ha finalitzat la dèscarrega de l'estudi
-    ///        signal: errorRetrievingStudy(QString studyInstanceUID) -> Indica que s'ha produït un error en la descàrrega
+    /// Download the study requested in the Indicated PACS.
+    /// The signal indicates the status of the download
+    /// signal: studyRetrieveStarted (QString studyInstanceUID) -> Indicates that the study download has started
+    /// signal: studyRetrieveFinished (QString studyInstanceUID) -> Indicates that the study download has finished
+    /// signal: errorRetrievingStudy (QString studyInstanceUID) -> Indicates that a download error has occurred
     ///
-    ///     ATENCIÓ!! Degut a aquesta classe és un singleton hi ha la possibilitat de que es facin signals d'estudis sol·licitats per altres
-    ///               classes, per tant cada classe que utiltizi aquest mètode i connecti amb els signals descrits anteriorment ha de mantenir de manera
-    ///               interna una llista de les sol·licituds que ha fet per saber si aquell signal l'afecta o no.
+    /// ATTENTION !! Because this class is a singleton there is the possibility of making signals from studies requested by others
+    /// classes, therefore each class that uses this method and connects to the signals described above must maintain a
+    /// contains a list of the requests you have made to find out if that signal affects you or not.
     ///
-    /// @param actionAfterRetrieve Indica l'acció a prendre un cop descarregat l'estudi
-    /// @param pacsDevice PACS des d'on es descarrega l'estudi
-    /// @param study Objecte Study amb la informació de l'estudi que volem descarregar
+    /// @param actionAfterRetrieve Indicates the action to take once the study is downloaded
+    /// @param pacsDevice PACS from where the study is downloaded
+    /// @param study Object Study with the information of the study we want to download
     void retrieveStudy(QInputOutputPacsWidget::ActionsAfterRetrieve actionAfterRetrieve, const PacsDevice &pacsDevice, Study *study);
 
 public slots:
     /// Obre un dicomdir
     void openDicomdir();
 
-    /// Actualitza la configuració que l'usuari hagi pogut canviar des del diàleg de configuració
+    /// Updates the settings that the user has been able to change from the settings dialog
     void updateConfiguration(const QString &configuration);
 
-    /// Si la finestra no és visible o està radera d'una altra, la fa visible i la porta al davant de les finestres.
+    /// If the window is not visible or is deleted from another,
+    /// makes it visible and brings it in front of the windows.
     void bringToFront();
 
-    /// Mostra la pestanya de PACS.
-    /// TODO Deixar els camps de cerca com estaven, fer un clear o posar valors per defecte?
-    /// Es podria passar un paràmetre "bool clear" amb valor per defecte (false, per exemple)
+    /// Displays the PACS tab.
+    /// EVERYTHING Leave the search fields as they were, make a clear or set default values?
+    /// A "bool clear" parameter could be passed with default value (false, for example)
     void showPACSTab();
 
-    /// Mostra tots els estudis en local i reseteja els camps de cerca
+    ///Show all studies locally and reset search fields
     void showLocalExams();
 
-    /// Neteja els LineEdit del formulari
+    ///Clear the LineEdits from the form
     void clearTexts();
 
-    /// Guarda els objectes que compleixien la màscara passada per paràmetres de l'estudi
-    /// passat per paràmetre al primer PACS que es troba com a PACS per defecte
+    /// Saves objects that met the mask passed by study parameters
+    /// passed by parameter to the first PACS which is found as the default PACS
     void sendDicomObjectsToPacs(PacsDevice pacsDevice, QList<Image*> images);
 
-    /// Es comunica amb el widget de la base de dades i visualitzar un estudi descarregat del PACS
+    /// It communicates with the database widget and displays a study downloaded from the PACS
     void viewStudyFromDatabase(QString studyInstanceUID);
 
-    /// Demana que es carregui un estudi descarregat. Útil per casos com el de carregar prèvies, per exemple.
+    /// Request a downloaded studio to be uploaded. Useful for cases such as pre-loading, for example.
     void loadStudyFromDatabase(QString studyInstanceUID);
 
 signals:
-    /// Signal que ens indica quins pacients s'han seleccionat per visualitzar
-    /// Afegim un segon paràmetre per indicar si aquests pacients s'han de carregar únicament i si s'han de visualitzar
+    /// Signal that tells us which patients have been selected to visualize
+    /// We add a second parameter to indicate whether these patients should be loaded only and whether they should be visualized
     void selectedPatients(QList<Patient*> selectedPatients, bool loadOnly = false);
 
-    /// Indica que s'ha produït un error en la descarrega d'un estudi sol·licitat a través del mètode public retrieveStudy
+    /// Indicates that a download error has occurred
+    /// of a study requested through the public retrieveStudy method
     void studyRetrieveFailed(QString studyInstanceUID);
 
-    /// Indica que ha finalitzat la descarrega d'un estudi sol·licitat a través del mètode public retrieveStudy
+    /// Indicates that a single studio download is complete
+    /// tendered through the public retrieveStudy method
     void studyRetrieveFinished(QString studyInstanceUID);
 
-    /// Indica que ha comença la descarrega d'un estudi sol·licitat a través del mètode public retrieveStudy
+    /// Indicates that the download of a single study has begun
+    /// tendered through the public retrieveStudy method
     void studyRetrieveStarted(QString studyInstanceUID);
 
-    /// Indica que s'ha cancel·lat la descàrrega d'un estudi sol·licitat a través del mètode public retrieveStudy
+    /// Indicates that a single studio download has been canceled
+    /// tendered through the public retrieveStudy method
     void studyRetrieveCancelled(QString studyInstanceUID);
 
-    /// S'emet quan la finestra es tanca
+    ///It is emitted when the window is closed
     void closed();
 
 protected:
-    ///  Event que s'activa al tancar al rebren un event de tancament
-    ///  @param event de tancament
+    /// Event that activates when closing when they receive a closing event
+    /// @param closing event
     void closeEvent(QCloseEvent *event);
 
 private slots:
-    /// Escull a on fer la cerca, si a nivell local o PACS
+    /// Choose where to search, whether locally or PACS
     void searchStudy();
 
-    /// Al canviar de pàgina del tab hem de canviar alguns paràmetres, com activar el boto Retrieve, etec..
-    /// @param index del tab al que s'ha canviat
+    /// When changing the page of the tab we have to change some parameters, such as activating the Retrieve button, etc.
+    /// @param index of the tab to which it has been changed
     void refreshTab(int index);
 
-    /// Mostra/amaga els camps de cerca avançats
+    ///Show / hide advanced search fields
     void setAdvancedSearchVisible(bool visible);
 
 #ifndef STARVIEWER_LITE
-    /// Mostra la pantalla QOperationStateScreen
+    /// Displays the QOperationStateScreen screen
     void showOperationStateScreen();
 #endif
 
-    /// Notifica quins estudis s'han escollit per carregar i/o veure
-    /// Afegim un segon paràmetre per indicar si volem fer view o únicament carregar les dades.
+    /// Notify which studies have been chosen to upload and / or view
+    /// We add a second parameter to indicate if we want to view or only load the data.
     void viewPatients(QList<Patient*>, bool loadOnly = false);
 
     /// Slot que s'activa quan s'ha produït un error al descarregar un estudi
     void studyRetrieveFailedSlot(QString studyInstanceUID);
 
-    /// Slot que s'activa quan ha finalitzat la descàrrega d'un estudi
+    /// Slot that is activated when the download of a studio has finished
     void studyRetrieveFinishedSlot(QString studyInstanceUID);
 
-    /// Slot que s'activa quan s'inicia la descàrrega d'un estudi
+    /// Slot that is activated when the download of a study begins
     void studyRetrieveStartedSlot(QString studyInstanceUID);
 
-    /// Slot que s'activa quan es cancel·la la descàrrega d'un estudi
+    ///Slot that activates when a studio download is canceled
     void studyRetrieveCancelledSlot(QString studyInstanceUID);
 
-    /// Slot que s'activa quan s'ha encuat un nou PACSJob si aquest és d'enviament o descarrega de fitxers es mostra el gif animat que indica que
-    /// s'estan processant peticions
+    /// Slot that is activated when a new PACSJob has been found if this one
+    /// is uploading or downloading files showing the animated gif indicating that
+    /// requests are being processed
     void newPACSJobEnqueued(PACSJobPointer pacsJob);
 
-    /// Slot que s'activa quan un PACSJob ha finalitzat, es comprova si la PacsManager està executant més jobs de descàrrega o enviament
-    /// si no n'està executant cap més s'amaga el gif animat que indica que s'està processant una petició
+    /// Slot that is activated when a PACSJob has ended,
+    /// checks if PacsManager is running more download or upload jobs
+    /// if you are not running any more, the animated gif is hidden indicating that a request is being processed
     void pacsJobFinishedOrCancelled(PACSJobPointer pacsJob);
 
-    /// Actualitza segons el tab en el que ens trobem la visibilitat del llistat de PACS
-    /// El llistat només es podrà habilitar o deshabilitar quan estem en la pestanya PACS
+    /// Update according to the tab in which we find the visibility of the list of PACS
+    /// The list can only be enabled or disabled when we are on the PACS tab
     void updatePACSNodesVisibility();
 
 private:
@@ -160,31 +168,34 @@ private:
     enum TabType { LocalDataBaseTab = 0, PACSQueryTab = 1, DICOMDIRTab = 2 };
 #endif
 
-    /// Connecta els signals i slots pertinents
+    /// Connect the relevant signals and slots
     void createConnections();
 
-    /// Construeix la màscara d'entrada pels dicom a partir dels widgets de cerca
-    /// @return retorna la màscara d'un objecte dicom
+    /// Build the input mask for dicom from search widgets
+    /// @return returns the mask of a dicom object
     DicomMask buildDicomMask();
 
-    /// Comprova els requeriments necessaris per poder utilitzar la QueryScreen
+    /// Check the requirements for using QueryScreen
     void checkRequirements();
 
-    /// Es comprova la integritat de la base de dades i les imatges, comprovant que la última vegada l'starviewer
-    /// no s'hagués tancat amb un estudi a mig baixar, i si és així esborra l'estudi a mig descarregar i deixa la base de dades en un estat integre
+    /// Checks the integrity of the database and images,
+    /// checking that last time the starviewer
+    /// would not have closed with a half-downloaded studio,
+    /// and if so delete the half-downloaded study and leave the database in an intact state
     void checkDatabaseImageIntegrity();
 
-    /// Comprova que el port pel qual es reben els objectes dicom a descarregar no estigui sent utitlitzat
-    /// per cap altre aplicació, si és aixì donar una missatge d'error
+    /// Check that the port through which the
+    /// objects I say to download are not being used
+    /// for no other application, if so give an error message
     void checkIncomingConnectionsPacsPortNotInUse();
 
-    /// Inicialitza les variables necessaries, es cridat pel constructor
+    ///It initializes the necessary variables, it is called by the constructor
     void initialize();
 
-    /// Llegeix i aplica dades de configuració
+    ///Read and apply configuration data
     void readSettings();
 
-    /// Guarda els settings de la QueryScreen
+    /// Save the QueryScreen settings
     void writeSettings();
 
 private:
@@ -192,7 +203,7 @@ private:
 
     StatsWatcher *m_statsWatcher;
 
-    /// Llista per controlar la descarrega de quins estudis ha estat sol·licitada
+    /// List to control the download of which studies has been requested
     QStringList m_studyRequestedToRetrieveFromPublicMethod;
 #ifndef STARVIEWER_LITE
     QOperationStateScreen *m_operationStateScreen;
@@ -200,7 +211,8 @@ private:
     PacsManager *m_pacsManager;
 #endif
 
-    /// Indica quans jobs tenim pendents de finalitzar (s'estan esperant per executar o s'estan executant)
+    /// Indicates when jobs are pending
+    /// (waiting to run or running)
     int m_PACSJobsPendingToFinish;
 };
 
