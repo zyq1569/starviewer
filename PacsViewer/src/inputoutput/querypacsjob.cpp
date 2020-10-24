@@ -28,9 +28,9 @@
 namespace udg {
 
 QueryPacsJob::QueryPacsJob(PacsDevice pacsDevice, DicomMask mask, QueryLevel queryLevel)
- : PACSJob(pacsDevice)
+    : PACSJob(pacsDevice)
 {
-    // Creem l'objecte fer la query
+    ///We create the object to query
     m_queryPacs = new QueryPacs(pacsDevice);
     m_mask = mask;
     m_queryLevel = queryLevel;
@@ -54,8 +54,8 @@ void QueryPacsJob::run(ThreadWeaver::JobPointer self, ThreadWeaver::Thread *thre
     Settings settings;
 
     INFO_LOG("Thread iniciat per cercar al PACS: AELocal= " + settings.getValue(InputOutputSettings::LocalAETitle).toString() + "; AEPACS= " +
-        getPacsDevice().getAETitle() + "; PACS Adr= " + getPacsDevice().getAddress() + "; PACS Port= " +
-        QString().setNum(getPacsDevice().getQueryRetrieveServicePort()) + ";");
+             getPacsDevice().getAETitle() + "; PACS Adr= " + getPacsDevice().getAddress() + "; PACS Port= " +
+             QString().setNum(getPacsDevice().getQueryRetrieveServicePort()) + ";");
 
     // Busquem els estudis
     m_queryRequestStatus = m_queryPacs->query(m_mask);
@@ -93,7 +93,7 @@ QList<Image*> QueryPacsJob::getImageList()
 
 void QueryPacsJob::requestCancelJob()
 {
-    INFO_LOG(QString("S'ha demanat la cancel.lacio del Job de consulta al PACS %1").arg(getPacsDevice().getAETitle()));
+    INFO_LOG(QString("PACS% 1 has been requested to cancel the Query Job").arg(getPacsDevice().getAETitle()));
     m_queryPacs->cancelQuery();
 }
 
@@ -102,8 +102,9 @@ PACSRequestStatus::QueryRequestStatus QueryPacsJob::getStatus()
     return m_queryRequestStatus;
 }
 
-// TODO:Centralitzem la contrucció dels missatges d'error perquè a totes les interfícies en puguin utilitzar un, i no calgui tenir el tractament d'errors
-// duplicat ni traduccions, però és el millor lloc aquí posar aquest codi?
+/// EVERYTHING: We centralize the construction of error messages for all of them
+/// interfaces can use one, and there is no need to have error handling
+/// duplicate or translations, but is the best place to put this code here?
 QString QueryPacsJob::getStatusDescription()
 {
     QString message;
@@ -112,36 +113,36 @@ QString QueryPacsJob::getStatusDescription()
 
     switch (getStatus())
     {
-        case PACSRequestStatus::QueryOk:
-            message = tr("Query to PACS %2 for %1 has been successful.").arg(getQueryLevelAsQString(), pacsAETitle);
-            break;
-        case PACSRequestStatus::QueryCancelled:
-            message = tr("Query to PACS %2 for %1 has been cancelled.").arg(getQueryLevelAsQString(), pacsAETitle);
-            break;
-        case PACSRequestStatus::QueryCanNotConnectToPACS:
-            message = tr("Query failed: Unable to connect to PACS %1.").arg(pacsAETitle);
-            message += "\n\n";
-            message += tr("Make sure your computer is connected to the network and the PACS configuration is correct.");
-            message += UserMessage::getProblemPersistsAdvice();
-            break;
-        case PACSRequestStatus::QueryFailedOrRefused:
-            message = tr("PACS %1 could not process the query.").arg(pacsAETitle);
-            message += "\n\n";
-            message += tr("Try with a different query or wait a few minutes. If the problem persists contact with a PACS administrator.");
-            message += errorDetails;
-            break;
-        case PACSRequestStatus::QueryUnknowStatus:
-            message = tr("PACS %1 could not process the query and returned an unknown error.").arg(pacsAETitle);
-            message += "\n\n";
-            message += tr("Please contact with a PACS administrator to report the issue.");
-            message += errorDetails;
-            break;
-        default:
-            message = tr("An unknown error has occurred while querying PACS %2 for %1.").arg(getQueryLevelAsQString(), pacsAETitle);
-            message += "\n\n";
-            message += UserMessage::getProblemPersistsAdvice();
-            message += errorDetails;
-            break;
+    case PACSRequestStatus::QueryOk:
+        message = tr("Query to PACS %2 for %1 has been successful.").arg(getQueryLevelAsQString(), pacsAETitle);
+        break;
+    case PACSRequestStatus::QueryCancelled:
+        message = tr("Query to PACS %2 for %1 has been cancelled.").arg(getQueryLevelAsQString(), pacsAETitle);
+        break;
+    case PACSRequestStatus::QueryCanNotConnectToPACS:
+        message = tr("Query failed: Unable to connect to PACS %1.").arg(pacsAETitle);
+        message += "\n\n";
+        message += tr("Make sure your computer is connected to the network and the PACS configuration is correct.");
+        message += UserMessage::getProblemPersistsAdvice();
+        break;
+    case PACSRequestStatus::QueryFailedOrRefused:
+        message = tr("PACS %1 could not process the query.").arg(pacsAETitle);
+        message += "\n\n";
+        message += tr("Try with a different query or wait a few minutes. If the problem persists contact with a PACS administrator.");
+        message += errorDetails;
+        break;
+    case PACSRequestStatus::QueryUnknowStatus:
+        message = tr("PACS %1 could not process the query and returned an unknown error.").arg(pacsAETitle);
+        message += "\n\n";
+        message += tr("Please contact with a PACS administrator to report the issue.");
+        message += errorDetails;
+        break;
+    default:
+        message = tr("An unknown error has occurred while querying PACS %2 for %1.").arg(getQueryLevelAsQString(), pacsAETitle);
+        message += "\n\n";
+        message += UserMessage::getProblemPersistsAdvice();
+        message += errorDetails;
+        break;
     }
 
     return message;
@@ -151,14 +152,14 @@ QString QueryPacsJob::getQueryLevelAsQString()
 {
     switch (m_queryLevel)
     {
-        case study:
-            return tr("studies");
-        case series:
-            return tr("series");
-        case image:
-            return tr("images");
-        default:
-            return tr("unknown query level");
+    case study:
+        return tr("studies");
+    case series:
+        return tr("series");
+    case image:
+        return tr("images");
+    default:
+        return tr("unknown query level");
     }
 }
 }
