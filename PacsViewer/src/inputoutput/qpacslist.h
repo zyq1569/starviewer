@@ -28,7 +28,7 @@ class PacsDevice;
 /**
 Interface showing the PACS to which the application can connect,
 allows you to select which ones the user wants to connect
- */
+*/
 class QPacsList : public QWidget, private Ui::QPacsListBase {
     Q_OBJECT
 public:

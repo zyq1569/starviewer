@@ -20,30 +20,32 @@
 namespace udg {
 
 /**
-    Aquesta classe és l'encarregada de fer la integració amb el SAP del ICS per a la descàrrega d'estudis, per fer-ho
-    aprofitem la part feta al Starviewer d'integració amb el RIS PIER.
-    Aquesta classe envia via TCP/IP una petició al Starviewer Local de descàrrega d'un estudi en el mateix format XML que ho
-    fa el RIS PIER, d'aquesta manera aprofitant la part d'integració RIS PIER implementada del Starviewer tenim feta
-    la integració amb el SAP.
-  */
+This class is responsible for integrating with the SAP of the ICS for downloading studies, to do so
+we take advantage of the part done in the Starviewer of integration with the RIS PIER.
+This class sends via TCP / IP a request to the Starviewer Local to download a study in the same XML format as
+makes the RIS PIER, thus taking advantage of the implemented RIS PIER integration part of the Starviewer we have done
+integration with SAP.
+*/
 class RISRequestWrapper {
 
 public:
-    /// Envia via Tcp/IP una petició de descarrega de l'estudi amb l'accession number passat per paràmetre al Starviewer de la màquina local
+    /// Send via Tcp / IP a request to download the study
+    /// with the accession number passed by parameter to the Starviewer of the local machine
     void sendRequestToLocalStarviewer(QString accessionNumber);
 
 private:
-    /// Donant l'accession number retorna un xml que l'Starviewer una vegada l'ha rebut és capaç de descarregar de forma automàtica l'estudi amb l'accession
-    /// number passat per paràmetre
+    /// Giving the accession number returns an xml that the Starviewer
+    /// once received it is able to automatically download the studio with accession
+    /// number passed by parameter
     QString getXmlPier(QString accessionNumber);
 
-    /// Imprimeix per pantalla i loggeja error al connectar
+    /// Print by screen and log in error when connecting
     void errorConnecting(int port, QString errorDescription);
 
-    /// Imprimeix per pantalla i loggeja error al enviar la petició per la connexió Tcp/Ip
+    /// Print by screen and log in error when sending the request for the Tcp / Ip connection
     void errorWriting(QString errorDescription);
 
-    /// Imprimeix per pantalla i loggeja error al tancar connexió
+    /// Print by screen and log in error when closing connection
     void errorClosing(QString errorDescription);
 };
 

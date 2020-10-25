@@ -27,28 +27,28 @@ void RISRequestWrapper::sendRequestToLocalStarviewer(QString accessionNumber)
 {
     Settings settings;
     QTcpSocket tcpSocket;
-    // IP del localhost
+    //IP del localhost
     QString locaHostAddress = "127.0.0.1";
-    // Port pel que Starviewer espera peticions del RIS
+    // Port so Starviewer awaits RIS requests
     int starviewerRisPort = settings.getValue(InputOutputSettings::RISRequestsPort).toInt();
 
-    INFO_LOG(QString("RISRequestWrapper::Demanare a l'Starviewer local pel port %1 la descarrega de l'estudi amb accession number %2")
-                .arg(QString().setNum(starviewerRisPort), accessionNumber));
+    INFO_LOG(QString("RISRequestWrapper :: I will ask the local Starviewer for port% 1 to download the studio with accession number% 2")
+             .arg(QString().setNum(starviewerRisPort), accessionNumber));
 
-    // Connectem contra el localhost
+    //We connect against the localhost
     tcpSocket.connectToHost(locaHostAddress, starviewerRisPort);
-    // Esperem que ens haguem connectat
+    // We hope we have connected
     if (!tcpSocket.waitForConnected())
     {
         errorConnecting(starviewerRisPort, tcpSocket.errorString());
         return;
     }
 
-    // Enviem la petició de descarregar del estudi
+    //We send the request to download from the studio
     tcpSocket.write(getXmlPier(accessionNumber).toLocal8Bit());
     if (!tcpSocket.waitForBytesWritten())
     {
-        INFO_LOG("RISRequestWrapper::No s'ha pogut enviar la petició a Starviewer");
+        INFO_LOG("RISRequestWrapper :: The request could not be sent to Starviewer");
 
         if (tcpSocket.error() != QAbstractSocket::UnknownSocketError)
         {
@@ -57,7 +57,7 @@ void RISRequestWrapper::sendRequestToLocalStarviewer(QString accessionNumber)
     }
     else
     {
-        INFO_LOG("RISRequestWrapper::S'ha enviat la petició correctament al Starviewer");
+        INFO_LOG("RISRequestWrapper :: The request was successfully sent to Starviewer");
     }
 
     tcpSocket.flush();
@@ -66,11 +66,11 @@ void RISRequestWrapper::sendRequestToLocalStarviewer(QString accessionNumber)
     tcpSocket.disconnectFromHost();
     if (tcpSocket.state() != QAbstractSocket::UnconnectedState && !tcpSocket.waitForDisconnected())
     {
-        INFO_LOG("RISRequestWrapper::No he pogut desconnectar del Starviewer");
+        INFO_LOG("RISRequestWrapper :: I couldn't disconnect from Starviewer");
     }
     else
     {
-        INFO_LOG("RISRequestWrapper::He desconnectat del Starviewer");
+        INFO_LOG("RISRequestWrapper:: I disconnected from Starviewer");
     }
 
     if (tcpSocket.error() != QAbstractSocket::UnknownSocketError)
@@ -88,23 +88,23 @@ QString RISRequestWrapper::getXmlPier(QString accessionNumber)
 void RISRequestWrapper::errorConnecting(int starviewerRisPort, QString errorDescription)
 {
     QString messageError = QString("Unable to connect with %3 on port %1, be sure %3 is running. Error description: %2.")
-                .arg(QString().setNum(starviewerRisPort), errorDescription, ApplicationNameString) + "\n";
+            .arg(QString().setNum(starviewerRisPort), errorDescription, ApplicationNameString) + "\n";
 
-    ERROR_LOG(QString("RISRequestWrapper::No s'ha pogut connectar amb l'Starviewer pel port %1, descripcio error: %2")
-                 .arg(QString().setNum(starviewerRisPort), errorDescription));
+    ERROR_LOG(QString("RISRequestWrapper :: Could not connect to Starviewer on port% 1, error description: %2")
+              .arg(QString().setNum(starviewerRisPort), errorDescription));
 }
 
 void RISRequestWrapper::errorWriting(QString errorDescription)
 {
     QString messageError = QString("Error cannot send the request to %2. Error description:  %1.").arg(errorDescription).arg(ApplicationNameString) + "\n";
 
-    ERROR_LOG("RISRequestWrapper::No s'ha pogut enviar la peticio al Starviewer, descripcio error: " + errorDescription);
+    ERROR_LOG("RISRequestWrapper::The request could not be sent to Starviewer, description error: " + errorDescription);
 }
 
 void RISRequestWrapper::errorClosing(QString errorDescription)
 {
     QString messageError = QString("Error while disconnecting from host. Error description:  %1.").arg(errorDescription) + "\n";
 
-    ERROR_LOG("RISRequestWrapper::S'ha produit un error desconnectant del host, descripcio del error: " + errorDescription);
+    ERROR_LOG("RISRequestWrapper::Error disconnecting host, error description: " + errorDescription);
 }
 }
