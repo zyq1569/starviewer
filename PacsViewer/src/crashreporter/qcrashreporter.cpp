@@ -62,7 +62,7 @@ QCrashReporter::QCrashReporter(const QStringList &args, QWidget *parent)
     m_minidumpFilename = m_minidumpUUID + ".dmp";
     m_minidumpPath = args[1] + "/" + m_minidumpFilename;
 
-    // Busquem les adreces IP del host.
+    // We look for the IP addresses of the host.
     QString ipAddresses("");
 
     Q_FOREACH (QNetworkInterface inter, QNetworkInterface::allInterfaces())
@@ -87,7 +87,7 @@ QCrashReporter::QCrashReporter(const QStringList &args, QWidget *parent)
     QString hostInformation;
     hostInformation = QString("%1: %2").arg(tr("IP")).arg(ipAddresses);
 
-    // En cas que estem a windows, afegim com a info del host el domini de l'usuari.
+    //In case we are in windows, we add the user's domain as host info.
 #ifdef WIN32
     QString userDomain = QProcessEnvironment::systemEnvironment().value(QString("USERDOMAIN"), QString(""));
     if (!userDomain.isEmpty())
@@ -280,12 +280,12 @@ bool QCrashReporter::restart()
 {
     QString starviewerPath = QCoreApplication::applicationDirPath() + "/" + STARVIEWER_EXE;
 #ifdef WIN32
-    // En windows per poder executar l'starviewer hem de tenir en compte que si està en algun directori que conte espais
-    // com el directori C:\Program Files\Starviewer\starviewer.exe, hem de posar el path entre cometes
-    // per a que no ho interpreti com a paràmetres, per exemple "C:\Program Files\Starviewer\starviewer.exe"
+    // In windows to be able to run the starviewer we must keep in mind that if it is in a directory that contains spaces
+    // like the C: \ Program Files \ Starviewer \ starviewer.exe directory, we have to put the path in quotes
+    // so that it does not interpret it as parameters, for example "C: \ Program Files \ Starviewer \ starviewer.exe"
 
-    // Afegim les cometes per si algun dels directori conté espai
-     starviewerPath = "\"" + starviewerPath + "\"";
+    // We add quotes in case any of the directory contains space
+    starviewerPath = "\"" + starviewerPath + "\"";
 #endif
 
     QProcess process;

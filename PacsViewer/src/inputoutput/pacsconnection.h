@@ -26,85 +26,98 @@ class QString;
 namespace udg {
 
 /**
-    Aquest classe s'encarrega de configurar la connexió i connectar amb el PACS en funció del servei que li volguem sol·licitar.
-  */
+This class is responsible for setting up the connection and connecting
+with the PACS depending on the service we want to request.
+*/
 class PACSConnection {
 
 public:
     enum PACSServiceToRequest { Query, RetrieveDICOMFiles, Echo, SendDICOMFiles };
 
-    /// Constuctor de la classe. Se li ha de passar un objecte PacsDevice, amb els paràmetres del pacs correctament especificats
-    /// @param Parametres del Pacs a connectar
+    /// Class builder. A PacsDevice object must be passed to it,
+    ///  with the pacs parameters correctly specified
+    ///  @param Pacs parameters to connect
     PACSConnection(PacsDevice pacsDevice);
     virtual ~PACSConnection();
 
-    /// Aquesta funció ens intenta connectar al PACS
-    /// @param Especifica en quina modalitat ens volem connectar, fer echo, busca informació o descarregar imatges
-    /// @return retorna l'estat de la connexió
+    /// This function tries to connect us to the PACS
+    /// @param Specifies in which mode we want to connect, echo,
+    /// search for information or download images
+    /// @return returns the status of the connection
     virtual bool connectToPACS(PACSServiceToRequest pacsServiceToRequest);
 
-    /// Retorna els paràmetres del PACS
-    /// @return paràmetres del Pacs
+    /// Returns the PACS parameters
+    /// @return Pacs parameters
     PacsDevice getPacs();
 
-    /// Retorna una connexió per a poder buscar informació, o descarregar imatges
-    /// @return retorna una connexió de PACS
+    /// Returns a connection to be able to search for information, or download images
+    /// @return returns a PACS connection
     T_ASC_Association* getConnection();
 
-    /// Retorna una configuració de xarxa. Només és necessària quan l'objectiu de la connexió sigui el de descarregar imatges
-    /// @return retorna la configuració de la xarxa
+    /// Returns a network configuration. It is only necessary when the goal
+    /// of the connection is to download images
+    /// @return returns the network settings
     T_ASC_Network* getNetwork();
 
     /// This action close the session with PACS's machine and release all the resources
     void disconnect();
 
 private:
-    /// Aquesta funció és privada. És utilitzada per especificar en el PACS, que una de les possibles operacions que volem fer amb ell és un echo. Per defecte
-    /// en qualsevol modalitat de connexió podrem fer un echo
-    /// @return retorna l'estat de la configuració
+    /// This function is private. It is used to specify in the PACS,
+    /// that one of the possible operations we want to do with him is an echo. By default
+    /// in any mode of connection we can make an echo
+    /// @return returns the status of the configuration
     OFCondition configureEcho();
 
-    /// Aquesta funció privada, configura els paràmetres de la connexió per especificar, que el motiu de la nostre connexió és buscar informació.
-    /// @return retorna l'estat de la configuració
+    /// This private function configures the connection parameters to specify,
+    /// that the reason for our connection is to search for information.
+    /// @return returns the status of the configuration
     OFCondition configureFind();
 
-    /// Aquesta funció privada permet configurar la connexió per a descarregar imatges al ordinador local. IMPORTANT!!! Abans de connectar s'ha d'invocar
-    /// la funció setLocalhostPort
-    /// @return retorna l'estat de la configuracióDUL_PRESENTATIONCONTEXTID
+    /// This private function allows you to configure the connection to download
+    /// images on the local computer. IMPORTANT !!! It must be invoked before connecting
+    /// the setLocalhostPort function
+    /// @return returns the configuration stateDUL_PRESENTATIONCONTEXTID
     OFCondition configureMove();
 
-    /// Aquesta funció privada permet configurar la connexió per a guardar estudis en el pacs.
-    /// @return retorna l'estat de la configuració
+    /// This private function allows you to configure the connection to save studies in the pacs.
+    /// @return returns the status of the configuration
     OFCondition configureStore();
 
-    /// Construeix l'adreça del servidor en format ip:port, per connectar-se al PACS
-    /// @param adreça del servidor
-    /// @param port del servidor
+    /// Construct the server address in ip: port format, to connect to the PACS
+    /// @param server address
+    /// @param server port
     QString constructPacsServerAddress(PACSServiceToRequest pacsServiceToRequest, PacsDevice pacsDevice);
 
-    /// Afageix un objecte SOP a la connexió amb el PACS
-    /// @param presentationContextId número de pid
-    /// @param abstractSyntax classe SOP a afegir
+    /// Add a SOP object to the connection to the PACS
+    /// @param presentationContextId pid number
+    /// @param abstractSyntax SOP class to add
     /// @param transferSyntaxList
-    /// @return estat del mètode
+    /// @return method state
     OFCondition addPresentationContext(int presentationContextId, const QString &abstractSyntax, QList<const char*> transferSyntaxList);
 
-    /// Aquest mètode inicialitza l'objecte AssociationNetwork en funció de la modalitat amb els paràmetres del PACS, aquest mètode no obre la connexió
-    /// simplement inicialitza l'objecte amb les dades necessàries per poder obrir connexió, qui obra la connexió és al invocar el mètode
-    /// de dcmtk ASC_requestAssociation dins del mètode connect connect();
+    /// This method initializes the AssociationNetwork object based on
+    /// mode with PACS parameters, this method does not open the connection
+    /// simply initializes the object with the data needed to be able to
+    /// open connection, who opens the connection is by invoking the method
+    /// from dcmtk ASC_requestAssociation within the connect connect () method;
     T_ASC_Network* initializeAssociationNetwork(PACSServiceToRequest modality);
 
-    /// Omple l'array passada per paràmetres amb la transfer syntax a utilitzar per les connexions per fer FIND o Move
+    /// Fill the array passed by parameters with the syntax transfer to
+    /// use for connections to make FIND or Move
     void getTransferSyntaxForFindOrMoveConnection(const char *transferSyntaxes[3]);
 
 private:
     PacsDevice m_pacs;
-    // network struct, contains DICOM upper layer FSM etc. A nivell DICOM no és res és un objecte propi de DCMTK, conté paràmetres de la connexió i en el cas
-    // descàrrega d'imatges se li indica per quin port escoltem les peticions DICOM.
+    /// network struct, contains DICOM upper layer FSM etc. At the DICOM level
+    // is nothing is a DCMTK object of its own, contains connection parameters and in the case
+    /// image download tells you which port we listen to DICOM requests.
     T_ASC_Network *m_associationNetwork;
-    // Defineix els paràmetres de l'associació que s'utilitzarà per la comunicació entre Starviewer i el PACS, conté adreça del PACS, tipus de connexió,....
+    /// Defines the association parameters to be used by the
+    /// communication between Starviewer and PACS, contains PACS address, connection type, ....
     T_ASC_Parameters *m_associationParameters;
-    // L'associació és el canal de comunicació que s'utilitza per l'intercanvi d'informació entre dispositius DICOM (és la connexió amb el PACS)
+    /// The association is the communication channel used for the exchange
+    /// of information between DICOM devices (it is the connection with the PACS)
     T_ASC_Association *m_dicomAssociation;
 };
 };
