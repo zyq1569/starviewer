@@ -28,47 +28,48 @@ class Image;
 class SendDICOMFilesToPACS;
 
 /**
-    Job que s'encarrega d'enviar fitxers del PACS.
-  */
+    Job that is responsible for sending PACS files.
+*/
 class SendDICOMFilesToPACSJob : public PACSJob {
-Q_OBJECT
+    Q_OBJECT
 public:
-    /// Atenció, La llista d'imatges ha de contenir l'estructura Pacient, Estudi, Series, Imatges
+    /// Attention, The list of images must contain the structure Patient, Study, Series, Images
     SendDICOMFilesToPACSJob(PacsDevice pacsDevice, QList<Image*>);
     ~SendDICOMFilesToPACSJob();
 
-    /// Retorna el tipus de PACSJob que és l'objecte
+    ///Returns the type of PACSJob that is the object
     PACSJob::PACSJobType getPACSJobType();
 
-    /// Codi que executarà el job
+    /// Code that will execute the job
     virtual void run(ThreadWeaver::JobPointer self, ThreadWeaver::Thread *thread);
 
-    /// Retorna l'Status del Job
+    /// Returns Job Status
     PACSRequestStatus::SendRequestStatus getStatus();
 
-    /// Retorna l'Status descrit en un QString , aquest QString està pensat per ser mostrat en QMessageBox per informar a l'usuari de l'estat que ha retornat
-    /// el job en el mateixa descripció s'indica de quin és l'estudi afectat
+    /// Returns the Status described in a QString, this QString is
+    /// intended to be displayed in QMessageBox to inform the user of the status returned
+    /// the job in the same description indicates which study is affected
     QString getStatusDescription();
 
-    /// Retorna la llista d'imatges que s'han indicat que s'havien de guardar
+    /// Returns the list of images that were indicated to be saved
     QList<Image*> getFilesToSend();
 
-    /// Retorna l'estudi de les imatges que s'havia de guardar
+    ///Returns the study of the images that were to be saved
     Study* getStudyOfDICOMFilesToSend();
 
 signals:
-    /// Signal que s'emet quan s'enviat una imatge al PACS
+    /// Signal that is emitted when an image is sent to the PACS
     void DICOMFileSent(PACSJobPointer pacsJob, int numberOfDICOMFilesSent);
 
-    /// Signal que s'emet quan s'ha enviat un serie completa al PACS
+    /// Signal that is emitted when a complete series has been sent to the PACS
     void DICOMSeriesSent(PACSJobPointer pacsJob, int numberOfSeriesSent);
 
 private:
-    /// Sol·licita que ens cancel·li el job
+    /// Request that we cancel the job
     void requestCancelJob();
 
 private slots:
-    /// Slot que respón al signal de SendDICOMFilesToPACS DICOMFileSent
+    /// Slot that responds to the SendDICOMFilesToPACS DICOMFileSent signal
     void DICOMFileSent(Image *imageSent, int numberOfDICOMFilesSent);
 
 private:
