@@ -33,10 +33,11 @@ class Study;
  */
 class LocalDatabaseManager : public QObject {
 
-Q_OBJECT
+    Q_OBJECT
 
 public:
-    /// Es defineix els tipus d'error que podem tenir, el DatabaseError indica quan és error de Sqlite
+    /// Es defineix els tipus d'error que podem tenir,
+    /// el DatabaseError indica quan és error de Sqlite
     enum LastError { Ok, DatabaseLocked, DatabaseCorrupted, SyntaxErrorSQL, DeletingFilesError, DatabaseError, PatientInconsistent };
 
     /// Returns the path of the database file.
@@ -51,22 +52,29 @@ public:
     /// Saves the given series to the database, inserting or updating also the associated patient, study and images.
     void save(Series *series);
 
-    /// Returns patients that match the given mask (only PatientID is considered). Returns only patients, without studies, series and images.
+    /// Returns patients that match the given mask (only PatientID is considered).
+    ///  Returns only patients, without studies, series and images.
     QList<Patient*> queryPatients(const DicomMask &mask);
-    /// Returns patients that contain studies that match the given mask (PatientID, PatientName, StudyDate and StudyInstanceUID are considered).
+    /// Returns patients that contain studies that match the given mask
+    /// (PatientID, PatientName, StudyDate and StudyInstanceUID are considered).
     /// Returns the patients with the studies but not series and images.
     QList<Patient*> queryPatientsAndStudies(const DicomMask &mask);
-    /// Returns studies that match the given mask (only StudyInstanceUID is considered). Returns only studies, without patients, series and images.
+    /// Returns studies that match the given mask (only StudyInstanceUID
+    /// is considered). Returns only studies, without patients, series and images.
     QList<Study*> queryStudies(const DicomMask &mask);
-    /// Returns series that match the given mask (only StudyInstanceUID and SeriesInstanceUID are considered).
+    /// Returns series that match the given mask
+    ///  (only StudyInstanceUID and SeriesInstanceUID are considered).
     /// Returns only series, without patients, studies and images.
     QList<Series*> querySeries(DicomMask mask);
-    /// Returns images that match the given mask (only StudyInstanceUID, SeriesInstanceUID and SOPInstanceUID are considered).
+    /// Returns images that match the given mask
+    /// (only StudyInstanceUID, SeriesInstanceUID and SOPInstanceUID are considered).
     QList<Image*> queryImages(const DicomMask &mask);
-    /// Returns encapsulated documents that match the given mask (only StudyInstanceUID, SeriesInstanceUID and SOPInstanceUID are considered).
+    /// Returns encapsulated documents that match the given mask
+    ///  (only StudyInstanceUID, SeriesInstanceUID and SOPInstanceUID are considered).
     QList<EncapsulatedDocument*> queryEncapsulatedDocuments(const DicomMask &mask);
 
-    /// Returns a patient structure, including studies, series and images, that matches the given mask. StudyInstanceUID, SeriesInstanceUID and SOPInstanceUID
+    /// Returns a patient structure, including studies, series and images,
+    /// that matches the given mask. StudyInstanceUID, SeriesInstanceUID and SOPInstanceUID
     /// are considered. If no result is found, returns null.
     Patient* retrieve(const DicomMask &mask);
 
@@ -75,7 +83,8 @@ public:
 
     /// Deletes the study with the given UID from the database and the disk.
     void deleteStudy(const QString &studyInstanceUID);
-    /// Deletes the series with the given SeriesInstanceUID from the study with the given StudyInstanceUID. If the study becomes empty, it's also deleted.
+    /// Deletes the series with the given SeriesInstanceUID from the
+    /// study with the given StudyInstanceUID. If the study becomes empty, it's also deleted.
     void deleteSeries(const QString &studyInstanceUID, const QString &seriesInstanceUID);
 
     /// Deletes studies that have not been open in a number of days specified in settings,
@@ -95,8 +104,10 @@ public:
     /// Returns true if at the end there's enough space and false otherwise.
     bool thereIsAvailableSpaceOnHardDisk();
 
-    /// Saves a setting to know that a study with the given UID is being retrieved. This is saved in order to delete a half-downloaded study in case the
-    /// application crashes in the middle of a download. Note: only one study at a time can be marked as being retrieved.
+    /// Saves a setting to know that a study with the given UID is being retrieved.
+    /// This is saved in order to delete a half-downloaded study in case the
+    /// application crashes in the middle of a download.
+    /// Note: only one study at a time can be marked as being retrieved.
     /// TODO should this really be here?
     void setStudyBeingRetrieved(const QString &studyInstanceUID);
     /// Clears the setting set in the above method to indicated that no study is being retrieved.
@@ -105,8 +116,10 @@ public:
     /// Return true if a study is being retrieved.
     /// TODO should this really be here?
     bool isAStudyBeingRetrieved() const;
-    /// If there is a study marked as being retrieved, this method will delete its images and leave the database in a consistent state. This method is intended
-    /// to delete a half-downloaded study in case the application crashes in the middle of a download. It should be called at the start of the application.
+    /// If there is a study marked as being retrieved,
+    /// this method will delete its images and leave the database in a consistent state. This method is intended
+    /// to delete a half-downloaded study in case the
+    /// application crashes in the middle of a download. It should be called at the start of the application.
     /// TODO should this really be here?
     void deleteStudyBeingRetrieved();
 
@@ -114,11 +127,13 @@ public:
     LastError getLastError() const;
 
 public slots:
-    /// Saves the given patient to the database, inserting or updating also the associated studies, series and images.
+    /// Saves the given patient to the database, inserting or
+    /// updating also the associated studies, series and images.
     void save(Patient *patient);
 
 signals:
-    /// This signal is emitted before a study is deleted from the local database and the disk to free up space.
+    /// This signal is emitted before a study is deleted from
+    /// the local database and the disk to free up space.
     void studyWillBeDeleted(const QString &studyInstanceUID);
 
 private:
@@ -137,7 +152,8 @@ private:
     void setLastError(const QSqlError &error);
 
 private:
-    /// Studies older than this date will be considered old. It's static and initialized the first time this class is instantiated in order to use the same
+    /// Studies older than this date will be considered old. It's static
+    /// and initialized the first time this class is instantiated in order to use the same
     /// reference date for the whole lifetime of the application process.
     static QDate LastAccessDateSelectedStudies;
 

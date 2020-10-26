@@ -78,7 +78,8 @@ private:
     /// Auto-generated connection name, different for each instance.
     QString m_connectionName;
 
-    /// SQLite doesn't support simultaneous transactions with the same connection, thus a mutex is needed for transactions.
+    /// SQLite doesn't support simultaneous transactions
+    /// with the same connection, thus a mutex is needed for transactions.
     QMutex m_mutex;
 
 };

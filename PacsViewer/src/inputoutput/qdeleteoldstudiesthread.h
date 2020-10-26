@@ -23,27 +23,27 @@
 namespace udg {
 
 /**
-    Classe encarregada d'esborrar en un thread els estudis vells
-  */
+    Class in charge of erasing old studies in a thread
+ */
 class QDeleteOldStudiesThread : public QThread {
-Q_OBJECT
+    Q_OBJECT
 
 public:
-    /// Constructor de la classe
+    ///Class builder
     QDeleteOldStudiesThread(QObject *parent = 0);
 
-    /// Esborra els estudis vells engegant un thread
+    ///Delete old studies by starting a thread
     void deleteOldStudies();
 
-    /// Retorna l'estat de l'operació d'esborrar estudis vells
+    /// Returns the status of the operation to delete old studies
     LocalDatabaseManager::LastError getLastError();
 
 signals:
-    /// Signal que s'envia quan finalitza l'execució d'aquest thread
+    /// Signal that is sent when the execution of this thread ends
     void finished();
 
 private:
-    /// Métode que és excutat pel thread creat per Qt, que esborra els estudis vells
+    /// Method that is executed by the thread created by Qt, which deletes the old studies
     void run();
 
     LocalDatabaseManager::LastError m_lastError;

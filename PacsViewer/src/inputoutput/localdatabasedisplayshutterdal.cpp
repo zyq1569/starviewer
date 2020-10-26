@@ -25,7 +25,7 @@ namespace udg {
 
 namespace {
 
-// Prepares the given query with the given SQL base command followed by the appropriate where clause according to the given mask.
+/// Prepares the given query with the given SQL base command followed by the appropriate where clause according to the given mask.
 void prepareQueryWithMask(QSqlQuery &query, const DicomMask &mask, const QString &sqlCommand)
 {
     if (!mask.getSOPInstanceUID().isEmpty() && !mask.getImageNumber().isEmpty())
@@ -67,7 +67,7 @@ void prepareQueryWithMask(QSqlQuery &query, const DicomMask &mask, const QString
     }
 }
 
-// Creates and returns a display shutter with the information of the current row of the given query.
+/// Creates and returns a display shutter with the information of the current row of the given query.
 DisplayShutter getDisplayShutter(const QSqlQuery &query)
 {
     DisplayShutter shutter;
@@ -119,8 +119,8 @@ bool LocalDatabaseDisplayShutterDAL::insert(const DisplayShutter &shutter, const
 
 bool LocalDatabaseDisplayShutterDAL::update(const QList<DisplayShutter> &shuttersList, const Image *shuttersImage)
 {
-    // We have to delete existing shutters and insert the new ones because the
-    // DisplayShutter class doesn't have the ID of the DisplayShutter record in the database
+    /// We have to delete existing shutters and insert the new ones because the
+    /// DisplayShutter class doesn't have the ID of the DisplayShutter record in the database
     DicomMask mask;
     mask.setImageNumber(QString::number(shuttersImage->getFrameNumber()));
     mask.setSOPInstanceUID(shuttersImage->getSOPInstanceUID());

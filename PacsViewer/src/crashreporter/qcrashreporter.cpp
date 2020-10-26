@@ -49,7 +49,8 @@ QCrashReporter::QCrashReporter(const QStringList &args, QWidget *parent)
     m_quitPushButton->setText(tr("Quit %1").arg(ApplicationNameString));
     m_restartPushButton->setText(tr("Restart %1").arg(ApplicationNameString));
     m_sendReportCheckBox->setText(tr("Tell %1 about this crash").arg(ApplicationNameString));
-    m_informationLabel->setText(tr("We're sorry %1 had a problem and crashed. Please take a moment to send us a crash report to help us diagnose and fix "
+    m_informationLabel->setText(tr("We're sorry %1 had a problem and crashed. Please take a moment to "
+                                   "send us a crash report to help us diagnose and fix "
                                    "the problem. Your personal information is not sent with this report.  ").arg(ApplicationNameString));
     m_sendReportLabel->setVisible(false);
     m_sendProgressBar->setVisible(false);
@@ -144,14 +145,16 @@ void QCrashReporter::closeEvent(QCloseEvent* event)
         {
             m_sendSuccess->setVisible(true);
         }
-        else {
+        else
+        {
             m_sendError->setVisible(true);
         }
         m_closeTimer->start();
         m_timerStarted = true;
         event->ignore();
     }
-    else {
+    else
+    {
         if (m_doRestart)
         {
             restart();
@@ -186,7 +189,8 @@ void QCrashReporter::maybeSendReport()
         m_quitPushButton->setVisible(false);
         sendReport();
     }
-    else {
+    else
+    {
         m_acceptClose = true;
         close();
     }
@@ -204,7 +208,8 @@ void QCrashReporter::sendReport()
         m_dumpQFile = nullptr;
     }
 
-    auto createHttpPart = [] (const QString& name, const QString& value) -> QHttpPart {
+    auto createHttpPart = [] (const QString& name, const QString& value) -> QHttpPart
+    {
         QHttpPart part;
         part.setHeader(QNetworkRequest::KnownHeaders::ContentDispositionHeader, QVariant(QString("form-data; name=\"%1\"").arg(name)));
         part.setBody(value.toUtf8());
@@ -312,10 +317,12 @@ void QCrashReporter::onReplyFinished()
         m_successful = true;
         close();
     }
-    else {
+    else
+    {
         QMessageBox confirmMsgbox(QMessageBox::Icon::Warning,
                                   tr("Send error"),
-                                  tr("The crash report could not be sent to Starviewer developers because [%1] error happened, do you want to try it again?").arg(m_reply->errorString())
+                                  tr("The crash report could not be sent to Starviewer developers "
+                                     "because [%1] error happened, do you want to try it again?").arg(m_reply->errorString())
                                   );
         confirmMsgbox.addButton(QMessageBox::StandardButton::Yes);
         confirmMsgbox.addButton(QMessageBox::StandardButton::No);
@@ -324,7 +331,8 @@ void QCrashReporter::onReplyFinished()
         {
             emit resendReport();
         }
-        else {
+        else
+        {
             m_acceptClose = true;
             close();
         }
@@ -336,7 +344,6 @@ void QCrashReporter::onReplyUploadProgress(qint64 bytesReceived, qint64 bytesTot
     if (bytesTotal > 0)
     {
         m_sendProgressBar->setValue((bytesTotal / bytesReceived)*100);
-
     }
 }
 
