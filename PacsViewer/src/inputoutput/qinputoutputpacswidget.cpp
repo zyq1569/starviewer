@@ -153,9 +153,12 @@ void QInputOutputPacsWidget::cancelCurrentQueriesToPACS()
         m_queryPACSJobPendingExecuteOrExecuting.remove(queryPACSJob->getPACSJobID());
     }
 
-    // Les consultes al PACS poden tarda variis segons a cancel·lar-se, ja que com està documentat hi ha PACS que una vegada un PACS rep l'orde de cancel·lació
-    // envien els resultats que havien trobat fins aquell moment i després tanquen la connexió, per fer transparent això a l'usuari, ja que ell no ho notarà en
-    // quin moment es cancel·len, ja amaguem el gif indicant que s'ha cancel·lat la consulta, perquè tingui la sensació que s'han cancel·lat immediatament
+    /// Les consultes al PACS poden tarda variis segons a cancel·lar-se,
+    /// ja que com està documentat hi ha PACS que una vegada un PACS rep l'orde de cancel·lació
+    /// envien els resultats que havien trobat fins aquell moment i després
+    /// tanquen la connexió, per fer transparent això a l'usuari, ja que ell no ho notarà en
+    /// quin moment es cancel·len, ja amaguem el gif indicant que s'ha cancel·
+    /// lat la consulta, perquè tingui la sensació que s'han cancel·lat immediatament
     setQueryInProgress(false);
 }
 
