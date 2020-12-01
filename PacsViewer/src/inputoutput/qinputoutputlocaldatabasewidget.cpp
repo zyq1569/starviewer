@@ -34,7 +34,7 @@
 namespace udg {
 
 QInputOutputLocalDatabaseWidget::QInputOutputLocalDatabaseWidget(QWidget *parent)
- : QWidget(parent)
+    : QWidget(parent)
 {
     setupUi(this);
 
@@ -45,7 +45,7 @@ QInputOutputLocalDatabaseWidget::QInputOutputLocalDatabaseWidget(QWidget *parent
     settings.restoreGeometry(InputOutputSettings::LocalDatabaseSplitterState, m_StudyTreeSeriesListQSplitter);
 
     QStudyTreeWidget::ColumnIndex sortByColumn = (QStudyTreeWidget::ColumnIndex)
-        settings.getValue(InputOutputSettings::LocalDatabaseStudyListSortByColumn).toInt();
+            settings.getValue(InputOutputSettings::LocalDatabaseStudyListSortByColumn).toInt();
 
     Qt::SortOrder sortOrderColumn = (Qt::SortOrder) settings.getValue(InputOutputSettings::LocalDatabaseStudyListSortOrder).toInt();
     m_studyTreeWidget->setSortByColumn (sortByColumn, sortOrderColumn);
@@ -60,9 +60,10 @@ QInputOutputLocalDatabaseWidget::QInputOutputLocalDatabaseWidget(QWidget *parent
 
     createConnections();
 
-    // Esborrem els estudis vells de la cache.
-    //ATENCIÓ!S'ha de fer després del createConnections perquè sinó no haurem connectat amb el signal per control els errors al esborrar estudis
-    //TODO: Això s'hauria de moure fora d'aquí no ha de ser responsabilitat d'aquesta classe
+    /// Delete old studies from the cache.
+    /// ATTENTION! It must be done after createConnections because otherwise
+    /// we will not have connected to the signal to control the errors when deleting studies
+    /// EVERYTHING: This should move out of here should not be the responsibility of this class
     deleteOldStudies();
 }
 
@@ -71,7 +72,7 @@ QInputOutputLocalDatabaseWidget::~QInputOutputLocalDatabaseWidget()
     Settings settings;
     settings.saveColumnsWidths(InputOutputSettings::LocalDatabaseStudyList, m_studyTreeWidget->getQTreeWidget());
 
-    // Guardem per quin columna està ordenada la llista d'estudis i en quin ordre
+    //We save by which column the list of studies is ordered and in what order
     settings.setValue(InputOutputSettings::LocalDatabaseStudyListSortByColumn, m_studyTreeWidget->getSortColumn());
     settings.setValue(InputOutputSettings::LocalDatabaseStudyListSortOrder, m_studyTreeWidget->getSortOrderColumn());
 
@@ -91,13 +92,13 @@ void QInputOutputLocalDatabaseWidget::createConnections()
     connect(m_seriesThumbnailPreviewWidget, SIGNAL(seriesThumbnailDoubleClicked(QString,QString)), SLOT(viewFromQSeriesListWidget(QString, QString)));
     connect(m_studyTreeWidget, SIGNAL(currentStudyChanged(Study*)), SLOT(setSeriesToSeriesListWidget(Study*)));
     connect(m_studyTreeWidget, SIGNAL(currentSeriesChanged(Series*)), SLOT(currentSeriesOfQStudyTreeWidgetChanged(Series*)));
-    // Si passem de tenir un element seleccionat a no tenir-ne li diem al seriesListWidget que no mostri cap previsualització
+    //If we go from having a selected item to not having one we tell the seriesListWidget not to show any preview
     connect(m_studyTreeWidget, SIGNAL(notCurrentItemSelected()), m_seriesThumbnailPreviewWidget, SLOT(clear()));
 
-    // Connecta amb el signal que indica que ha finalitza el thread d'esborrar els estudis vells
+    // Connects to the signal indicating that the thread to delete old studies has ended
     connect(&m_qdeleteOldStudiesThread, SIGNAL(finished()), SLOT(deleteOldStudiesThreadFinished()));
 
-    /// Si movem el QSplitter capturem el signal per guardar la seva posició
+    /// If we move the QSplitter we capture the signal to save its position
     connect(m_StudyTreeSeriesListQSplitter, SIGNAL(splitterMoved (int, int)), SLOT(qSplitterPositionChanged()));
     connect(m_qwidgetSelectPacsToStoreDicomImage, SIGNAL(selectedPacsToStore()), SLOT(sendSelectedStudiesToSelectedPacs()));
 }
@@ -123,11 +124,12 @@ void QInputOutputLocalDatabaseWidget::createContextMenuQStudyTreeWidget()
     action->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::StoreSelectedStudiesToPACS));
     (void) new QShortcut(action->shortcut(), this, SLOT(selectedStudiesStoreToPacs()));
 #endif
-    // Especifiquem que és el menú per la cache
+    // We specify that it is the menu for the cache
     m_studyTreeWidget->setContextMenu(&m_contextMenuQStudyTreeWidget);
 }
 
-// TODO s'hauria buscar una manera més elegant de comunicar les dos classes, fer un singletton de QCreateDicomdir ?
+/// TODO a more elegant way of communicating the two
+/// classes should be sought, to make a singletton of QCreateDicomdir?
 void QInputOutputLocalDatabaseWidget::setQCreateDicomdir(QCreateDicomdir *qcreateDicomdir)
 {
     m_qcreateDicomdir = qcreateDicomdir;
@@ -150,7 +152,7 @@ void QInputOutputLocalDatabaseWidget::queryStudy(DicomMask queryMask)
     LocalDatabaseManager localDatabaseManager;
     QList<Patient*> patientStudyList;
 
-    StatsWatcher::log("Cerca d'estudis a la base de dades local amb paràmetres: " + queryMask.getFilledMaskFields());
+    StatsWatcher::log("Search for studies in the local database with parameters: " + queryMask.getFilledMaskFields());
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     clear();
@@ -162,13 +164,13 @@ void QInputOutputLocalDatabaseWidget::queryStudy(DicomMask queryMask)
         return;
     }
 
-    // Aquest mètode a part de ser cridada quan l'usuari fa click al botó search, també es cridada al
-    // constructor d'aquesta classe, per a que al engegar l'aplicació ja es mostri la llista d'estudis
-    // que hi ha a la base de dades local. Si el mètode no troba cap estudi a la base de dades local
-    // es llença el missatge que no s'han trobat estudis, però com que no és idonii, en el cas aquest que es
-    // crida des del constructor que es mostri el missatge de que no s'han trobat estudis al engegar l'aplicació, el que
-    // es fa és que per llançar el missatge es comprovi que la finestra estigui activa. Si la finestra no està activa
-    // vol dir que el mètode ha estat invocat des del constructor
+    // This method apart from being called when the user clicks the search button, is also called al
+    // constructor of this class, so that when starting the application the list of studies is already displayed
+    // that is in the local database. If the method does not find any study in the local database
+    // throws the message that no studies have been found, but as it is not suitable, in this case
+    // calls from the constructor to display the message that no studies were found when starting the application, which
+    // is done to check that the window is active to launch the message. If the window is not active
+    // means that the method has been invoked from the constructor
     if (patientStudyList.isEmpty() && isActiveWindow())
     {
         QApplication::restoreOverrideCursor();
@@ -176,7 +178,7 @@ void QInputOutputLocalDatabaseWidget::queryStudy(DicomMask queryMask)
     }
     else
     {
-        // Es mostra la llista d'estudis
+        //The list of studies is displayed
         m_studyTreeWidget->insertPatientList(patientStudyList);
         QApplication::restoreOverrideCursor();
     }
@@ -209,9 +211,9 @@ void QInputOutputLocalDatabaseWidget::removeStudyFromQStudyTreeWidget(QString st
 
 void QInputOutputLocalDatabaseWidget::requestedSeriesOfStudy(Study *study)
 { 
-    INFO_LOG("Cerca de sèries a la font cache de l'estudi " + study->getInstanceUID());
+    INFO_LOG("Search for series in the study's source cache " + study->getInstanceUID());
 
-    // Preparem la mascara i cerquem les series a la cache
+    // We prepare the mask and look for the series in the cache
     DicomMask mask;
     mask.setStudyInstanceUID(study->getInstanceUID());
 
@@ -230,7 +232,7 @@ void QInputOutputLocalDatabaseWidget::requestedSeriesOfStudy(Study *study)
     }
     else
     {
-        // Inserim la informació de les sèries al estudi
+        // We insert the series information into the study
         m_studyTreeWidget->insertSeriesList(study->getInstanceUID(), seriesList);
     }
 }
@@ -244,7 +246,7 @@ void QInputOutputLocalDatabaseWidget::setSeriesToSeriesListWidget(Study *current
         return;
     }
 
-    INFO_LOG("Cerca de sèries a la cache de l'estudi " + currentStudy->getInstanceUID());
+    INFO_LOG("Search series in the studio cache" + currentStudy->getInstanceUID());
 
     DicomMask mask;
     mask.setStudyInstanceUID(currentStudy->getInstanceUID());
@@ -284,9 +286,9 @@ void QInputOutputLocalDatabaseWidget::deleteSelectedItemsFromLocalDatabase()
     if (!selectedDicomMaskDICOMSoruceToDelete.isEmpty())
     {
         QMessageBox::StandardButton response = QMessageBox::question(this, ApplicationNameString,
-                                                                           tr("Are you sure you want to delete the selected items?"),
-                                                                           QMessageBox::Yes | QMessageBox::No,
-                                                                           QMessageBox::No);
+                                                                     tr("Are you sure you want to delete the selected items?"),
+                                                                     QMessageBox::Yes | QMessageBox::No,
+                                                                     QMessageBox::No);
         if (response == QMessageBox::Yes)
         {
             QApplication::setOverrideCursor(Qt::BusyCursor);
@@ -304,15 +306,16 @@ void QInputOutputLocalDatabaseWidget::deleteSelectedItemsFromLocalDatabase()
                     {
                         warningMessage = tr("Study %1 of patient %2 is in use by the DICOMDIR list. If you want to delete "
                                             "this study you must remove it from the DICOMDIR list first.")
-                                         .arg(studyToDelete->getID(), studyToDelete->getParentPatient()->getFullName());
+                                .arg(studyToDelete->getID(), studyToDelete->getParentPatient()->getFullName());
                     }
                     else
                     {
-                        // TODO:Hauriem de mostar el Series ID en lloc del Series UID
-                        warningMessage = tr("The series with UID %1 of study %2 of patient %3 is in use by the DICOMDIR list. If you want to delete "
+                        // EVERYTHING: We should show the Series ID instead of the Series UID
+                        warningMessage = tr("The series with UID %1 of study %2 of patient %3 is in use by the DICOMDIR list. "
+                                            "If you want to delete "
                                             "this series you must remove the study from the DICOMDIR list first.")
-                                         .arg(dicomMaskToDelete.getSeriesInstanceUID(), studyToDelete->getID(),
-                                              studyToDelete->getParentPatient()->getFullName());
+                                .arg(dicomMaskToDelete.getSeriesInstanceUID(), studyToDelete->getID(),
+                                     studyToDelete->getParentPatient()->getFullName());
                     }
 
                     QMessageBox::warning(this, ApplicationNameString, warningMessage);
@@ -321,8 +324,8 @@ void QInputOutputLocalDatabaseWidget::deleteSelectedItemsFromLocalDatabase()
                 {
                     if (!dicomMaskToDelete.getSeriesInstanceUID().isEmpty())
                     {
-                        INFO_LOG(QString("L'usuari ha indicat que vol esborrar de la cache la serie %1 de l'estudi %2")
-                                    .arg(dicomMaskToDelete.getSeriesInstanceUID(), dicomMaskToDelete.getStudyInstanceUID()));
+                        INFO_LOG(QString("User has indicated that he wants to clear series% 1 from study% 2 from the cache")
+                                 .arg(dicomMaskToDelete.getSeriesInstanceUID(), dicomMaskToDelete.getStudyInstanceUID()));
                         localDatabaseManager.deleteSeries(dicomMaskToDelete.getStudyInstanceUID(), dicomMaskToDelete.getSeriesInstanceUID());
 
                         m_seriesThumbnailPreviewWidget->removeSeries(dicomMaskToDelete.getSeriesInstanceUID());
@@ -330,7 +333,8 @@ void QInputOutputLocalDatabaseWidget::deleteSelectedItemsFromLocalDatabase()
                     }
                     else
                     {
-                        INFO_LOG(QString("L'usuari ha indicat que vol esborrar de la cache l'estudi %1").arg(dicomMaskToDelete.getStudyInstanceUID()));
+                        INFO_LOG(QString("The user has indicated that they want to clear the study from the cache %1")
+                                 .arg(dicomMaskToDelete.getStudyInstanceUID()));
                         localDatabaseManager.deleteStudy(dicomMaskToDelete.getStudyInstanceUID());
 
                         m_seriesThumbnailPreviewWidget->clear();
@@ -398,13 +402,13 @@ void QInputOutputLocalDatabaseWidget::view(QList<DicomMask> dicomMaskStudiesToVi
         }
         else
         {
-            DEBUG_LOG("No s'ha pogut obtenir l'estudi amb UID " + dicomMaskStudyToView.getStudyInstanceUID());
+            DEBUG_LOG("Could not get study with UID " + dicomMaskStudyToView.getStudyInstanceUID());
         }
     }
 
     if (selectedPatientsList.count() > 0)
     {
-        DEBUG_LOG("Llançat signal per visualitzar estudi del pacient " + patient->getFullName());
+        DEBUG_LOG("Released signal to visualize patient study " + patient->getFullName());
         emit viewPatients(selectedPatientsList, loadOnly);
     }
 
@@ -432,11 +436,11 @@ void QInputOutputLocalDatabaseWidget::viewFromQSeriesListWidget(QString studyIns
 
     view(QList<DicomMask>() << studyToView);
 
-    StatsWatcher::log("Obrim estudi seleccionant sèrie desde thumbnail");
+    StatsWatcher::log("We open studio by selecting series from thumbnail");
 }
 
-// TODO en comptes de fer un signal cap a la queryscreen, perquè aquesta indiqui a la QInputOutPacsWidget que guardi un estudi al PACS,
-// no hauria de ser aquesta funció l'encarregada de guardar l'estudi directament al PACS, entenc que no és responsabilitat de
+// EVERYTHING instead of making a signal to the queryscreen, so that it tells the QInputOutPacsWidget to save a study to the PACS,
+// this function should not be in charge of saving the study directly to the PACS, I understand that it is not the responsibility of
 // QInputOutputPacsWidget
 void QInputOutputLocalDatabaseWidget::selectedStudiesStoreToPacs()
 {
@@ -467,8 +471,8 @@ void QInputOutputLocalDatabaseWidget::addSelectedStudiesToCreateDicomdirList()
             return;
         }
 
-        // \TODO Això s'ha de fer perquè queryPatientStudy retorna llista de Patients
-        // Nosaltres, en realitat, volem llista d'study amb les dades de Patient omplertes.
+        // \ TODO This must be done because queryPatientStudy returns Patient list
+        // We actually want study list with Patient data filled.
         if (patientList.size() != 1 && patientList.first()->getNumberOfStudies() != 1)
         {
             showDatabaseManagerError(LocalDatabaseManager::DatabaseCorrupted);
@@ -479,13 +483,15 @@ void QInputOutputLocalDatabaseWidget::addSelectedStudiesToCreateDicomdirList()
     m_qcreateDicomdir->addStudies(studies);
 }
 
-// TODO: Aquesta responsabilitat d'esborrar els estudis vells al iniciar-se l'aplicació s'hauria de traslladar a un altre lloc, no és responsabilitat
-//       d'aquesta inferfície
+/// EVERYTHING: This responsibility to delete old studies when starting the application
+/// should be moved to another location, not liability
+/// of this inference
 void QInputOutputLocalDatabaseWidget::deleteOldStudies()
 {
     Settings settings;
-    // Mirem si està activada la opció de la configuració d'esborrar els estudis vells no visualitzats en un número de dies determinat
-    // fem la comprovació, per evitar engegar el thread si no s'han d'esborrar els estudis vells
+    /// Let's see if the delete settings option is enabled
+    /// old studies not displayed in a given number of days
+    /// we do the check, to avoid starting the thread if the old studies do not have to be deleted
     if (settings.getValue(InputOutputSettings::DeleteLeastRecentlyUsedStudiesInDaysCriteria).toBool())
     {
         m_qdeleteOldStudiesThread.deleteOldStudies();
@@ -531,12 +537,13 @@ void QInputOutputLocalDatabaseWidget::sendSelectedStudiesToSelectedPacs()
 
             if (localDatabaseManager.getLastError() != LocalDatabaseManager::Ok)
             {
-                ERROR_LOG(QString("Error a la base de dades intentar obtenir els estudis que s'han d'enviar al PACS, Error: %1; StudyUID: %2")
-                                  .arg(localDatabaseManager.getLastError())
-                                  .arg(dicomMaskToSend.getStudyInstanceUID()));
+                ERROR_LOG(QString("Error in database trying to get studies to be sent to PACS, Error:% 1; StudyUID:% 2")
+                          .arg(localDatabaseManager.getLastError())
+                          .arg(dicomMaskToSend.getStudyInstanceUID()));
 
-                QString message = tr("There has been a database error while preparing the DICOM files to send to PACS %1. The DICOM files won't be sent.")
-                    .arg(pacsDevice.getAETitle());
+                QString message = tr("There has been a database error while preparing the "
+                                     "DICOM files to send to PACS %1. The DICOM files won't be sent.")
+                        .arg(pacsDevice.getAETitle());
                 message += "\n";
                 message += UserMessage::getCloseWindowsAndTryAgainAdvice();
                 message += "\n\n";
@@ -565,7 +572,7 @@ void QInputOutputLocalDatabaseWidget::sendDICOMFilesToPACSJobFinished(PACSJobPoi
     if (sendDICOMFilesToPACSJob->getStatus() != PACSRequestStatus::SendOk)
     {
         if (sendDICOMFilesToPACSJob->getStatus() == PACSRequestStatus::SendWarningForSomeImages ||
-            sendDICOMFilesToPACSJob->getStatus() == PACSRequestStatus::SendSomeDICOMFilesFailed)
+                sendDICOMFilesToPACSJob->getStatus() == PACSRequestStatus::SendSomeDICOMFilesFailed)
         {
             QMessageBox::warning(this, ApplicationNameString, sendDICOMFilesToPACSJob->getStatusDescription());
         }
@@ -578,11 +585,15 @@ void QInputOutputLocalDatabaseWidget::sendDICOMFilesToPACSJobFinished(PACSJobPoi
 
 void QInputOutputLocalDatabaseWidget::newPACSJobEnqueued(PACSJobPointer pacsJob)
 {
-    // Connectem amb el signal RetrieveDICOMFilesFromPACSJob de que s'esborrarà un estudi de la caché per treure'ls de la QStudyTreeWidget quan se
-    // n'esborrin
-    // TODO: RetrieveDICOMFilesFromPACS no hauria d'emetre aquest signal, hauria de ser una CacheManager d'aquesta manera treuriem la responsabilitat
-    //       de RetrieveDICOMFilesFromPACS de fer-ho, i a més no caldria connectar el signal cada vegada que fan un nou Job. Una vegada s'hagi implementar la
-    //       CacheManager aquest mètode HA DE DESAPAREIXER, quan es tregui aquest mètode recordar a treure l'include a "retrievedicomfilesfrompacsjob.h"
+    /// Connect to the RetrieveDICOMFilesFromPACSJob signal that will be deleted
+    /// a cache study to remove them from the QStudyTreeWidget when
+    /// delete them
+    /// TODO: RetrieveDICOMFilesFromPACS should not emit this signal,
+    /// should be a CacheManager this way we would take the responsibility
+    /// of RetrieveDICOMFilesFromPACS to do so, and also would not need to connect
+    /// the signal every time they do a new Job. Once the
+    /// CacheManager this method MUST DISAPPEAR, when removed
+    /// this method remember to remove the include in "retrievedicomfilesfrompacsjob.h"
     if (pacsJob->getPACSJobType() == PACSJob::RetrieveDICOMFilesFromPACSJobType)
     {
         connect(pacsJob.objectCast<RetrieveDICOMFilesFromPACSJob>().data(), SIGNAL(studyFromCacheWillBeDeleted(QString)),
@@ -601,44 +612,44 @@ bool QInputOutputLocalDatabaseWidget::showDatabaseManagerError(LocalDatabaseMana
 
     switch (error)
     {
-        case LocalDatabaseManager::Ok:
-            return false;
-        case LocalDatabaseManager::DatabaseLocked:
-            message += tr("The database is blocked by another process.");
-            message += "\n";
-            message += UserMessage::getCloseWindowsAndTryAgainAdvice();
-            message += "\n\n";
-            message += UserMessage::getProblemPersistsAdvice();
-            break;
-        case LocalDatabaseManager::DatabaseCorrupted:
-            message += tr("Database is corrupted.");
-            message += "\n";
-            message += UserMessage::getCloseWindowsAndTryAgainAdvice();
-            message += "\n\n";
-            message += UserMessage::getProblemPersistsAdvice();
-            break;
-        case LocalDatabaseManager::SyntaxErrorSQL:
-            message += tr("Database syntax error.");
-            message += "\n";
-            message += UserMessage::getCloseWindowsAndTryAgainAdvice();
-            message += "\n\n";
-            message += UserMessage::getProblemPersistsAdvice();
-            break;
-        case LocalDatabaseManager::DatabaseError:
-            message += tr("An internal database error occurred.");
-            message += "\n";
-            message += UserMessage::getCloseWindowsAndTryAgainAdvice();
-            message += "\n\n";
-            message += UserMessage::getProblemPersistsAdvice();
-            break;
-        case LocalDatabaseManager::DeletingFilesError:
-            message += tr("Some files cannot be deleted.");
-            message += "\n";
-            message += tr("These files have to be deleted manually.");
-            break;
-        default:
-            message = tr("Unknown error.");
-            break;
+    case LocalDatabaseManager::Ok:
+        return false;
+    case LocalDatabaseManager::DatabaseLocked:
+        message += tr("The database is blocked by another process.");
+        message += "\n";
+        message += UserMessage::getCloseWindowsAndTryAgainAdvice();
+        message += "\n\n";
+        message += UserMessage::getProblemPersistsAdvice();
+        break;
+    case LocalDatabaseManager::DatabaseCorrupted:
+        message += tr("Database is corrupted.");
+        message += "\n";
+        message += UserMessage::getCloseWindowsAndTryAgainAdvice();
+        message += "\n\n";
+        message += UserMessage::getProblemPersistsAdvice();
+        break;
+    case LocalDatabaseManager::SyntaxErrorSQL:
+        message += tr("Database syntax error.");
+        message += "\n";
+        message += UserMessage::getCloseWindowsAndTryAgainAdvice();
+        message += "\n\n";
+        message += UserMessage::getProblemPersistsAdvice();
+        break;
+    case LocalDatabaseManager::DatabaseError:
+        message += tr("An internal database error occurred.");
+        message += "\n";
+        message += UserMessage::getCloseWindowsAndTryAgainAdvice();
+        message += "\n\n";
+        message += UserMessage::getProblemPersistsAdvice();
+        break;
+    case LocalDatabaseManager::DeletingFilesError:
+        message += tr("Some files cannot be deleted.");
+        message += "\n";
+        message += tr("These files have to be deleted manually.");
+        break;
+    default:
+        message = tr("Unknown error.");
+        break;
     }
 
     QApplication::restoreOverrideCursor();

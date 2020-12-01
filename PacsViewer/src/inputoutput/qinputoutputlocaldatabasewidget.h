@@ -41,115 +41,118 @@ class SendDICOMFilesToPACSJob;
 class PacsManager;
 
 /**
-    Widget en el que controla les operacions d'entrada/sortida de la base de dades local
-  */
+Widget in which it controls the input / output operations of the local database
+*/
 class QInputOutputLocalDatabaseWidget : public QWidget, private Ui::QInputOutputLocalDatabaseWidgetBase {
-Q_OBJECT
+    Q_OBJECT
 
 public:
     QInputOutputLocalDatabaseWidget(QWidget *parent = 0);
     ~QInputOutputLocalDatabaseWidget();
 
-    /// Especifiquem l'instància de PacsManager utilitza per les operacions amb el PACS
+    /// We specify the instance of PacsManager used for operations with PACS
     void setPacsManager(PacsManager *pacsManager);
 
-    /// Consulta els estudis al dicomdir obert que compleixin la màscara de cerca
+    /// Check out the open dicomdir studies that meet the search mask
     void queryStudy(DicomMask queryMask);
 
-    /// Li passem un punte a la interfície que crea dicomdir, per a que s'hi pugui comunicar-se per preguntar
-    /// si l'estudi abans de ser esborrat està a llista d'estudis per crear un nou dicomdir, o per indicar-li
-    /// que s'ha afegit demanat afegir un nou estudi a llista d'estudis per crear dicomdir
-    /// TODO s'hauria buscar una manera més elegant de comunicar les dos classes, fer un singletton de QCreateDicomdir ?
+    /// We pass a point to the interface that creates dicomdir, so that it can communicate to ask
+    /// if the study before being deleted is in the list of studies to create a new dicomdir, or to indicate
+    /// that has been added asked to add a new study to study list to create dicomdir
+    /// EVERYTHING should you look for a more elegant way to communicate the two classes, do a singleton of QCreateDicomdir?
     void setQCreateDicomdir(QCreateDicomdir *qcreateDicomdir);
 
-    /// Neteja els resultats que es mostren de la cerca
+    ///Clears the search results shown
     void clear();
 
-    /// Envia les imatges passades per paràmetre al PACS especificat
+    ///Sends images passed by parameter to the specified PACS
     void sendDICOMFilesToPACS(PacsDevice pacsDevice, QList<Image*> images);
 
 public slots:
 
-    /// Emet signal selectedPatients indicant que s'han seleccionat estudis per ser visualitzats
-    /// Afegim un terer paràmetre "loadOnly" que ens indicarà si únicament volem carregar les dades sense necessitat de fer un "view"
-    /// Així diferenciem els casos en que volem carregar dades del pacient "en background" (només fusionem dades del pacient i prou,
-    /// sense aplicar canvis visibles sobre la interfície) útil pels casos de carregar estudis previs, per exemple.
+    /// Emet signal selectedPatients indicating that studies have been selected for display
+    /// We add a third parameter "loadOnly" that will tell us if we only want to load the data without having to do a "view"
+    /// This is how we differentiate the cases in which we want to load patient data "in the background" (we only merge patient data and that's it,
+    /// without applying visible changes on the interface) useful for cases of loading previous studies, for example.
     void view(QList<DicomMask> dicomMaskStudiesToView, bool loadOnly = false);
     void view(QString studyInstanceUID, bool loadOnly = false);
 
-    /// Afegeix l'estudi amb l'Study Instance UID passat per paràmetre al Widget
+    ///Add the study with the Study Instance UID passed as a parameter to the Widget
     void addStudyToQStudyTreeWidget(QString studyInstanceUID);
 
-    /// Treu l'estudi amb l'Study Instance UID passat per paràmetre del QStudyTreeWidget
+    /// Remove the study with the Instance Study UID passed by QStudyTreeWidget parameter
     void removeStudyFromQStudyTreeWidget(QString studyInstanceUID);
 
 signals:
-    /// Signal que s'emet per indicar que es netegin els camps de cerca
+    /// Signal issued to indicate that search fields are cleared
     void clearSearchTexts();
 
-    /// Signal que s'emet per indicar que s'ha demanat visualitzar un estudi
-    /// Afegim un segon paràmetre per indicar si volem fer un "view" o únicament carregar en background les dades de pacient i prou
+    /// Signal that is emitted to indicate that a study has been requested to be viewed
+    /// We add a second parameter to indicate if we want to do
+    /// a "view" or only load the patient data in the background and enough
     void viewPatients(QList<Patient*> patientsToView, bool onlyLoad);
 
 private:
-    /// Crea les connexions entre signals i slots
+    /// Creates connections between signals and slots
     void createConnections();
 
-    /// Genera el menú contextual que apareix quan clickem amb el botó dret a sobre d'un item del StudyTreeWidget
+    /// Generates the context menu that appears when we right-click on an item in the StudyTreeWidget
     void createContextMenuQStudyTreeWidget();
 
-    /// Mostrar l'error que s'ha produït amb les operacions a la base de dades
+    /// Show the error that occurred with the operations in the database
     bool showDatabaseManagerError(LocalDatabaseManager::LastError error, const QString &doingWhat = "");
 
-    /// Esborra els estudis vells
-    // TODO Aquesta responsabilitat d'esborrar els estudis vells al iniciar-se l'aplicació s'hauria de
-    // traslladar a un altre lloc, no és responsabilitat d'aquesta inferfície
+    /// Delete old studies
+    // TODO This responsibility for deleting old studies when starting the application should
+    // move to another location, is not responsible for this inference
     void deleteOldStudies();
 
-    /// Retorna totes les imatges d'un pacient
+    /// Returns all images of a patient
     QList<Image*> getAllImagesFromPatient(Patient *patient);
 
 private slots:
-    /// Mostra les sèries d'un estudi, les consulta al dicomdir i les mostra al tree widget
+    /// Displays series from a study, queries them in the dicomdir, and displays them in the tree widget
     void requestedSeriesOfStudy(Study *studyRequestedSeries);
 
-    /// Mostra al SeriesListWidget la previsualització de la sèrie seleccionada en aquell moment al QStudyTreeWidget
+    /// Show SeriesListWidget preview of currently selected series in QStudyTreeWidget
     void setSeriesToSeriesListWidget(Study *study);
 
     void currentSeriesOfQStudyTreeWidgetChanged(Series *series);
 
     void currentSeriesChangedOfQSeriesListWidget(const QString &studyInstanceUID, const QString &seriesInstanceUID);
 
-    /// Esborra de la base de dades els estudis seleccionats en el QStudyTreeWidgetView
+    /// Deletes selected studies in the QStudyTreeWidgetView from the database
     void deleteSelectedItemsFromLocalDatabase();
 
-    /// Slot que es dispara quan ha finalitzat el thread que esborrar els estudis vells, aquest slot comprova que no s'hagi produït cap error esborrant
-    /// els estudis vells
+    /// Slot that fires when the thread that deleted old studies is finished,
+    /// this slot checks that no deletion error has occurred
+    /// the old studies
     void deleteOldStudiesThreadFinished();
 
-    /// Afegeix els estudis seleccionats a la llista d'estudis a convertir a dicomdir
+    /// Add the selected studies to the list of studies to convert to dicomdir
     void addSelectedStudiesToCreateDicomdirList();
 
-    /// Visualitza l'estudi que se li ha fet doble click QSeriesListWidget
+    /// View the QSeriesListWidget double-click study
     void viewFromQSeriesListWidget(QString studyInstanceUID, QString seriesInstanceUID);
 
-    /// Visualitza els estudis seleccionats a la QStudyTreeWidget
+    /// View the selected studies in the QStudyTreeWidget
     void viewFromQStudyTreeWidget();
 
-    /// Fa signal indicant que els estudis seleccionats s'han de guardar al PACS
+    ///It signals that the selected studies should be saved to the PACS
     void selectedStudiesStoreToPacs();
 
-    /// Guarda la posició de l'splitter quan l'han mogut
+    /// Save the position of the splitter when they have moved it
     void qSplitterPositionChanged();
 
-    /// Guarda els estudis seleccionats al PACS que l'usuari ha seleccionat
+    ///Saves the selected studies to the PACS that the user has selected
     void sendSelectedStudiesToSelectedPacs();
 
-    /// Slot que s'activa quan un SendDICOMFilesToPACSJob acaba
+    ///Slot that activates when a SendDICOMFilesToPACSJob ends
     void sendDICOMFilesToPACSJobFinished(PACSJobPointer);
 
-    /// Cada vegada que encuem un nou Job comprovem si és un RetrieveDICOMFileFromPACSJob i si és així connectem amb el Signal StudyFromCacheWillBeDeleted
-    /// per si s'esborren estudis de la caché poder-los treure de la QStudyTreeWidget
+    /// Every time we find a new Job we check if it is a RetrieveDICOMFileFromPACSJob
+    ///  and if so we connect with the Signal StudyFromCacheWillBeDeleted
+    /// if you delete studies from the cache you can remove them from the QStudyTreeWidget
     void newPACSJobEnqueued(PACSJobPointer);
 
 private:
