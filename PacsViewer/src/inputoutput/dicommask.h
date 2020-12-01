@@ -20,12 +20,14 @@
 #include <QTime>
 
 /**
-    Aquesta classe construeix una màscara per la cerca d'estudis/series/imatges al PACS/BD/DICOMDIR. 
-    S'ha de consulta a cada classe on s'utilitza si tots els camps d'aquesta classe DICOMMask estan disponibles en la cercar.
+This class builds a mask for searching for studies / series / images in PACS / BD / DICOMDIR.
+Each class should be queried if all fields in that DICOMMask class are available in the search.
 
-    Quan es fan cerques el PACS, aquest només retorna els camps que se li han demanat, si utilitzem la DICOMMask per fer una cerca al PACS i volem indicar que ens retorni
-    uns determinats camps hem de set amb string.empty amb els camps que volem que ens retorni per l'estudi/serie/imatge i pels camps que són Data/Hora una Data/Hora nul·la QDate().
-  */
+When searching the PACS, it only returns the fields that have been requested.
+if we use the DICOMMask to do a search on the PACS and we want to indicate that it returns us
+certain fields we have to set with string.empty with the fields we want us to
+return for the studio / series / image and for the fields that are Date / Time a Date / Time null QDate ().
+*/
 namespace udg {
 
 class Study;
@@ -36,11 +38,14 @@ class DicomMask {
 public:
     DicomMask();
 
-    /// Indiquem el Patient name pel qual filtrar. Si els dos paràmetres són Nulls es busquen tots els pacients, si per exemple minimumDate és null
-    ///i a maximumDate se li passa valor buscarà els pacients nascuts abans o el mateix dia de la data indicada a maximumDate
+    /// We indicate the Patient name to filter by. If both parameters are Nulls
+    /// all patients are searched, if for example minimumDate is null
+    /// and maximumDate is passed value will look for born patients
+    /// before or on the same day as the date indicated in maximumDate
     void setPatientName(const QString &patientName);
 
-    /// Aquest mètode especifica la data de naixement del pacient amb la que s'han de cercar els estudis. El format és DDMMYYYY
+    /// This method specifies the date of birth of the patient with
+    /// the one to look for studies. The format is DDMMYYYY
     void setPatientBirth(const QDate &minimumDate, const QDate &maximumDate);
 
     /// This action especified that in the search we want the Patient's sex
@@ -48,7 +53,7 @@ public:
     /// @return state of the method
     void setPatientSex(const QString &patientSex);
 
-    /// Indiquem el patient Id pel qual filtrar
+    /// We indicate the patient Id for which to filter
     void setPatientID(const QString &patientID);
 
     /// This action especified that in the search we want the Patient's Age
@@ -61,8 +66,10 @@ public:
     /// @return state of the method
     void setStudyID(const QString &studyID);
 
-    ///Indiquem entre quines dates volem filtrar els estudis. Si els dos paràmetres són Nulls es busquen tots els estudis, si per exemple minimumDate és null
-    ///i a maximumDate se li passa valor buscarà els estudis fets abans o el mateix dia de la data indicada a maximumDate
+    /// Indicate between which dates we want to filter the studies. If both parameters
+    /// are Nulls all studies are searched, if for example minimumDate is null
+    /// and maximumDate is passed value will look for the studies done before or the
+    /// same day of the date indicated in maximumDate
     void setStudyDate(const QDate &minimumDate, const QDate &maximumDate);
 
     /// This action especified that in the search we want the Study's description
@@ -75,8 +82,9 @@ public:
     /// @return state of the method
     void setStudyModality(const QString &studyModality);
 
-    ///Indiquem entre quines hores volem filtrar els estudis. Si els dos paràmetres són Nulls es busquen tots els estudis, si per exemple minimumTime és null
-    ///i a maximumTime se li passa valor buscarà els estudis fets abans o de l'hora indicada a maximumTime
+    /// We indicate between what hours we want to filter the studies. If both parameters
+    /// are Nulls all studies are searched, if for example minimumTime is null
+    /// and maximumTime is given value will look for the studies done before or of the time indicated in maximumTime
     void setStudyTime(const QTime &studyTimeMinimum, const QTime &studyTimeMaximum);
 
     /// This action especified that in the search we want the Study's instance UID
@@ -89,63 +97,65 @@ public:
     /// @return state of the method
     void setAccessionNumber(const QString &accessionNumber);
 
-    /// Establei el ReferringPhysiciansName
+    /// Set the ReferringPhysiciansName
     /// @param physiciansName
-    /// @return estat del mètode
+    /// @return method state
     void setReferringPhysiciansName(const QString &physiciansName);
 
-    /// Retorna de la màscara l'estudi UID
-    /// @param mask [in] màscara de la cerca
-    /// @return   Estudi UID que cerquem
+    /// Returns the UID study from the mask
+    /// @param mask [in] search mask
+    /// @return UID study we are looking for
     QString getStudyInstanceUID() const;
 
-    /// Retorna el Id del pacient a filtrar
+    /// Returns the Patient Id to filter
     QString getPatientID() const;
 
-    /// Retorna el nom del pacient a filtrar
+    /// Returns the patient's name to filter
     QString getPatientName() const;
 
-    /// Retorna en quina data de neixement hem de buscar els pacients
+    /// Returns on what date of birth we should look for patients
     QDate getPatientBirthMinimum() const;
     QDate getPatientBirthMaximum() const;
     QString getPatientBirthRangeAsDICOMFormat() const;
 
-    /// Retorna l'edat de pacient
-    /// @return edat del pacient
+    /// Returns patient age
+    /// @return patient age
     QString getPatientAge() const;
 
-    /// Retorna el sexe del pacient
-    /// @return sexe del pacient
+    /// Returns the patient's sex
+    /// @return patient sex
     QString getPatientSex() const;
 
-    /// Retorna Id de l'estudi
-    /// @return   ID de l'estudi
+    /// Returns Studio Id
+    /// @return Studio ID
     QString getStudyID() const;
 
-    /// Retorna rang de dates en que s'han de buscar els estudis. Es retorna en format String per quan es fan cerques al PACS si és null significa que no hem 
-    /// demanar al PACS que retorni aquell camp, si és buit significa que l'ha de retorna 
+    /// Returns range of dates on which studies should be searched. He returns
+    /// in String format for when searching PACS if it is null means we don't have it
+    /// ask the PACS to return that field, if it is empty it means it must return it
     QDate getStudyDateMinimum() const;
     QDate getStudyDateMaximum() const;
 
-    ///Retorna en format strign el Rang de dates en que hem de cercar l'estudi. Si retorna null indica que no ens han demanat cercar per data. Retorna el rang de data separat per "-"
+    /// Returns in string format the Date Range in which we need to search for the study.
+    ///  If it returns null it indicates that we have not been asked to search by date. Returns the date range separated by "-"
     QString getStudyDateRangeAsDICOMFormat() const;
 
-    /// Retorna la descripció de l'estudi
-    /// @return   descripció de l'estudi
+    /// Returns the study description
+    /// @return study description
     QString getStudyDescription() const;
 
-    /// Retorna de la modalitat de l'estudi
-    /// @return   Modalitat de l'estudi
+    /// Returns from the study mode
+    /// @return Study mode
     QString getStudyModality() const;
 
-    /// Retorna l'hora de l'estudi
-    /// @return   hora de l'estudi
+    /// Returns the time of the study
+    /// @return study time
     QTime getStudyTimeMinimum() const;
     QTime getStudyTimeMaximum() const;
     QString getStudyTimeRangeAsDICOMFormat() const;
 
-    /// Retorna el accession number de l'estudi
-    /// @return   accession number de l'estudi
+    /// Returns the accession number of the study
+    /// @return accession number of the study
     QString getAccessionNumber() const;
 
     /// Retorna el ReferringPhysiciansName
@@ -153,83 +163,91 @@ public:
     QString getReferringPhysiciansName() const;
 
     /// This action especified in the search which series number we want to match
-    /// @param seriesNumber' Number of the series to search. If this parameter is null it's supose that any mask is applied at this field
+    /// @param seriesNumber' Number of the series to search. If this parameter
+    /// is null it's supose that any mask is applied at this field
     /// @return estat del mètode
     void setSeriesNumber(const QString &seriesNumber);
 
-    ///Indiquem entre quines dates volem filtrar les sèries. Si els dos paràmetres són Nulls es busquen tots els estudis, si per exemple minimumDate és null
-    ///i a maximumDate se li passa valor buscarà les sèries fets abans o el mateix dia de la data indicada a maximumDate
+    /// Indicate between which dates we want to filter the series. If both
+    /// parameters are Nulls all studies are searched, if for example minimumDate is null
+    /// and at maximumDate value is passed it will look for the series done before or
+    /// the same day of the date indicated in maximumDate
     void setSeriesDate(const QDate &minimumDate, const QDate &maximumDate);
 
-    ///Indiquem entre quines hores volem filtrar les sèries. Si els dos paràmetres són Nulls es busquen totess les serèries, si per exemple minimumTime és null
-    ///i a maximumTime se li passa valor buscarà les sèries fetes abans o de l'hora indicada a maximumTime
+    /// Indicate between what hours we want to filter the series. If both
+    /// parameters are Nulls all series are searched, if for example minimumTime is null
+    /// and at maximumTime value is passed it will look for the series done before or of the time indicated in maximumTime
     void setSeriesTime(const QTime &minimumTime, const QTime &maximumTime);
 
     /// This action especified that in the search we want the seriess description
-    /// @param Series description of the study to search. If this parameter is null it's supose that any mask is applied at this field.
-    /// @return estat del mètode
+    /// @param Series description of the study to search. If this parameter
+    /// is null it's supose that any mask is applied at this field.
+    /// @return method state
     void setSeriesDescription(const QString &seriesDescription);
 
     /// This action especified that in the search we want the series modality
-    /// @param series modality the study to search. If this parameter is null it's supose that any mask is applied at this field
-    /// @return estat del mètode
+    /// @param series modality the study to search. If this parameter is
+    /// null it's supose that any mask is applied at this field
+    /// @return method state
     void setSeriesModality(const QString &seriesModality);
 
     /// This action especified that in the search we want to query the Protocol Name
-    /// @param Protocol Name. If this parameter is null it's supose that any mask is applied at this field
+    /// @param Protocol Name. If this parameter is null it's supose that
+    /// any mask is applied at this field
     /// @return estat del mètode
     void setSeriesProtocolName(const QString &protocolName);
 
     /// This action especified that in the search we want the seriess description
-    /// @param Series description of the study to search. If this parameter is null it's supose that any mask is applied at this field.
-    /// @return estat del mètode
+    /// @param Series description of the study to search. If this parameter
+    /// is null it's supose that any mask is applied at this field.
+    /// @return method state
     void setSeriesInstanceUID(const QString &seriesInstanceUID);
 
     /// Estableix la seqüència per cercar per la requested atribute sequence.
     /// RequestAtrributeSequence està format pel RequestedProcedureID i el procedureStepID
     /// @param RequestedProcedureID Requested Procedure ID pel qual s'ha de cercar
     /// @param ScheduledProcedureStepID Scheduled Procedure Step ID pel qual s'ha de cercar
-    /// @return estat del mètode
+    /// @return method state
     void setRequestAttributeSequence(const QString &procedureID, const QString &procedureStepID);
 
-    /// Estableix la màscara de cerca del Perfomed Procedure Step Start date
-    /// @param startDate Perfomed Procedure Step Start date pel qual cercar
-    /// @return estat del mètode
+    /// Sets the Perfomed Procedure Step Start date search mask
+    /// @param startDate Perfomed Procedure Step Start date to search
+    /// @return method state
     void setPPSStartDate(const QDate &minimumDate, const QDate &maximumDate);
 
-    /// Estableix la màscara de cerca del Perfomed Procedure Step Start Time
-    /// @param startTime Perfomed Procedure Step Start Time pel qual cercar
-    /// @return estat del mètode
+    /// Sets the Perfomed Procedure Step Start Time search mask
+    /// @param startTime Perfomed Procedure Step Start Time to search
+    /// @return method state
     void setPPStartTime(const QTime &minimumTime, const QTime &maximumTime);
 
     /// Retorna el series Number
     /// @return   series Number
     QString getSeriesNumber() const;
 
-    /// Retorna la data de la sèrie
+    /// Returns the date of the series
     QDate getSeriesDateMinimum() const;
     QDate getSeriesDateMaximum() const;
     QString getSeriesDateRangeAsDICOMFormat() const;
 
-    /// Retorna l'hora de la sèrie
-    /// @return   hora de la sèrie
+    /// Returns the time of the series
+    /// @return series time
     QTime getSeriesTimeMinimum() const;
     QTime getSeriesTimeMaximum() const;
     QString getSeriesTimeRangeAsDICOMFormat() const;
 
-    /// Retorna la descripcio de la sèrie
-    /// @return descripcio de la serie
+    /// Returns the description of the series
+    /// @return description of the series
     QString getSeriesDescription() const;
 
-    /// Retorna la modalitat de la sèrie
-    /// @return modalitat de la sèrie
+    /// Returns the series mode
+    /// @return series mode
     QString getSeriesModality() const;
 
-    /// Retorna el nom del protocol utiltizat la serie
-    /// @return nom del protocol utilitzat a la seire
+    /// Returns the name of the protocol used in the series
+    /// @return name of the protocol used in the seire
     QString getSeriesProtocolName() const;
 
-    /// Retorna l'uid de la serie
+    /// Returns the uid of the series
     /// @return SeriesUID
     QString getSeriesInstanceUID() const;
 
@@ -254,7 +272,8 @@ public:
     QString getPPSStartTimeAsRangeDICOMFormat() const;
 
     /// Set the StudyId of the images
-    /// @param   Study instance UID the study to search. If this parameter is null it's supose that any mask is applied at this field
+    /// @param   Study instance UID the study to search. If this parameter
+    /// is null it's supose that any mask is applied at this field
     /// @return The state of the action
     void setImageNumber(const QString &imageNumber);
 
@@ -273,7 +292,8 @@ public:
 
     bool operator ==(const DicomMask &mask);
 
-    /// Defineix l'operador suma dos màscares, en el cas que el this i la màscara passada per paràmetre tinguin un valor de filtratge per una determinada
+    /// Defineix l'operador suma dos màscares, en el cas que el this i
+    /// la màscara passada per paràmetre tinguin un valor de filtratge per una determinada
     /// propietat, no es cercarà pels dos valors,sinó només pel de la màscara this
     DicomMask operator +(const DicomMask &mask);
 
@@ -289,9 +309,12 @@ public:
     /// Ens diu si la màscara està buida o no
     bool isEmpty();
 
-    ///Mètode que a partir d'un estudi/series/image ens retornen la DICOMMask per descarregar o consultar els fills d'aquell objecte. És important que si hem de construir
-    ///un DICOMMask a partir d'una imatge aquesta inclogui la informació de la sèrie pare i estudi pare per construir, i en el cas de series contingui l'estudi pare, sinó
-    ///el mètode ens retornarà un DicomMask invàlid que no ens servirà per fer descàrregues o consultes. El paràmetre ok indica si s'ha pogut fer correctament la conversió
+    ///Mètode que a partir d'un estudi/series/image ens retornen la DICOMMask
+    /// per descarregar o consultar els fills d'aquell objecte. És important que si hem de construir
+    ///un DICOMMask a partir d'una imatge aquesta inclogui la informació
+    /// de la sèrie pare i estudi pare per construir, i en el cas de series contingui l'estudi pare, sinó
+    ///el mètode ens retornarà un DicomMask invàlid que no ens servirà per
+    /// fer descàrregues o consultes. El paràmetre ok indica si s'ha pogut fer correctament la conversió
     ///de l'objecte a DICOMMask
     static DicomMask fromStudy(Study *study, bool &ok);
     static DicomMask fromSeries(Series *series, bool &ok);
@@ -306,9 +329,11 @@ private:
     static const QString DateFormatAsString;
     static const QString TimeFormatAsString;
 
-    //Els camps que són Data/Hora els guardem con a QString perquè així alhora de cercar al PACS sabem si ens han demanat que es retorni aquell camp, 
-    //ja que QString té 3 estats null (camp no sol·licitat), empty (s'ha de tornar aquell camp per tots els estudis que compleixin la cerca), 
-    //valor s'han de tornar els estudis que tinguin aquell valor.
+    ///Els camps que són Data/Hora els guardem con a QString perquè així alhora de cercar
+    /// al PACS sabem si ens han demanat que es retorni aquell camp,
+    ///ja que QString té 3 estats null (camp no sol·licitat), empty (s'ha de tornar
+    /// aquell camp per tots els estudis que compleixin la cerca),
+    ///valor s'han de tornar els estudis que tinguin aquell valor.
 
     QString m_patientID;
     QString m_patientName;
