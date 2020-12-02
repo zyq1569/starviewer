@@ -39,7 +39,7 @@
 namespace udg {
 
 QInputOutputPacsWidget::QInputOutputPacsWidget(QWidget *parent)
- : QWidget(parent)
+    : QWidget(parent)
 {
     setupUi(this);
 
@@ -249,13 +249,13 @@ void QInputOutputPacsWidget::showErrorQueringPACS(PACSJobPointer pacsJob)
     {
         switch (queryPACSJob->getQueryLevel())
         {
-            case QueryPacsJob::study:
-                QMessageBox::critical(this, ApplicationNameString, queryPACSJob->getStatusDescription());
-                break;
-            case QueryPacsJob::series:
-            case QueryPacsJob::image:
-                QMessageBox::warning(this, ApplicationNameString, queryPACSJob->getStatusDescription());
-                break;
+        case QueryPacsJob::study:
+            QMessageBox::critical(this, ApplicationNameString, queryPACSJob->getStatusDescription());
+            break;
+        case QueryPacsJob::series:
+        case QueryPacsJob::image:
+            QMessageBox::warning(this, ApplicationNameString, queryPACSJob->getStatusDescription());
+            break;
         }
     }
 }
@@ -269,14 +269,14 @@ void QInputOutputPacsWidget::requestedSeriesOfStudy(Study *study)
 {
     if (study->getDICOMSource().getRetrievePACS().count() == 0)
     {
-        ERROR_LOG(QString("No s'ha trobat de quin PACS es l'estudi %1 per obtenir-ne les series").arg(study->getInstanceUID()));
+        ERROR_LOG(QString("The PACS study% 1 was not found to obtain the series").arg(study->getInstanceUID()));
         return;
     }
 
     PacsDevice pacsDevice = study->getDICOMSource().getRetrievePACS().at(0);
-    QString pacsDescription = pacsDevice.getAETitle() + " Institució" + pacsDevice.getInstitution() + " IP:" + pacsDevice.getAddress();
+    QString pacsDescription = pacsDevice.getAETitle() + " Institution" + pacsDevice.getInstitution() + " IP:" + pacsDevice.getAddress();
 
-    INFO_LOG("Cercant informacio de les series de l'estudi" + study->getInstanceUID() + " del PACS " + pacsDescription);
+    INFO_LOG("Looking for information on the series of the study" + study->getInstanceUID() + " of the PACS " + pacsDescription);
 
     enqueueQueryPACSJobToPACSManagerAndConnectSignals(PACSJobPointer(new QueryPacsJob(pacsDevice, buildSeriesDicomMask(study->getInstanceUID()),
                                                                                       QueryPacsJob::series)));
@@ -286,17 +286,17 @@ void QInputOutputPacsWidget::requestedImagesOfSeries(Series *series)
 {
     if (series->getDICOMSource().getRetrievePACS().count() == 0)
     {
-        ERROR_LOG(QString("No s'ha trobat de quin PACS es la serie per obtenir-ne les imatges").arg(series->getInstanceUID()));
+        ERROR_LOG(QString("It has not been found from which PACS the series is to obtain the images").arg(series->getInstanceUID()));
         return;
     }
 
     PacsDevice pacsDevice = series->getDICOMSource().getRetrievePACS().at(0);
-    QString pacsDescription = pacsDevice.getAETitle() + " Institució" + pacsDevice.getInstitution() + " IP:" + pacsDevice.getAddress();
+    QString pacsDescription = pacsDevice.getAETitle() + " Institution" + pacsDevice.getInstitution() + " IP:" + pacsDevice.getAddress();
 
-    INFO_LOG("Cercant informacio de les imatges de la serie" + series->getInstanceUID() + " de l'estudi" + series->getParentStudy()->getInstanceUID() + " del PACS " + pacsDescription);
+    INFO_LOG("Looking for information on the images in the series" + series->getInstanceUID() + " of the study" + series->getParentStudy()->getInstanceUID() + " del PACS " + pacsDescription);
 
     enqueueQueryPACSJobToPACSManagerAndConnectSignals(PACSJobPointer(new QueryPacsJob(pacsDevice, buildImageDicomMask(series->getParentStudy()->getInstanceUID(), series->getInstanceUID()),
-        QueryPacsJob::image)));
+                                                                                      QueryPacsJob::image)));
 }
 
 void QInputOutputPacsWidget::retrieveSelectedItemsFromQStudyTreeWidget()
@@ -336,7 +336,7 @@ void QInputOutputPacsWidget::retrieveSelectedItemsFromQStudyTreeWidget(ActionsAf
             PacsDevice pacsDeviceFromRetrieve = dicomSourceStudyToRetrieve.getRetrievePACS().at(0); //Agafem el primer PACS
 
             retrieve(pacsDeviceFromRetrieve, _actionsAfterRetrieve, m_studyTreeWidget->getStudy(dicomMaskToRetrieve.getStudyInstanceUID(), dicomSourceStudyToRetrieve),
-                dicomMaskToRetrieve.getSeriesInstanceUID(), dicomMaskToRetrieve.getSOPInstanceUID());
+                     dicomMaskToRetrieve.getSeriesInstanceUID(), dicomMaskToRetrieve.getSOPInstanceUID());
         }
     }
 }
@@ -368,14 +368,14 @@ void QInputOutputPacsWidget::retrieveDICOMFilesFromPACSJobFinished(PACSJobPointe
 
     switch (m_actionsWhenRetrieveJobFinished.take(retrieveDICOMFilesFromPACSJob->getPACSJobID()))
     {
-        case Load:
-            emit loadRetrievedStudy(retrieveDICOMFilesFromPACSJob->getStudyToRetrieveDICOMFiles()->getInstanceUID());;
-            break;
-        case View:
-            emit viewRetrievedStudy(retrieveDICOMFilesFromPACSJob->getStudyToRetrieveDICOMFiles()->getInstanceUID());
-            break;
-        default:
-            break;
+    case Load:
+        emit loadRetrievedStudy(retrieveDICOMFilesFromPACSJob->getStudyToRetrieveDICOMFiles()->getInstanceUID());;
+        break;
+    case View:
+        emit viewRetrievedStudy(retrieveDICOMFilesFromPACSJob->getStudyToRetrieveDICOMFiles()->getInstanceUID());
+        break;
+    default:
+        break;
     }
 }
 
@@ -387,13 +387,13 @@ void QInputOutputPacsWidget::retrieveDICOMFilesFromPACSJobCancelled(PACSJobPoint
 }
 
 void QInputOutputPacsWidget::retrieve(const PacsDevice &pacsDevice, ActionsAfterRetrieve actionAfterRetrieve, Study *studyToRetrieve,
-    const QString &seriesInstanceUIDToRetrieve, const QString &sopInstanceUIDToRetrieve)
+                                      const QString &seriesInstanceUIDToRetrieve, const QString &sopInstanceUIDToRetrieve)
 {
     RetrieveDICOMFilesFromPACSJob::RetrievePriorityJob retrievePriorityJob = actionAfterRetrieve == View ? RetrieveDICOMFilesFromPACSJob::High
-        : RetrieveDICOMFilesFromPACSJob::Medium;
+                                                                                                         : RetrieveDICOMFilesFromPACSJob::Medium;
 
     PACSJobPointer retrieveDICOMFilesFromPACSJob(new RetrieveDICOMFilesFromPACSJob(pacsDevice, retrievePriorityJob, studyToRetrieve,
-        seriesInstanceUIDToRetrieve, sopInstanceUIDToRetrieve));
+                                                                                   seriesInstanceUIDToRetrieve, sopInstanceUIDToRetrieve));
 
     connect(retrieveDICOMFilesFromPACSJob.data(), SIGNAL(PACSJobStarted(PACSJobPointer)), SLOT(retrieveDICOMFilesFromPACSJobStarted(PACSJobPointer)));
     connect(retrieveDICOMFilesFromPACSJob.data(), SIGNAL(PACSJobFinished(PACSJobPointer)), SLOT(retrieveDICOMFilesFromPACSJobFinished(PACSJobPointer)));
@@ -416,7 +416,7 @@ bool QInputOutputPacsWidget::AreValidQueryParameters(DicomMask *maskToQuery, QLi
     {
         QMessageBox::StandardButton response;
         response = QMessageBox::question(this, ApplicationNameString, tr("No search fields were filled.") + "\n" +
-            tr("The query can take a long time.\nDo you want continue?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+                                         tr("The query can take a long time.\nDo you want continue?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         return (response == QMessageBox::Yes);
     }
     else
