@@ -43,7 +43,7 @@
 namespace udg {
 
 QueryScreen::QueryScreen(QWidget *parent)
- : QDialog(parent)
+    : QDialog(parent)
 {
     setupUi(this);
     setWindowFlags(Qt::Widget);
@@ -292,29 +292,29 @@ void QueryScreen::searchStudy()
 {
     switch (m_tab->currentIndex())
     {
-        case LocalDataBaseTab:
-            m_qInputOutputLocalDatabaseWidget->queryStudy(buildDicomMask());
-            break;
+    case LocalDataBaseTab:
+        m_qInputOutputLocalDatabaseWidget->queryStudy(buildDicomMask());
+        break;
 
-        case PACSQueryTab:
-            m_qInputOutputPacsWidget->queryStudy(buildDicomMask(), m_PACSNodes->getSelectedPacs());
-            break;
+    case PACSQueryTab:
+        m_qInputOutputPacsWidget->queryStudy(buildDicomMask(), m_PACSNodes->getSelectedPacs());
+        break;
 
-        case DICOMDIRTab:
-            m_qInputOutputDicomdirWidget->queryStudy(buildDicomMask());
-            break;
+    case DICOMDIRTab:
+        m_qInputOutputDicomdirWidget->queryStudy(buildDicomMask());
+        break;
     }
 }
 
 void QueryScreen::viewStudyFromDatabase(QString studyInstanceUID)
 {
-    // Indiquem que volem veure un estudi que està guardat a la base de dades
+    //We indicate that we want to see a study that is stored in the database
     m_qInputOutputLocalDatabaseWidget->view(studyInstanceUID);
 }
 
 void QueryScreen::loadStudyFromDatabase(QString studyInstanceUID)
 {
-    // Indiquem que volem veure un estudi que està guardat a la base de dades
+    //We indicate that we want to see a study that is stored in the database
     m_qInputOutputLocalDatabaseWidget->view(studyInstanceUID, true);
 }
 
@@ -327,20 +327,20 @@ void QueryScreen::refreshTab(int index)
 {
     switch (index)
     {
-        case LocalDataBaseTab:
-                m_qbasicSearchWidget->setEnabledSeriesModality(true);
-                m_qadvancedSearchWidget->setEnabled(false);
-                break;
+    case LocalDataBaseTab:
+        m_qbasicSearchWidget->setEnabledSeriesModality(true);
+        m_qadvancedSearchWidget->setEnabled(false);
+        break;
 
-        case PACSQueryTab:
-                m_qbasicSearchWidget->setEnabledSeriesModality(true);
-                m_qadvancedSearchWidget->setEnabled(true);
-                break;
+    case PACSQueryTab:
+        m_qbasicSearchWidget->setEnabledSeriesModality(true);
+        m_qadvancedSearchWidget->setEnabled(true);
+        break;
 
-        case DICOMDIRTab:
-                m_qbasicSearchWidget->setEnabledSeriesModality(false);
-                m_qadvancedSearchWidget->setEnabled(false);
-                break;
+    case DICOMDIRTab:
+        m_qbasicSearchWidget->setEnabledSeriesModality(false);
+        m_qadvancedSearchWidget->setEnabled(false);
+        break;
     }
     updatePACSNodesVisibility();
 }
@@ -361,11 +361,11 @@ void QueryScreen::updatePACSNodesVisibility()
 
 void QueryScreen::viewPatients(QList<Patient*> listPatientsToView, bool loadOnly)
 {
-    // Si fem un "view" amagarem les finestres de la QueryScreen perquè
-    // l'aplicació i les extensions siguin visibles, altrament no amagarem res
+    // If we do a "view" we will hide the QueryScreen windows because
+    // the application and extensions are visible, otherwise we will not hide anything
     if (!loadOnly)
     {
-        // S'amaga per poder visualitzar la serie
+        // It is hidden to be able to visualize the series
         this->close();
     }
 
@@ -404,15 +404,18 @@ DicomMask QueryScreen::buildDicomMask()
 
 void QueryScreen::closeEvent(QCloseEvent *event)
 {
-    // Guardem els settings
+    // We save the settings
     writeSettings();
 
-    // TODO: Des del desctructor d'ExtensionHander quan no queda cap més QApplicationMaingWindow oberta s'invoca el mètode close de la QueryScreen perquè es
-    // tanquin totes les finestres depenents de la QueryScreen, això provoca que es llenci el signal lastWindowClosed el qual hi responem invocant
-    // el mètode quit des de main.cpp. Per això quan s'invoca el mètode close() de la QueryScreen és necessari tancar totes les finestres obertes
-    // des de la QueryScreen perquè Starviewer es tanqui en cas que no hi ha hagi cap visor QApplicationMainWindow.
+    /// TODO: From the ExtensionHander descriptor when no more is left
+    /// QApplicationMaingWindow open invokes the QueryScreen close method because
+    /// close all windows dependent on the QueryScreen, this causes
+    /// that the lastWindowClosed signal is thrown which we respond by invoking
+    /// the method quit from main.cpp. This is why when the close () method is invoked
+    /// of the QueryScreen it is necessary to close all open windows
+    /// from the QueryScreen for Starviewer to close in case there is no QApplicationMainWindow viewer.
 #ifndef STARVIEWER_LITE
-    // Tanquem la QOperationStateScreen al tancar la QueryScreen
+    // We close the QOperationStateScreen when we close the QueryScreen
     m_operationStateScreen->close();
 #endif
     m_qcreateDicomdir->close();
@@ -426,9 +429,11 @@ void QueryScreen::readSettings()
 {
     Settings settings;
     settings.restoreGeometry(InputOutputSettings::QueryScreenGeometry, this);
-    // Aquesta clau substitueix les obsoletes "queryScreenWindowPositionX", "queryScreenWindowPositionY", "queryScreenWindowWidth" i "queryScreenWindowHeight"
-    // que tenien les claus /interface/queryscreen/ + windowPositionX, windowPositionY, windowWidth i windowHeigth respectivament
-    // TODO fer neteja d'aquestes claus antigues amb la migració de dades
+    /// This key replaces the obsolete "queryScreenWindowPositionX",
+    /// "queryScreenWindowPositionY", "queryScreenWindowWidth" and "queryScreenWindowHeight"
+    /// that had the keys / interface / queryscreen / + windowPositionX,
+    /// windowPositionY, windowWidth and windowHeigth respectively
+    /// TODO clean up these old keys with data migration
 
 #ifndef STARVIEWER_LITE
     m_showPACSNodesPushButton->setChecked(settings.getValue(InputOutputSettings::QueryScreenPACSListIsVisible).toBool());
@@ -437,9 +442,11 @@ void QueryScreen::readSettings()
 
 void QueryScreen::writeSettings()
 {
-    // Només guardem els settings quan la interfície ha estat visible, ja que hi ha settings com el QSplitter que si la primera vegada
-    // que executem l'starviewer no obrim la QueryScreen retorna un valors incorrecte per això, el que fem és comprova que la QueryScreen
-    // hagi estat visible per guardar el settings
+    /// We only save the settings when the interface has been visible,
+    /// since there are settings like QSplitter that if the first time
+    /// that we run the starviewer we don't open the QueryScreen returns a
+    /// incorrect values so what we do is check the QueryScreen
+    /// has been visible to save the settings
     if (this->isVisible())
     {
         Settings settings;
@@ -449,10 +456,10 @@ void QueryScreen::writeSettings()
 
 void QueryScreen::retrieveStudy(QInputOutputPacsWidget::ActionsAfterRetrieve actionAfterRetrieve, const PacsDevice &pacsDevice, Study *study)
 {
-    // QueryScreen rep un signal cada vegada que qualsevol estudis en el procés de descàrrega canvia d'estat,
-    // en principi només ha de reemetre aquests signals cap a fora quan és un signal que afecta un estudi
-    // sol·licitat a través d'aquest mètode públic, per això mantenim aquesta llista que ens indica els estudis
-    // pendents de descarregar sol·licitats a partir d'aquest mètode
+    // QueryScreen receives a signal every time any studies in the download process change status,
+    // in principle you only need to retransmit these signals out when it is a signal that affects a study
+    // requested through this public method, so we keep this list that indicates the studies
+    // pending download requested from this method
     m_studyRequestedToRetrieveFromPublicMethod.append(study->getInstanceUID());
 
     m_qInputOutputPacsWidget->retrieve(pacsDevice, actionAfterRetrieve, study);
@@ -462,7 +469,7 @@ void QueryScreen::studyRetrieveFailedSlot(QString studyInstanceUID)
 {
     if (m_studyRequestedToRetrieveFromPublicMethod.contains(studyInstanceUID))
     {
-        // És un estudi dels que ens han demanat des del mètode públic
+        //It is a study of those who have asked us from the public method
         m_studyRequestedToRetrieveFromPublicMethod.removeOne(studyInstanceUID);
 
         emit studyRetrieveFailed(studyInstanceUID);
@@ -473,7 +480,7 @@ void QueryScreen::studyRetrieveFinishedSlot(QString studyInstanceUID)
 {
     if (m_studyRequestedToRetrieveFromPublicMethod.contains(studyInstanceUID))
     {
-        // És un estudi dels que ens han demanat des del mètode públic
+        // It is a study of those who have asked us from the public method
         m_studyRequestedToRetrieveFromPublicMethod.removeOne(studyInstanceUID);
 
         emit studyRetrieveFinished(studyInstanceUID);
@@ -484,7 +491,7 @@ void QueryScreen::studyRetrieveStartedSlot(QString studyInstanceUID)
 {
     if (m_studyRequestedToRetrieveFromPublicMethod.contains(studyInstanceUID))
     {
-        // És un estudi dels que ens han demanat des del mètode públic
+        //It is a study of those who have asked us from the public method
         emit studyRetrieveStarted(studyInstanceUID);
     }
 }
@@ -493,7 +500,7 @@ void QueryScreen::studyRetrieveCancelledSlot(QString studyInstanceUID)
 {
     if (m_studyRequestedToRetrieveFromPublicMethod.contains(studyInstanceUID))
     {
-        // És un estudi dels que ens han demanat des del mètode públic
+        // It is a study of those who have asked us from the public method
         m_studyRequestedToRetrieveFromPublicMethod.removeOne(studyInstanceUID);
 
         emit studyRetrieveCancelled(studyInstanceUID);
@@ -508,17 +515,19 @@ void QueryScreen::newPACSJobEnqueued(PACSJobPointer pacsJob)
         connect(pacsJob.data(), SIGNAL(PACSJobFinished(PACSJobPointer)), SLOT(pacsJobFinishedOrCancelled(PACSJobPointer)));
         connect(pacsJob.data(), SIGNAL(PACSJobCancelled(PACSJobPointer)), SLOT(pacsJobFinishedOrCancelled(PACSJobPointer)));
 
-        // Indiquem que tenim un PACSJob més pendent de finalitzar
+        // We indicate that we have a PACSJob more pending completion
         m_PACSJobsPendingToFinish++;
     }
 }
 
 void QueryScreen::pacsJobFinishedOrCancelled(PACSJobPointer) {
-    // No podem utilitzar isExecutingPACSJob per controlar si hi ha jobs pendents d'executar, perquè algunes vegades ens
-    // hem trobat que tot i no tenir cap job pendent d'executar, el mètode respón que hi ha algun job executant-se.
-    // Això passa algunes vegades quan s'aten el signal PACSJobFinished d'un job de seguida i es pregunta al mètode isExecutingPACSJob
-    // si hi ha jobs executant-se, semblaria que tot i haver finalitzar l'últim job pendent ThreadWeaver està acabant de fer
-    // alguna acció i per això indica que hi ha jobs executant-se
+    /// We can't use isExecutingPACSJob to check for pending jobs, because sometimes we
+    /// we found that even though we don't have any jobs pending execution, the method responds that there are some jobs running.
+    /// This happens sometimes when the PACSJobFinished signal is addressed
+    /// of a job immediately and asks the isExecutingPACSJob method
+    /// if there are jobs running, it would seem that despite having finished
+    /// the last pending ThreadWeaver job is just done
+    /// some action and therefore indicates that there are jobs running
     m_PACSJobsPendingToFinish--;
 
     if (m_PACSJobsPendingToFinish == 0)
