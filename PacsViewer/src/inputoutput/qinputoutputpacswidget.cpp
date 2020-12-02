@@ -184,7 +184,7 @@ void QInputOutputPacsWidget::queryPACSJobFinished(PACSJobPointer pacsJob)
 
     if (queryPACSJob.isNull())
     {
-        ERROR_LOG("El PACSJob que ha finalitzat no és un QueryPACSJob");
+        ERROR_LOG("The completed PACSJob is not a QueryPACSJob");
     }
     else
     {
