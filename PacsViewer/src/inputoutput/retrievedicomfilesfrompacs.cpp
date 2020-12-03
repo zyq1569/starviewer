@@ -49,7 +49,8 @@ RetrieveDICOMFilesFromPACS::RetrieveDICOMFilesFromPACS(PacsDevice pacs)
 OFCondition RetrieveDICOMFilesFromPACS::acceptSubAssociation(T_ASC_Network *associationNetwork, T_ASC_Association **association)
 {
     const char *knownAbstractSyntaxes[] = { UID_VerificationSOPClass };
-    const char *transferSyntaxes[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL , NULL, NULL, NULL, NULL};
+    const char *transferSyntaxes[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+                                       NULL, NULL, NULL , NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     int numTransferSyntaxes;
 
     OFCondition condition = ASC_receiveAssociation(associationNetwork, association, ASC_DEFAULTMAXPDU);
@@ -66,23 +67,38 @@ OFCondition RetrieveDICOMFilesFromPACS::acceptSubAssociation(T_ASC_Network *asso
         //transferSyntaxes[3] = UID_LittleEndianImplicitTransferSyntax;
         //numTransferSyntaxes = 4;
 
-        transferSyntaxes[0]  = UID_JPEG2000TransferSyntax;
-        transferSyntaxes[1]  = UID_JPEG2000LosslessOnlyTransferSyntax;
-        transferSyntaxes[2]  = UID_JPEGProcess2_4TransferSyntax;
-        transferSyntaxes[3]  = UID_JPEGProcess1TransferSyntax;
-        transferSyntaxes[4]  = UID_JPEGProcess14SV1TransferSyntax;
-        transferSyntaxes[5]  = UID_JPEGLSLossyTransferSyntax;
-        transferSyntaxes[6]  = UID_JPEGLSLosslessTransferSyntax;
-        transferSyntaxes[7]  = UID_RLELosslessTransferSyntax;
-        transferSyntaxes[8]  = UID_MPEG2MainProfileAtMainLevelTransferSyntax;
-        transferSyntaxes[9]  = UID_MPEG2MainProfileAtHighLevelTransferSyntax;
+        transferSyntaxes[0] = UID_JPEG2000TransferSyntax;
+        transferSyntaxes[1] = UID_JPEG2000LosslessOnlyTransferSyntax;
+        transferSyntaxes[2] = UID_JPEGProcess2_4TransferSyntax;
+        transferSyntaxes[3] = UID_JPEGProcess1TransferSyntax;
+        transferSyntaxes[4] = UID_JPEGProcess14SV1TransferSyntax;
+        transferSyntaxes[5] = UID_JPEGLSLossyTransferSyntax;
+        transferSyntaxes[6] = UID_JPEGLSLosslessTransferSyntax;
+        transferSyntaxes[7] = UID_RLELosslessTransferSyntax;
+        transferSyntaxes[8] = UID_MPEG2MainProfileAtMainLevelTransferSyntax;
+        transferSyntaxes[9] = UID_MPEG2MainProfileAtHighLevelTransferSyntax;
         transferSyntaxes[10] = UID_MPEG4HighProfileLevel4_1TransferSyntax;
         transferSyntaxes[11] = UID_MPEG4BDcompatibleHighProfileLevel4_1TransferSyntax;
-        transferSyntaxes[12] = UID_LittleEndianExplicitTransferSyntax;
-        transferSyntaxes[13] = UID_BigEndianExplicitTransferSyntax;
-        transferSyntaxes[14] = UID_LittleEndianImplicitTransferSyntax;
-        transferSyntaxes[15] = UID_DeflatedExplicitVRLittleEndianTransferSyntax;
-        numTransferSyntaxes  = 16;
+        transferSyntaxes[12] = UID_MPEG4HighProfileLevel4_2_For2DVideoTransferSyntax;
+        transferSyntaxes[13] = UID_MPEG4HighProfileLevel4_2_For3DVideoTransferSyntax;
+        transferSyntaxes[14] = UID_MPEG4StereoHighProfileLevel4_2TransferSyntax;
+        transferSyntaxes[15] = UID_HEVCMainProfileLevel5_1TransferSyntax;
+        transferSyntaxes[16] = UID_HEVCMain10ProfileLevel5_1TransferSyntax;
+        transferSyntaxes[17] = UID_DeflatedExplicitVRLittleEndianTransferSyntax;
+        if (gLocalByteOrder == EBO_LittleEndian)
+        {
+            transferSyntaxes[18] = UID_LittleEndianExplicitTransferSyntax;
+            transferSyntaxes[19] = UID_BigEndianExplicitTransferSyntax;
+        }
+        else
+        {
+            transferSyntaxes[18] = UID_BigEndianExplicitTransferSyntax;
+            transferSyntaxes[19] = UID_LittleEndianExplicitTransferSyntax;
+        }
+        transferSyntaxes[20] = UID_LittleEndianImplicitTransferSyntax;
+        transferSyntaxes[21] = UID_JPEGProcess14TransferSyntax;
+        numTransferSyntaxes = 22;
+
 #else
         // Defined in dcxfer.h
         if (gLocalByteOrder == EBO_LittleEndian)

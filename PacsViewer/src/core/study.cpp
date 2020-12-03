@@ -21,7 +21,7 @@
 namespace udg {
 
 Study::Study(Patient *parentPatient, QObject *parent)
- : QObject(parent), m_height(0), m_weight(0), m_parentPatient(parentPatient)
+    : QObject(parent), m_height(0), m_weight(0), m_parentPatient(parentPatient)
 {
 }
 
@@ -107,7 +107,7 @@ QString Study::getPatientAge() const
                     // If age is > 24 months, age is displayed in years as "xY" where x is the age in years
                     // If age is between 3 to 24 months it is displayed as "xM" where x is the age in months
                     // If age is between 1 to 3 months it is displayed as "xW" where x is the age in weeks
-                    // If it is less that 1 month it is displayed as "xD" where x is the age in days. 
+                    // If it is less that 1 month it is displayed as "xD" where x is the age in days.
                     int quantity = 0;
                     QString unit;
                     if (dateInDays.year() - 1 < 2)
@@ -124,7 +124,7 @@ QString Study::getPatientAge() const
                             {
                                 months += 12;
                             }
-                        
+
                             if (months < 3)
                             {
                                 quantity = dateInDays.weekNumber();
@@ -217,7 +217,7 @@ bool Study::setDate(int day, int month, int year)
 
 bool Study::setDate(QString date)
 {
-    // Seguim la suggerència de la taula 6.2-1 de la Part 5 del DICOM standard de tenir en compte el format yyyy.MM.dd
+    /// Seguim la suggerència de la taula 6.2-1 de la Part 5 del DICOM standard de tenir en compte el format yyyy.MM.dd
     return this->setDate(QDate::fromString(date.remove("."), "yyyyMMdd"));
 }
 
@@ -230,7 +230,7 @@ bool Study::setDate(QDate date)
     }
     else
     {
-        DEBUG_LOG("La data està en un mal format");
+        DEBUG_LOG("The date is in a bad format");
         return false;
     }
 }
@@ -242,16 +242,16 @@ bool Study::setTime(int hour, int minute, int second)
 
 bool Study::setTime(QString time)
 {
-    // Seguim la suggerència de la taula 6.2-1 de la Part 5 del DICOM standard de tenir en compte el format hh:mm:ss.frac
+    /// Seguim la suggerència de la taula 6.2-1 de la Part 5 del DICOM standard de tenir en compte el format hh:mm:ss.frac
     time = time.remove(":");
 
     QStringList split = time.split(".");
     QTime convertedTime = QTime::fromString(split[0], "hhmmss");
 
-    // Té fracció al final
+    /// Té fracció al final
     if (split.size() == 2)
     {
-        // Trunquem a milisegons i no a milionèssimes de segons
+        /// Trunquem a milisegons i no a milionèssimes de segons
         convertedTime = convertedTime.addMSecs(split[1].leftJustified(3, '0', true).toInt());
     }
 
@@ -501,13 +501,13 @@ QList<Study*> Study::sortStudies(const QList<Study*> &studiesList, StudySortType
     
     switch (sortCriteria)
     {
-        case RecentStudiesFirst:
-            qSort(sortedStudies.begin(), sortedStudies.end(), studyIsGreaterThan);
-            break;
+    case RecentStudiesFirst:
+        qSort(sortedStudies.begin(), sortedStudies.end(), studyIsGreaterThan);
+        break;
 
-        case OlderStudiesFirst:
-            qSort(sortedStudies.begin(), sortedStudies.end(), studyIsLessThan);
-            break;
+    case OlderStudiesFirst:
+        qSort(sortedStudies.begin(), sortedStudies.end(), studyIsLessThan);
+        break;
     }
 
     return sortedStudies;
