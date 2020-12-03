@@ -508,7 +508,8 @@ void QueryScreen::studyRetrieveCancelledSlot(QString studyInstanceUID)
 }
 void QueryScreen::newPACSJobEnqueued(PACSJobPointer pacsJob)
 {
-    if (pacsJob->getPACSJobType() == PACSJob::SendDICOMFilesToPACSJobType || pacsJob->getPACSJobType() == PACSJob::RetrieveDICOMFilesFromPACSJobType)
+    if (pacsJob->getPACSJobType() == PACSJob::SendDICOMFilesToPACSJobType ||
+            pacsJob->getPACSJobType() == PACSJob::RetrieveDICOMFilesFromPACSJobType)
     {
         m_operationAnimation->show();
         m_labelOperation->show();

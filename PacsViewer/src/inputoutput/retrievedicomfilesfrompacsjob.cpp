@@ -37,9 +37,10 @@
 
 namespace udg {
 
-RetrieveDICOMFilesFromPACSJob::RetrieveDICOMFilesFromPACSJob(PacsDevice pacsDevice, RetrievePriorityJob retrievePriorityJob, Study *studyToRetrieveDICOMFiles, 
-    const QString &seriesInstanceUIDToRetrieve, const QString &sopInstanceUIDToRetrieve)
- : PACSJob(pacsDevice)
+RetrieveDICOMFilesFromPACSJob::RetrieveDICOMFilesFromPACSJob(PacsDevice pacsDevice,
+                                                             RetrievePriorityJob retrievePriorityJob, Study *studyToRetrieveDICOMFiles,
+                                                             const QString &seriesInstanceUIDToRetrieve, const QString &sopInstanceUIDToRetrieve)
+    : PACSJob(pacsDevice)
 {
     Q_ASSERT(studyToRetrieveDICOMFiles);
     Q_ASSERT(studyToRetrieveDICOMFiles->getParentPatient());
@@ -76,9 +77,10 @@ void RetrieveDICOMFilesFromPACSJob::run(ThreadWeaver::JobPointer self, ThreadWea
     // TODO: És aquest el lloc per aquest missatge ? no seria potser millor fer-ho a RetrieveDICOMFilesFromPACS
     INFO_LOG(QString("Iniciant descarrega del PACS %1, IP: %2, Port: %3, AE Title Local: %4 Port local: %5, "
                      "l'estudi UID: %6, series UID: %7, SOP Instance UID:%8")
-        .arg(getPacsDevice().getAETitle(), getPacsDevice().getAddress(), QString::number(getPacsDevice().getQueryRetrieveServicePort()))
-        .arg(settings.getValue(InputOutputSettings::LocalAETitle).toString(), settings.getValue(InputOutputSettings::IncomingDICOMConnectionsPort).toString())
-        .arg(m_studyToRetrieveDICOMFiles->getInstanceUID(), m_seriesInstanceUIDToRetrieve, m_SOPInstanceUIDToRetrieve));
+             .arg(getPacsDevice().getAETitle(), getPacsDevice().getAddress(), QString::number(getPacsDevice().getQueryRetrieveServicePort()))
+             .arg(settings.getValue(InputOutputSettings::LocalAETitle).toString(),
+                  settings.getValue(InputOutputSettings::IncomingDICOMConnectionsPort).toString())
+             .arg(m_studyToRetrieveDICOMFiles->getInstanceUID(), m_seriesInstanceUIDToRetrieve, m_SOPInstanceUIDToRetrieve));
 
     m_retrievedSeriesInstanceUIDSet.clear();
 
@@ -103,44 +105,49 @@ void RetrieveDICOMFilesFromPACSJob::run(ThreadWeaver::JobPointer self, ThreadWea
         patientFiller.moveToThread(&fillersThread);
         LocalDatabaseManager localDatabaseManager;
 
-        // S'ha d'especificar com a DirectConnection, perquè sinó aquest signal l'aten qui ha creat el Job, que és la interfície, per tant
-        // no s'atendria fins que la interfície estigui lliure, provocant comportaments incorrectes
+        /// Must be specified as DirectConnection, because otherwise this
+        /// signal it to the person who created the Job, which is the interface, therefore
+        /// would not be attended to until the interface is free,
+        /// causing incorrect behaviors
         connect(m_retrieveDICOMFilesFromPACS, SIGNAL(DICOMFileRetrieved(DICOMTagReader*, int)), this, SLOT(DICOMFileRetrieved(DICOMTagReader*, int)),
                 Qt::DirectConnection);
-        // Connectem amb els signals del patientFiller per processar els fitxers descarregats
+        ///We connect to the patientFiller signals to process the downloaded files
         connect(this, &RetrieveDICOMFilesFromPACSJob::DICOMTagReaderReadyForProcess, &patientFiller, &PatientFiller::processDICOMFile);
         connect(this, SIGNAL(DICOMFilesRetrieveFinished()), &patientFiller, SLOT(finishDICOMFilesProcess()));
-        // Connexió entre el processat dels fitxers DICOM i l'inserció al a BD, és important que aquest signal sigui un Qt:DirectConnection perquè així el
-        // el processa els thread dels fillers, d'aquesta manera el thread de descarrega que està esperant a fillersThread.wait() quan surt
-        // d'aquí perquè els fillers ja han acabat ja s'ha inserit el pacient a la base de dades.
+        /// Connection between the processing of DICOM files and the insertion in the BD,
+        /// it is important that this signal is a Qt: DirectConnection so that the
+        /// is processed by the child threads, thus the thread
+        /// download that is waiting in fillersThread.wait () when it exits
+        /// hence because the fillers are already finished the patient has already been inserted into the database.
         connect(&patientFiller, SIGNAL(patientProcessed(Patient*)), &localDatabaseManager, SLOT(save(Patient*)), Qt::DirectConnection);
-        // Connexions per finalitzar els threads
+        ///Connections to end threads
         connect(&patientFiller, SIGNAL(patientProcessed(Patient*)), &fillersThread, SLOT(quit()), Qt::DirectConnection);
 
         localDatabaseManager.setStudyBeingRetrieved(m_studyToRetrieveDICOMFiles->getInstanceUID());
         fillersThread.start();
 
         m_retrieveRequestStatus = m_retrieveDICOMFilesFromPACS->retrieve(m_studyToRetrieveDICOMFiles->getInstanceUID(), m_seriesInstanceUIDToRetrieve,
-            m_SOPInstanceUIDToRetrieve);
+                                                                         m_SOPInstanceUIDToRetrieve);
 
         if ((m_retrieveRequestStatus == PACSRequestStatus::RetrieveOk || m_retrieveRequestStatus == PACSRequestStatus::RetrieveSomeDICOMFilesFailed) &&
-            !this->isAbortRequested())
+                !this->isAbortRequested())
         {
-            INFO_LOG(QString("Ha finalitzat la descarrega de l'estudi %1 del PACS %2, s'han descarregat %3 fitxers")
-                .arg(m_studyToRetrieveDICOMFiles->getInstanceUID(), getPacsDevice().getAETitle())
-                .arg(m_retrieveDICOMFilesFromPACS->getNumberOfDICOMFilesRetrieved()));
+            INFO_LOG(QString("PACS% 2 study% 1 has finished downloading,% 3 files have been downloaded")
+                     .arg(m_studyToRetrieveDICOMFiles->getInstanceUID(), getPacsDevice().getAETitle())
+                     .arg(m_retrieveDICOMFilesFromPACS->getNumberOfDICOMFilesRetrieved()));
 
-            // Indiquem que el procés de descàrrega ha finalitzat
+            //We indicate that the download process is complete
             emit DICOMFilesRetrieveFinished();
 
-            // Esperem que el processat i l'insersió a la base de dades acabin
+            // We expect the processing and insertion into the database to complete
             fillersThread.wait();
 
             if (localDatabaseManager.getLastError() != LocalDatabaseManager::Ok)
             {
                 if (localDatabaseManager.getLastError() == LocalDatabaseManager::PatientInconsistent)
                 {
-                    // No s'ha pogut inserir el patient, perquè patientfiller no ha pogut emplenar l'informació de patient correctament
+                    /// Could not insert patient, because patientfiller
+                    /// could not fill in the patient information correctly
                     m_retrieveRequestStatus = PACSRequestStatus::RetrievePatientInconsistent;
                 }
                 else
@@ -152,10 +159,14 @@ void RetrieveDICOMFilesFromPACSJob::run(ThreadWeaver::JobPointer self, ThreadWea
         else
         {
             fillersThread.quit();
-            // Esperem que el thread acabi, ja que pel que s'interpreta de la documentació, sembla que el quit del thread no es fa fins que aquest retorna
-            // al eventLoop, això provoca per exemple en els casos que ens han cancel·lat la descàrrega d'un estudi, si no esperem al thread que estigui mort
-            // poguem esborrar imatges que els fillers estan processant en aquell moment mentre encara s'estan executant i peti l'Starviewer, perquè
-            // no s'ha atés el Slot quit del thread, per això esperem que aquest estigui mort a esborrar les imatges descarregades.
+            /// We hope that the thread ends, because from what is interpreted from the documentation,
+            /// it seems that quitting the thread is not done until it returns
+            /// in eventLoop, this causes for example in the cases that we have canceled
+            /// lat the download of a study, if we do not wait for the thread to be dead
+            /// we can delete images that the fillers are processing on that one
+            /// moment while they're still running and ask for the Starviewer, because
+            /// the Slot quit of the thread has not been addressed, so we hope this
+            /// is dead deleting downloaded images.
             fillersThread.wait();
             deleteRetrievedDICOMFilesIfStudyNotExistInDatabase();
         }
@@ -166,9 +177,9 @@ void RetrieveDICOMFilesFromPACSJob::run(ThreadWeaver::JobPointer self, ThreadWea
 
 void RetrieveDICOMFilesFromPACSJob::requestCancelJob()
 {
-    INFO_LOG(QString("S'ha demanat la cancel.lacio del Job de descarrega d'imatges de l'estudi %1 del PACS %2")
-                .arg(getStudyToRetrieveDICOMFiles()->getInstanceUID(),
-             getPacsDevice().getAETitle()));
+    INFO_LOG(QString("PACS Study UID %1 .AETitle %1 Image Download Job Canceled")
+             .arg(getStudyToRetrieveDICOMFiles()->getInstanceUID(),
+                  getPacsDevice().getAETitle()));
     m_retrieveDICOMFilesFromPACS->requestCancel();
 }
 
@@ -181,7 +192,8 @@ void RetrieveDICOMFilesFromPACSJob::DICOMFileRetrieved(DICOMTagReader *dicomTagR
 {
     emit DICOMFileRetrieved(m_selfPointer.toStrongRef(), numberOfImagesRetrieved);
 
-    /// Actualitzem el número de sèries processades si ens arriba una nova imatge que pertanyi a una sèrie no descarregada fins al moment
+    /// We update the number of series processed if it reaches us
+    /// a new image that belongs to a series not downloaded so far
     QString seriesInstancedUIDRetrievedImage = dicomTagReader->getValueAttributeAsQString(DICOMSeriesInstanceUID);
     if (!m_retrievedSeriesInstanceUIDSet.contains(seriesInstancedUIDRetrievedImage))
     {
@@ -189,10 +201,14 @@ void RetrieveDICOMFilesFromPACSJob::DICOMFileRetrieved(DICOMTagReader *dicomTagR
         emit DICOMSeriesRetrieved(m_selfPointer.toStrongRef(), m_retrievedSeriesInstanceUIDSet.count());
     }
 
-    // Fem un emit indicat que dicomTagReader està a punt per ser processat per l'Slot processDICOMFile de PatientFiller, no podem fer un connect
-    // directament entre el signal de DICOMFileRetrieved de RetrieveDICOMFileFromPACS i processDICOMFile de PatientFiller, perquè ens podríem trobar
-    // que quan en aquest mètode comprova si hem descarregat una nova sèrie que DICOMTagReader ja no tingui valor, per això primer capturem el signal de
-    // RetrieveDICOMFileFromPACS comprovem si és una sèrie nova la que es descarrega i llavors fem l'emit per que PatientFiller processi el DICOMTagReader
+    /// We make an issue indicating that dicomTagReader is ready to
+    /// be processed by PatientFiller's processDICOMFile slot, we can't make a connection
+    /// directly between the DICOMFileRetrieved signal of RetrieveDICOMFileFromPACS
+    /// and processDICOMFile of PatientFiller, because we could find
+    /// that when in this method it checks if we have downloaded a new series
+    /// that DICOMTagReader no longer has value, so we first capture the signal from
+    /// RetrieveDICOMFileFromPACS we check if it is a new series
+    /// that is downloaded and then we issue it for PatientFiller to process the DICOMTagReader
 
     emit DICOMTagReaderReadyForProcess(dicomTagReader);
 }
@@ -205,13 +221,13 @@ int RetrieveDICOMFilesFromPACSJob::priority() const
 PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACSJob::thereIsAvailableSpaceOnHardDisk()
 {
     LocalDatabaseManager localDatabaseManager;
-    // TODO: Aquest signal no s'hauria de fer des d'aquesta classe sinó des d'una CacheManager, però com de moment encara no està implementada
-    //       temporalment emetem el signal des d'aquí*/
+    // TODO:This signal should not be made from this class but from a CacheManager, but as of now it is not yet implemented
+    // temporarily emit the signal from here * /
     connect(&localDatabaseManager, SIGNAL(studyWillBeDeleted(QString)), SIGNAL(studyFromCacheWillBeDeleted(QString)));
 
     if (!localDatabaseManager.thereIsAvailableSpaceOnHardDisk())
     {
-        // Si no hi ha prou espai emitim aquest signal
+        // If there is not enough space we emit this signal
         if (localDatabaseManager.getLastError() == LocalDatabaseManager::Ok)
         {
             return PACSRequestStatus::RetrieveNoEnoughSpace;
@@ -227,24 +243,28 @@ PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACSJob::thereIsA
 
 void RetrieveDICOMFilesFromPACSJob::deleteRetrievedDICOMFilesIfStudyNotExistInDatabase()
 {
-    // Comprovem si l'estudi està inserit a la base de dades, si és així vol dir que anteriorment s'havia descarregat un part o tot l'estudi,
-    // com que ja tenim altres elements d'aquest estudi inserits a la base de dades no esborrem el directori de l'estudi
+    /// We check if the study is inserted in the database, if so
+    /// means that part or all of the study had previously been downloaded,
+    /// as we already have other elements of this study inserted in the
+    /// database we do not delete the study directory
     if (!LocalDatabaseManager().studyExists(m_studyToRetrieveDICOMFiles->getInstanceUID()))
     {
-        // Si l'estudi no existeix a la base de dades esborrem el contingut del directori, en principi segons la normativa DICO; si rebem un status de
-        // tipus error per part de MoveSCP indicaria s'ha pogut descarregar cap objecte dicom amb èxit
+        /// If the study does not exist in the database we delete it
+        /// the content of the directory, in principle according to the DICO regulations; if we receive a status of
+        /// type error by MoveSCP would indicate that no dicom object has been successfully downloaded
 
-        INFO_LOG("L'estudi " + m_studyToRetrieveDICOMFiles->getInstanceUID() + " no existeix a la base de de dades, esborrem el contingut del seu directori.");
+        INFO_LOG("The study " + m_studyToRetrieveDICOMFiles->getInstanceUID() + " does not exist in the database, we delete the contents of your directory.");
         DirectoryUtilities().deleteDirectory(LocalDatabaseManager().getStudyPath(m_studyToRetrieveDICOMFiles->getInstanceUID()), true);
     }
     else
     {
-        INFO_LOG("L'estudi " + m_studyToRetrieveDICOMFiles->getInstanceUID() + " existeix a la base de dades, no esborrem el contingut del seu directori.");
+        INFO_LOG("The study " + m_studyToRetrieveDICOMFiles->getInstanceUID() + " exists in the database, we do not delete the contents of your directory.");
     }
 }
 
-// TODO:Centralitzem la contrucció dels missatges d'error perquè a totes les interfícies en puguin utilitzar un, i no calgui tenir el tractament d'errors
-// duplicat ni traduccions, però és el millor lloc aquí posar aquest codi?
+/// TODO:We centralize the construction of error messages because
+/// all interfaces can use one, and there is no need to have error handling
+/// duplicate or translations, but is the best place to put this code here?
 QString RetrieveDICOMFilesFromPACSJob::getStatusDescription()
 {
     QString message;
@@ -256,97 +276,97 @@ QString RetrieveDICOMFilesFromPACSJob::getStatusDescription()
 
     switch (getStatus())
     {
-        case PACSRequestStatus::RetrieveOk:
-            message = tr("Images from study %1 of patient %2 have been successfully retrieved from PACS %3.").arg(studyID, patientName, pacsAETitle);
-            break;
-        case PACSRequestStatus::RetrieveCancelled:
-            message = tr("Retrieval of the images from study %1 of patient %2 from PACS %3 has been canceled.").arg(studyID, patientName, pacsAETitle);
-            break;
-        case PACSRequestStatus::RetrieveCanNotConnectToPACS:
-            message = tr("Unable to connect to PACS %1 to retrieve images from study %2 of patient %3.")
+    case PACSRequestStatus::RetrieveOk:
+        message = tr("Images from study %1 of patient %2 have been successfully retrieved from PACS %3.").arg(studyID, patientName, pacsAETitle);
+        break;
+    case PACSRequestStatus::RetrieveCancelled:
+        message = tr("Retrieval of the images from study %1 of patient %2 from PACS %3 has been canceled.").arg(studyID, patientName, pacsAETitle);
+        break;
+    case PACSRequestStatus::RetrieveCanNotConnectToPACS:
+        message = tr("Unable to connect to PACS %1 to retrieve images from study %2 of patient %3.")
                 .arg(pacsAETitle, studyID, patientName);
-            message += "\n\n";
-            message += tr("Make sure your computer is connected to the network and the PACS parameters are correct.");
-            message += "\n";
-            message += UserMessage::getProblemPersistsAdvice();
-            break;
-        case PACSRequestStatus::RetrieveNoEnoughSpace:
-            {
-                Settings settings;
-                HardDiskInformation hardDiskInformation;
-                quint64 freeSpaceInHardDisk = hardDiskInformation.getNumberOfFreeMBytes(LocalDatabaseManager::getCachePath());
-                quint64 minimumSpaceRequired = quint64(settings.getValue(InputOutputSettings::MinimumFreeGigaBytesForCache).toULongLong() * 1024);
-                message = tr("There is not enough space to retrieve images from study %1 of patient %2, please free space or change your local "
-                             "database settings.")
-                        .arg(studyID, patientName);
-                message += "\n\n";
-                message += tr("- Available disk space: %1 MB.").arg(freeSpaceInHardDisk);
-                message += "\n";
-                message += tr("- Minimum disk space required to retrieve studies: %1 MB.").arg(minimumSpaceRequired);
-            }
-            break;
-        case PACSRequestStatus::RetrieveErrorFreeingSpace:
-            message = tr("An error occurred while freeing space on hard disk, images from study %1 of patient %2 won't be retrieved.").arg(studyID, patientName);
-            message += "\n\n";
-            message += UserMessage::getCloseWindowsAndTryAgainAdvice();
-            message += "\n";
-            message += UserMessage::getProblemPersistsAdvice();
-            break;
-        case PACSRequestStatus::RetrieveDatabaseError:
-            message = tr("Cannot retrieve images from study %1 of patient %2 because a database error occurred.").arg(studyID, patientName);
-            message += "\n\n";
-            message += UserMessage::getCloseWindowsAndTryAgainAdvice();
-            message += "\n";
-            message += UserMessage::getProblemPersistsAdvice();
-            break;
-        case PACSRequestStatus::RetrievePatientInconsistent:
-            message = tr("Cannot retrieve images from study %1 of patient %2 from PACS %3. Unable to correctly read data from images.")
+        message += "\n\n";
+        message += tr("Make sure your computer is connected to the network and the PACS parameters are correct.");
+        message += "\n";
+        message += UserMessage::getProblemPersistsAdvice();
+        break;
+    case PACSRequestStatus::RetrieveNoEnoughSpace:
+    {
+        Settings settings;
+        HardDiskInformation hardDiskInformation;
+        quint64 freeSpaceInHardDisk = hardDiskInformation.getNumberOfFreeMBytes(LocalDatabaseManager::getCachePath());
+        quint64 minimumSpaceRequired = quint64(settings.getValue(InputOutputSettings::MinimumFreeGigaBytesForCache).toULongLong() * 1024);
+        message = tr("There is not enough space to retrieve images from study %1 of patient %2, please free space or change your local "
+                     "database settings.")
+                .arg(studyID, patientName);
+        message += "\n\n";
+        message += tr("- Available disk space: %1 MB.").arg(freeSpaceInHardDisk);
+        message += "\n";
+        message += tr("- Minimum disk space required to retrieve studies: %1 MB.").arg(minimumSpaceRequired);
+    }
+        break;
+    case PACSRequestStatus::RetrieveErrorFreeingSpace:
+        message = tr("An error occurred while freeing space on hard disk, images from study %1 of patient %2 won't be retrieved.").arg(studyID, patientName);
+        message += "\n\n";
+        message += UserMessage::getCloseWindowsAndTryAgainAdvice();
+        message += "\n";
+        message += UserMessage::getProblemPersistsAdvice();
+        break;
+    case PACSRequestStatus::RetrieveDatabaseError:
+        message = tr("Cannot retrieve images from study %1 of patient %2 because a database error occurred.").arg(studyID, patientName);
+        message += "\n\n";
+        message += UserMessage::getCloseWindowsAndTryAgainAdvice();
+        message += "\n";
+        message += UserMessage::getProblemPersistsAdvice();
+        break;
+    case PACSRequestStatus::RetrievePatientInconsistent:
+        message = tr("Cannot retrieve images from study %1 of patient %2 from PACS %3. Unable to correctly read data from images.")
                 .arg(studyID, patientName, pacsAETitle);
-            message += "\n\n";
-            message += tr("The study may be corrupted, if it is not corrupted please contact with %1 team.").arg(ApplicationNameString);
-            break;
-        case PACSRequestStatus::RetrieveDestinationAETileUnknown:
-            message = tr("Cannot retrieve images from study %1 of patient %2 because PACS %3 does not recognize your computer's AE Title %4.")
-                    .arg(studyID, patientName, pacsAETitle, settings.getValue(InputOutputSettings::LocalAETitle).toString());
-            message += "\n\n";
-            message += tr("Contact with an administrator to register your computer to the PACS.");
-            message += errorDetails;
-            break;
-        case PACSRequestStatus::RetrieveUnknowStatus:
-            message = tr("Cannot retrieve images from study %1 of patient %2 due to an unknown error of PACS %3.")
+        message += "\n\n";
+        message += tr("The study may be corrupted, if it is not corrupted please contact with %1 team.").arg(ApplicationNameString);
+        break;
+    case PACSRequestStatus::RetrieveDestinationAETileUnknown:
+        message = tr("Cannot retrieve images from study %1 of patient %2 because PACS %3 does not recognize your computer's AE Title %4.")
+                .arg(studyID, patientName, pacsAETitle, settings.getValue(InputOutputSettings::LocalAETitle).toString());
+        message += "\n\n";
+        message += tr("Contact with an administrator to register your computer to the PACS.");
+        message += errorDetails;
+        break;
+    case PACSRequestStatus::RetrieveUnknowStatus:
+        message = tr("Cannot retrieve images from study %1 of patient %2 due to an unknown error of PACS %3.")
                 .arg(studyID, patientName, pacsAETitle);
-            message += "\n\n";
-            message += tr("The cause of the error may be that the requested images are corrupted. Please contact with a PACS administrator.");
-            message += errorDetails;
-            break;
-        case PACSRequestStatus::RetrieveFailureOrRefused:
-            message = tr("Cannot retrieve images from study %1 of patient %2 due to an error of PACS %3.")
+        message += "\n\n";
+        message += tr("The cause of the error may be that the requested images are corrupted. Please contact with a PACS administrator.");
+        message += errorDetails;
+        break;
+    case PACSRequestStatus::RetrieveFailureOrRefused:
+        message = tr("Cannot retrieve images from study %1 of patient %2 due to an error of PACS %3.")
                 .arg(studyID, patientName, pacsAETitle);
-            message += "\n\n";
-            message += tr("The cause of the error may be that the requested images are corrupted or the incoming connections port in PACS configuration "
-                          "is not correct.");
-            message += errorDetails;
-            break;
-        case PACSRequestStatus::RetrieveIncomingDICOMConnectionsPortInUse:
-            message = tr("Cannot retrieve images from study %1 of patient %2 because port %3 for incoming connections from PACS is already in use "
-                         "by another application.")
+        message += "\n\n";
+        message += tr("The cause of the error may be that the requested images are corrupted or the incoming connections port in PACS configuration "
+                      "is not correct.");
+        message += errorDetails;
+        break;
+    case PACSRequestStatus::RetrieveIncomingDICOMConnectionsPortInUse:
+        message = tr("Cannot retrieve images from study %1 of patient %2 because port %3 for incoming connections from PACS is already in use "
+                     "by another application.")
                 .arg(studyID, patientName, settings.getValue(InputOutputSettings::IncomingDICOMConnectionsPort).toString());
-            break;
-        case PACSRequestStatus::RetrieveSomeDICOMFilesFailed:
-            message = tr("Unable to retrieve some images from study %1 of patient %2 from PACS %3. Maybe those images are missing or corrupted in PACS.")
+        break;
+    case PACSRequestStatus::RetrieveSomeDICOMFilesFailed:
+        message = tr("Unable to retrieve some images from study %1 of patient %2 from PACS %3. Maybe those images are missing or corrupted in PACS.")
                 .arg(studyID, patientName, pacsAETitle);
-            message += "\n";
-            message += errorDetails;
-            break;
-        default:
-            message = tr("Cannot retrieve images from study %1 of patient %2 from PACS %3 due to an unknown error.")
+        message += "\n";
+        message += errorDetails;
+        break;
+    default:
+        message = tr("Cannot retrieve images from study %1 of patient %2 from PACS %3 due to an unknown error.")
                 .arg(ApplicationNameString, studyID, patientName, pacsAETitle);
-            message += "\n\n";
-            message += UserMessage::getCloseWindowsAndTryAgainAdvice();
-            message += "\n";
-            message += UserMessage::getProblemPersistsAdvice();
-            message += errorDetails;
-            break;
+        message += "\n\n";
+        message += UserMessage::getCloseWindowsAndTryAgainAdvice();
+        message += "\n";
+        message += UserMessage::getProblemPersistsAdvice();
+        message += errorDetails;
+        break;
     }
 
     return message;

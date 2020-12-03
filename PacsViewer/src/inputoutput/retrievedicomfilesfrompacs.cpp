@@ -423,7 +423,7 @@ PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::retrieve(co
     presentationContextID = ASC_findAcceptedPresentationContextID(association, MoveAbstractSyntax);
     if (presentationContextID == 0)
     {
-        ERROR_LOG("No s'ha trobat cap presentation context valid");
+        ERROR_LOG("No valid presentation context found");
         return PACSRequestStatus::RetrieveFailureOrRefused;
     }
 
@@ -446,7 +446,7 @@ PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::retrieve(co
 
     if (condition.bad())
     {
-        ERROR_LOG(QString("El metode descarrega no ha finalitzat correctament. Codi error: %1, descripcio error: %2").arg(condition.code())
+        ERROR_LOG(QString("The download method did not complete successfully. Error code: %1, error description: %2").arg(condition.code())
                   .arg(condition.text()));
     }
 

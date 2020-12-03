@@ -59,12 +59,12 @@ void HangingProtocolsLoader::loadDefaults()
 
     if (QFile::exists(defaultPath))
     {
-        INFO_LOG(QString("Directory where the default hanging protocols will be searched:% 1").arg(defaultPath));
+        INFO_LOG(QString("Directory where the default hanging protocols will be searched: %1").arg(defaultPath));
         loadXMLFiles(defaultPath);
     }
     else
     {
-        INFO_LOG(QString("The default directory for hanging protocols (% 1) does not exist. They will not be charged.").arg(defaultPath));
+        INFO_LOG(QString("The default directory for hanging protocols ( %1) does not exist. They will not be charged.").arg(defaultPath));
     }
 
     /// Hanging protocols definits per l'usuari
