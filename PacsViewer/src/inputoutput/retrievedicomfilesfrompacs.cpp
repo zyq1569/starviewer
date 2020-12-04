@@ -157,24 +157,25 @@ void RetrieveDICOMFilesFromPACS::moveCallback(void *callbackData, T_DIMSE_C_Move
     Q_UNUSED(request);
     Q_UNUSED(callbackData);
 
-    // This in theory is the code to cancel a download but the PACS of the UDIAT does not support the requestCancel, therefore the only way
-    // to do so is as done in the subOperationSCP method which aborts the connection to the PACS.
+    /// This in theory is the code to cancel a download but
+    /// the PACS of the UDIAT does not support the requestCancel, therefore the only way
+    /// to do so is as done in the subOperationSCP method which aborts the connection to the PACS.
 
-    //MoveSCPCallbackData *moveSCPCallbackData = (MoveSCPCallbackData*) callbackData;
+    MoveSCPCallbackData *moveSCPCallbackData = (MoveSCPCallbackData*) callbackData;
 
-    //if (moveSCPCallbackData->retrieveDICOMFilesFromPACS->m_abortIsRequested)
-    //{
-    //    OFCondition condition = DIMSE_sendCancelRequest(moveSCPCallbackData->association, moveSCPCallbackData->presentationContextId, request->MessageID);
+    if (moveSCPCallbackData->retrieveDICOMFilesFromPACS->m_abortIsRequested)
+    {
+        OFCondition condition = DIMSE_sendCancelRequest(moveSCPCallbackData->association, moveSCPCallbackData->presentationContextId, request->MessageID);
 
-    //    if (condition.good())
-    //    {
-    //        INFO_LOG("S'ha cancel·lat la descarrega");
-    //    }
-    //    else
-    //    {
-    //        ERROR_LOG("Error al intentar cancel.lar la descarrga. Descripcio error: " + QString(condition.text()));
-    //    }
-    //}
+        if (condition.good())
+        {
+            INFO_LOG("Download canceled");
+        }
+        else
+        {
+            ERROR_LOG("Error trying to cancel download. Description error: " + QString(condition.text()));
+        }
+    }
 }
 
 OFCondition RetrieveDICOMFilesFromPACS::echoSCP(T_ASC_Association *association, T_DIMSE_Message *dimseMessage,
