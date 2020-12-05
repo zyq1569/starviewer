@@ -52,8 +52,9 @@ Study* CreateInformationModelObject::createStudy(const DICOMTagReader *dicomTagR
     study->setWeight(dicomTagReader->getValueAttributeAsQString(DICOMPatientWeight).toDouble());
     study->setReferringPhysiciansName(dicomTagReader->getValueAttributeAsQString(DICOMReferringPhysicianName));
 
-    // Afegim la modalitat de l'estudi
-    // Tenir en compte si aquest objecte s'utilitza per fer el dicomclassifierfillerstep que ells omplen la modalitat a partir de les series
+    /// We add the modality of the study
+    /// Consider whether this object is used to make the
+    /// dicomclassifierfillerstep that they fill the modality from the series
     studyModalities = dicomTagReader->getValueAttributeAsQString(DICOMModalitiesInStudy);
 
     foreach (const QString &modality, studyModalities.split("\\"))

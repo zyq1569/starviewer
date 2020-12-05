@@ -35,16 +35,18 @@ class DICOMSource;
     Job que s'encarrega de descarregar fitxers del PACS.
   */
 class RetrieveDICOMFilesFromPACSJob : public PACSJob {
-Q_OBJECT
+    Q_OBJECT
 public:
     /// Definim la prioritat del Job, aquesta prioritat ens definir l'ordre d'execuci en la cua
     enum RetrievePriorityJob { Low = 0, Medium = 2, High = 3 };
 
-    /// Constructor/Destructor de la classe. Si seriesInstanceUID est buit descarregar tot l'estudi, si t valor noms aquella srie, i si tamb especifiquem el SOPInstanceUID
-    /// noms descarregar la imatge amb el SOPInstanceUID de la srie especificada, de l'estudi especificat. L'Objecte Study que se li passa se'n fa copia, per evitar que si a
-    /// fora destrueixen l'Study quan aquesta classe encara el necessiti peti l'aplicacio
-    RetrieveDICOMFilesFromPACSJob(PacsDevice pacsDevice, RetrievePriorityJob, Study *studyToRetrieveDICOMFiles, const QString &seriesInstanceUID = "" , 
-        const QString &sopInstanceUID = "");
+    /// Class Builder / Destroyer. If seriesInstanceUID is empty download
+    /// the whole study, if t value only that series, and if we also specify the SOPInstanceUID
+    /// only download the image with the SOPInstanceUID of the specified series,
+    /// of the specified study. The Study Object that is passed to him is copied, to avoid that if a
+    /// outside destroy the Study when this class still needs it request the application
+    RetrieveDICOMFilesFromPACSJob(PacsDevice pacsDevice, RetrievePriorityJob, Study *studyToRetrieveDICOMFiles, const QString &seriesInstanceUID = "" ,
+                                  const QString &sopInstanceUID = "");
     ~RetrieveDICOMFilesFromPACSJob();
 
     /// Retorna el tipus de PACSJob que s l'objecte

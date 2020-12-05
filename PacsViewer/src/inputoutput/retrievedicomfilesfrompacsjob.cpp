@@ -74,9 +74,9 @@ void RetrieveDICOMFilesFromPACSJob::run(ThreadWeaver::JobPointer self, ThreadWea
     Q_UNUSED(thread)
 
     Settings settings;
-    // TODO: És aquest el lloc per aquest missatge ? no seria potser millor fer-ho a RetrieveDICOMFilesFromPACS
+    // TODO: Is this the place for this post? it might not be better to do it in RetrieveDICOMFilesFromPACS
     INFO_LOG(QString("Iniciant descarrega del PACS %1, IP: %2, Port: %3, AE Title Local: %4 Port local: %5, "
-                     "l'estudi UID: %6, series UID: %7, SOP Instance UID:%8")
+                     "the study UID: %6, series UID: %7, SOP Instance UID:%8")
              .arg(getPacsDevice().getAETitle(), getPacsDevice().getAddress(), QString::number(getPacsDevice().getQueryRetrieveServicePort()))
              .arg(settings.getValue(InputOutputSettings::LocalAETitle).toString(),
                   settings.getValue(InputOutputSettings::IncomingDICOMConnectionsPort).toString())
@@ -96,7 +96,7 @@ void RetrieveDICOMFilesFromPACSJob::run(ThreadWeaver::JobPointer self, ThreadWea
     if (PortInUse().isPortInUse(localPort))
     {
         m_retrieveRequestStatus = PACSRequestStatus::RetrieveIncomingDICOMConnectionsPortInUse;
-        ERROR_LOG("El port " + QString::number(localPort) + " per a connexions entrants del PACS, esta en us, no es pot descarregar l'estudi");
+        ERROR_LOG("The port " + QString::number(localPort) + " for incoming PACS connections, it is in use, the study cannot be downloaded");
     }
     else
     {

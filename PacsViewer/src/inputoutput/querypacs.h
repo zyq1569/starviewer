@@ -78,7 +78,8 @@ private:
     /// for each object I say is in the PACS that fulfills the query dcmtk calls it.
     /// This method inserts the list of studies,
     /// series or images the dicom object found depending on the level of what the object is.
-    static void foundMatchCallback(void *callbackData, T_DIMSE_C_FindRQ *request, int responseCount, T_DIMSE_C_FindRSP *rsp, DcmDataset *responseIdentifiers);
+    static void foundMatchCallback(void *callbackData, T_DIMSE_C_FindRQ *request,
+                                   int responseCount, T_DIMSE_C_FindRSP *rsp, DcmDataset *responseIdentifiers);
 
     ///Cancel the current query
     void cancelQuery(T_DIMSE_C_FindRQ *request);

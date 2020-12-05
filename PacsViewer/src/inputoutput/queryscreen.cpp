@@ -454,7 +454,8 @@ void QueryScreen::writeSettings()
     }
 }
 
-void QueryScreen::retrieveStudy(QInputOutputPacsWidget::ActionsAfterRetrieve actionAfterRetrieve, const PacsDevice &pacsDevice, Study *study)
+void QueryScreen::retrieveStudy(QInputOutputPacsWidget::ActionsAfterRetrieve actionAfterRetrieve,
+                                const PacsDevice &pacsDevice, Study *study)
 {
     // QueryScreen receives a signal every time any studies in the download process change status,
     // in principle you only need to retransmit these signals out when it is a signal that affects a study
@@ -521,7 +522,8 @@ void QueryScreen::newPACSJobEnqueued(PACSJobPointer pacsJob)
     }
 }
 
-void QueryScreen::pacsJobFinishedOrCancelled(PACSJobPointer) {
+void QueryScreen::pacsJobFinishedOrCancelled(PACSJobPointer)
+{
     /// We can't use isExecutingPACSJob to check for pending jobs, because sometimes we
     /// we found that even though we don't have any jobs pending execution, the method responds that there are some jobs running.
     /// This happens sometimes when the PACSJobFinished signal is addressed

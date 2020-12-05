@@ -290,7 +290,8 @@ Study* QStudyTreeWidget::getStudy(const QString &studyInstanceUID, const DICOMSo
     return study;
 }
 
-Series* QStudyTreeWidget::getSeries(const QString &studyInstanceUID, const QString &seriesInstanceUID, const DICOMSource &dicomSourceOfSeries)
+Series* QStudyTreeWidget::getSeries(const QString &studyInstanceUID, const QString &seriesInstanceUID,
+                                    const DICOMSource &dicomSourceOfSeries)
 {
     QTreeWidgetItem *seriesItem = getSeriesQTreeWidgetItem(studyInstanceUID, seriesInstanceUID, dicomSourceOfSeries);
     Series *series = NULL;
@@ -331,7 +332,8 @@ QStudyTreeWidget::ItemTreeLevels QStudyTreeWidget::getMaximumExpandTreeItemsLeve
     return m_maximumExpandTreeItemsLevel;
 }
 
-void QStudyTreeWidget::setCurrentSeries(const QString &studyInstanceUID, const QString &seriesInstanceUID, const DICOMSource &dicomSource)
+void QStudyTreeWidget::setCurrentSeries(const QString &studyInstanceUID, const QString &seriesInstanceUID,
+                                        const DICOMSource &dicomSource)
 {
     QTreeWidgetItem *seriesItem = getSeriesQTreeWidgetItem(studyInstanceUID, seriesInstanceUID, dicomSource);
 
@@ -382,8 +384,9 @@ QTreeWidgetItem* QStudyTreeWidget::getStudyQTreeWidgetItem(const QString &studyU
 
     foreach(QTreeWidgetItem *studyItem, qTreeWidgetItemsStudy)
     {
-        if (isItemStudy(studyItem) &&
-                (getStudyByDICOMItemID(studyItem->text(DICOMItemID).toInt())->getDICOMSource() == studyDICOMSource || !m_useDICOMSourceToDiscriminateStudies))
+        if (isItemStudy(studyItem) && (getStudyByDICOMItemID(
+                                           studyItem->text(DICOMItemID).toInt())->getDICOMSource() == studyDICOMSource
+                                       || !m_useDICOMSourceToDiscriminateStudies))
         {
             return studyItem;
         }
@@ -392,7 +395,8 @@ QTreeWidgetItem* QStudyTreeWidget::getStudyQTreeWidgetItem(const QString &studyU
     return NULL;
 }
 
-QTreeWidgetItem* QStudyTreeWidget::getSeriesQTreeWidgetItem(const QString &studyInstanceUID, const QString &seriesInstanceUID, const DICOMSource &seriesDICOMSource)
+QTreeWidgetItem* QStudyTreeWidget::getSeriesQTreeWidgetItem(const QString &studyInstanceUID,
+                                                            const QString &seriesInstanceUID, const DICOMSource &seriesDICOMSource)
 {
     QTreeWidgetItem *studyItem = getStudyQTreeWidgetItem(studyInstanceUID, seriesDICOMSource);
 
@@ -449,7 +453,7 @@ QList<QTreeWidgetItem*> QStudyTreeWidget::fillPatient(Patient *patient)
         item->setText(PatientAge, formatAge(studyToInsert->getPatientAge()));
         item->setText(Modality, studyToInsert->getModalitiesAsSingleString());
         item->setText(Description, studyToInsert->getDescription());
-        /// EVERYTHING: Shouldn't the studio return the formatted date? Problem
+        /// todo: Shouldn't the studio return the formatted date? Problem
         ///  we need the date to be in yyyy / mm / dd format to be able to sort by date
         item->setText(Date, formatDateTime(studyToInsert->getDate(), studyToInsert->getTime()));
         item->setText(StudyID, tr("Study %1").arg(studyToInsert->getID()));
@@ -463,9 +467,12 @@ QList<QTreeWidgetItem*> QStudyTreeWidget::fillPatient(Patient *patient)
         // Check if the TreeItem should expand based on the maximum level they have told us we can expand
         if (m_maximumExpandTreeItemsLevel > StudyLevel)
         {
-            /// Because for each study item we have child items that are series, and that consulting the series for each study is
-            /// an expensive operation (for example when consulting the pacs) we will only insert the series so that you can
-            /// consult the user when making a study expansion, but for the "+" button to display the study to appear we insert a blank item
+            /// Because for each study item we have child items that are series,
+            /// and that consulting the series for each study is
+            /// an expensive operation (for example when consulting the pacs)
+            /// we will only insert the series so that you can
+            /// consult the user when making a study expansion, but for the "+"
+            /// button to display the study to appear we insert a blank item
             item->addChild(createDummyQTreeWidgetItem());
         }
         qtreeWidgetItemList.append(item);

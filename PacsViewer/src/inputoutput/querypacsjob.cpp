@@ -53,11 +53,12 @@ void QueryPacsJob::run(ThreadWeaver::JobPointer self, ThreadWeaver::Thread *thre
 
     Settings settings;
 
-    INFO_LOG("Thread iniciat per cercar al PACS: AELocal= " + settings.getValue(InputOutputSettings::LocalAETitle).toString() + "; AEPACS= " +
+    INFO_LOG("Thread iniciat per cercar al PACS: AELocal= " +
+             settings.getValue(InputOutputSettings::LocalAETitle).toString() + "; AEPACS= " +
              getPacsDevice().getAETitle() + "; PACS Adr= " + getPacsDevice().getAddress() + "; PACS Port= " +
              QString().setNum(getPacsDevice().getQueryRetrieveServicePort()) + ";");
 
-    // Busquem els estudis
+    // We look for studies
     m_queryRequestStatus = m_queryPacs->query(m_mask);
 
     INFO_LOG(QString("Consulta al PACS %1 finalitzada").arg(getPacsDevice().getAETitle()));
@@ -93,7 +94,7 @@ QList<Image*> QueryPacsJob::getImageList()
 
 void QueryPacsJob::requestCancelJob()
 {
-    INFO_LOG(QString("PACS% 1 has been requested to cancel the Query Job").arg(getPacsDevice().getAETitle()));
+    INFO_LOG(QString("PACS %1 has been requested to cancel the Query Job").arg(getPacsDevice().getAETitle()));
     m_queryPacs->cancelQuery();
 }
 
