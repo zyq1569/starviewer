@@ -150,9 +150,9 @@ bool SendDICOMFilesToPACS::storeSCU(T_ASC_Association *association, QString file
     }
     // Figure out which SOP class and SOP instance is encapsulated in the file
 #ifdef  PACKAGE_VERSION_NUMBER
-#if PACKAGE_VERSION_NUMBER == 361
+#if PACKAGE_VERSION_NUMBER  < 365
     if (!DU_findSOPClassAndInstanceInDataSet(dcmff.getDataset(), sopClass, sopInstance, OFFalse))
-#else if  PACKAGE_VERSION_NUMBER == 363
+#else if  PACKAGE_VERSION_NUMBER == 365
     if (!DU_findSOPClassAndInstanceInDataSet(dcmff.getDataset(), sopClass,sizeof(sopClass), sopInstance, sizeof(sopInstance), OFFalse))
 #endif
 #endif

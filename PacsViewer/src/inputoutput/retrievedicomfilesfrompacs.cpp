@@ -61,43 +61,43 @@ OFCondition RetrieveDICOMFilesFromPACS::acceptSubAssociation(T_ASC_Network *asso
         // If we have compression we ask for it, and we can speed up the download time considerably
         // For now we ask for the lossless compression that every PACS that supports compression has
         // to provide: JPEGLossless: Non-Hierarchical-1stOrderPrediction
-        //transferSyntaxes[0] = UID_JPEGProcess14SV1TransferSyntax;
-        //transferSyntaxes[1] = UID_LittleEndianExplicitTransferSyntax;
-        //transferSyntaxes[2] = UID_BigEndianExplicitTransferSyntax;
-        //transferSyntaxes[3] = UID_LittleEndianImplicitTransferSyntax;
-        //numTransferSyntaxes = 4;
+        transferSyntaxes[0] = UID_JPEGProcess14SV1TransferSyntax;
+        transferSyntaxes[1] = UID_LittleEndianExplicitTransferSyntax;
+        transferSyntaxes[2] = UID_BigEndianExplicitTransferSyntax;
+        transferSyntaxes[3] = UID_LittleEndianImplicitTransferSyntax;
+        numTransferSyntaxes = 4;
 
-        transferSyntaxes[0] = UID_JPEG2000TransferSyntax;
-        transferSyntaxes[1] = UID_JPEG2000LosslessOnlyTransferSyntax;
-        transferSyntaxes[2] = UID_JPEGProcess2_4TransferSyntax;
-        transferSyntaxes[3] = UID_JPEGProcess1TransferSyntax;
-        transferSyntaxes[4] = UID_JPEGProcess14SV1TransferSyntax;
-        transferSyntaxes[5] = UID_JPEGLSLossyTransferSyntax;
-        transferSyntaxes[6] = UID_JPEGLSLosslessTransferSyntax;
-        transferSyntaxes[7] = UID_RLELosslessTransferSyntax;
-        transferSyntaxes[8] = UID_MPEG2MainProfileAtMainLevelTransferSyntax;
-        transferSyntaxes[9] = UID_MPEG2MainProfileAtHighLevelTransferSyntax;
-        transferSyntaxes[10] = UID_MPEG4HighProfileLevel4_1TransferSyntax;
-        transferSyntaxes[11] = UID_MPEG4BDcompatibleHighProfileLevel4_1TransferSyntax;
-        transferSyntaxes[12] = UID_MPEG4HighProfileLevel4_2_For2DVideoTransferSyntax;
-        transferSyntaxes[13] = UID_MPEG4HighProfileLevel4_2_For3DVideoTransferSyntax;
-        transferSyntaxes[14] = UID_MPEG4StereoHighProfileLevel4_2TransferSyntax;
-        transferSyntaxes[15] = UID_HEVCMainProfileLevel5_1TransferSyntax;
-        transferSyntaxes[16] = UID_HEVCMain10ProfileLevel5_1TransferSyntax;
-        transferSyntaxes[17] = UID_DeflatedExplicitVRLittleEndianTransferSyntax;
-        if (gLocalByteOrder == EBO_LittleEndian)
-        {
-            transferSyntaxes[18] = UID_LittleEndianExplicitTransferSyntax;
-            transferSyntaxes[19] = UID_BigEndianExplicitTransferSyntax;
-        }
-        else
-        {
-            transferSyntaxes[18] = UID_BigEndianExplicitTransferSyntax;
-            transferSyntaxes[19] = UID_LittleEndianExplicitTransferSyntax;
-        }
-        transferSyntaxes[20] = UID_LittleEndianImplicitTransferSyntax;
-        transferSyntaxes[21] = UID_JPEGProcess14TransferSyntax;
-        numTransferSyntaxes = 22;
+//        transferSyntaxes[0] = UID_JPEG2000TransferSyntax;
+//        transferSyntaxes[1] = UID_JPEG2000LosslessOnlyTransferSyntax;
+//        transferSyntaxes[2] = UID_JPEGProcess2_4TransferSyntax;
+//        transferSyntaxes[3] = UID_JPEGProcess1TransferSyntax;
+//        transferSyntaxes[4] = UID_JPEGProcess14SV1TransferSyntax;//
+//        transferSyntaxes[5] = UID_JPEGLSLossyTransferSyntax;
+//        transferSyntaxes[6] = UID_JPEGLSLosslessTransferSyntax;
+//        transferSyntaxes[7] = UID_RLELosslessTransferSyntax;
+//        transferSyntaxes[8] = UID_MPEG2MainProfileAtMainLevelTransferSyntax;
+//        transferSyntaxes[9] = UID_MPEG2MainProfileAtHighLevelTransferSyntax;
+//        transferSyntaxes[10] = UID_MPEG4HighProfileLevel4_1TransferSyntax;
+//        transferSyntaxes[11] = UID_MPEG4BDcompatibleHighProfileLevel4_1TransferSyntax;
+//        transferSyntaxes[12] = UID_JPEGProcess14SV1TransferSyntax;//UID_MPEG4HighProfileLevel4_2_For2DVideoTransferSyntax;
+//        transferSyntaxes[13] = UID_JPEGProcess14SV1TransferSyntax;//UID_MPEG4HighProfileLevel4_2_For3DVideoTransferSyntax;
+//        transferSyntaxes[14] = UID_JPEGProcess14SV1TransferSyntax;//UID_MPEG4StereoHighProfileLevel4_2TransferSyntax;
+//        transferSyntaxes[15] = UID_JPEGProcess14SV1TransferSyntax;//UID_HEVCMainProfileLevel5_1TransferSyntax;
+//        transferSyntaxes[16] = UID_JPEGProcess14SV1TransferSyntax;//UID_HEVCMain10ProfileLevel5_1TransferSyntax;
+//        transferSyntaxes[17] = UID_DeflatedExplicitVRLittleEndianTransferSyntax;
+//        if (gLocalByteOrder == EBO_LittleEndian)
+//        {
+//            transferSyntaxes[18] = UID_LittleEndianExplicitTransferSyntax;
+//            transferSyntaxes[19] = UID_BigEndianExplicitTransferSyntax;
+//        }
+//        else
+//        {
+//            transferSyntaxes[18] = UID_BigEndianExplicitTransferSyntax;
+//            transferSyntaxes[19] = UID_LittleEndianExplicitTransferSyntax;
+//        }
+//        transferSyntaxes[20] = UID_LittleEndianImplicitTransferSyntax;
+//        transferSyntaxes[21] = UID_JPEGProcess14TransferSyntax;
+//        numTransferSyntaxes = 22;
 
 #else
         // Defined in dcxfer.h
@@ -235,8 +235,8 @@ void RetrieveDICOMFilesFromPACS::storeSCPCallback(void *callbackData, T_DIMSE_St
                     // Which SOP class and SOP instance?
                     //if (!DU_findSOPClassAndInstanceInDataSet(*imageDataSet, sopClass, sopInstance, correctUIDPadding))
 #ifdef  PACKAGE_VERSION_NUMBER
-#if PACKAGE_VERSION_NUMBER == 361
-                    if (!DU_findSOPClassAndInstanceInDataSet(dcmff.getDataset(), sopClass, sopInstance, OFFalse))
+#if PACKAGE_VERSION_NUMBER < 365
+                    if (!DU_findSOPClassAndInstanceInDataSet(*imageDataSet, sopClass, sopInstance, correctUIDPadding))
 #else if  PACKAGE_VERSION_NUMBER == 365
                     if (!DU_findSOPClassAndInstanceInDataSet(*imageDataSet, sopClass,sizeof(sopClass), sopInstance, sizeof(correctUIDPadding)))
 #endif
@@ -417,7 +417,8 @@ void RetrieveDICOMFilesFromPACS::subOperationCallback(void *subOperationCallback
     }
 }
 
-PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::retrieve(const QString &studyInstanceUID, const QString &seriesInstanceUID, const QString &sopInstanceUID)
+PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::
+retrieve(const QString &studyInstanceUID, const QString &seriesInstanceUID, const QString &sopInstanceUID)
 {
     T_ASC_PresentationContextID presentationContextID;
     T_DIMSE_C_MoveRSP moveResponse;
@@ -451,7 +452,7 @@ PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::retrieve(co
     // Set the destination of the images to us
     T_DIMSE_C_MoveRQ moveRequest = getConfiguredMoveRequest(association);
 #ifdef  PACKAGE_VERSION_NUMBER
-#if PACKAGE_VERSION_NUMBER == 361
+#if PACKAGE_VERSION_NUMBER < 365
     ASC_getAPTitles(association->params, moveRequest.MoveDestination, NULL, NULL);
 #else if  PACKAGE_VERSION_NUMBER == 365
     ASC_getAPTitles(association->params, moveRequest.MoveDestination, sizeof(moveRequest.MoveDestination), NULL, 0, NULL, 0);
@@ -463,7 +464,8 @@ PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::retrieve(co
 
     if (condition.bad())
     {
-        ERROR_LOG(QString("The download method did not complete successfully. Error code: %1, error description: %2").arg(condition.code())
+        ERROR_LOG(QString("The download method did not complete successfully. Error code: %1, error description: %2")
+                  .arg(condition.code())
                   .arg(condition.text()));
     }
 
@@ -507,7 +509,8 @@ T_DIMSE_C_MoveRQ RetrieveDICOMFilesFromPACS::getConfiguredMoveRequest(T_ASC_Asso
     return moveRequest;
 }
 
-DcmDataset* RetrieveDICOMFilesFromPACS::getDcmDatasetOfImagesToRetrieve(const QString &studyInstanceUID, const QString &seriesInstanceUID, const QString &sopInstanceUID)
+DcmDataset* RetrieveDICOMFilesFromPACS::
+getDcmDatasetOfImagesToRetrieve(const QString &studyInstanceUID, const QString &seriesInstanceUID, const QString &sopInstanceUID)
 {
     DcmDataset *dcmDatasetToRetrieve = new DcmDataset();
     QString retrieveLevel = "STUDY";
@@ -576,7 +579,8 @@ DcmDataset* RetrieveDICOMFilesFromPACS::getDcmDatasetOfImagesToRetrieve(const QS
     return dcmDatasetToRetrieve;
 }
 
-PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::getDIMSEStatusCodeAsRetrieveRequestStatus(unsigned int dimseStatusCode)
+PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::
+getDIMSEStatusCodeAsRetrieveRequestStatus(unsigned int dimseStatusCode)
 {
     PACSRequestStatus::RetrieveRequestStatus retrieveRequestStatus;
 
@@ -623,7 +627,8 @@ PACSRequestStatus::RetrieveRequestStatus RetrieveDICOMFilesFromPACS::getDIMSESta
     return retrieveRequestStatus;
 }
 
-QString RetrieveDICOMFilesFromPACS::getAbsoluteFilePathCompositeInstance(DcmDataset *imageDataset, QString fileName)
+QString RetrieveDICOMFilesFromPACS::
+getAbsoluteFilePathCompositeInstance(DcmDataset *imageDataset, QString fileName)
 {
     QString absoluteFilePath = LocalDatabaseManager::getCachePath();
     QDir directory;

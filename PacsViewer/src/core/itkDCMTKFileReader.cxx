@@ -1367,7 +1367,7 @@ void DCMTKFileReader::AddDictEntry(DcmDictEntry *entry)
     DcmDataDictionary &dict = dcmDataDict.wrlock();
     dict.addEntry(entry);
 #ifdef  PACKAGE_VERSION_NUMBER
-#if PACKAGE_VERSION_NUMBER == 361
+#if PACKAGE_VERSION_NUMBER < 365
     dcmDataDict.unlock();
 #else if  PACKAGE_VERSION_NUMBER == 365
     dcmDataDict.wrunlock();
