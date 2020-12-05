@@ -53,6 +53,9 @@ public slots:
     /// @return The context of the extension can be modified
     ExtensionContext& getContext();
 
+    ///20201205
+    void setQueryPatientsThumbnail(QList<Patient*> patientsList, bool loadOnly = false);
+
 private slots:
     /// Processes a set of input files and processes them to decide what to do with them, such as
     /// create new patient, open windows, add data to current patient, etc

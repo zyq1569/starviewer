@@ -262,7 +262,7 @@ void SendDICOMFilesToPACS::processResponseFromStoreSCP(unsigned int dimseStatusC
 #ifdef  PACKAGE_VERSION_NUMBER
 #if PACKAGE_VERSION_NUMBER == 361
     case STATUS_STORE_Warning_CoersionOfDataElements:
-#else if  PACKAGE_VERSION_NUMBER == 365
+#else if  PACKAGE_VERSION_NUMBER  >= 363
     case STATUS_STORE_Warning_CoercionOfDataElements:
 #endif
 #endif

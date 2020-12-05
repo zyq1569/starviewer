@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
     // Init log info
     udg::beginLogging();
     // We mark the start of the application in the log
-    INFO_LOG("==================================================== BEGIN STARVIEWER ====================================================");
+    INFO_LOG("===================== BEGIN STARVIEWER =================================");
     INFO_LOG(QString("%1 Version %2 BuildID %3").arg(udg::ApplicationNameString).arg(udg::StarviewerVersionString).arg(udg::StarviewerBuildID));
 
     // We redirect VTK messages to the log.

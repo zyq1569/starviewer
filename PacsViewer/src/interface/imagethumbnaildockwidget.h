@@ -60,6 +60,8 @@ private:
     QListWidget *m_ImagelistWidge;
     QHBoxLayout *m_mainlayout;
     QList<Patient*> m_patientsList;
+
+
 private:
     /// Pointer to the main application
     QApplicationMainWindow *m_mainApp;

@@ -48,8 +48,9 @@ int main(int argc, char *argv[])
     int returnValue = 0;
     QApplication application(argc, argv);
     udg::beginLogging();
-    INFO_LOG("==================================================== BEGIN STARVIEWER SAP WRAPPER ====================================================");
-    INFO_LOG(QString("%1 Version %2 BuildID %3").arg(udg::ApplicationNameString).arg(udg::StarviewerVersionString).arg(udg::StarviewerBuildID));
+    INFO_LOG("====================== BEGIN STARVIEWER SAP WRAPPER ===============================");
+    INFO_LOG(QString("%1 Version %2 BuildID %3").arg(udg::ApplicationNameString).
+             arg(udg::StarviewerVersionString).arg(udg::StarviewerBuildID));
 
     QStringList parametersList = application.arguments();
 
