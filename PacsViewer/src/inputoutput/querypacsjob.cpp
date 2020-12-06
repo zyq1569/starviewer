@@ -53,7 +53,7 @@ void QueryPacsJob::run(ThreadWeaver::JobPointer self, ThreadWeaver::Thread *thre
 
     Settings settings;
 
-    INFO_LOG("Thread iniciat per cercar al PACS: AELocal= " +
+    INFO_LOG("Thread started to search in PACS: AELocal = " +
              settings.getValue(InputOutputSettings::LocalAETitle).toString() + "; AEPACS= " +
              getPacsDevice().getAETitle() + "; PACS Adr= " + getPacsDevice().getAddress() + "; PACS Port= " +
              QString().setNum(getPacsDevice().getQueryRetrieveServicePort()) + ";");
@@ -61,7 +61,7 @@ void QueryPacsJob::run(ThreadWeaver::JobPointer self, ThreadWeaver::Thread *thre
     // We look for studies
     m_queryRequestStatus = m_queryPacs->query(m_mask);
 
-    INFO_LOG(QString("Consulta al PACS %1 finalitzada").arg(getPacsDevice().getAETitle()));
+    INFO_LOG(QString("Query on PACS% 1 completed").arg(getPacsDevice().getAETitle()));
 }
 
 DicomMask QueryPacsJob::getDicomMask()
@@ -103,7 +103,7 @@ PACSRequestStatus::QueryRequestStatus QueryPacsJob::getStatus()
     return m_queryRequestStatus;
 }
 
-/// EVERYTHING: We centralize the construction of error messages for all of them
+/// TODO: We centralize the construction of error messages for all of them
 /// interfaces can use one, and there is no need to have error handling
 /// duplicate or translations, but is the best place to put this code here?
 QString QueryPacsJob::getStatusDescription()
