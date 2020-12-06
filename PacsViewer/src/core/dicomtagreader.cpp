@@ -115,8 +115,8 @@ bool DICOMTagReader::setFile(const QString &filename)
     else
     {
         m_hasValidFile = false;
-        DEBUG_LOG(QString("Error reading file [% 1]\n Possible cause: %2 ").arg(filename).arg(status.text()));
-        ERROR_LOG(QString("Error reading file [% 1]\n Possible cause: %2 ").arg(filename).arg(status.text()));
+        DEBUG_LOG(QString("Error reading file [ %1]\n Possible cause: %2 ").arg(filename).arg(status.text()));
+        ERROR_LOG(QString("Error reading file [ %1]\n Possible cause: %2 ").arg(filename).arg(status.text()));
         return false;
     }
 

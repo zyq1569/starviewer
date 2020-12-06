@@ -164,9 +164,9 @@ ImageOverlay ImageOverlay::fromGDCMOverlay(const gdcm::Overlay &gdcmOverlay)
         {
             imageOverlay.setData(0);
             
-            ERROR_LOG(QString("Not enough memory to load overlay [% 1 *% 2] =% 3 bytes")
+            ERROR_LOG(QString("Not enough memory to load overlay [ %1 * %2] = %3 bytes")
                       .arg(imageOverlay.getRows()).arg(imageOverlay.getColumns()).arg((unsigned long)imageOverlay.getRows() * imageOverlay.getColumns()));
-            DEBUG_LOG(QString("Not enough memory to load overlay [% 1 *% 2] =% 3 bytes")
+            DEBUG_LOG(QString("Not enough memory to load overlay [ %1 * %2] = %3 bytes")
                       .arg(imageOverlay.getRows()).arg(imageOverlay.getColumns()).arg((unsigned long)imageOverlay.getRows() * imageOverlay.getColumns()));
         }
     }
@@ -242,9 +242,9 @@ ImageOverlay ImageOverlay::mergeOverlays(const QList<ImageOverlay> &overlaysList
     }
     catch (std::bad_alloc)
     {
-        ERROR_LOG(QString("Not enough memory to create buffer for merged overlay [% 1 *% 2] =% 3 bytes")
+        ERROR_LOG(QString("Not enough memory to create buffer for merged overlay [ %1 * %2] = %3 bytes")
                   .arg(outRows).arg(outColumns).arg((unsigned long)outRows * outColumns));
-        DEBUG_LOG(QString("Not enough memory to create buffer for merged overlay [% 1 *% 2] =% 3 bytes")
+        DEBUG_LOG(QString("Not enough memory to create buffer for merged overlay [ %1 * %2] = %3 bytes")
                   .arg(outRows).arg(outColumns).arg((unsigned long)outRows * outColumns));
 
         ok = false;

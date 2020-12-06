@@ -248,6 +248,11 @@ void ExtensionHandler::createConnections()
     connect(&m_importFileApp, SIGNAL(selectedFiles(QStringList)), SLOT(processInput(QStringList)));
 }
 
+void ExtensionHandler::httpServerInput(const QStringList &inputFiles)
+{
+
+}
+
 void ExtensionHandler::processInput(const QStringList &inputFiles)
 {
     if (inputFiles.isEmpty())
@@ -576,7 +581,8 @@ void ExtensionHandler::openDefaultExtension()
             QString defaultExtension = settings.getValue(InterfaceSettings::DefaultExtension).toString();
             if (!createExtension(defaultExtension))
             {
-                WARN_LOG("The request for the default extension called failed: " + defaultExtension + ". We start default 2D extension (hardcoded)");
+                WARN_LOG("The request for the default extension called failed: " + defaultExtension
+                         + ". We start default 2D extension (hardcoded)");
                 createExtension("Q2DViewerExtension");
             }
         }

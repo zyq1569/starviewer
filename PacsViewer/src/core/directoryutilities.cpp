@@ -55,7 +55,7 @@ bool DirectoryUtilities::copyDirectory(const QString &sourceDirectoryPath, const
 
     if (!sourceDirectory.exists())
     {
-        ERROR_LOG(QString("Source directory% 1 does not exist").arg(sourceDirectoryPath));
+        ERROR_LOG(QString("Source directory %1 does not exist").arg(sourceDirectoryPath));
         return false;
     }
 
@@ -77,7 +77,7 @@ bool DirectoryUtilities::copyDirectory(const QString &sourceDirectoryPath, const
 
         if (!QFile::copy(sourceFile, destinationFile))
         {
-            ERROR_LOG(QString("Could not copy file% 1 to destination% 2").arg(sourceFile, destinationFile));
+            ERROR_LOG(QString("Could not copy file %1 to destination %2").arg(sourceFile, destinationFile));
             return false;
         }
     }

@@ -272,7 +272,7 @@ void QInputOutputPacsWidget::requestedSeriesOfStudy(Study *study)
 {
     if (study->getDICOMSource().getRetrievePACS().count() == 0)
     {
-        ERROR_LOG(QString("The PACS study% 1 was not found to obtain the series").arg(study->getInstanceUID()));
+        ERROR_LOG(QString("The PACS study %1 was not found to obtain the series").arg(study->getInstanceUID()));
         return;
     }
 

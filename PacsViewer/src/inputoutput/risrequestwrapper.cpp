@@ -32,7 +32,7 @@ void RISRequestWrapper::sendRequestToLocalStarviewer(QString accessionNumber)
     // Port so Starviewer awaits RIS requests
     int starviewerRisPort = settings.getValue(InputOutputSettings::RISRequestsPort).toInt();
 
-    INFO_LOG(QString("RISRequestWrapper :: I will ask the local Starviewer for port% 1 to download the studio with accession number% 2")
+    INFO_LOG(QString("RISRequestWrapper :: I will ask the local Starviewer for port %1 to download the studio with accession number %2")
              .arg(QString().setNum(starviewerRisPort), accessionNumber));
 
     //We connect against the localhost
@@ -90,7 +90,7 @@ void RISRequestWrapper::errorConnecting(int starviewerRisPort, QString errorDesc
     QString messageError = QString("Unable to connect with %3 on port %1, be sure %3 is running. Error description: %2.")
             .arg(QString().setNum(starviewerRisPort), errorDescription, ApplicationNameString) + "\n";
 
-    ERROR_LOG(QString("RISRequestWrapper :: Could not connect to Starviewer on port% 1, error description: %2")
+    ERROR_LOG(QString("RISRequestWrapper :: Could not connect to Starviewer on port %1, error description: %2")
               .arg(QString().setNum(starviewerRisPort), errorDescription));
 }
 

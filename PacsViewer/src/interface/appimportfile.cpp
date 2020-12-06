@@ -132,8 +132,9 @@ bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data)
         }
         else
         {
-            value = aStream.readLine();//out.getline(buffer, max, '\n');//getline(char *,int,char) 表示该行字符达到256个或遇到换行就结束
-            // value = OFString(buffer);
+            value = aStream.readLine();
+            ///out.getline(buffer, max, '\n');//getline(char *,int,char) 表示该行字符达到256个或遇到换行就结束
+            /// value = OFString(buffer);
         }
     } while (!aStream.atEnd());
     //out.close();
@@ -142,7 +143,9 @@ bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data)
 }
 void AppImportFile::openDirectory(bool recursively)
 {
-    QString directoryName = QFileDialog::getExistingDirectory(0, tr("Choose a directory to scan"), m_workingDicomDirectory, QFileDialog::ShowDirsOnly);
+    QString directoryName = QFileDialog::getExistingDirectory(0,
+                                                              tr("Choose a directory to scan"),
+                                                              m_workingDicomDirectory, QFileDialog::ShowDirsOnly);
 
     if (!directoryName.isEmpty())
     {

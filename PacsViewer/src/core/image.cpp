@@ -266,7 +266,7 @@ void Image::addVoiLut(const VoiLut &voiLut)
 {
     if (voiLut.isWindowLevel() && !voiLut.getWindowLevel().isValid())
     {
-        QString logMessage = QString("WW / WL Inconsistent:% 1,% 2. It will not be added to the image").arg(voiLut.getWindowLevel().getWidth())
+        QString logMessage = QString("WW / WL Inconsistent: %1, %2. It will not be added to the image").arg(voiLut.getWindowLevel().getWidth())
                 .arg(voiLut.getWindowLevel().getCenter());
         WARN_LOG(logMessage);
         DEBUG_LOG(logMessage);

@@ -309,7 +309,7 @@ QString Q2DViewerAnnotationHandler::getStandardAdditionalInformation() const
             int balance = m_2DViewer->getFusionBalance();
             const QString &modality0 = m_2DViewer->getInput(0)->getModality();
             const QString &modality1 = m_2DViewer->getInput(1)->getModality();
-            fusionBalance = QObject::tr("Fusion: ") + QString("%1% %2 + %3% %4").arg(100 - balance).arg(modality0).arg(balance).arg(modality1);
+            fusionBalance = QObject::tr("Fusion: ") + QString(" %1% %2 + %3% %4").arg(100 - balance).arg(modality0).arg(balance).arg(modality1);
             seriesLabel += " +\n" + getSeriesDescriptiveLabel(m_2DViewer->getInput(1)->getSeries());
         }
         

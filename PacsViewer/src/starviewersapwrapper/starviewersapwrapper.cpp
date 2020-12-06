@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        INFO_LOG(QString("StarviewerSAPWrapper :: Incorrect number of parameters,% 1 parameters passed").arg(QString().setNum(argc - 1)));
+        INFO_LOG(QString("StarviewerSAPWrapper :: Incorrect number of parameters, %1 parameters passed").arg(QString().setNum(argc - 1)));
         printHelp();
     }
 

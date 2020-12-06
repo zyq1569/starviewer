@@ -667,9 +667,9 @@ void Q2DViewer::loadOverlays(Volume *volume)
             Image *image = volume->getImage(sliceIndex, phaseIndex);
             if (!image)
             {
-                ERROR_LOG(QString("Unexpected error trying to access image with indexes:% 1 (slice),% 2 (phase) of current volume")
+                ERROR_LOG(QString("Unexpected error trying to access image with indexes: %1 (slice), %2 (phase) of current volume")
                           .arg(sliceIndex).arg(phaseIndex));
-                DEBUG_LOG(QString("Unexpected error trying to access image with indexes:% 1 (slice),% 2 (phase) of current volume")
+                DEBUG_LOG(QString("Unexpected error trying to access image with indexes: %1 (slice), %2 (phase) of current volume")
                           .arg(sliceIndex).arg(phaseIndex));
             }
             else

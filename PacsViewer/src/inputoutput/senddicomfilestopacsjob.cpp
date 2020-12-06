@@ -81,7 +81,7 @@ void SendDICOMFilesToPACSJob::run(ThreadWeaver::JobPointer self, ThreadWeaver::T
 
 void SendDICOMFilesToPACSJob::requestCancelJob()
 {
-    INFO_LOG(QString("Job has been requested to cancel Studio Image Sending Job% 1 to PACS %2")
+    INFO_LOG(QString("Job has been requested to cancel Studio Image Sending Job %1 to PACS %2")
              .arg(getStudyOfDICOMFilesToSend()->getInstanceUID(), getPacsDevice().getAETitle()));
     m_sendDICOMFilesToPACS->requestCancel();
 }

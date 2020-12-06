@@ -59,6 +59,12 @@ public slots:
     void setPatientsThumbnail(QList<Patient*> patientsList, bool loadOnly = false);
 
 private slots:
+    ///20201206 add
+    /// Processes a set of httpServer input files and processes them to decide what to do with them, such as
+    /// create new patient, open windows, add data to current patient, etc
+    /// @param inputFiles Files to process, which may or may not be supported by the application
+    void httpServerInput(const QStringList &inputFiles);
+
     /// Processes a set of input files and processes them to decide what to do with them, such as
     /// create new patient, open windows, add data to current patient, etc
     /// @param inputFiles Files to process, which may or may not be supported by the application

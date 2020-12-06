@@ -161,7 +161,7 @@ HangingProtocol* HangingProtocolManager::setBestHangingProtocol(Patient *patient
 
     if (bestHangingProtocol)
     {
-        DEBUG_LOG(QString("Hanging protocol that applies:% 1").arg(bestHangingProtocol->getName()));
+        DEBUG_LOG(QString("Hanging protocol that applies: %1").arg(bestHangingProtocol->getName()));
         applyHangingProtocol(bestHangingProtocol, layout, patient, geometry);
     }
 

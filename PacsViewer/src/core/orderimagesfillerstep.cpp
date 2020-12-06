@@ -102,7 +102,7 @@ bool OrderImagesFillerStep::fillIndividually()
         }
         else
         {
-            DEBUG_LOG(QString("Null list for volume% 1 of series%2. We create a new one.").arg(m_input->getCurrentVolumeNumber()).arg(
+            DEBUG_LOG(QString("Null list for volume %1 of series %2. We create a new one.").arg(m_input->getCurrentVolumeNumber()).arg(
                           m_input->getCurrentSeries()->getInstanceUID()));
             m_orderedNormalsSet = new QMap<double,QMap<QString, QMap<double, QMap<unsigned long, Image*>*>*>*>();
             volumesInSeries->insert(m_input->getCurrentVolumeNumber(), m_orderedNormalsSet);
@@ -412,18 +412,18 @@ void OrderImagesFillerStep::setOrderedImagesIntoSeries(Series *series)
         if (!m_sameNumberOfPhasesPerPositionPerVolumeInSeriesHash.value(series)->value(currentVolumeNumber))
         {
             orderByInstanceNumber = true;
-            DEBUG_LOG(QString("Not all images have the same number of phases. We sort volume% 1 of series% 2 by Instance Number").arg(
+            DEBUG_LOG(QString("Not all images have the same number of phases. We sort volume %1 of series %2 by Instance Number").arg(
                           currentVolumeNumber).arg(series->getInstanceUID()));
-            INFO_LOG(QString("Not all images have the same number of phases. We sort volume% 1 of series% 2 by Instance Number").arg(
+            INFO_LOG(QString("Not all images have the same number of phases. We sort volume %1 of series %2 by Instance Number").arg(
                          currentVolumeNumber).arg(series->getInstanceUID()));
         }
         /// Multiple acquisition number
         if (m_acquisitionNumberEvaluation[series][currentVolumeNumber]->second)
         {
             orderByInstanceNumber = true;
-            DEBUG_LOG(QString("Not all images have the same AcquisitionNumber. We sort volume% 1 of series% 2 by Instance Number").arg(
+            DEBUG_LOG(QString("Not all images have the same AcquisitionNumber. We sort volume %1 of series %2 by Instance Number").arg(
                           currentVolumeNumber).arg(series->getInstanceUID()));
-            INFO_LOG(QString("Not all images have the same AcquisitionNumber. We sort volume% 1 of series% 2 by Instance Number").arg(
+            INFO_LOG(QString("Not all images have the same AcquisitionNumber. We sort volume %1 of series %2 by Instance Number").arg(
                          currentVolumeNumber).arg(series->getInstanceUID()));
         }
 

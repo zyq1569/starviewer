@@ -324,7 +324,7 @@ void QInputOutputLocalDatabaseWidget::deleteSelectedItemsFromLocalDatabase()
                 {
                     if (!dicomMaskToDelete.getSeriesInstanceUID().isEmpty())
                     {
-                        INFO_LOG(QString("User has indicated that he wants to clear series% 1 from study% 2 from the cache")
+                        INFO_LOG(QString("User has indicated that he wants to clear series %1 from study %2 from the cache")
                                  .arg(dicomMaskToDelete.getSeriesInstanceUID(), dicomMaskToDelete.getStudyInstanceUID()));
                         localDatabaseManager.deleteSeries(dicomMaskToDelete.getStudyInstanceUID(), dicomMaskToDelete.getSeriesInstanceUID());
 
@@ -537,7 +537,7 @@ void QInputOutputLocalDatabaseWidget::sendSelectedStudiesToSelectedPacs()
 
             if (localDatabaseManager.getLastError() != LocalDatabaseManager::Ok)
             {
-                ERROR_LOG(QString("Error in database trying to get studies to be sent to PACS, Error:% 1; StudyUID:% 2")
+                ERROR_LOG(QString("Error in database trying to get studies to be sent to PACS, Error: %1; StudyUID: %2")
                           .arg(localDatabaseManager.getLastError())
                           .arg(dicomMaskToSend.getStudyInstanceUID()));
 

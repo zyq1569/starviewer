@@ -66,7 +66,7 @@ void ConvertToDicomdir::addStudy(const QString &studyUID)
     QList<Patient*> patientList = localDatabaseManager.queryPatientsAndStudies(studyMask);
     if (localDatabaseManager.getLastError() != LocalDatabaseManager::Ok)
     {
-        ERROR_LOG(QString("Error adding a study to generate a DICOMDIR; Error:% 1; StudyUID: %2")
+        ERROR_LOG(QString("Error adding a study to generate a DICOMDIR; Error: %1; StudyUID: %2")
                   .arg(localDatabaseManager.getLastError())
                   .arg(studyUID));
         return;
@@ -124,7 +124,7 @@ Status ConvertToDicomdir::convert(const QString &dicomdirPath, CreateDicomdir::r
     QString pathFolderContentToCopyToDICOMDIR = Settings().getValue(InputOutputSettings::DICOMDIRFolderPathToCopy).toString();
     if (copyFolderContent && !AreValidRequirementsOfFolderContentToCopyToDICOMDIR(pathFolderContentToCopyToDICOMDIR))
     {
-        ERROR_LOG(QString("Unable to create DICOMDIR because path% 1 contains an item named DICOM or DICOMDIR")
+        ERROR_LOG(QString("Unable to create DICOMDIR because path %1 contains an item named DICOM or DICOMDIR")
                   .arg(pathFolderContentToCopyToDICOMDIR));
         state.setStatus("", false, 4003);
         return state;
@@ -141,7 +141,7 @@ Status ConvertToDicomdir::convert(const QString &dicomdirPath, CreateDicomdir::r
         Patient *patient = localDatabaseManager.retrieve(studyMask);
         if (localDatabaseManager.getLastError() != LocalDatabaseManager::Ok)
         {
-            ERROR_LOG(QString("Studio% 1 data not found in database ").arg(studyToConvert.studyUID));
+            ERROR_LOG(QString("Studio %1 data not found in database ").arg(studyToConvert.studyUID));
             QString error = QString("Error performing a retrieve study to generate a DICOMDIR; Error: %1; StudyUID: %2")
                     .arg(localDatabaseManager.getLastError())
                     .arg(studyToConvert.studyUID);
@@ -267,12 +267,12 @@ Status ConvertToDicomdir::createDicomdir(const QString &dicomdirPath, CreateDico
     ///  Ha fallat crear el dicomdir, ara intentem crear-lo en mode no estricte
     if (!state.good())
     {
-        WARN_LOG("Algunes de les imatges no compleixen l'estandard DICOM al 100% es provara de crear el DICOMDIR sense el mode estricte");
+        WARN_LOG("Some of the images do not meet the 100% DICOM standard will try to create the DICOMDIR without the strict mode");
         createDicomdir.setStrictMode(false);
         state = createDicomdir.create(dicomdirPath);
         if (state.good())
         {
-            return stateNotDicomConformance.setStatus("Alguna de les imatges no complia l'estàndard DICOM", false, 4001);
+            return stateNotDicomConformance.setStatus("Some of the images did not meet the DICOM standard", false, 4001);
         }
     }
 
@@ -592,7 +592,7 @@ bool ConvertToDicomdir::copyFolderContentToDICOMDIR()
 
     if (!DirectoryUtilities::copyDirectory(folderToCopyPath, m_dicomDirPath))
     {
-        ERROR_LOG(QString("Could not copy DICOM viewer% 1 to DICOMDIR% 2").arg(folderToCopyPath, m_dicomDirPath));
+        ERROR_LOG(QString("Could not copy DICOM viewer %1 to DICOMDIR %2").arg(folderToCopyPath, m_dicomDirPath));
         ok = false;
     }
 

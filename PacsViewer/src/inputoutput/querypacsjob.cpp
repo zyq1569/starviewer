@@ -61,7 +61,7 @@ void QueryPacsJob::run(ThreadWeaver::JobPointer self, ThreadWeaver::Thread *thre
     // We look for studies
     m_queryRequestStatus = m_queryPacs->query(m_mask);
 
-    INFO_LOG(QString("Query on PACS% 1 completed").arg(getPacsDevice().getAETitle()));
+    INFO_LOG(QString("Query on PACS %1 completed").arg(getPacsDevice().getAETitle()));
 }
 
 DicomMask QueryPacsJob::getDicomMask()

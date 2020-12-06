@@ -44,7 +44,7 @@ void VolumeRepository::deleteVolume(Identifier id)
     Volume *volume = this->getVolume(id);
     if (!volume)
     {
-        INFO_LOG(QString("There is no volume in the repository with the id:% 1. We will not delete anything from the repository.").arg(id.getValue()));
+        INFO_LOG(QString("There is no volume in the repository with the id: %1. We will not delete anything from the repository.").arg(id.getValue()));
         return;
     }
 

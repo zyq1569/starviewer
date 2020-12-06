@@ -61,7 +61,7 @@ Status ConvertDicomToLittleEndian::convert(QString inputFile, QString outputFile
 
     if (error.bad())
     {
-        ERROR_LOG(QString("Could not open file to convert LittleEndian% 1, description error: %2").arg(inputFile, error.text()));
+        ERROR_LOG(QString("Could not open file to convert LittleEndian %1, description error: %2").arg(inputFile, error.text()));
         return state.setStatus(error);
     }
     dataset->loadAllDataIntoMemory();
@@ -83,7 +83,7 @@ Status ConvertDicomToLittleEndian::convert(QString inputFile, QString outputFile
 
     if (!error.good())
     {
-        ERROR_LOG(QString("Error trying to save image% 1 converted to LittleEndian on path% 2, error description: %3")
+        ERROR_LOG(QString("Error trying to save image %1 converted to LittleEndian on path %2, error description: %3")
                   .arg(inputFile, outputFile, error.text()));
     }
 

@@ -167,7 +167,7 @@ PACSRequestStatus::QueryRequestStatus QueryPacs::query()
 
     if (!condition.good())
     {
-        ERROR_LOG(QString("Error querying PACS% 1, error description:% 2").arg(m_pacsDevice.getAETitle(), condition.text()));
+        ERROR_LOG(QString("Error querying PACS %1, error description: %2").arg(m_pacsDevice.getAETitle(), condition.text()));
     }
 
     PACSRequestStatus::QueryRequestStatus queryRequestStatus = getDIMSEStatusCodeAsQueryRequestStatus(findResponse.DimseStatus);
@@ -204,7 +204,7 @@ void QueryPacs::cancelQuery()
 
 void QueryPacs::cancelQuery(T_DIMSE_C_FindRQ *request)
 {
-    INFO_LOG(QString("Please cancel PACS% 1 for the current query").arg(m_pacsDevice.getAETitle()));
+    INFO_LOG(QString("Please cancel PACS %1 for the current query").arg(m_pacsDevice.getAETitle()));
 
     // All PACS are required by DICOM Conformance to implement the cancellation
     OFCondition cond = DIMSE_sendCancelRequest(m_pacsConnection->getConnection(), m_presId, request->MessageID);

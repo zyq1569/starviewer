@@ -132,7 +132,7 @@ void RetrieveDICOMFilesFromPACSJob::run(ThreadWeaver::JobPointer self, ThreadWea
         if ((m_retrieveRequestStatus == PACSRequestStatus::RetrieveOk || m_retrieveRequestStatus == PACSRequestStatus::RetrieveSomeDICOMFilesFailed) &&
                 !this->isAbortRequested())
         {
-            INFO_LOG(QString("PACS% 2 study% 1 has finished downloading,% 3 files have been downloaded")
+            INFO_LOG(QString("PACS %2 study %1 has finished downloading, %3 files have been downloaded")
                      .arg(m_studyToRetrieveDICOMFiles->getInstanceUID(), getPacsDevice().getAETitle())
                      .arg(m_retrieveDICOMFilesFromPACS->getNumberOfDICOMFilesRetrieved()));
 

@@ -217,13 +217,13 @@ QImage ThumbnailCreator::createThumbnail(DicomImage *dicomImage, int resolution)
         else
         {
             ok = false;
-            DEBUG_LOG(QString("The scaled image has errors. Error:% 1 ").arg(DicomImage::getString(scaledImage->getStatus())));
+            DEBUG_LOG(QString("The scaled image has errors. Error: %1 ").arg(DicomImage::getString(scaledImage->getStatus())));
         }
     }
     else
     {
         ok = false;
-        DEBUG_LOG(QString("Error loading the DicomImage. Error:% 1 ").arg(DicomImage::getString(dicomImage->getStatus())));
+        DEBUG_LOG(QString("Error loading the DicomImage. Error: %1 ").arg(DicomImage::getString(dicomImage->getStatus())));
     }
 
     //If we were unable to generate the thumbnail, we create a blank one

@@ -182,9 +182,9 @@ void TemporalDimensionFillerStep::postProcessing()
                     if (volumeInfo->multipleAcquisitionNumber)
                     {
                         numberOfPhases = 1;
-                        DEBUG_LOG(QString("Not all images have the same AcquisitionNumber. We consider that volume% 1 of series% 2 is not dynamic.")
+                        DEBUG_LOG(QString("Not all images have the same AcquisitionNumber. We consider that volume %1 of series %2 is not dynamic.")
                                   .arg(currentVolume).arg(key->getInstanceUID()));
-                        INFO_LOG(QString("Not all images have the same AcquisitionNumber. We consider that volume% 1 of series% 2 is not dynamic.")
+                        INFO_LOG(QString("Not all images have the same AcquisitionNumber. We consider that volume %1 of series %2 is not dynamic.")
                                  .arg(currentVolume).arg(key->getInstanceUID()));
                     }
                     else
@@ -213,9 +213,9 @@ void TemporalDimensionFillerStep::postProcessing()
                 {
                     numberOfPhases = 1;
 
-                    ERROR_LOG(QString("Volume% 1 of series% 2 has not been processed! We consider it not dynamic")
+                    ERROR_LOG(QString("Volume %1 of series %2 has not been processed! We consider it not dynamic")
                               .arg(currentVolume).arg(key->getInstanceUID()));
-                    DEBUG_LOG(QString("Volume% 1 of series% 2 has not been processed! We consider it not dynamic")
+                    DEBUG_LOG(QString("Volume %1 of series %2 has not been processed! We consider it not dynamic")
                               .arg(currentVolume).arg(key->getInstanceUID()));
                 }
 
@@ -223,7 +223,7 @@ void TemporalDimensionFillerStep::postProcessing()
 
                 if (numberOfPhases > 1)
                 {
-                    DEBUG_LOG(QString("Volume% 1 in series% 2 is dynamic").arg(currentVolume).arg(key->getInstanceUID()));
+                    DEBUG_LOG(QString("Volume %1 in series %2 is dynamic").arg(currentVolume).arg(key->getInstanceUID()));
                 }
 
             }

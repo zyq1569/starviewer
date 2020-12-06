@@ -308,7 +308,7 @@ PACSRequestStatus::SendRequestStatus SendDICOMFilesToPACS::getStatusStoreSCU()
     else if (getNumberOfDICOMFilesSentFailed() > 0)
     {
         // No s'han pogut guardar els fitxers
-        ERROR_LOG(QString("Uploading% 1 of% 2 files to PACS failed")
+        ERROR_LOG(QString("Uploading %1 of %2 files to PACS failed")
                   .arg(QString().setNum(getNumberOfDICOMFilesSentFailed()), QString().setNum(m_numberOfDICOMFilesToSend)));
         return PACSRequestStatus::SendSomeDICOMFilesFailed;
     }
@@ -316,7 +316,7 @@ PACSRequestStatus::SendRequestStatus SendDICOMFilesToPACS::getStatusStoreSCU()
     {
         /// Some images have been saved with the Warning Status (Normally
         /// means that the PACS has modified the data of the sent DICOM file)
-        WARN_LOG(QString("A warning was received while% 1 of% 2 files were sent")
+        WARN_LOG(QString("A warning was received while %1 of %2 files were sent")
                  .arg(QString().setNum(getNumberOfDICOMFilesSentWarning()), QString().setNum(m_numberOfDICOMFilesToSend)));
         return PACSRequestStatus::SendWarningForSomeImages;
     }
