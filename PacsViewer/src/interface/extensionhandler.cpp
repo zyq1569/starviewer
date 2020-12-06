@@ -59,10 +59,8 @@ ExtensionHandler::ExtensionHandler(QApplicationMainWindow *mainApp, QObject *par
     /// TODO: Slap for the starviewer to listen to RIS requests, as all the code to listen to RIS requests is in the
     /// queryscreen we have to instantiate it at the beginning so that it listens to the requests
     disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
-    connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
-
-    /// set Thumbnail
-    connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(setPatientsThumbnail(QList<Patient*>, bool)));
+    //connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
+    connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(patientsInput(QList<Patient*>, bool)));
     connect(QueryScreenSingleton::instance(), SIGNAL(closed()), SLOT(queryScreenIsClosed()));
     m_haveToCloseQueryScreen = false;
 }
@@ -221,7 +219,6 @@ bool ExtensionHandler::request(const QString &who)
     //QVariant str = object->
     QList<Patient*> Patients;
     Patients<<m_mainApp->getCurrentPatient();
-    //m_mainApp->addPatientsThumbnail(Patients);
     setPatientsThumbnail(Patients);
     return createExtension(who);
 }
@@ -355,6 +352,11 @@ void ExtensionHandler::processInput(const QStringList &inputFiles)
     }
 }
 
+void ExtensionHandler::patientsInput(QList<Patient*> patientsList, bool loadOnly )
+{
+    processInput(patientsList,loadOnly);
+    setPatientsThumbnail(patientsList);
+}
 void ExtensionHandler::processInput(QList<Patient*> patientsList, bool loadOnly)
 {
     QList<Patient*> mergedPatientsList = mergePatients(patientsList);

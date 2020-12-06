@@ -50,6 +50,7 @@ signals:
 
 private slots:
     /// Update views related to the active item (the one the mouse hovers over)
+    /// select Item
     void updateActiveItemView(QListWidgetItem *item);
 
     void refreshTab(int index);

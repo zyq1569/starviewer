@@ -54,7 +54,7 @@ public slots:
     ExtensionContext& getContext();
 
     ///20201205
-    void setQueryPatientsThumbnail(QList<Patient*> patientsList, bool loadOnly = false);
+    void setPatientsThumbnail(QList<Patient*> patientsList, bool loadOnly = false);
 
 private slots:
     /// Processes a set of input files and processes them to decide what to do with them, such as
@@ -70,6 +70,8 @@ private slots:
     /// We add a second parameter that tells us if patients just need to be loaded or "viewed".
     void processInput(QList<Patient*> patientsList, bool loadOnly = false);
 
+
+    void patientsInput(QList<Patient*> patientsList, bool loadOnly = false);
     ///It will be called when the QueryScreen closes
     void queryScreenIsClosed();
 
