@@ -291,7 +291,7 @@ void ExtensionHandler::processInput(const QStringList &inputFiles)
 
     for (int i = 0; i < numberOfPatients; i++)
     {
-        DEBUG_LOG(QString("Patient #%1\n %2").arg(i).arg(patientsList.at(i)->toString()));
+        DEBUG_LOG(QString("Patient # %1\n %2").arg(i).arg(patientsList.at(i)->toString()));
 
         bool error = true;
 
