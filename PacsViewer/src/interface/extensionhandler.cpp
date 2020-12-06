@@ -61,6 +61,8 @@ ExtensionHandler::ExtensionHandler(QApplicationMainWindow *mainApp, QObject *par
     disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
     connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
 
+    /// set Thumbnail
+    connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(setPatientsThumbnail(QList<Patient*>, bool)));
     connect(QueryScreenSingleton::instance(), SIGNAL(closed()), SLOT(queryScreenIsClosed()));
     m_haveToCloseQueryScreen = false;
 }
@@ -219,8 +221,15 @@ bool ExtensionHandler::request(const QString &who)
     //QVariant str = object->
     QList<Patient*> Patients;
     Patients<<m_mainApp->getCurrentPatient();
-    m_mainApp->addPatientsThumbnail(Patients);
+    //m_mainApp->addPatientsThumbnail(Patients);
+    setPatientsThumbnail(Patients);
     return createExtension(who);
+}
+
+///20201205
+void ExtensionHandler::setPatientsThumbnail(QList<Patient*> patientsList, bool loadOnly)
+{
+    m_mainApp->addPatientsThumbnail(patientsList);
 }
 
 void ExtensionHandler::setContext(const ExtensionContext &context)
@@ -328,7 +337,7 @@ void ExtensionHandler::processInput(const QStringList &inputFiles)
         // There are no mistakes, we load them all
         processInput(patientsList);
         ///----------add patientsList--------------------
-        m_mainApp->addPatientsThumbnail(patientsList);
+        setPatientsThumbnail(patientsList);
         ///----------------------------------------------
     }
     else
@@ -341,7 +350,7 @@ void ExtensionHandler::processInput(const QStringList &inputFiles)
         }
         processInput(rightPatients);
         ///----------add patientsList--------------------
-        m_mainApp->addPatientsThumbnail(rightPatients);
+        setPatientsThumbnail(rightPatients);
         ///----------------------------------------------
     }
 }
