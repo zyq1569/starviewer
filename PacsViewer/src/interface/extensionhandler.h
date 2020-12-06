@@ -53,6 +53,8 @@ public slots:
     /// @return The context of the extension can be modified
     ExtensionContext& getContext();
 
+    void patientsInput(QList<Patient*> patientsList, bool loadOnly = false);
+
     ///20201205
     void setPatientsThumbnail(QList<Patient*> patientsList, bool loadOnly = false);
 
@@ -70,8 +72,6 @@ private slots:
     /// We add a second parameter that tells us if patients just need to be loaded or "viewed".
     void processInput(QList<Patient*> patientsList, bool loadOnly = false);
 
-
-    void patientsInput(QList<Patient*> patientsList, bool loadOnly = false);
     ///It will be called when the QueryScreen closes
     void queryScreenIsClosed();
 

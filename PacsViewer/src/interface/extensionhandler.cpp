@@ -61,6 +61,10 @@ ExtensionHandler::ExtensionHandler(QApplicationMainWindow *mainApp, QObject *par
     disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
     //connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
     connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(patientsInput(QList<Patient*>, bool)));
+
+
+    ///patientsInput    ???   why???  不知为何不能统一到patientsInput
+    connect(QueryScreenSingleton::instance(), SIGNAL(setPatientsThumbnail(QList<Patient*>, bool)), SLOT(setPatientsThumbnail(QList<Patient*>, bool)));
     connect(QueryScreenSingleton::instance(), SIGNAL(closed()), SLOT(queryScreenIsClosed()));
     m_haveToCloseQueryScreen = false;
 }
@@ -354,9 +358,10 @@ void ExtensionHandler::processInput(const QStringList &inputFiles)
 
 void ExtensionHandler::patientsInput(QList<Patient*> patientsList, bool loadOnly )
 {
-    processInput(patientsList,loadOnly);
     setPatientsThumbnail(patientsList);
+    processInput(patientsList,loadOnly);
 }
+
 void ExtensionHandler::processInput(QList<Patient*> patientsList, bool loadOnly)
 {
     QList<Patient*> mergedPatientsList = mergePatients(patientsList);

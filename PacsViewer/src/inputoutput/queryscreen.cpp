@@ -370,6 +370,7 @@ void QueryScreen::viewPatients(QList<Patient*> listPatientsToView, bool loadOnly
     }
 
     emit selectedPatients(listPatientsToView, loadOnly);
+    emit setPatientsThumbnail(listPatientsToView, loadOnly);
 }
 
 #ifndef STARVIEWER_LITE

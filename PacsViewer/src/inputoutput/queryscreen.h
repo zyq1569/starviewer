@@ -90,6 +90,9 @@ signals:
     /// We add a second parameter to indicate whether these patients should be loaded only and whether they should be visualized
     void selectedPatients(QList<Patient*> selectedPatients, bool loadOnly = false);
 
+    /// .
+    void setPatientsThumbnail(QList<Patient*> selectedPatients, bool loadOnly = false);
+
     /// Indicates that a download error has occurred
     /// of a study requested through the public retrieveStudy method
     void studyRetrieveFailed(QString studyInstanceUID);
