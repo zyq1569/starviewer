@@ -81,11 +81,11 @@ OFCondition RetrieveDICOMFilesFromPACS::acceptSubAssociation(T_ASC_Network *asso
         //        transferSyntaxes[9] = UID_MPEG2MainProfileAtHighLevelTransferSyntax;
         //        transferSyntaxes[10] = UID_MPEG4HighProfileLevel4_1TransferSyntax;
         //        transferSyntaxes[11] = UID_MPEG4BDcompatibleHighProfileLevel4_1TransferSyntax;
-        //        transferSyntaxes[12] = UID_JPEGProcess14SV1TransferSyntax;//UID_MPEG4HighProfileLevel4_2_For2DVideoTransferSyntax;
-        //        transferSyntaxes[13] = UID_JPEGProcess14SV1TransferSyntax;//UID_MPEG4HighProfileLevel4_2_For3DVideoTransferSyntax;
-        //        transferSyntaxes[14] = UID_JPEGProcess14SV1TransferSyntax;//UID_MPEG4StereoHighProfileLevel4_2TransferSyntax;
-        //        transferSyntaxes[15] = UID_JPEGProcess14SV1TransferSyntax;//UID_HEVCMainProfileLevel5_1TransferSyntax;
-        //        transferSyntaxes[16] = UID_JPEGProcess14SV1TransferSyntax;//UID_HEVCMain10ProfileLevel5_1TransferSyntax;
+        //        transferSyntaxes[12] = UID_MPEG4HighProfileLevel4_2_For2DVideoTransferSyntax;
+        //        transferSyntaxes[13] = UID_MPEG4HighProfileLevel4_2_For3DVideoTransferSyntax;
+        //        transferSyntaxes[14] = UID_MPEG4StereoHighProfileLevel4_2TransferSyntax;
+        //        transferSyntaxes[15] = UID_HEVCMainProfileLevel5_1TransferSyntax;
+        //        transferSyntaxes[16] = UID_HEVCMain10ProfileLevel5_1TransferSyntax;
         //        transferSyntaxes[17] = UID_DeflatedExplicitVRLittleEndianTransferSyntax;
         //        if (gLocalByteOrder == EBO_LittleEndian)
         //        {
