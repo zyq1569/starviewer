@@ -73,7 +73,7 @@ OFCondition RetrieveDICOMFilesFromPACS::acceptSubAssociation(T_ASC_Network *asso
         //transferSyntaxes[1] = UID_JPEG2000LosslessOnlyTransferSyntax;
         //transferSyntaxes[2] = UID_JPEGProcess2_4TransferSyntax;
         //transferSyntaxes[3] = UID_JPEGProcess1TransferSyntax;
-        //transferSyntaxes[4] = UID_JPEGProcess14SV1TransferSyntax;//
+        //transferSyntaxes[4] = UID_JPEGProcess14SV1TransferSyntax;
         //transferSyntaxes[5] = UID_JPEGLSLossyTransferSyntax;
         //transferSyntaxes[6] = UID_JPEGLSLosslessTransferSyntax;
         //transferSyntaxes[7] = UID_RLELosslessTransferSyntax;
