@@ -1,6 +1,9 @@
 #ifndef HTTPCLIENT_H
 #define HTTPCLIENT_H
 
+
+#include "logging.h"
+
 #include <QObject>
 #include <QUrl>
 //#include <QSslError>

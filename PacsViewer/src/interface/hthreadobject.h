@@ -1,6 +1,9 @@
 #ifndef HTHREADOBJECT_H
 #define HTHREADOBJECT_H
 
+
+#include "logging.h"
+
 #include <QObject>
 #include <QMutex>
 #include <QThread>

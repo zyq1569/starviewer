@@ -76,13 +76,15 @@ void HttpClient::ParseDwonData()
     m_patientstudydb.rowinfo.clear();
     if (m_currentfiletype == DownFileType::studyini && m_currentDownData.size() > 1)
     {
-        qDebug() <<"---step 1/3---: start parse jsonfile : "<< m_url.query();
+        //qDebug() <<"---step 1/3---: start parse jsonfile : "<< m_url.query();
+        INFO_LOG("---step 1/3---: start parse jsonfile : "+m_url.query());
         HStudy study;
         QJsonParseError jsonError;
         QJsonDocument paserDoc = QJsonDocument::fromJson(m_currentDownData, &jsonError);
         if (jsonError.error != QJsonParseError::NoError)
         {
-            qDebug() <<"---second Parse Json--- studyuid: " << m_currentJsonfile;
+            //qDebug() <<"---second Parse Json--- studyuid: " << m_currentJsonfile;
+            INFO_LOG("---second Parse Json--- studyuid: " + m_currentJsonfile);
             QFile file(m_currentJsonfile);
             file.open(QIODevice::ReadOnly);
             QByteArray data = file.readAll();
@@ -96,7 +98,8 @@ void HttpClient::ParseDwonData()
             study.imageCount = paserObj.take("numImages").toInt();
             QJsonArray array = paserObj.take("seriesList").toArray();
             CreatDir(m_downDir+"/"+study.StudyUID);
-            qDebug() <<"---step 2/3---:  parse dcm studyuid: " <<study.StudyUID;
+            //qDebug() <<"---step 2/3---:  parse dcm studyuid: " <<study.StudyUID;
+            INFO_LOG("------step 2/3---:  parse dcm studyuid:: " + study.StudyUID);
             QList<HttpInfo> httpinfo;
             int size = array.size();
             for (int i=0; i<size; i++)
@@ -119,7 +122,8 @@ void HttpClient::ParseDwonData()
                 }
                 study.Serieslist.push_back(series);
             }
-            qDebug() <<"---step 3/3---:  start to down all dcm files : series size = " << size << " | image filse : count =" <<httpinfo.size();
+            //qDebug() <<"---step 3/3---:  start to down all dcm files : series size = " << size << " | image filse : count =" <<httpinfo.size();
+           INFO_LOG(tr("---step 3/3---:  start to down all dcm files : series size =  %1   | image filse : count = %2 ").arg(size).arg(httpinfo.size()));
             if (!m_managethread)
             {
                 m_managethread = new HManageThread();
@@ -128,7 +132,8 @@ void HttpClient::ParseDwonData()
         }
         else
         {
-            qDebug() <<"---error---->parse json fail: "<< m_url.query()<<jsonError.errorString();
+            //qDebug() <<"---error---->parse json fail: "<< m_url.query()<<jsonError.errorString();
+            ERROR_LOG(tr("---error---->parse json fail: %1 %2").arg(m_url.query()).arg(jsonError.errorString()));
             QMessageBox::question(NULL, tr("Down error"),
                                   tr("parse json fail: %1 %2?").arg(m_url.query(),jsonError.errorString()), QMessageBox::Ok);
         }
