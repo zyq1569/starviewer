@@ -652,19 +652,20 @@ void ExtensionHandler::fromClientNotify()
     QString msg;
     msg = m_clientSocket->readAll();
 
+
     //
     if (!m_httpclient)
     {
         m_httpclient = new HttpClient(NULL,"F:\\log\\down");
-        m_httpclient->setHost("127.0.0.1:8080");
+        m_httpclient->setHost("http://127.0.0.1:8080");
     }
 
-    //m_httpclient->getStudyImageFile(QUrl("m_httpurl"),"studyuid","","");
+    m_httpclient->getStudyImageFile(QUrl("http://127.0.0.1:8080"), msg, "", "");
     //
-    INFO_LOG("fromClientNotify: "+msg);
+    INFO_LOG("fromClientNotify: " + msg);
 
     //QMessageBox::information(NULL, tr("STUDY"),msg);
-    QString receive = "receive StudyUID:"+msg+ " \n on time:"+QDateTime::currentDateTime().toString("yyyy-MM-dd-hh:mm:ss-zzz");
+    QString receive = "receive StudyUID:" + msg + " \n on time:" + QDateTime::currentDateTime().toString("yyyy-MM-dd-hh:mm:ss-zzz");
 
     m_clientSocket->write(receive.toUtf8());
     m_clientSocket->flush();
