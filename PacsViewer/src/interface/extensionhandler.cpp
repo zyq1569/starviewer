@@ -39,6 +39,10 @@
 #include "queryscreen.h"
 #include "patientfiller.h"
 
+
+///
+#include <QLocalServer>
+///
 namespace udg {
 
 typedef SingletonPointer<QueryScreen> QueryScreenSingleton;
@@ -63,10 +67,25 @@ ExtensionHandler::ExtensionHandler(QApplicationMainWindow *mainApp, QObject *par
     connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(patientsInput(QList<Patient*>, bool)));
 
 
-    ///patientsInput    ???   why???  不知为何不能统一到patientsInput
+    ///patientsInput    ???   why???  不知为何不能统一到 SIGNAL patientsInput
     connect(QueryScreenSingleton::instance(), SIGNAL(setPatientsThumbnail(QList<Patient*>, bool)), SLOT(setPatientsThumbnail(QList<Patient*>, bool)));
     connect(QueryScreenSingleton::instance(), SIGNAL(closed()), SLOT(queryScreenIsClosed()));
     m_haveToCloseQueryScreen = false;
+
+
+    ///-----------20201207---------
+    m_localserver =  new QLocalServer(this);
+    connect(m_localserver, SIGNAL(newConnection()), this, SLOT(newClientConnection()));
+    QLocalServer::removeServer(ImageAppName);
+    if(m_localserver->listen(ImageAppName))
+    {
+        INFO_LOG("----Listen succeed!----");
+    }
+    else
+    {
+        ERROR_LOG("---Listen failed!!----");
+    }
+    ///---------------------
 }
 
 ExtensionHandler::~ExtensionHandler()
@@ -248,10 +267,6 @@ void ExtensionHandler::createConnections()
     connect(&m_importFileApp, SIGNAL(selectedFiles(QStringList)), SLOT(processInput(QStringList)));
 }
 
-void ExtensionHandler::httpServerInput(const QStringList &inputFiles)
-{
-
-}
 
 void ExtensionHandler::processInput(const QStringList &inputFiles)
 {
@@ -596,6 +611,90 @@ void ExtensionHandler::openDefaultExtension()
     {
         DEBUG_LOG("No patient data!");
     }
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+
+void  ExtensionHandler::newClientConnection()
+{
+    m_clientSocket = m_localserver->nextPendingConnection();
+
+    connect(m_clientSocket, SIGNAL(readyRead()), this, SLOT(fromClientNotify()));
+    connect(m_clientSocket, SIGNAL(connected()), this, SLOT(socketConnect()));
+    connect(m_clientSocket, SIGNAL(disconnected()), this, SLOT(socketDisconnect()));
+    connect(m_clientSocket, SIGNAL(error(QLocalSocket::LocalSocketError)), this, SLOT(socketError(QLocalSocket::LocalSocketError)));
+    connect(m_clientSocket, SIGNAL(stateChanged(QLocalSocket::LocalSocketState)), this, SLOT(socketStateChanged(QLocalSocket::LocalSocketState)));
+
+}
+
+
+void ExtensionHandler::httpServerInput(const QStringList &inputFiles)
+{
+
+}
+
+void ExtensionHandler::fromClientNotify()
+{
+    //m_httpurl = ui->m_URL->text();
+    //qDebug() << m_clientSocket;
+    if(!m_clientSocket)
+    {
+        return;
+    }
+    QString msg;
+    msg = m_clientSocket->readAll();
+    //qDebug() << msg;
+    INFO_LOG("fromClientNotify: "+msg);
+    //ui->m_getMsg->setText(msg);
+    //downImagesFromHttp(msg,"","");
+    QMessageBox::information(NULL, tr("STUDY"),msg);
+    QString receive = "receive";
+
+    m_clientSocket->write(receive.toUtf8());
+    m_clientSocket->flush();
+}
+
+void ExtensionHandler::socketConnect()
+{
+    //qDebug() << "A new connection";
+    INFO_LOG("A new connection");
+}
+
+void ExtensionHandler::socketDisconnect()
+{
+    //qDebug() << "Disconnected";
+    INFO_LOG("Disconnected");
+}
+
+void ExtensionHandler::socketError(QLocalSocket::LocalSocketError socketError)
+{
+    //qDebug() << socketError;
+    INFO_LOG("socketError");
+}
+
+void ExtensionHandler::socketStateChanged(QLocalSocket::LocalSocketState socketState)
+{
+    //qDebug() << socketState;
+    INFO_LOG("socketStateChanged");
+}
+
+
+void ExtensionHandler::readFromServer(int fd)
+{
+    INFO_LOG("readFromServer");
+    //QFile filein;
+    //filein.open(stdin, QIODevice::ReadOnly);
+    //QSocketNotifier* sn = new QSocketNotifier(filein.handle(), QSocketNotifier::Read, this);
+    //connect(sn, SIGNAL(activated(int)), this, SLOT(readFromServer(int)));
+    //QFile filein;
+    //if(fd != filein.handle() )
+    //return;
+
+    //char buffer[256];
+    ////int count = read(filein.handle(), buffer, 256);
+    //ui->m_imageuid->setText("FROM SERVER:" + QString(buffer).left(count));
+    //http://blog.chinaunix.net/uid-13830775-id-97753.html
 }
 
 }   // end namespace udg

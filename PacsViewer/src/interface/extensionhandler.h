@@ -19,9 +19,17 @@
 #include <QString>
 #include <QList>
 #include <QMutex>
+#include <QLocalSocket>
+
+
+class QLocalServer;
 
 #include "extensioncontext.h"
 #include "appimportfile.h"
+
+
+#define ImageAppName  "StarViewer"
+
 
 namespace udg {
 
@@ -29,7 +37,7 @@ namespace udg {
 class QApplicationMainWindow;
 /**
    Manager of mini-applications and services of the main application
-  */
+*/
 class ExtensionHandler : public QObject {
     Q_OBJECT
 public:
@@ -53,10 +61,19 @@ public slots:
     /// @return The context of the extension can be modified
     ExtensionContext& getContext();
 
+    ///add----------/////////////////////////////////////////////////////////
     void patientsInput(QList<Patient*> patientsList, bool loadOnly = false);
 
     ///20201205
     void setPatientsThumbnail(QList<Patient*> patientsList, bool loadOnly = false);
+    ///20201207
+    void newClientConnection();
+    void fromClientNotify();
+    void readFromServer(int fd);
+    void socketConnect();
+    void socketDisconnect();
+    void socketError(QLocalSocket::LocalSocketError socketError);
+    void socketStateChanged(QLocalSocket::LocalSocketState socketState);
 
 private slots:
     ///20201206 add
@@ -102,6 +119,11 @@ private:
     ///----add creat Extension object 20200925-------
 private:
     bool createExtension(const QString &who);
+    //-----------------------------------------------
+    ///----add  20201207-------
+private:
+    QLocalServer *m_localserver;
+    QLocalSocket *m_clientSocket;
     //-----------------------------------------------
 private:
     /// Pointer to the main application

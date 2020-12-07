@@ -3,6 +3,7 @@
 #include "ui_authenticationdialog.h"
 
 #include "hthreadobject.h"
+#include "hmanagethread.h"
 
 #include <QNetworkReply>
 #include <QFileInfo>
@@ -17,6 +18,20 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#include <QProcess>
+QProcess *process;
+///// -------------------------------------------------------------------------
+/// eg..
+/// dcm/
+///http://127.0.0.1:8080/WADO?
+///studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196
+///&seriesuid=1.2.840.113619.2.55.3.604688119.969.1252951290.810.4
+///&sopinstanceuid=1.2.840.113619.2.55.3.604688119.969.1252951290.968.37
+/// -------------------------------------------------------------------------
+/// json file
+///http://127.0.0.1:8080/WADO?
+///studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196&type=json
+///-------------------------------------------------------------------------
 
 //-----------------------------------------HttpClient------------------------------------------------------------
 HttpClient::HttpClient(QObject *parent, QString dir) : QObject(parent),m_httpRequestAborted(false)
@@ -153,7 +168,9 @@ void HttpClient::ParseDwonData()
         }
         else
         {
-            qDebug() <<"---error---->parse json fail: "<< m_url.query();
+            qDebug() <<"---error---->parse json fail: "<< m_url.query()<<jsonError.errorString();
+            QMessageBox::question(NULL, tr("Down error"),
+                                  tr("parse json fail: %1 %2?").arg(m_url.query(),jsonError.errorString()), QMessageBox::Ok);
         }
     }
 }
@@ -347,15 +364,6 @@ void HttpClient::downFileFromWeb(QUrl httpUrl, QString savefilename, QString dow
     startRequest(httpUrl);
 }
 
-/// -------------------------------------------------------------------------
-///http://127.0.0.1:8080/WADO?
-///studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196
-///&seriesuid=1.2.840.113619.2.55.3.604688119.969.1252951290.810.4
-///&sopinstanceuid=1.2.840.113619.2.55.3.604688119.969.1252951290.968.37
-/// -------------------------------------------------------------------------
-///http://127.0.0.1:8080/WADO?
-///studyuid=1.2.826.1.1.3680043.2.461.20090916105245.168977.200909160196&type=json
-///-------------------------------------------------------------------------
 void HttpClient::getStudyImageFile(QUrl url,QString studyuid,QString seruid, QString imguid)
 {
     if (url.toString() == "" || studyuid == "")
@@ -407,7 +415,7 @@ void HttpClient::getStudyImageFile(QUrl url,QString studyuid,QString seruid, QSt
     {
         fileName = "temp.tmp";
     }
-
+//    QMessageBox::information(NULL, "Title", fileName);
     downFileFromWeb(newUrl,fileName,m_downDir);
 
 }
