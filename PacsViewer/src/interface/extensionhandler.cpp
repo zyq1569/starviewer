@@ -644,12 +644,11 @@ void ExtensionHandler::fromClientNotify()
     }
     QString msg;
     msg = m_clientSocket->readAll();
-    //qDebug() << msg;
+
     INFO_LOG("fromClientNotify: "+msg);
-    //ui->m_getMsg->setText(msg);
-    //downImagesFromHttp(msg,"","");
-    QMessageBox::information(NULL, tr("STUDY"),msg);
-    QString receive = "receive";
+
+    //QMessageBox::information(NULL, tr("STUDY"),msg);
+    QString receive = "receive StudyUID:"+msg+ " \n on time:"+QDateTime::currentDateTime().toString("yyyyMMddhhmmss");
 
     m_clientSocket->write(receive.toUtf8());
     m_clientSocket->flush();

@@ -11,6 +11,7 @@ FORMS += qconfigurationdialogbase.ui \
         qaboutdialogbase.ui \
         qlicensedialogbase.ui
 HEADERS += qapplicationmainwindow.h \
+           hmanagethread.h \
            hthreadobject.h \
            httpclient.h \
            imagethumbnaildockwidget.h \
@@ -24,6 +25,7 @@ HEADERS += qapplicationmainwindow.h \
            qaboutdialog.h \
            qlicensedialog.h
 SOURCES += qapplicationmainwindow.cpp \
+           hmanagethread.cpp \
            hthreadobject.cpp \
            httpclient.cpp \
            imagethumbnaildockwidget.cpp \
