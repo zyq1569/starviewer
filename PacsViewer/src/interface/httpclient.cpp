@@ -69,61 +69,12 @@ void HttpClient::startRequest(const QUrl &requestedUrl)
 
 }
 
-PatientStudyDB* HttpClient::getPatientStudyDB()
-{
-    return  &m_patientstudydb;
-}
 
 void HttpClient::ParseDwonData()
 {
     m_patientstudydb.count = 0;
     m_patientstudydb.rowinfo.clear();
-    if (m_currentfiletype == DownFileType::dbinfo && m_currentDownData.size() > 1)
-    {
-        QJsonParseError jsonError;
-        QJsonDocument paserDoc = QJsonDocument::fromJson(m_currentDownData, &jsonError);
-        if (jsonError.error == QJsonParseError::NoError)
-        {
-            QJsonObject paserObj = paserDoc.object();
-            if (paserObj.contains("code"))
-            {
-                QJsonValue codeValue = paserObj.take("code");
-                if (codeValue.isDouble())
-                {
-                    m_patientstudydb.code = codeValue.toInt();
-                }
-            }
-            if (paserObj.contains("msg"))
-            {
-                QJsonValue msgValue = paserObj["msg"];
-                if (msgValue.isString())
-                    m_patientstudydb.msg = msgValue.toString();
-            }
-            if (paserObj.contains("count"))
-            {
-                QJsonValue countValue = paserObj["count"];
-                if (countValue.isDouble())
-                    m_patientstudydb.count = countValue.toInt();
-            }
-            if (paserObj.contains("data"))
-            {
-                QJsonValue dataValue = paserObj.take("data");
-                if (dataValue.isArray())
-                {
-                    QJsonArray array = dataValue.toArray();
-                    for(int i = 0; i < array.size(); ++i)
-                    {
-                        StudyRowInfo rowinfo;
-                        QJsonValue tmp = array.at(i);
-                        setPatientDBinfo(tmp,rowinfo);
-                        m_patientstudydb.rowinfo.push_back(rowinfo);
-                    }
-                }
-            }
-        }
-        emit parseDataFinished();
-    }
-    else if (m_currentfiletype == DownFileType::studyini && m_currentDownData.size() > 1)
+    if (m_currentfiletype == DownFileType::studyini && m_currentDownData.size() > 1)
     {
         qDebug() <<"---step 1/3---: start parse jsonfile : "<< m_url.query();
         HStudy study;
@@ -173,162 +124,6 @@ void HttpClient::ParseDwonData()
                                   tr("parse json fail: %1 %2?").arg(m_url.query(),jsonError.errorString()), QMessageBox::Ok);
         }
     }
-}
-
-void HttpClient::setPatientDBinfo(QJsonValue &JsonValue, StudyRowInfo &Rowinfo)
-{
-    QJsonObject paserObj = JsonValue.toObject();
-    //    QString Name;
-    //    QJsonObject::Iterator it;
-    //    QString keyString="";
-    //    QString valueString="";
-    //    int i=0;
-    //    for(it=paserObj.begin();it!=paserObj.end();it++)
-    //    {
-    //        QString value=it.value().toString();
-    //        keyString=it.key()+","+keyString;
-    //        valueString="'"+value+"',"+valueString;
-    //        i++;
-    //    }
-    if (paserObj.contains("patientIdentity"))
-    {
-        Rowinfo.patientIdentity = paserObj["patientIdentity"].toString();
-    }
-    if (paserObj.contains("patientName"))
-    {
-        Rowinfo.patientName = paserObj["patientName"].toString();
-    }
-    if (paserObj.contains("patientId"))
-    {
-        Rowinfo.patientId = paserObj["patientId"].toString();
-    }
-    if (paserObj.contains("patientSex"))
-    {
-        Rowinfo.patientSex = paserObj["patientSex"].toString();
-    }
-    if (paserObj.contains("patientBirthday"))
-    {
-        Rowinfo.patientBirthday = paserObj["patientBirthday"].toString();
-    }
-    if (paserObj.contains("patientTelNumber"))
-    {
-        Rowinfo.patientTelNumber = paserObj["patientTelNumber"].toString();
-    }
-    if (paserObj.contains("patientAddr"))
-    {
-        Rowinfo.patientAddr = paserObj["patientAddr"].toString();
-    }
-    if (paserObj.contains("patientCarID"))
-    {
-        Rowinfo.patientCarID = paserObj["patientCarID"].toString();
-    }
-    if (paserObj.contains("patientType"))
-    {
-        Rowinfo.patientType = paserObj["patientType"].toString();
-    }
-    if (paserObj.contains("patientEmail"))
-    {
-        Rowinfo.patientEmail = paserObj["patientEmail"].toString();
-    }
-    if (paserObj.contains("studyOrderIdentity"))
-    {
-        Rowinfo.studyOrderIdentity = paserObj["studyOrderIdentity"].toString();
-    }
-
-    if (paserObj.contains("studyId"))
-    {
-        Rowinfo.studyId = paserObj["studyId"].toString();
-    }
-    if (paserObj.contains("studyuid"))
-    {
-        Rowinfo.studyuid = paserObj["studyuid"].toString();
-    }
-    if (paserObj.contains("scheduledDateTime"))
-    {
-        Rowinfo.scheduledDateTime = paserObj["scheduledDateTime"].toString();
-    }
-
-    if (paserObj.contains("patientEmail"))
-    {
-        Rowinfo.patientEmail = paserObj["patientEmail"].toString();
-    }
-    if (paserObj.contains("ScheduledDate"))
-    {
-        Rowinfo.ScheduledDate = paserObj["ScheduledDate"].toString();
-    }
-    if (paserObj.contains("orderDateTime"))
-    {
-        Rowinfo.orderDateTime = paserObj["orderDateTime"].toString();
-    }
-
-    if (paserObj.contains("studyDescription"))
-    {
-        Rowinfo.studyDescription = paserObj["studyDescription"].toString();
-    }
-    if (paserObj.contains("studyModality"))
-    {
-        Rowinfo.studyModality = paserObj["studyModality"].toString();
-    }
-    if (paserObj.contains("aETitle"))
-    {
-        Rowinfo.aETitle = paserObj["aETitle"].toString();
-    }
-
-    if (paserObj.contains("studyType"))
-    {
-        Rowinfo.studyType = paserObj["studyType"].toString();
-    }
-    if (paserObj.contains("studyCode"))
-    {
-        Rowinfo.studyCode = paserObj["studyCode"].toString();
-    }
-    if (paserObj.contains("studyState"))
-    {
-        Rowinfo.studyState = paserObj["studyState"].toString();
-    }
-
-    if (paserObj.contains("studyCost"))
-    {
-        Rowinfo.studyCost = paserObj["studyCost"].toString();
-    }
-    if (paserObj.contains("studyDate"))
-    {
-        Rowinfo.studyDate = paserObj["studyDate"].toString();
-    }
-    if (paserObj.contains("studyDepart"))
-    {
-        Rowinfo.studyDepart = paserObj["studyDepart"].toString();
-    }
-
-    if (paserObj.contains("sStudyModality"))
-    {
-        Rowinfo.sStudyModality = paserObj["sStudyModality"].toString();
-    }
-    if (paserObj.contains("costType"))
-    {
-        Rowinfo.costType = paserObj["costType"].toString();
-    }
-
-}
-
-void HttpClient::getStudyDBinfo(QUrl url,QString start,QString end,QString page,QString limit)
-{
-    ///http://127.0.0.1:8080/healthsystem/ris/stduyimage/?start=19700101&end=20191230&page=1&limit=10
-    //QString startDate = ui->m_startDate->text();
-    //QString endDate = ui->m_endDate->text();
-    //QString mod = ui->m_StudyModality->currentText();
-    //QUrl url = ui->m_URL->text();
-    QString newUrlStr = url.toString() + "/healthsystem/ris/stduyimage/?start=";
-    newUrlStr += start+"&end="+end+"&page="+page+"&limit="+limit;
-    m_currentfiletype = DownFileType::dbinfo;
-
-    QUrl newUrl = newUrlStr;
-    if (!newUrl.isValid())
-    {
-        QMessageBox::information(NULL, tr("Error"),tr("Invalid URL: %1: %2").arg(newUrlStr, newUrl.errorString()));
-        return;
-    }
-    downFileFromWeb(newUrl,"studyDb.json",m_downDir);
 }
 
 void HttpClient::downFileFromWeb(QUrl httpUrl, QString savefilename, QString downDir)
@@ -415,9 +210,8 @@ void HttpClient::getStudyImageFile(QUrl url,QString studyuid,QString seruid, QSt
     {
         fileName = "temp.tmp";
     }
-//    QMessageBox::information(NULL, "Title", fileName);
-    downFileFromWeb(newUrl,fileName,m_downDir);
 
+    downFileFromWeb(newUrl,fileName,m_downDir);
 }
 
 void HttpClient::cancelDownload()
@@ -443,7 +237,7 @@ void HttpClient::httpFinished()
     if (m_httpRequestAborted)
     {
         m_networkreply->deleteLater();
-        m_networkreply = nullptr;
+        m_networkreply = NULL;
         return;
     }
 
@@ -451,14 +245,14 @@ void HttpClient::httpFinished()
     {
         QFile::remove(fileinfo.absoluteFilePath());
         m_networkreply->deleteLater();
-        m_networkreply = nullptr;
+        m_networkreply = NULL;
         return;
     }
 
     const QVariant redirectionTarget = m_networkreply->attribute(QNetworkRequest::RedirectionTargetAttribute);
 
     m_networkreply->deleteLater();
-    m_networkreply = nullptr;
+    m_networkreply = NULL;
 
     if (!redirectionTarget.isNull())
     {
@@ -485,7 +279,7 @@ bool HttpClient::openFileForWrite(const QString &fileName)
     if (m_file)
     {
         delete m_file;
-        m_file = nullptr;
+        m_file = NULL;
     }
     m_file = new QFile(fileName);
     if (!m_file->open(QIODevice::WriteOnly))
@@ -494,7 +288,7 @@ bool HttpClient::openFileForWrite(const QString &fileName)
                                      QDir::toNativeSeparators(fileName),m_file->errorString()));
         m_file->close();
         delete m_file;
-        m_file = nullptr;
+        m_file = NULL;
         return false;
     }
     return true;

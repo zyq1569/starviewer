@@ -94,11 +94,10 @@ public:
     explicit HttpClient(QObject *parent = nullptr, QString dir = "");
 
 public:
-    void setPatientDBinfo(QJsonValue &JsonValue,StudyRowInfo &Rowinfo);
     void setDwonloadDir(QString dir);
-    void getStudyDBinfo(QUrl url,QString start,QString end,QString page,QString limit);//start=19700101&end=20191230&page=1&limit=10
+
     void getStudyImageFile(QUrl url,QString studyuid="",QString seruid = "", QString imguid = "");
-    PatientStudyDB* getPatientStudyDB();
+
     bool CreatDir(QString fullPath)
     {
         QDir dir(fullPath); // 注意
@@ -149,7 +148,6 @@ private:
     PatientStudyDB m_patientstudydb;
     HManageThread *m_managethread;
     QObject *m_parent;
-
 };
 
 #endif // HTTPCLIENT_H

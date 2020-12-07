@@ -23,6 +23,7 @@
 
 
 class QLocalServer;
+class HttpClient;
 
 #include "extensioncontext.h"
 #include "appimportfile.h"
@@ -124,6 +125,7 @@ private:
 private:
     QLocalServer *m_localserver;
     QLocalSocket *m_clientSocket;
+    HttpClient *m_httpclient;
     //-----------------------------------------------
 private:
     /// Pointer to the main application

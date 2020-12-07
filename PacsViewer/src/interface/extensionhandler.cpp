@@ -39,9 +39,15 @@
 #include "queryscreen.h"
 #include "patientfiller.h"
 
+/// httpserver
+#include "httpclient.h"
+
 
 ///
 #include <QLocalServer>
+
+///
+///
 ///
 namespace udg {
 
@@ -74,6 +80,7 @@ ExtensionHandler::ExtensionHandler(QApplicationMainWindow *mainApp, QObject *par
 
 
     ///-----------20201207---------
+    m_httpclient = NULL;
     m_localserver =  new QLocalServer(this);
     connect(m_localserver, SIGNAL(newConnection()), this, SLOT(newClientConnection()));
     QLocalServer::removeServer(ImageAppName);
@@ -645,10 +652,19 @@ void ExtensionHandler::fromClientNotify()
     QString msg;
     msg = m_clientSocket->readAll();
 
+    //
+    if (!m_httpclient)
+    {
+        m_httpclient = new HttpClient(NULL,"F:\\log\\down");
+        m_httpclient->setHost("127.0.0.1:8080");
+    }
+
+    //m_httpclient->getStudyImageFile(QUrl("m_httpurl"),"studyuid","","");
+    //
     INFO_LOG("fromClientNotify: "+msg);
 
     //QMessageBox::information(NULL, tr("STUDY"),msg);
-    QString receive = "receive StudyUID:"+msg+ " \n on time:"+QDateTime::currentDateTime().toString("yyyyMMddhhmmss");
+    QString receive = "receive StudyUID:"+msg+ " \n on time:"+QDateTime::currentDateTime().toString("yyyy-MM-dd-hh:mm:ss-zzz");
 
     m_clientSocket->write(receive.toUtf8());
     m_clientSocket->flush();
@@ -682,18 +698,6 @@ void ExtensionHandler::socketStateChanged(QLocalSocket::LocalSocketState socketS
 void ExtensionHandler::readFromServer(int fd)
 {
     INFO_LOG("readFromServer");
-    //QFile filein;
-    //filein.open(stdin, QIODevice::ReadOnly);
-    //QSocketNotifier* sn = new QSocketNotifier(filein.handle(), QSocketNotifier::Read, this);
-    //connect(sn, SIGNAL(activated(int)), this, SLOT(readFromServer(int)));
-    //QFile filein;
-    //if(fd != filein.handle() )
-    //return;
-
-    //char buffer[256];
-    ////int count = read(filein.handle(), buffer, 256);
-    //ui->m_imageuid->setText("FROM SERVER:" + QString(buffer).left(count));
-    //http://blog.chinaunix.net/uid-13830775-id-97753.html
 }
 
 }   // end namespace udg
