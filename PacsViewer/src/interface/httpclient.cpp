@@ -80,6 +80,15 @@ void HttpClient::ParseDwonData()
         HStudy study;
         QJsonParseError jsonError;
         QJsonDocument paserDoc = QJsonDocument::fromJson(m_currentDownData, &jsonError);
+        if (jsonError.error != QJsonParseError::NoError)
+        {
+            qDebug() <<"---second Parse Json--- studyuid: " << m_currentJsonfile;
+            QFile file(m_currentJsonfile);
+            file.open(QIODevice::ReadOnly);
+            QByteArray data = file.readAll();
+            file.close();
+            paserDoc = QJsonDocument::fromJson(data, &jsonError);
+        }
         if (jsonError.error == QJsonParseError::NoError)
         {
             QJsonObject paserObj = paserDoc.object();
@@ -149,6 +158,10 @@ void HttpClient::downFileFromWeb(QUrl httpUrl, QString savefilename, QString dow
     }
     if (m_currentfiletype != DownFileType::dbinfo)
     {
+        if (m_currentfiletype == DownFileType::studyini)
+        {
+            m_currentJsonfile = fileName;
+        }
         if (!openFileForWrite(fileName))
         {
             return;

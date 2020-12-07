@@ -145,6 +145,7 @@ private:
     QString m_downDir;
     DownFileType m_currentfiletype;
     QByteArray m_currentDownData;
+    QString m_currentJsonfile;
     PatientStudyDB m_patientstudydb;
     HManageThread *m_managethread;
     QObject *m_parent;
