@@ -74,7 +74,7 @@ void HManageThread::start(QList<HttpInfo> httpInfo)
         //progressDialog.setLabelText("Downloading "+host+port);
         progressDialog.setCancelButton(0);
         connect(this, &HManageThread::ProgressInfo, &progressDialog, &QProgressDialog::setLabelText);
-        connect(this, &HManageThread::finished, &progressDialog, &QProgressDialog::close);
+        connect(this, &HManageThread::allFinished, &progressDialog, &QProgressDialog::close);
     }
     progressDialog.setLabelText("Start Downloading...");
     progressDialog.show();
@@ -94,6 +94,6 @@ void HManageThread::handleResults(const int &msg)
     emit ProgressInfo(tr("Downloading %1 / %2   ...").arg(m_total-m_remainder).arg(m_total));
     if (m_remainder <1)
     {
-        emit finished();
+        emit allFinished();
     }
 }

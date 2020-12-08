@@ -49,6 +49,16 @@ bool HttpClient::CreatDir(QString fullPath)
     }
 }
 
+QStringList* HttpClient::getListStudyUID()
+{
+    return &m_listStudyuid;
+}
+
+QString HttpClient::getHttpServerHost()
+{
+    return m_host;
+}
+
 void HttpClient::setHttpServerHost(QString host)
 {
     m_host = host;
@@ -122,6 +132,7 @@ void HttpClient::ParseDwonData()
             QJsonArray array = paserObj.take("seriesList").toArray();
             CreatDir(m_downDir+"/"+study.StudyUID);
             INFO_LOG("------step 2/3---:  parse dcm studyuid:: " + study.StudyUID);
+            m_listStudyuid.clear();
             QList<HttpInfo> httpinfo;
             int size = array.size();
             for (int i=0; i<size; i++)
@@ -141,6 +152,7 @@ void HttpClient::ParseDwonData()
                     info.url = QUrl(newurl);
                     info.fullpathfilename = m_downDir + "/"+study.StudyUID+"/"+series.SeriesUID+"/"+imageuid+".dcm";
                     httpinfo.push_back(info);
+                    m_listStudyuid.push_back(info.fullpathfilename);
                 }
                 study.Serieslist.push_back(series);
             }
@@ -148,6 +160,8 @@ void HttpClient::ParseDwonData()
             if (!m_managethread)
             {
                 m_managethread = new HManageThread();
+                connect(m_managethread, SIGNAL(allFinished()), this,  SLOT(allFilesThreadFinished()));
+                //allFilesThreadFinished
             }
             m_managethread->start(httpinfo);
         }
@@ -199,9 +213,13 @@ void HttpClient::downFileFromWeb(QUrl httpUrl, QString savefilename, QString dow
 
 void HttpClient::getStudyImageFile(QUrl url,QString studyuid,QString seruid, QString imguid)
 {
-    if (url.toString() == "" || studyuid == "")
+    if ( studyuid == "")
     {
         return;
+    }
+    if (url.toString() == "")
+    {
+        url = QUrl(getHttpServerHost());
     }
     m_currentfiletype = DownFileType::other;
 
@@ -250,6 +268,12 @@ void HttpClient::getStudyImageFile(QUrl url,QString studyuid,QString seruid, QSt
     }
 
     downFileFromWeb(newUrl,fileName,m_downDir);
+}
+
+
+void HttpClient::allFilesThreadFinished()
+{
+    emit allFilesFinished();
 }
 
 void HttpClient::cancelDownload()

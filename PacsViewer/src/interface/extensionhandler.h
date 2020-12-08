@@ -82,6 +82,7 @@ private slots:
     /// create new patient, open windows, add data to current patient, etc
     /// @param inputFiles Files to process, which may or may not be supported by the application
     void httpServerInput(const QStringList &inputFiles);
+    void httpServerDownAllDcm();
 
     /// Processes a set of input files and processes them to decide what to do with them, such as
     /// create new patient, open windows, add data to current patient, etc
@@ -118,15 +119,18 @@ private:
     QList<Patient*> mergePatients(const QList<Patient*> &patientList);
 
     ///----add creat Extension object 20200925-------
+
 private:
     bool createExtension(const QString &who);
     //-----------------------------------------------
     ///----add  20201207-------
+
 private:
     QLocalServer *m_localserver;
     QLocalSocket *m_clientSocket;
     HttpClient *m_httpclient;
     //-----------------------------------------------
+
 private:
     /// Pointer to the main application
     QApplicationMainWindow *m_mainApp;

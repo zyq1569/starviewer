@@ -41,7 +41,7 @@
 
 /// httpserver
 #include "httpclient.h"
-
+#include "hmanagethread.h"
 
 ///
 #include <QLocalServer>
@@ -635,25 +635,30 @@ void  ExtensionHandler::newClientConnection()
 
 }
 
+void ExtensionHandler::httpServerDownAllDcm()
+{
+    if (m_httpclient)
+    {
+        QStringList list = *m_httpclient->getListStudyUID();
+        httpServerInput(list);
+    }
+}
 
 void ExtensionHandler::httpServerInput(const QStringList &inputFiles)
 {
-
+    processInput(inputFiles);
 }
 
 void ExtensionHandler::fromClientNotify()
 {
-    //m_httpurl = ui->m_URL->text();
     if(!m_clientSocket)
     {
         return;
     }
-    QString msg;
-    msg = m_clientSocket->readAll();
+    QString msg = m_clientSocket->readAll();
 
     //QMessageBox::information(NULL, tr("STUDY"),msg);
     QString receive = "receive StudyUID:" + msg + " \n on time:" + QDateTime::currentDateTime().toString("yyyy-MM-dd-hh:mm:ss-zzz");
-
     m_clientSocket->write(receive.toUtf8());
     m_clientSocket->flush();
 
@@ -661,10 +666,10 @@ void ExtensionHandler::fromClientNotify()
     if (!m_httpclient)
     {
         m_httpclient = new HttpClient(NULL,"F:/log/down");
+        connect(m_httpclient, SIGNAL(allFilesFinished()), this,  SLOT(httpServerDownAllDcm()));
         m_httpclient->setHttpServerHost("http://127.0.0.1:8080");
     }
-
-    m_httpclient->getStudyImageFile(QUrl("http://127.0.0.1:8080"), msg, "", "");
+    m_httpclient->getStudyImageFile(QUrl(m_httpclient->getHttpServerHost()), msg, "", "");
     //------------------------------------------------------------------------------
     INFO_LOG("fromClientNotify: " + msg);
 }

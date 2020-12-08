@@ -105,10 +105,18 @@ public:
 
     void setHttpServerHost(QString host);
 
-    const HManageThread * getManageThread();
+    QString getHttpServerHost();
+
+    QStringList* getListStudyUID();
+
+    const HManageThread* getManageThread();
 
 signals:
     void parseDataFinished();
+    void allFilesFinished();
+
+public slots:
+    void allFilesThreadFinished();
 
 private slots:
     void cancelDownload();
@@ -139,6 +147,7 @@ private:
     PatientStudyDB m_patientstudydb;
     HManageThread *m_managethread;
     QObject *m_parent;
+    QStringList m_listStudyuid;
 };
 
 #endif // HTTPCLIENT_H
