@@ -670,7 +670,7 @@ void ExtensionHandler::fromClientNotify()
         m_httpclient->setHttpServerHost("http://127.0.0.1:8080");
     }
     m_httpclient->getStudyImageFile(QUrl(m_httpclient->getHttpServerHost()), msg, "", "");
-    ///HWND_TOPMOST--->HWND_NOTOPMOST
+    ///---HWND_TOPMOST--->HWND_NOTOPMOST
     ::SetWindowPos(HWND(m_mainApp->winId()), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
     ::SetWindowPos(HWND(m_mainApp->winId()), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
     m_mainApp->show();
