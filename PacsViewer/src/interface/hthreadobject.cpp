@@ -80,7 +80,7 @@ void HThreadObject::startNetwork()
 
     QString filename = m_httpInfo[m_taskIndex].fullpathfilename;
     m_file = new QFile(filename);
-    //qDebug() <<filename;
+
     if (!m_file->open(QFile::WriteOnly | QIODevice::Truncate))
     {
         m_file->close();

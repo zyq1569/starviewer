@@ -185,14 +185,14 @@ void HttpClient::downFileFromWeb(QUrl httpUrl, QString savefilename, QString dow
     }
     if (QFile::exists(fileName))
     {
-        if (QMessageBox::question(NULL, tr("Overwrite Existing File"),
-                                  tr("There already exists a file called %1%2."
-                                     " Overwrite?").arg(fileName,
-                                                        useDirectory ? QString() : QStringLiteral(" in the current directory")),
-                                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::No)
-        {
-            return;
-        }
+//        if (QMessageBox::question(NULL, tr("Overwrite Existing File"),
+//                                  tr("There already exists a file called %1%2."
+//                                     " Overwrite?").arg(fileName,
+//                                                        useDirectory ? QString() : QStringLiteral(" in the current directory")),
+//                                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::No)
+//        {
+//            return;
+//        }
         QFile::remove(fileName);
     }
     if (m_currentfiletype != DownFileType::dbinfo)
@@ -344,7 +344,7 @@ bool HttpClient::openFileForWrite(const QString &fileName)
         m_file = NULL;
     }
     m_file = new QFile(fileName);
-    if (!m_file->open(QIODevice::WriteOnly))
+    if (!m_file->open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
         QMessageBox::information(NULL, tr("Error"),tr("Unable to save the file %1: %2.").arg(
                                      QDir::toNativeSeparators(fileName),m_file->errorString()));
