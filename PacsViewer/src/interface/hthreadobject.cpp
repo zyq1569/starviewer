@@ -9,8 +9,8 @@
 ///--------------------------------------------------------------
 HThreadObject::HThreadObject(QObject *parent) : QObject(parent)
 {
-    m_file = nullptr;
-    m_networkmanager = nullptr;
+    m_file = NULL;
+    m_networkmanager = NULL;
 }
 
 
@@ -39,7 +39,8 @@ void HThreadObject::sslErrors(QNetworkReply *, const QList<QSslError> &errors)
         }
         errorString += error.errorString();
     }
-    qDebug() <<errorString;
+    //qDebug() <<errorString;
+    ERROR_LOG(errorString);
     m_networkreply->ignoreSslErrors();
 }
 #endif
@@ -59,7 +60,7 @@ void HThreadObject::Finished()
     }
     emit notifyResult(SaveFile_Ok);
     m_networkreply->deleteLater();
-    m_networkreply = nullptr;
+    m_networkreply = NULL;
     startNetwork();
 }
 
@@ -84,7 +85,7 @@ void HThreadObject::startNetwork()
     {
         m_file->close();
         delete m_file;
-        m_file = nullptr;
+        m_file = NULL;
         notifyResult(OpenFile_Fail);
         return ;
     }

@@ -621,7 +621,7 @@ void ExtensionHandler::openDefaultExtension()
 }
 
 
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////2020-12-07///////////////////////////////////////////////
 
 void  ExtensionHandler::newClientConnection()
 {
@@ -644,7 +644,6 @@ void ExtensionHandler::httpServerInput(const QStringList &inputFiles)
 void ExtensionHandler::fromClientNotify()
 {
     //m_httpurl = ui->m_URL->text();
-    //qDebug() << m_clientSocket;
     if(!m_clientSocket)
     {
         return;
@@ -652,46 +651,41 @@ void ExtensionHandler::fromClientNotify()
     QString msg;
     msg = m_clientSocket->readAll();
 
-
-    //
-    if (!m_httpclient)
-    {
-        m_httpclient = new HttpClient(NULL,"F:\\log\\down");
-        m_httpclient->setHost("http://127.0.0.1:8080");
-    }
-
-    m_httpclient->getStudyImageFile(QUrl("http://127.0.0.1:8080"), msg, "", "");
-    //
-    INFO_LOG("fromClientNotify: " + msg);
-
     //QMessageBox::information(NULL, tr("STUDY"),msg);
     QString receive = "receive StudyUID:" + msg + " \n on time:" + QDateTime::currentDateTime().toString("yyyy-MM-dd-hh:mm:ss-zzz");
 
     m_clientSocket->write(receive.toUtf8());
     m_clientSocket->flush();
+
+    //-----------------------------------------------------------------------------
+    if (!m_httpclient)
+    {
+        m_httpclient = new HttpClient(NULL,"F:/log/down");
+        m_httpclient->setHttpServerHost("http://127.0.0.1:8080");
+    }
+
+    m_httpclient->getStudyImageFile(QUrl("http://127.0.0.1:8080"), msg, "", "");
+    //------------------------------------------------------------------------------
+    INFO_LOG("fromClientNotify: " + msg);
 }
 
 void ExtensionHandler::socketConnect()
 {
-    //qDebug() << "A new connection";
     INFO_LOG("A new connection");
 }
 
 void ExtensionHandler::socketDisconnect()
 {
-    //qDebug() << "Disconnected";
     INFO_LOG("Disconnected");
 }
 
 void ExtensionHandler::socketError(QLocalSocket::LocalSocketError socketError)
 {
-    //qDebug() << socketError;
     INFO_LOG("socketError");
 }
 
 void ExtensionHandler::socketStateChanged(QLocalSocket::LocalSocketState socketState)
 {
-    //qDebug() << socketState;
     INFO_LOG("socketStateChanged");
 }
 

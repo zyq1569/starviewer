@@ -94,31 +94,18 @@ class HttpClient : public QObject
 {
     Q_OBJECT
 public:
-    explicit HttpClient(QObject *parent = nullptr, QString dir = "");
+    explicit HttpClient(QObject *parent = NULL, QString dir = "");
 
 public:
     void setDwonloadDir(QString dir);
 
     void getStudyImageFile(QUrl url,QString studyuid="",QString seruid = "", QString imguid = "");
 
-    bool CreatDir(QString fullPath)
-    {
-        QDir dir(fullPath); // 注意
-        if(dir.exists())
-        {
-            return true;
-        }
-        else
-        {
-            dir.setPath("");
-            bool ok = dir.mkpath(fullPath);
-            return ok;
-        }
-    }
-    void setHost(QString host)
-    {
-        m_host = host;
-    }
+    bool CreatDir(QString fullPath);
+
+    void setHttpServerHost(QString host);
+
+    const HManageThread * getManageThread();
 
 signals:
     void parseDataFinished();
