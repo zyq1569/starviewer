@@ -242,8 +242,11 @@ void AppImportFile::readSettings()
     Settings settings;
 
     m_workingDirectory = settings.getValue(InterfaceSettings::OpenFileLastPath).toString();
+    INFO_LOG("workingDirectory:"+m_workingDirectory);
     m_workingDicomDirectory = settings.getValue(InterfaceSettings::OpenDirectoryLastPath).toString();
+    INFO_LOG("workingDicomDirectory:"+m_workingDicomDirectory);
     m_lastExtension = settings.getValue(InterfaceSettings::OpenFileLastFileExtension).toString();
+    INFO_LOG("lastExtension:"+m_lastExtension);
 }
 
 void AppImportFile::writeSettings()

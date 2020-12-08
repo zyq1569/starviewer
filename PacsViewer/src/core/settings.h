@@ -28,13 +28,13 @@ class QSplitter;
 namespace udg {
 
 /**
-    Interfície per manipular settings.
-    La manera correcta de fer servir la classe és declarant-la localment en el mètode en
-    el que volem accedir o escriure al setting, mai es declararà com a variable membre d'una classe.
-    L'escriptura d'un setting no es farà efectiva a disc fins que no es destrueixi la instància.
-    Aquest mecanisme funciona d'aquesta manera per raons d'eficiència, així podem assignar diversos
-    settings alhora sense penalitzar un accés a disc fins que no es destrueixi l'objecte de Settings.
-  */
+Interface for manipulating settings.
+The correct way to use the class is by declaring it locally in the method in
+what we want to access or write to the setting, will never be declared as a member variable of a class.
+Writing a setting will not take effect on disk until the instance is destroyed.
+This mechanism works in this way for efficiency reasons, so we can assign several
+settings at the same time without penalizing disk access until the Settings object is destroyed.
+*/
 class Settings : public SettingsInterface {
 public:
     enum AccessLevel { UserLevel, SystemLevel };
