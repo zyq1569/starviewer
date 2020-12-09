@@ -27,10 +27,10 @@ namespace udg {
 
 PACSConnection::PACSConnection(PacsDevice pacsDevice)
 {
-    /// Variable global de dcmtk per evitar el dnslookup,
-    /// que dona problemes de lentitu a windows.
-    /// TODO: Al fer refactoring aquesta inicialització hauria de
-    /// quedar en un lloc central de configuracions per dcmtk.
+    /// dcmtk global variable to avoid dnslookup,
+    /// which gives lentitu problems to windows.
+    /// TODO: When refactoring this initialization should
+    /// stay in a central configuration site for dcmtk.
     dcmDisableGethostbyaddr.set(OFTrue);
 
     m_pacs = pacsDevice;
@@ -49,30 +49,33 @@ OFCondition PACSConnection::configureEcho()
     // PresentationContextID always has to be odd
     int presentationContextID = 1;
 
-    return ASC_addPresentationContext(m_associationParameters, presentationContextID, UID_VerificationSOPClass, transferSyntaxes, DIM_OF(transferSyntaxes));
+    return ASC_addPresentationContext(m_associationParameters,
+                                      presentationContextID, UID_VerificationSOPClass, transferSyntaxes, DIM_OF(transferSyntaxes));
 }
 
 OFCondition PACSConnection::configureFind()
 {
-    const char *transferSyntaxes[] = { NULL, NULL, NULL };
+    const char *transferSyntaxes[] = { NULL, NULL, NULL, NULL, NULL, NULL };
     /// It must always be odd, its value is 1 because we only pass a presentation context
     int presentationContextID = 1;
 
     getTransferSyntaxForFindOrMoveConnection(transferSyntaxes);
 
-    return ASC_addPresentationContext(m_associationParameters, presentationContextID, UID_FINDStudyRootQueryRetrieveInformationModel, transferSyntaxes,
+    return ASC_addPresentationContext(m_associationParameters,
+                                      presentationContextID, UID_FINDStudyRootQueryRetrieveInformationModel, transferSyntaxes,
                                       DIM_OF(transferSyntaxes));
 }
 
 OFCondition PACSConnection::configureMove()
 {
     T_ASC_PresentationContextID associationPresentationContextID = 1;
-    const char *transferSyntaxes[] = { NULL, NULL, NULL };
+    const char *transferSyntaxes[] = { NULL, NULL, NULL, NULL, NULL, NULL };
 
     getTransferSyntaxForFindOrMoveConnection(transferSyntaxes);
 
-    return ASC_addPresentationContext(m_associationParameters, associationPresentationContextID, UID_MOVEStudyRootQueryRetrieveInformationModel,
-                                      transferSyntaxes, 3 /*number of TransferSyntaxes*/);
+    return ASC_addPresentationContext(m_associationParameters,
+                                      associationPresentationContextID, UID_MOVEStudyRootQueryRetrieveInformationModel,
+                                      transferSyntaxes, DIM_OF(transferSyntaxes) /*number of TransferSyntaxes*/);
 }
 
 /// TODO Study if the best default transferSyntax is
@@ -92,13 +95,21 @@ OFCondition PACSConnection::configureStore()
     /// just select the first transfer syntax they support (this is not part of the standard) so
     /// organise the proposed transfer syntaxes to take advantage of such behaviour.
 
-    /// Indiquem que con Transfer syntax preferida volem utilitzar JpegLossless
+    ///We indicate that with preferred Transfer syntax we want to use JpegLossless
     const char *preferredTransferSyntax = UID_JPEGProcess14SV1TransferSyntax;
 
     QList<const char*> fallbackSyntaxes;
     fallbackSyntaxes.append(UID_LittleEndianExplicitTransferSyntax);
     fallbackSyntaxes.append(UID_BigEndianExplicitTransferSyntax);
-    fallbackSyntaxes.append(UID_LittleEndianImplicitTransferSyntax);
+
+    fallbackSyntaxes.append(UID_JPEG2000TransferSyntax);
+    fallbackSyntaxes.append(UID_JPEG2000LosslessOnlyTransferSyntax);
+    fallbackSyntaxes.append(UID_JPEGProcess2_4TransferSyntax);
+    fallbackSyntaxes.append(UID_JPEGProcess1TransferSyntax);
+    fallbackSyntaxes.append(UID_JPEGProcess14SV1TransferSyntax);
+    fallbackSyntaxes.append(UID_JPEGLSLossyTransferSyntax);
+    fallbackSyntaxes.append(UID_JPEGLSLosslessTransferSyntax);
+    fallbackSyntaxes.append(UID_RLELosslessTransferSyntax);
 
     /// We add all image transfer SOP classes. as we do not know what modality they are
     /// the images at the same time as preparing the connection are included in all the modalities.
@@ -152,7 +163,8 @@ OFCondition PACSConnection::configureStore()
         }
 
         // Sop class with preferred transfer syntax
-        condition = ASC_addPresentationContext(m_associationParameters, presentationContextID, qPrintable(sopClass), &preferredTransferSyntax, 1,
+        condition = ASC_addPresentationContext(m_associationParameters,
+                                               presentationContextID, qPrintable(sopClass), &preferredTransferSyntax, 1,
                                                ASC_SC_ROLE_DEFAULT);
         // Only odd presentation context id's
         presentationContextID += 2;
@@ -193,7 +205,8 @@ OFCondition PACSConnection::addPresentationContext(int presentationContextId, co
         transferSyntaxes[transferSyntaxCount++] = transferSyntax;
     }
 
-    OFCondition condition = ASC_addPresentationContext(m_associationParameters, presentationContextId, qPrintable(abstractSyntax), transferSyntaxes,
+    OFCondition condition = ASC_addPresentationContext(m_associationParameters,
+                                                       presentationContextId, qPrintable(abstractSyntax), transferSyntaxes,
                                                        transferSyntaxCount, ASC_SC_ROLE_DEFAULT);
 
     delete[] transferSyntaxes;
@@ -215,8 +228,8 @@ bool PACSConnection::connectToPACS(PACSServiceToRequest pacsServiceToRequest)
     }
 
     /// Set calling and called AE titles
-    ASC_setAPTitles(m_associationParameters, qPrintable(settings.getValue(InputOutputSettings::LocalAETitle).toString()), qPrintable(m_pacs.getAETitle()),
-                    NULL);
+    ASC_setAPTitles(m_associationParameters, qPrintable(settings.getValue(InputOutputSettings::LocalAETitle).toString()),
+                    qPrintable(m_pacs.getAETitle()), NULL);
 
     /// Set the security level of the connection in which case we say we do not use any security level
     ASC_setTransportLayerType(m_associationParameters, OFFalse);
@@ -245,7 +258,8 @@ bool PACSConnection::connectToPACS(PACSServiceToRequest pacsServiceToRequest)
 
     if (!condition.good())
     {
-        ERROR_LOG("An error occurred while setting up the connection. AE Title: " + m_pacs.getAETitle() + ", adreca: " +
+        ERROR_LOG("An error occurred while setting up the connection. AE Title: "
+                  + m_pacs.getAETitle() + ", adress: " +
                   constructPacsServerAddress(pacsServiceToRequest, m_pacs) + ". Descripcio error: " + QString(condition.text()));
         return false;
     }
@@ -256,7 +270,8 @@ bool PACSConnection::connectToPACS(PACSServiceToRequest pacsServiceToRequest)
 
     if (m_associationNetwork == NULL)
     {
-        ERROR_LOG("An error occurred initializing the connection parameters. AE Title: " + m_pacs.getAETitle() + ", adreca: " +
+        ERROR_LOG("An error occurred initializing the connection parameters. AE Title: "
+                  + m_pacs.getAETitle() + ", adress: " +
                   constructPacsServerAddress(pacsServiceToRequest, m_pacs));
         return false;
     }
@@ -268,14 +283,16 @@ bool PACSConnection::connectToPACS(PACSServiceToRequest pacsServiceToRequest)
     {
         if (ASC_countAcceptedPresentationContexts(m_associationParameters) == 0)
         {
-            ERROR_LOG("The PACS has not accepted any of the Presentation Contexts presented to us. AE Title: " + m_pacs.getAETitle() + ", adreca: " +
+            ERROR_LOG("The PACS has not accepted any of the Presentation Contexts presented to us. AE Title: "
+                      + m_pacs.getAETitle() + ", adress: " +
                       constructPacsServerAddress(pacsServiceToRequest, m_pacs));
             return false;
         }
     }
     else
     {
-        ERROR_LOG("An error occurred while trying to connect to the PACS. AE Title: " + m_pacs.getAETitle() + ", adreca: " +
+        ERROR_LOG("An error occurred while trying to connect to the PACS. AE Title: "
+                  + m_pacs.getAETitle() + ", adress: " +
                   constructPacsServerAddress(pacsServiceToRequest, m_pacs) + ". Descripcio error: " + QString(condition.text()));
 
         /// If we have not been able to connect to the PACS and it is a download we will have opened the
@@ -373,7 +390,7 @@ T_ASC_Network* PACSConnection::initializeAssociationNetwork(PACSServiceToRequest
     return associationNetwork;
 }
 
-void PACSConnection::getTransferSyntaxForFindOrMoveConnection(const char *transferSyntaxes[3])
+void PACSConnection::getTransferSyntaxForFindOrMoveConnection(const char *transferSyntaxes[6])
 {
     /// We prefer to use Explicitly encoded transfer syntaxes. If we are running on
     /// a Little Endian machine we prefer LittleEndianExplicitTransferSyntax
@@ -398,6 +415,11 @@ void PACSConnection::getTransferSyntaxForFindOrMoveConnection(const char *transf
     }
 
     transferSyntaxes[2] = UID_LittleEndianImplicitTransferSyntax;
+
+    transferSyntaxes[3] = UID_JPEGProcess14SV1TransferSyntax;
+    transferSyntaxes[4] = UID_JPEGLSLosslessTransferSyntax;
+    transferSyntaxes[5] = UID_JPEG2000LosslessOnlyTransferSyntax;
+    //numTransferSyntaxes = 6;
 }
 
 PacsDevice PACSConnection::getPacs()
