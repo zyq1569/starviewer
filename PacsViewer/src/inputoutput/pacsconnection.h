@@ -105,7 +105,7 @@ private:
 
     /// Fill the array passed by parameters with the syntax transfer to
     /// use for connections to make FIND or Move
-    void getTransferSyntaxForFindOrMoveConnection(const char *transferSyntaxes[6]);
+    void getTransferSyntaxForFindOrMoveConnection(const char *transferSyntaxes[]);
 
 private:
     PacsDevice m_pacs;

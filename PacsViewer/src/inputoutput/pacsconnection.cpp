@@ -390,7 +390,7 @@ T_ASC_Network* PACSConnection::initializeAssociationNetwork(PACSServiceToRequest
     return associationNetwork;
 }
 
-void PACSConnection::getTransferSyntaxForFindOrMoveConnection(const char *transferSyntaxes[6])
+void PACSConnection::getTransferSyntaxForFindOrMoveConnection(const char *transferSyntaxes[])
 {
     /// We prefer to use Explicitly encoded transfer syntaxes. If we are running on
     /// a Little Endian machine we prefer LittleEndianExplicitTransferSyntax
