@@ -55,7 +55,7 @@ OFCondition PACSConnection::configureEcho()
 
 OFCondition PACSConnection::configureFind()
 {
-    const char *transferSyntaxes[] = { NULL, NULL, NULL, NULL, NULL, NULL };
+    const char *transferSyntaxes[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
     /// It must always be odd, its value is 1 because we only pass a presentation context
     int presentationContextID = 1;
 
@@ -69,7 +69,7 @@ OFCondition PACSConnection::configureFind()
 OFCondition PACSConnection::configureMove()
 {
     T_ASC_PresentationContextID associationPresentationContextID = 1;
-    const char *transferSyntaxes[] = { NULL, NULL, NULL, NULL, NULL, NULL };
+    const char *transferSyntaxes[] = { NULL, NULL, NULL, NULL, NULL, NULL , NULL, NULL, NULL, NULL};
 
     getTransferSyntaxForFindOrMoveConnection(transferSyntaxes);
 
@@ -415,10 +415,13 @@ void PACSConnection::getTransferSyntaxForFindOrMoveConnection(const char *transf
     }
 
     transferSyntaxes[2] = UID_LittleEndianImplicitTransferSyntax;
-
     transferSyntaxes[3] = UID_JPEGProcess14SV1TransferSyntax;
     transferSyntaxes[4] = UID_JPEGLSLosslessTransferSyntax;
     transferSyntaxes[5] = UID_JPEG2000LosslessOnlyTransferSyntax;
+    transferSyntaxes[6] = UID_JPEG2000TransferSyntax;
+    transferSyntaxes[7] = UID_JPEGProcess2_4TransferSyntax;
+    transferSyntaxes[8] = UID_JPEGProcess1TransferSyntax;
+    transferSyntaxes[9] = UID_JPEGLSLossyTransferSyntax;
     //numTransferSyntaxes = 6;
 }
 

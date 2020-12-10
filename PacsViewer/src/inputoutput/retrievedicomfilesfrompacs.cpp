@@ -61,13 +61,17 @@ OFCondition RetrieveDICOMFilesFromPACS::acceptSubAssociation(T_ASC_Network *asso
         // If we have compression we ask for it, and we can speed up the download time considerably
         // For now we ask for the lossless compression that every PACS that supports compression has
         // to provide: JPEGLossless: Non-Hierarchical-1stOrderPrediction
-        transferSyntaxes[0] = UID_JPEGProcess14SV1TransferSyntax;
+        transferSyntaxes[0] = UID_LittleEndianImplicitTransferSyntax;//UID_JPEGProcess14SV1TransferSyntax;
         transferSyntaxes[1] = UID_LittleEndianExplicitTransferSyntax;
         transferSyntaxes[2] = UID_BigEndianExplicitTransferSyntax;
-        transferSyntaxes[3] = UID_LittleEndianImplicitTransferSyntax;
+        transferSyntaxes[3] = UID_JPEGProcess14SV1TransferSyntax;//UID_LittleEndianImplicitTransferSyntax;
         transferSyntaxes[4] = UID_JPEGLSLosslessTransferSyntax;
         transferSyntaxes[5] = UID_JPEG2000LosslessOnlyTransferSyntax;
-        numTransferSyntaxes = 6;
+        transferSyntaxes[6] = UID_JPEG2000TransferSyntax;
+        transferSyntaxes[7] = UID_JPEGProcess2_4TransferSyntax;
+        transferSyntaxes[8] = UID_JPEGProcess1TransferSyntax;
+        transferSyntaxes[9] = UID_JPEGLSLossyTransferSyntax;
+        numTransferSyntaxes = 10;
 
         //transferSyntaxes[0] = UID_JPEG2000TransferSyntax;
         //transferSyntaxes[1] = UID_JPEG2000LosslessOnlyTransferSyntax;
@@ -140,6 +144,10 @@ OFCondition RetrieveDICOMFilesFromPACS::acceptSubAssociation(T_ASC_Network *asso
 #endif
 
 #endif
+        }
+        else
+        {
+            ERROR_LOG("acceptSubAssociation ASC_acceptContextsWithPreferredTransferSyntaxes error!" + QString(condition.text()));
         }
     }
 
