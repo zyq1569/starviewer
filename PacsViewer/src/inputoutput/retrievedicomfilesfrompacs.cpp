@@ -574,7 +574,6 @@ getDIMSEStatusCodeAsRetrieveRequestStatus(unsigned int dimseStatusCode)
     // Failure or Refused: Some images could not be downloaded
     // Warning: At least one image could be downloaded
     // Success: All images have been downloaded successfully
-
     // For details on "related fields" see PS 3.7, Annex C - Status Type Enconding
 
     if (dimseStatusCode == STATUS_Success)
