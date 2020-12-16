@@ -25,11 +25,12 @@ public:
     IncomingDICOMConnectionsPortInUseTest(QObject *parent = 0);
     ~IncomingDICOMConnectionsPortInUseTest();
 
-    ///Retorna descripcio del test
+    ///Returns test description
     QString getDescription();
 };
 
-static DiagnosisTestFactoryRegister<IncomingDICOMConnectionsPortInUseTest> registerIncomingDICOMConnectionsPortInUseTest("IncomingDICOMConnectionsPortInUseTest");
+static DiagnosisTestFactoryRegister<IncomingDICOMConnectionsPortInUseTest>
+registerIncomingDICOMConnectionsPortInUseTest("IncomingDICOMConnectionsPortInUseTest");
 
 } // end namespace udg
 
