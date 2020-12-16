@@ -136,7 +136,7 @@ OFCondition PACSConnection::configureStore()
     QStringList sopClasses;
     for (int i = 0; i < numberOfDcmShortSCUStorageSOPClassUIDs; i++)
     {
-        // Comprovem que no hi hagi que cap SOPClas duplicada
+        // We check that there are no duplicate SOPClas
         if (!sopClasses.contains(QString(dcmShortSCUStorageSOPClassUIDs[i])))
         {
             sopClasses.append(QString(dcmShortSCUStorageSOPClassUIDs[i]));
