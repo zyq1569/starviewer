@@ -215,8 +215,8 @@ OFCondition PACSConnection::addPresentationContext(int presentationContextId, co
 
 bool PACSConnection::connectToPACS(PACSServiceToRequest pacsServiceToRequest)
 {
-    /// Hi ha invocacions de mètodes de dcmtk que no se'ls hi comprova el
-    ///  condition que retornen, perquè se'ls hi ha mirat el codi i sempre retornen EC_NORMAL
+    /// There are invocations of dcmtk methods that are not checked on
+    /// condition that they return, because the code has been looked at and they always return EC_NORMAL
     Settings settings;
 
     /// Create the parameters of the connection
