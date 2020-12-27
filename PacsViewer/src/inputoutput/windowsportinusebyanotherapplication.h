@@ -24,8 +24,8 @@
 namespace udg {
 
 /**
-    Classe que s'encarrega de comprovar si un port està en ús per una aplicació que no sigui starviewer, a windows.
-  */
+Class that is responsible for checking if a port is in use by an application other than starviewer, in windows.
+*/
 class WindowsPortInUseByAnotherApplication : public PortInUseByAnotherApplication {
 public:
     WindowsPortInUseByAnotherApplication();
