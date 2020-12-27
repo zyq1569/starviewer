@@ -663,19 +663,37 @@ void ExtensionHandler::fromClientNotify()
     m_clientSocket->flush();
 
     //-----------------------------------------------------------------------------
-    if (!m_httpclient)
+    QStringList list = msg.split("&");
+    QString HttpServerHost, DownDir,Studyuid;
+    if (list.size() >2)
     {
-        m_httpclient = new HttpClient(NULL,"F:/log/down");
-        connect(m_httpclient, SIGNAL(allFilesFinished()), this,  SLOT(httpServerDownAllDcm()));
-        m_httpclient->setHttpServerHost("http://127.0.0.1:8080");
+        HttpServerHost = list[0];
+        DownDir = list[1];
+        Studyuid = list[2];
+        QDir downdir(DownDir);
+        if(!downdir.exists())
+        {
+            QDir createDir(DownDir); // 注意
+            createDir.setPath("");
+            if (!createDir.mkpath(DownDir))
+            {
+                // error!
+            }
+        }
+        if (!m_httpclient)
+        {
+            m_httpclient = new HttpClient(NULL,DownDir/*"F:/log/down"*/);
+            connect(m_httpclient, SIGNAL(allFilesFinished()), this,  SLOT(httpServerDownAllDcm()));
+        }
+        m_httpclient->setHttpServerHost(HttpServerHost/*"http://127.0.0.1:8080"*/);
+        m_httpclient->getStudyImageFile(QUrl(HttpServerHost/*m_httpclient->getHttpServerHost()*/), Studyuid/*msg*/, "", "");
+        ///---HWND_TOPMOST--->HWND_NOTOPMOST
+        ::SetWindowPos(HWND(m_mainApp->winId()), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+        ::SetWindowPos(HWND(m_mainApp->winId()), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+        m_mainApp->show();
+        m_mainApp->activateWindow();
+        //------------------------------------------------------------------------------
     }
-    m_httpclient->getStudyImageFile(QUrl(m_httpclient->getHttpServerHost()), msg, "", "");
-    ///---HWND_TOPMOST--->HWND_NOTOPMOST
-    ::SetWindowPos(HWND(m_mainApp->winId()), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-    ::SetWindowPos(HWND(m_mainApp->winId()), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-    m_mainApp->show();
-    m_mainApp->activateWindow();
-    //------------------------------------------------------------------------------
     INFO_LOG("fromClientNotify: " + msg);
 }
 
