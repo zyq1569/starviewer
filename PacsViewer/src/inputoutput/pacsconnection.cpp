@@ -414,8 +414,8 @@ void PACSConnection::getTransferSyntaxForFindOrMoveConnection(const char *transf
         transferSyntaxes[1] = UID_LittleEndianExplicitTransferSyntax;
     }
 
-    transferSyntaxes[2] = UID_LittleEndianImplicitTransferSyntax;
-    transferSyntaxes[3] = UID_JPEGProcess14SV1TransferSyntax;
+    transferSyntaxes[2] = UID_JPEGProcess14SV1TransferSyntax;
+    transferSyntaxes[3] = UID_LittleEndianImplicitTransferSyntax;
     transferSyntaxes[4] = UID_JPEGLSLosslessTransferSyntax;
     transferSyntaxes[5] = UID_JPEG2000LosslessOnlyTransferSyntax;
     transferSyntaxes[6] = UID_JPEG2000TransferSyntax;
