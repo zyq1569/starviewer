@@ -30,11 +30,11 @@ void setLogDefault()
     // default logger uses default configurations
     el::Loggers::reconfigureLogger("default", defaultConf);
     //LOG(INFO) << "Log using default file";
-    INFO_LOG("Log using default file");
     // To set GLOBAL configurations you may use
     defaultConf.setGlobally( el::ConfigurationType::Format, "%datetime{%Y-%M-%d %H:%m:%s} %level %msg");
     defaultConf.setGlobally(el::ConfigurationType::Filename, getLogFilePath().toStdString());
     el::Loggers::reconfigureLogger("default", defaultConf);
+    INFO_LOG("--------setLogDefault()-----------");
 }
 
 void beginLogging()
@@ -61,7 +61,7 @@ void beginLogging()
     }else
     {
         setLogDefault();
-        INFO_LOG("--------setLogDefault()-----------");
+
     }
 }
 
