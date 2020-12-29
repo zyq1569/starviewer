@@ -20,6 +20,22 @@
 
 namespace udg {
 
+void setLogDefault()
+{
+    el::Configurations defaultConf;
+    defaultConf.setToDefault();
+    // Values are always std::string
+    //defaultConf.set(el::Level::Info, el::ConfigurationType::Format, "%datetime{%Y-%M-%d %H:%m:%s} %level %msg");
+    defaultConf.set(el::Level::Warning, el::ConfigurationType::Format, "%datetime{%Y-%M-%d %H:%m:%s} %level %msg");
+    // default logger uses default configurations
+    el::Loggers::reconfigureLogger("default", defaultConf);
+    LOG(INFO) << "Log using default file";
+    // To set GLOBAL configurations you may use
+    defaultConf.setGlobally( el::ConfigurationType::Format, "%datetime{%Y-%M-%d %H:%m:%s} %level %msg");
+    defaultConf.setGlobally(el::ConfigurationType::Filename, getLogFilePath().toStdString());
+    el::Loggers::reconfigureLogger("default", defaultConf);
+}
+
 void beginLogging()
 {
     //First we check that the directory ~ / .starviewer / log / exists where we will look for the logs
@@ -31,15 +47,20 @@ void beginLogging()
         //logDir.mkpath(udg::UserLogsPath);
         logDir.mkpath(udg::UserCurrentAppPath);
     }
-    el::Configurations logConfig(getLogConfFilePath().toStdString());
-    logConfig.setGlobally(el::ConfigurationType::Filename, getLogFilePath().toStdString());
-
-    //Disable logging to the standard output when compiled on release
+    QDir logConf = getLogConfFilePath();
+    if (logConf.exists())
+    {
+        el::Configurations logConfig(getLogConfFilePath().toStdString());
+        logConfig.setGlobally(el::ConfigurationType::Filename, getLogFilePath().toStdString());
+        //Disable logging to the standard output when compiled on release
 #ifdef QT_NO_DEBUG
-    logConfig.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
+        logConfig.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
 #endif
-
-    el::Loggers::reconfigureAllLoggers(logConfig);
+        el::Loggers::reconfigureAllLoggers(logConfig);
+    }else
+    {
+        setLogDefault();
+    }
 }
 
 QString getLogFilePath()
