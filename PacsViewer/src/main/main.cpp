@@ -120,6 +120,7 @@ void sendToFirstStarviewerInstanceCommandLineOptions(QtSingleApplication &app)
     }
 }
 
+/// 20210104 error!!void QViewer::setupRenderWindow()
 int main(int argc, char *argv[])
 {
     // Applying scale factor
