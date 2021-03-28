@@ -20,7 +20,8 @@
 #include "starviewerapplication.h"
 #include "coresettings.h"
 
-namespace udg {
+namespace udg
+{
 
 ApplicationTranslationsLoader::ApplicationTranslationsLoader(QApplication *application)
 {

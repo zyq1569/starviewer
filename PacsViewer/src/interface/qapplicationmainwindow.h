@@ -33,7 +33,8 @@ class QSplitter;
 
 
 
-namespace udg {
+namespace udg
+{
 // Forward declarations
 class ExtensionWorkspace;
 class ExtensionHandler;
@@ -44,7 +45,8 @@ class StatsWatcher;
 class ExternalApplication;
 class ImageThumbnailDockWidget;
 
-class QApplicationMainWindow : public QMainWindow {
+class QApplicationMainWindow : public QMainWindow
+{
     Q_OBJECT
 public:
     /// The builder of the Mainwindow. This is where the entire interface skeleton is created: Menus,

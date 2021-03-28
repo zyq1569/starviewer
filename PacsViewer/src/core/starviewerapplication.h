@@ -20,7 +20,7 @@
 namespace udg {
 
 const QString StarviewerVersionString("0.15.0-devel");
-const QString StarviewerBuildID("2018021200");
+const QString StarviewerBuildID("2021012900");
 
 #ifdef Q_OS_WIN
 const QString StarviewerBuildPlatform("Windows");

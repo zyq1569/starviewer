@@ -12,7 +12,7 @@ win32-msvc2013 {
     OBJECTS_DIR = ../../tmp/obj
     }
 
-UI_DIR = ../../tmp/ui
+UI_DIR  = ../../tmp/ui
 MOC_DIR = ../../tmp/moc
 RCC_DIR = ../../tmp/rcc
 

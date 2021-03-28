@@ -223,12 +223,12 @@ CrashHandler::CrashHandler()
 
 #ifdef Q_OS_LINUX
     exceptionHandler = new google_breakpad::ExceptionHandler(google_breakpad::MinidumpDescriptor(dumpsDir.absolutePath().toStdString()), nullptr,
-                                                             launchCrashReporter, this, true, -1);
+            launchCrashReporter, this, true, -1);
 #elif defined Q_OS_MAC
     exceptionHandler = new google_breakpad::ExceptionHandler(dumpsDir.absolutePath().toStdString(), 0, launchCrashReporter, this, true, nullptr);
 #elif defined Q_OS_WIN32
     exceptionHandler = new google_breakpad::ExceptionHandler(dumpsDir.absolutePath().toStdWString(), 0, launchCrashReporter, this,
-                                                             google_breakpad::ExceptionHandler::HANDLER_ALL);
+            google_breakpad::ExceptionHandler::HANDLER_ALL);
 #endif // Q_OS_*
 
 #endif // NO_CRASH_REPORTER

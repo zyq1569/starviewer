@@ -33,7 +33,8 @@
 #include "phasesyncaction.h"
 #include "thickslabsyncaction.h"
 
-namespace udg {
+namespace udg
+{
 
 void SyncActionsRegister::registerSyncActions()
 {

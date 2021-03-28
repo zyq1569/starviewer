@@ -72,7 +72,8 @@
 #include "shortcuts.h"
 #include "shortcutmanager.h"
 
-namespace udg {
+namespace udg
+{
 
 /// To process the options entered by command line we have to use a Singleton of
 /// StarviewerApplicationCommandLine, this comes because
@@ -145,7 +146,7 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     readSettings();
     // Application icon
     this->setWindowIcon(QIcon(":/images/logo/logo.ico"));
-    this->setWindowTitle(ApplicationNameString+"-MainWindow");
+    this->setWindowTitle(ApplicationNameString/*+"-MainWindow"*/);
 
     //With starviewer lite there will be no hanging protocols, so we will not load them
 #ifndef STARVIEWER_LITE
@@ -383,7 +384,8 @@ void QApplicationMainWindow::createActions()
     m_runDiagnosisTestsAction = new QAction(this);
     m_runDiagnosisTestsAction->setText(tr("&Run Diagnosis Tests"));
     m_runDiagnosisTestsAction->setStatusTip(tr("Run %1 diagnosis tests").arg(ApplicationNameString));
-    connect(m_runDiagnosisTestsAction, SIGNAL(triggered()), SLOT(showDiagnosisTestDialog()));}
+    connect(m_runDiagnosisTestsAction, SIGNAL(triggered()), SLOT(showDiagnosisTestDialog()));
+}
 
 void QApplicationMainWindow::maximizeMultipleScreens()
 {
@@ -461,7 +463,7 @@ void QApplicationMainWindow::createMenus()
     m_windowMenu->addAction(m_maximizeAction);
     m_windowMenu->addAction(m_moveToPreviousDesktopAction);
     m_windowMenu->addAction(m_moveToNextDesktopAction);
-    
+
     menuBar()->addSeparator();
 
     // Help and support menu
@@ -804,17 +806,17 @@ void QApplicationMainWindow::newCommandLineOptionsToRun()
     {
         switch (optionValue.first)
         {
-        case StarviewerApplicationCommandLine::openBlankWindow:
-            INFO_LOG("Received command line argument to open new window");
-            openBlankWindow();
-            break;
-        case StarviewerApplicationCommandLine::retrieveStudyFromAccessioNumber:
-            INFO_LOG("Received command line argument to download a study through its accession number");
-            sendRequestRetrieveStudyWithAccessionNumberToLocalStarviewer(optionValue.second);
-            break;
-        default:
-            INFO_LOG("Invalid command line argument");
-            break;
+            case StarviewerApplicationCommandLine::openBlankWindow:
+                INFO_LOG("Received command line argument to open new window");
+                openBlankWindow();
+                break;
+            case StarviewerApplicationCommandLine::retrieveStudyFromAccessioNumber:
+                INFO_LOG("Received command line argument to download a study through its accession number");
+                sendRequestRetrieveStudyWithAccessionNumberToLocalStarviewer(optionValue.second);
+                break;
+            default:
+                INFO_LOG("Invalid command line argument");
+                break;
         }
     }
 }

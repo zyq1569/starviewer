@@ -112,7 +112,7 @@ void sendToFirstStarviewerInstanceCommandLineOptions(QtSingleApplication &app)
     {
         ERROR_LOG("The argument list could not be sent to the main instance, the primary instance does not appear to respond.");
         QMessageBox::critical(NULL, udg::ApplicationNameString, QObject::tr("%1 is already running, but is not responding. "
-                                                                            "To open %1, you must first close the existing %1 process, or restart your system.").arg(udg::ApplicationNameString));
+                              "To open %1, you must first close the existing %1 process, or restart your system.").arg(udg::ApplicationNameString));
     }
     else
     {
@@ -230,7 +230,7 @@ int main(int argc, char *argv[])
         if (!StarviewerSingleApplicationCommandLineSingleton::instance()->parse(commandLineArgumentsList, errorInvalidCommanLineArguments))
         {
             QString invalidCommandLine = QObject::tr("There were errors invoking %1 from the command line with the following call:\n\n%2")
-                    .arg(udg::ApplicationNameString).arg(commandLineCall) + "\n\n";
+                                         .arg(udg::ApplicationNameString).arg(commandLineCall) + "\n\n";
             invalidCommandLine += QObject::tr("Detected errors: ") + errorInvalidCommanLineArguments + "\n";
             invalidCommandLine += StarviewerSingleApplicationCommandLineSingleton::instance()->getStarviewerApplicationCommandLineOptions().getSynopsis();
             QMessageBox::warning(NULL, udg::ApplicationNameString, invalidCommandLine);
