@@ -32,14 +32,16 @@ class HttpClient;
 #define ImageAppName  "StarViewer"
 
 
-namespace udg {
+namespace udg
+{
 
 // Fordward Declarations
 class QApplicationMainWindow;
 /**
    Manager of mini-applications and services of the main application
 */
-class ExtensionHandler : public QObject {
+class ExtensionHandler : public QObject
+{
     Q_OBJECT
 public:
     ExtensionHandler(QApplicationMainWindow *mainApp, QObject *parent = 0);

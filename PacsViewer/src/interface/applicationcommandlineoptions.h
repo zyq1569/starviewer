@@ -23,7 +23,8 @@
 
 class QString;
 
-namespace udg {
+namespace udg
+{
 
 /**
 Class that parses the arguments we enter by command line when running the application.
@@ -42,7 +43,8 @@ than one argument it will be ignored and the first one will be taken
 
 This class is case sensitive
  */
-        class ApplicationCommandLineOptions {
+class ApplicationCommandLineOptions
+{
 
 public:
     /// Default constructor in which to specify the name of the application
@@ -50,7 +52,7 @@ public:
 
     /// Returns the name of the application
     QString getApplicationName() const;
-    
+
     /// Allows you to add an argument that we will accept
     /// as valid for the line command. Returns false if the argument already exists
     bool addOption(const CommandLineOption &option);
@@ -79,14 +81,14 @@ public:
 
     /// Returns a text with the synopsis of using these command options
     QString getSynopsis() const;
-    
+
     /// Returns the list of possible orders that are registered
     QList<CommandLineOption> getCommandLineOptionsList() const;
 
 private:
     /// Name of the application for which these options apply
     QString m_applicationName;
-    
+
     // It contains the possible options that can enter us from the command line,
     // and contains associated the description of what that option does
     QMap<QString, CommandLineOption> m_commandLineOptions;

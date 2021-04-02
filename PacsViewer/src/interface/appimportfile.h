@@ -18,13 +18,15 @@
 #include <QObject>
 #include <QStringList>
 
-namespace udg {
+namespace udg
+{
 
 /**
      Mini-application responsible for loading a model from the file system to the volume repository
 */
-class AppImportFile : public QObject {
-Q_OBJECT
+class AppImportFile : public QObject
+{
+    Q_OBJECT
 public:
     AppImportFile(QObject *parent = 0);
     ~AppImportFile();
@@ -58,10 +60,10 @@ private:
     ///Working directory for ordinary files
     QString m_workingDirectory;
 
-   /// Working directory by dicom directories
+    /// Working directory by dicom directories
     QString m_workingDicomDirectory;
 
-  ///Last User Selected Extension
+    ///Last User Selected Extension
     QString m_lastExtension;
 };
 

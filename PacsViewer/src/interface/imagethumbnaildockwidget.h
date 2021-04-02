@@ -9,7 +9,8 @@ class QListWidgetItem;
 #include <QDockWidget>
 #include <QMap>
 
-namespace udg {
+namespace udg
+{
 
 class QApplicationMainWindow;
 class Patient;
