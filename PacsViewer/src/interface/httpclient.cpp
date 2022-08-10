@@ -111,7 +111,7 @@ void HttpClient::ParseDwonData()
     m_patientstudydb.rowinfo.clear();
     if (m_currentfiletype == DownFileType::studyini && m_currentDownData.size() > 1)
     {
-        INFO_LOG("---step 1/3---: start parse jsonfile : "+m_url.query());
+        TRACE_LOG("---step 1/3---: start parse jsonfile : "+m_url.query());
         HStudy study;
         QJsonParseError jsonError;
         QJsonDocument paserDoc = QJsonDocument::fromJson(m_currentDownData, &jsonError);
@@ -131,7 +131,7 @@ void HttpClient::ParseDwonData()
             study.imageCount = paserObj.take("numImages").toInt();
             QJsonArray array = paserObj.take("seriesList").toArray();
             CreatDir(m_downDir+"/"+study.StudyUID);
-            INFO_LOG("------step 2/3---:  parse dcm studyuid:: " + study.StudyUID);
+            TRACE_LOG("------step 2/3---:  parse dcm studyuid:: " + study.StudyUID);
             m_listStudyuid.clear();
             QList<HttpInfo> httpinfo;
             int size = array.size();
@@ -156,7 +156,7 @@ void HttpClient::ParseDwonData()
                 }
                 study.Serieslist.push_back(series);
             }
-            INFO_LOG(tr("---step 3/3---:  start to down all dcm files : series size =  %1   | image filse : count = %2 ").arg(size).arg(httpinfo.size()));
+            TRACE_LOG(tr("---step 3/3---:  start to down all dcm files : series size =  %1   | image filse : count = %2 ").arg(size).arg(httpinfo.size()));
             if (!m_managethread)
             {
                 m_managethread = new HManageThread();
@@ -168,8 +168,7 @@ void HttpClient::ParseDwonData()
         else
         {
             ERROR_LOG(tr("---error---->parse json fail: %1 %2").arg(m_url.query()).arg(jsonError.errorString()));
-            QMessageBox::question(NULL, tr("Down error"),
-                                  tr("parse json fail: %1 %2?").arg(m_url.query(),jsonError.errorString()), QMessageBox::Ok);
+            QMessageBox::question(NULL, tr("Down error"),tr("parse json fail: %1 %2?").arg(m_url.query(),jsonError.errorString()), QMessageBox::Ok);
         }
     }
 }
