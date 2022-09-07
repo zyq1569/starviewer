@@ -121,6 +121,7 @@ void sendToFirstStarviewerInstanceCommandLineOptions(QtSingleApplication &app)
 }
 
 /// 20210104 error!!void QViewer::setupRenderWindow()
+/// 20220907 影像服务端考虑将存储以时间段为目录存储,这样出现查询studyuid时间，后台需要先查找时间值
 int main(int argc, char *argv[])
 {
     // Applying scale factor
