@@ -269,7 +269,14 @@ int main(int argc, char *argv[])
 
             INFO_LOG("Created main window");
 
-            mainWin->show();
+            if (argc > 2)///20220912
+            {
+                mainWin->hide();
+            }
+            else
+            {
+                mainWin->show();
+            }
             mainWin->checkNewVersionAndShowReleaseNotes();
 
             QObject::connect(&app, SIGNAL(lastWindowClosed()),
