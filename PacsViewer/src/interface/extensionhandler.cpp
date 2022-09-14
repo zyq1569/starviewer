@@ -49,13 +49,13 @@
 ///
 ///
 ///
-namespace udg {
+namespace udg
+{
 
 typedef SingletonPointer<QueryScreen> QueryScreenSingleton;
 typedef Singleton<PatientComparer> PatientComparerSingleton;
 
-ExtensionHandler::ExtensionHandler(QApplicationMainWindow *mainApp, QObject *parent)
-    : QObject(parent)
+ExtensionHandler::ExtensionHandler(QApplicationMainWindow *mainApp, QObject *parent): QObject(parent)
 {
     m_mainApp = mainApp;
 
@@ -118,44 +118,44 @@ void ExtensionHandler::request(int who)
     INFO_LOG("Extension request with ID: " + QString::number(who));
     switch (who)
     {
-    case 1:
-        m_importFileApp.open();
-        break;
+        case 1:
+            m_importFileApp.open();
+            break;
 
-    case 6:
-        m_importFileApp.openDirectory();
-        break;
+        case 6:
+            m_importFileApp.openDirectory();
+            break;
 
-    case 7:
-        // HACK because the QueryScreen is a singleton, this causes side effects when we had
-        // two windows (see ticket # 542). Let's do this little hack so that this doesn't happen.
-        // It remains to be resolved in the appropriate way
-        disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
-        QueryScreenSingleton::instance()->showPACSTab();
-        connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
-        m_haveToCloseQueryScreen = true;
-        break;
+        case 7:
+            // HACK because the QueryScreen is a singleton, this causes side effects when we had
+            // two windows (see ticket # 542). Let's do this little hack so that this doesn't happen.
+            // It remains to be resolved in the appropriate way
+            disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
+            QueryScreenSingleton::instance()->showPACSTab();
+            connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
+            m_haveToCloseQueryScreen = true;
+            break;
 
-    case 8:
-        // HACK because the QueryScreen is a singleton, this causes side effects when we had
-        // two windows (see ticket # 542). Let's do this little hack so that this doesn't happen.
-        // It remains to be resolved in the appropriate way
-        disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
-        QueryScreenSingleton::instance()->openDicomdir();
-        connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
-        m_haveToCloseQueryScreen = true;
-        break;
+        case 8:
+            // HACK because the QueryScreen is a singleton, this causes side effects when we had
+            // two windows (see ticket # 542). Let's do this little hack so that this doesn't happen.
+            // It remains to be resolved in the appropriate way
+            disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
+            QueryScreenSingleton::instance()->openDicomdir();
+            connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
+            m_haveToCloseQueryScreen = true;
+            break;
 
-    case 10:
-        // Show location
-        // HACK because the QueryScreen is a singleton, this causes side effects when we had
-        // two windows (see ticket # 542). Let's do this little hack so that this doesn't happen.
-        // It remains to be resolved in the appropriate way
-        disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
-        QueryScreenSingleton::instance()->showLocalExams();
-        connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
-        m_haveToCloseQueryScreen = true;
-        break;
+        case 10:
+            // Show location
+            // HACK because the QueryScreen is a singleton, this causes side effects when we had
+            // two windows (see ticket # 542). Let's do this little hack so that this doesn't happen.
+            // It remains to be resolved in the appropriate way
+            disconnect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), 0, 0);
+            QueryScreenSingleton::instance()->showLocalExams();
+            connect(QueryScreenSingleton::instance(), SIGNAL(selectedPatients(QList<Patient*>, bool)), SLOT(processInput(QList<Patient*>, bool)));
+            m_haveToCloseQueryScreen = true;
+            break;
     }
 }
 
