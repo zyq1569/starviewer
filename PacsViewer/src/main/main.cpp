@@ -273,7 +273,7 @@ int main(int argc, char *argv[])
             if (argc > 1)///20220912
             {
                 mainWin->hide();
-                INFO_LOG("main(int argc, char *argv[])" + QString::number(argc));
+                INFO_LOG("main(int argc, char *argv[]):argc > 1  mainWin->hide()" + QString::number(argc));
             }
             else
             {
