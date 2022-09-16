@@ -18,19 +18,24 @@
 
 #include <QApplication>
 
-namespace udg {
+namespace udg
+{
 
 const char* getPID(const el::LogMessage*)
 {
-    static QString pid = QString::number(getpid());
-    return  pid.toLatin1();
+#ifdef MSVC
+    static std::string stdpid = QString::number(qApp->applicationPid()).toStdString();
+#else
+    static std::string stdpid = QString::number(getpid()).toStdString();
+#endif
+    return  stdpid.c_str();
 }
 
 void setLogDefault()
 {
     el::Configurations defaultConf;
     defaultConf.setToDefault();
-	el::Helpers::installCustomFormatSpecifier(el::CustomFormatSpecifier("%pid", getPID));
+    el::Helpers::installCustomFormatSpecifier(el::CustomFormatSpecifier("%pid", getPID));
     // Values are always std::string
     //defaultConf.set(el::Level::Info, el::ConfigurationType::Format, "%datetime{%Y-%M-%d %H:%m:%s} %level %msg");
     defaultConf.set(el::Level::Warning, el::ConfigurationType::Format, "%datetime{%Y-%M-%d %H:%m:%s:%g} %pid %thread %levshort %msg");
@@ -65,7 +70,8 @@ void beginLogging()
         logConfig.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
 #endif
         el::Loggers::reconfigureAllLoggers(logConfig);
-    }else
+    }
+    else
     {
         setLogDefault();
 
