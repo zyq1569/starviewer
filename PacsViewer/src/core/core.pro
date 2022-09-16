@@ -812,6 +812,9 @@ win32 {
                windowssysteminformation.h
     SOURCES += windowsfirewallaccess.cpp \
                windowssysteminformation.cpp
+
+msvc: DEFINES      += MSVC
+
 }
 
 OTHER_FILES += ../qml/qmlpatientbrowsermenu.qml
