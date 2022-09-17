@@ -225,25 +225,28 @@ int main(int argc, char *argv[])
     QString commandLineCall = commandLineArgumentsList.join(" ");
     INFO_LOG("Started new Starviewer instance with the following command line arguments " + commandLineCall);
 
-    if (commandLineArgumentsList.count() > 1)
+    if (commandLineArgumentsList.count() > 1 )
     {
-        // We just parse the command line arguments to see if they are correct, we'll wait until everything is loaded by
-        // process them, if the arguments are not correct show QMessagebox if there is another instance of Starviewer we end here.
-        QString errorInvalidCommanLineArguments;
-        if (!StarviewerSingleApplicationCommandLineSingleton::instance()->parse(commandLineArgumentsList, errorInvalidCommanLineArguments))
+        if (commandLineArgumentsList[1] != "hide")
         {
-            QString invalidCommandLine = QObject::tr("There were errors invoking %1 from the command line with the following call:\n\n%2")
-                                         .arg(udg::ApplicationNameString).arg(commandLineCall) + "\n\n";
-            invalidCommandLine += QObject::tr("Detected errors: ") + errorInvalidCommanLineArguments + "\n";
-            invalidCommandLine += StarviewerSingleApplicationCommandLineSingleton::instance()->getStarviewerApplicationCommandLineOptions().getSynopsis();
-            QMessageBox::warning(NULL, udg::ApplicationNameString, invalidCommandLine);
-
-            ERROR_LOG("Invalid command line arguments, error : " + errorInvalidCommanLineArguments);
-
-            // If there is already another instance running we give the error message and close Starviewer
-            if (app.isRunning())
+            // We just parse the command line arguments to see if they are correct, we'll wait until everything is loaded by
+            // process them, if the arguments are not correct show QMessagebox if there is another instance of Starviewer we end here.
+            QString errorInvalidCommanLineArguments;
+            if (!StarviewerSingleApplicationCommandLineSingleton::instance()->parse(commandLineArgumentsList, errorInvalidCommanLineArguments))
             {
-                return 0;
+                QString invalidCommandLine = QObject::tr("There were errors invoking %1 from the command line with the following call:\n\n%2")
+                                             .arg(udg::ApplicationNameString).arg(commandLineCall) + "\n\n";
+                invalidCommandLine += QObject::tr("Detected errors: ") + errorInvalidCommanLineArguments + "\n";
+                invalidCommandLine += StarviewerSingleApplicationCommandLineSingleton::instance()->getStarviewerApplicationCommandLineOptions().getSynopsis();
+                QMessageBox::warning(NULL, udg::ApplicationNameString, invalidCommandLine);
+
+                ERROR_LOG("Invalid command line arguments, error : " + errorInvalidCommanLineArguments);
+
+                // If there is already another instance running we give the error message and close Starviewer
+                if (app.isRunning())
+                {
+                    return 0;
+                }
             }
         }
     }
@@ -273,7 +276,7 @@ int main(int argc, char *argv[])
             if (argc > 1)///20220912
             {
                 mainWin->hide();
-                INFO_LOG("main(int argc, char *argv[]):argc > 1  mainWin->hide()" + QString::number(argc));
+                INFO_LOG("main(int argc, char *argv[]):argc > 1  mainWin->hide()" + QString(argv[1]));
             }
             else
             {
