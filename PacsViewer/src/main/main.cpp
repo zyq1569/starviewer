@@ -276,7 +276,7 @@ int main(int argc, char *argv[])
             if (argc > 1)///20220912
             {
                 mainWin->hide();
-                INFO_LOG("main(int argc, char *argv[]):argc > 1  mainWin->hide()" + QString(argv[1]));
+                INFO_LOG("MHealthReport.exe start!--main(int argc, char *argv[]):argc > 1  mainWin->hide()" + QString(argv[1]));
             }
             else
             {
