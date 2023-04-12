@@ -3,6 +3,7 @@
 # Subdirectory related to the main project directory://. qinwenliu9/Lqw19880211 ->iphone4s ECID 81672314123
 # The goal is a subdirectory of the project
 
+# win32-msvc2017 +  >=qt5.9
 include(src/compilationtype.pri)
 
 SUBDIRS += src
