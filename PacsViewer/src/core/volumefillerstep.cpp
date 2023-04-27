@@ -119,11 +119,11 @@ void VolumeFillerStep::saveThumbnail(const Image *image)
     QImage thumbnail = thumbnailCreator.getThumbnail(image);
     thumbnail.save(QString("%1/thumbnail%2.png").arg(thumbnailPath).arg(volumeNumber), "PNG");
 
-    // Si és el primer thumbnail, també creem el thumbnail ordinari que s'havia fet sempre
-    if (volumeNumber == 1)
-    {
-        thumbnail.save(QString("%1/thumbnail.png").arg(thumbnailPath), "PNG");
-    }
+//    // Si és el primer thumbnail, també creem el thumbnail ordinari que s'havia fet sempre
+//    if (volumeNumber == 1)
+//    {
+//        thumbnail.save(QString("%1/thumbnail.png").arg(thumbnailPath), "PNG");
+//    }
 }
 
 VolumeFillerStep::ImageProperties::ImageProperties(const Image *image)
