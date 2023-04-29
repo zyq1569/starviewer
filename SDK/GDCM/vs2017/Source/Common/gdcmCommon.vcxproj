@@ -341,14 +341,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmCAPICryptographicMessageSyntax.cxx" />
     <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmCAPICryptoFactory.cxx" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\ZERO_CHECK.vcxproj">
-      <Project>{608A3646-57AB-3611-8FB4-58F74C98FFD9}</Project>
-      <Name>ZERO_CHECK</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
