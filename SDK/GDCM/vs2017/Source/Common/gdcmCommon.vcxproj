@@ -56,7 +56,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\bin\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">gdcmCommon.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">gdcmCommon</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.dll</TargetExt>
@@ -68,13 +68,13 @@
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.dll</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\bin\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">..\..\bin\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">gdcmCommon.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">gdcmCommon</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.dll</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\bin\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(SolutionDir)lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">gdcmCommon.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">gdcmCommon</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.dll</TargetExt>
@@ -83,7 +83,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\DataStructureAndEncodingDefinition;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\Common;..\..\..\src\Source\Common;..\..\..\src\Source\DataStructureAndEncodingDefinition;..\..\Testing\Source\Data;..\..\..\src\Testing\Source\Data;..\..\..\src\Utilities;..\..\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -100,10 +100,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;NDEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\";gdcmCommon_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\DataStructureAndEncodingDefinition;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\Common;..\..\..\src\Source\Common;..\..\..\src\Source\DataStructureAndEncodingDefinition;..\..\Testing\Source\Data;..\..\..\src\Testing\Source\Data;..\..\..\src\Utilities;..\..\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\DataStructureAndEncodingDefinition;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\Common;..\..\..\src\Source\Common;..\..\..\src\Source\DataStructureAndEncodingDefinition;..\..\Testing\Source\Data;..\..\..\src\Testing\Source\Data;..\..\..\src\Utilities;..\..\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -116,8 +116,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/Debug/gdcmCommon.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/Debug/gdcmCommon.pdb</ProgramDataBaseFile>
+      <ImportLibrary>$(SolutionDir)lib/$(Configuration)/$(TargetName).lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)lib/$(Configuration)/$(TargetName).pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -126,7 +126,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\DataStructureAndEncodingDefinition;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\Common;..\..\..\src\Source\Common;..\..\..\src\Source\DataStructureAndEncodingDefinition;..\..\Testing\Source\Data;..\..\..\src\Testing\Source\Data;..\..\..\src\Utilities;..\..\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -143,10 +143,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Release\";gdcmCommon_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\DataStructureAndEncodingDefinition;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\Common;..\..\..\src\Source\Common;..\..\..\src\Source\DataStructureAndEncodingDefinition;..\..\Testing\Source\Data;..\..\..\src\Testing\Source\Data;..\..\..\src\Utilities;..\..\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\DataStructureAndEncodingDefinition;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\Common;..\..\..\src\Source\Common;..\..\..\src\Source\DataStructureAndEncodingDefinition;..\..\Testing\Source\Data;..\..\..\src\Testing\Source\Data;..\..\..\src\Utilities;..\..\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -159,8 +159,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/Release/gdcmCommon.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/Release/gdcmCommon.pdb</ProgramDataBaseFile>
+      <ImportLibrary>$(SolutionDir)lib/$(Configuration)/$(TargetName).lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)lib/$(Configuration)/$(TargetName).pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -169,7 +169,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\DataStructureAndEncodingDefinition;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\Common;..\..\..\src\Source\Common;..\..\..\src\Source\DataStructureAndEncodingDefinition;..\..\Testing\Source\Data;..\..\..\src\Testing\Source\Data;..\..\..\src\Utilities;..\..\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -186,10 +186,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"MinSizeRel\";gdcmCommon_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\DataStructureAndEncodingDefinition;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\Common;..\..\..\src\Source\Common;..\..\..\src\Source\DataStructureAndEncodingDefinition;..\..\Testing\Source\Data;..\..\..\src\Testing\Source\Data;..\..\..\src\Utilities;..\..\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\DataStructureAndEncodingDefinition;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\Common;..\..\..\src\Source\Common;..\..\..\src\Source\DataStructureAndEncodingDefinition;..\..\Testing\Source\Data;..\..\..\src\Testing\Source\Data;..\..\..\src\Utilities;..\..\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -202,8 +202,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/MinSizeRel/gdcmCommon.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/MinSizeRel/gdcmCommon.pdb</ProgramDataBaseFile>
+      <ImportLibrary>$(SolutionDir)lib/$(Configuration)/$(TargetName).lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)lib/$(Configuration)/$(TargetName).pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -212,7 +212,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\DataStructureAndEncodingDefinition;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\Common;..\..\..\src\Source\Common;..\..\..\src\Source\DataStructureAndEncodingDefinition;..\..\Testing\Source\Data;..\..\..\src\Testing\Source\Data;..\..\..\src\Utilities;..\..\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -228,10 +228,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"RelWithDebInfo\";gdcmCommon_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\DataStructureAndEncodingDefinition;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\Common;..\..\..\src\Source\Common;..\..\..\src\Source\DataStructureAndEncodingDefinition;..\..\Testing\Source\Data;..\..\..\src\Testing\Source\Data;..\..\..\src\Utilities;..\..\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\DataStructureAndEncodingDefinition;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Testing\Source\Data;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\Common;..\..\..\src\Source\Common;..\..\..\src\Source\DataStructureAndEncodingDefinition;..\..\Testing\Source\Data;..\..\..\src\Testing\Source\Data;..\..\..\src\Utilities;..\..\Utilities\gdcmzlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -244,8 +244,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/RelWithDebInfo/gdcmCommon.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/RelWithDebInfo/gdcmCommon.pdb</ProgramDataBaseFile>
+      <ImportLibrary>$(SolutionDir)lib/$(Configuration)/$(TargetName).lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)lib/$(Configuration)/$(TargetName).pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -253,7 +253,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\CMakeLists.txt">
+    <CustomBuild Include="..\..\..\src\Source\Common\CMakeLists.txt">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21/Source/Common/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
 E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\bin\cmake.exe -SD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21 -BD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17 --check-stamp-file D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/Source/Common/CMakeFiles/generate.stamp
@@ -264,8 +264,8 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmConfigure.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckCXXSourceCompiles.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckSymbolExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\Internal\CheckSourceCompiles.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\..\src\Source\Common\gdcmConfigure.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckCXXSourceCompiles.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckSymbolExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\Internal\CheckSourceCompiles.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\Source\Common\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21/Source/Common/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
@@ -277,8 +277,8 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmConfigure.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckCXXSourceCompiles.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckSymbolExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\Internal\CheckSourceCompiles.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\..\src\Source\Common\gdcmConfigure.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckCXXSourceCompiles.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckSymbolExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\Internal\CheckSourceCompiles.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\Source\Common\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21/Source/Common/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
@@ -290,8 +290,8 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmConfigure.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckCXXSourceCompiles.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckSymbolExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\Internal\CheckSourceCompiles.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">..\..\..\src\Source\Common\gdcmConfigure.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckCXXSourceCompiles.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckSymbolExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\Internal\CheckSourceCompiles.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">..\..\Source\Common\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21/Source/Common/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
@@ -303,43 +303,43 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmConfigure.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckCXXSourceCompiles.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckSymbolExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\Internal\CheckSourceCompiles.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Source\Common\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">..\..\..\src\Source\Common\gdcmConfigure.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckCXXSourceCompiles.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckSymbolExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\Internal\CheckSourceCompiles.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">..\..\Source\Common\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmVersion.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmRegion.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmBoxRegion.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmEvent.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmDataEvent.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmProgressEvent.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmFileNameEvent.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmCommand.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmMD5.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmBase64.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmSHA1.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmDummyValueGenerator.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmCryptographicMessageSyntax.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmCryptoFactory.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmASN1.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmObject.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmSubject.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmDirectory.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmTerminal.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmString.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmFilename.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmFilenameGenerator.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmSwapCode.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmSystem.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmTrace.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmException.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmDeflateStream.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmByteSwap.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmUnpacker12Bits.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmCAPICryptographicMessageSyntax.cxx" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Source\Common\gdcmCAPICryptoFactory.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmVersion.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmRegion.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmBoxRegion.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmEvent.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmDataEvent.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmProgressEvent.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmFileNameEvent.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmCommand.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmMD5.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmBase64.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmSHA1.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmDummyValueGenerator.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmCryptographicMessageSyntax.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmCryptoFactory.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmASN1.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmObject.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmSubject.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmDirectory.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmTerminal.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmString.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmFilename.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmFilenameGenerator.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmSwapCode.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmSystem.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmTrace.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmException.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmDeflateStream.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmByteSwap.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmUnpacker12Bits.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmCAPICryptographicMessageSyntax.cxx" />
+    <ClCompile Include="..\..\..\src\Source\Common\gdcmCAPICryptoFactory.cxx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

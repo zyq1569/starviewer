@@ -56,7 +56,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\bin\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">socketxx.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">socketxx</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.dll</TargetExt>
@@ -68,13 +68,13 @@
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.dll</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\bin\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">..\..\bin\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">socketxx.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">socketxx</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.dll</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\bin\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(SolutionDir)lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">socketxx.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">socketxx</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.dll</TargetExt>
@@ -83,7 +83,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\Utilities\socketxx;..\..\..\src\Utilities\socketxx\socket++;..\..\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -100,10 +100,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;NDEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\";socketxx_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\Utilities\socketxx;..\..\..\src\Utilities\socketxx\socket++;..\..\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\Utilities\socketxx;..\..\..\src\Utilities\socketxx\socket++;..\..\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -116,8 +116,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/Debug/socketxx.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/Debug/socketxx.pdb</ProgramDataBaseFile>
+      <ImportLibrary>$(SolutionDir)lib/$(Configuration)/$(TargetName).lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)lib/$(Configuration)/$(TargetName).pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -126,7 +126,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\Utilities\socketxx;..\..\..\src\Utilities\socketxx\socket++;..\..\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -143,10 +143,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Release\";socketxx_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\Utilities\socketxx;..\..\..\src\Utilities\socketxx\socket++;..\..\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\Utilities\socketxx;..\..\..\src\Utilities\socketxx\socket++;..\..\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -159,8 +159,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/Release/socketxx.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/Release/socketxx.pdb</ProgramDataBaseFile>
+      <ImportLibrary>$(SolutionDir)lib/$(Configuration)/$(TargetName).lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)lib/$(Configuration)/$(TargetName).pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -169,7 +169,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\Utilities\socketxx;..\..\..\src\Utilities\socketxx\socket++;..\..\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -186,10 +186,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"MinSizeRel\";socketxx_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\Utilities\socketxx;..\..\..\src\Utilities\socketxx\socket++;..\..\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\Utilities\socketxx;..\..\..\src\Utilities\socketxx\socket++;..\..\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -202,8 +202,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/MinSizeRel/socketxx.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/MinSizeRel/socketxx.pdb</ProgramDataBaseFile>
+      <ImportLibrary>$(SolutionDir)lib/$(Configuration)/$(TargetName).lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)lib/$(Configuration)/$(TargetName).pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -212,7 +212,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\Utilities\socketxx;..\..\..\src\Utilities\socketxx\socket++;..\..\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -228,10 +228,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"RelWithDebInfo\";socketxx_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\Utilities\socketxx;..\..\..\src\Utilities\socketxx\socket++;..\..\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++;D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\Utilities\socketxx;..\..\..\src\Utilities\socketxx\socket++;..\..\Utilities\socketxx\socket++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -244,8 +244,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/RelWithDebInfo/socketxx.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/RelWithDebInfo/socketxx.pdb</ProgramDataBaseFile>
+      <ImportLibrary>$(SolutionDir)lib/$(Configuration)/$(TargetName).lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)lib/$(Configuration)/$(TargetName).pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -253,80 +253,16 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++\CMakeLists.txt">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21/Utilities/socketxx/socket++/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\bin\cmake.exe -SD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21 -BD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17 --check-stamp-file D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/Utilities/socketxx/socket++/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++\config.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21/Utilities/socketxx/socket++/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\bin\cmake.exe -SD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21 -BD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17 --check-stamp-file D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/Utilities/socketxx/socket++/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++\config.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21/Utilities/socketxx/socket++/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\bin\cmake.exe -SD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21 -BD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17 --check-stamp-file D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/Utilities/socketxx/socket++/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++\config.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21/Utilities/socketxx/socket++/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\bin\cmake.exe -SD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21 -BD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17 --check-stamp-file D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/Utilities/socketxx/socket++/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++\config.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\Utilities\socketxx\socket++\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++\sockstream.cpp" />
-    <ClInclude Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++\sockstream.h" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++\sockinet.cpp" />
-    <ClInclude Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++\sockinet.h" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++\fork.cpp" />
-    <ClInclude Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++\fork.h" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++\protocol.cpp" />
-    <ClInclude Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++\protocol.h" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++\echo.cpp" />
-    <ClInclude Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\socketxx\socket++\echo.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\ZERO_CHECK.vcxproj">
-      <Project>{608A3646-57AB-3611-8FB4-58F74C98FFD9}</Project>
-      <Name>ZERO_CHECK</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </ProjectReference>
+    <ClCompile Include="..\..\..\src\Utilities\socketxx\socket++\sockstream.cpp" />
+    <ClInclude Include="..\..\..\src\Utilities\socketxx\socket++\sockstream.h" />
+    <ClCompile Include="..\..\..\src\Utilities\socketxx\socket++\sockinet.cpp" />
+    <ClInclude Include="..\..\..\src\Utilities\socketxx\socket++\sockinet.h" />
+    <ClCompile Include="..\..\..\src\Utilities\socketxx\socket++\fork.cpp" />
+    <ClInclude Include="..\..\..\src\Utilities\socketxx\socket++\fork.h" />
+    <ClCompile Include="..\..\..\src\Utilities\socketxx\socket++\protocol.cpp" />
+    <ClInclude Include="..\..\..\src\Utilities\socketxx\socket++\protocol.h" />
+    <ClCompile Include="..\..\..\src\Utilities\socketxx\socket++\echo.cpp" />
+    <ClInclude Include="..\..\..\src\Utilities\socketxx\socket++\echo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
