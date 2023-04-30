@@ -155,8 +155,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/Release/gdcmcharls.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/Release/gdcmcharls.pdb</ProgramDataBaseFile>
+      <ImportLibrary>$(SolutionDir)lib/$(Configuration)/$(TargetName).lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)lib/$(Configuration)/$(TargetName).pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -196,8 +196,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/MinSizeRel/gdcmcharls.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/MinSizeRel/gdcmcharls.pdb</ProgramDataBaseFile>
+      <ImportLibrary>$(SolutionDir)lib/$(Configuration)/$(TargetName).lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)lib/$(Configuration)/$(TargetName).pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -237,7 +237,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ImportLibrary>$(SolutionDir)lib/$(Configuration)/$(TargetName).lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/bin/RelWithDebInfo/gdcmcharls.pdb</ProgramDataBaseFile>
+      <ProgramDataBaseFile>$(SolutionDir)lib/$(Configuration)/$(TargetName).pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -301,11 +301,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\gdcmcharls\interface.cpp" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\gdcmcharls\jpegls.cpp" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\gdcmcharls\jpegmarkersegment.cpp" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\gdcmcharls\jpegstreamreader.cpp" />
-    <ClCompile Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21\Utilities\gdcmcharls\jpegstreamwriter.cpp" />
+    <ClCompile Include="..\..\..\src\Utilities\gdcmcharls\interface.cpp" />
+    <ClCompile Include="..\..\..\src\Utilities\gdcmcharls\jpegls.cpp" />
+    <ClCompile Include="..\..\..\src\Utilities\gdcmcharls\jpegmarkersegment.cpp" />
+    <ClCompile Include="..\..\..\src\Utilities\gdcmcharls\jpegstreamreader.cpp" />
+    <ClCompile Include="..\..\..\src\Utilities\gdcmcharls\jpegstreamwriter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:\SDK\starviewer-sdk-win64-0.15\gdcm\3.0.21\GDCM-3.0.21_VS17\ZERO_CHECK.vcxproj">
