@@ -68,7 +68,7 @@
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.dll</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">..\..\bin\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(SolutionDir)lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">gdcmCommon.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">gdcmCommon</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.dll</TargetExt>
@@ -252,62 +252,6 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\..\..\src\Source\Common\CMakeLists.txt">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21/Source/Common/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\bin\cmake.exe -SD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21 -BD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17 --check-stamp-file D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/Source/Common/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\..\src\Source\Common\gdcmConfigure.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckCXXSourceCompiles.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckSymbolExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\Internal\CheckSourceCompiles.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\Source\Common\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21/Source/Common/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\bin\cmake.exe -SD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21 -BD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17 --check-stamp-file D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/Source/Common/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\..\src\Source\Common\gdcmConfigure.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckCXXSourceCompiles.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckSymbolExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\Internal\CheckSourceCompiles.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\Source\Common\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21/Source/Common/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\bin\cmake.exe -SD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21 -BD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17 --check-stamp-file D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/Source/Common/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">..\..\..\src\Source\Common\gdcmConfigure.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckCXXSourceCompiles.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckSymbolExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\Internal\CheckSourceCompiles.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">..\..\Source\Common\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21/Source/Common/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\bin\cmake.exe -SD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21 -BD:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17 --check-stamp-file D:/SDK/starviewer-sdk-win64-0.15/gdcm/3.0.21/GDCM-3.0.21_VS17/Source/Common/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">..\..\..\src\Source\Common\gdcmConfigure.h.in;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckCXXSourceCompiles.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckFunctionExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\CheckSymbolExists.cmake;E:\Tool\Downloads\Dev_tools\cmake-3.19.1-win64-x64\share\cmake-3.19\Modules\Internal\CheckSourceCompiles.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">..\..\Source\Common\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
-    </CustomBuild>
-  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Source\Common\gdcmVersion.cxx" />
     <ClCompile Include="..\..\..\src\Source\Common\gdcmRegion.cxx" />
