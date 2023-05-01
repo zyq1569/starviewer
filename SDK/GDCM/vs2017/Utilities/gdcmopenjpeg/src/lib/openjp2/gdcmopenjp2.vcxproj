@@ -68,7 +68,7 @@
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.dll</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">..\..\bin\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(SolutionDir)lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">gdcmopenjp2.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">gdcmopenjp2</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.dll</TargetExt>
@@ -253,53 +253,53 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\thread.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\thread.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\bio.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\bio.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\cio.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\cio.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\dwt.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\dwt.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\event.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\event.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\image.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\image.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\invert.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\invert.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\j2k.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\j2k.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\jp2.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\jp2.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\mct.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\mct.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\mqc.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\mqc.h" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\mqc_inl.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\openjpeg.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\openjpeg.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_clock.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_clock.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\pi.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\pi.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\t1.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\t1.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\t2.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\t2.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\tcd.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\tcd.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\tgt.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\tgt.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\function_list.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\function_list.h" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_codec.h" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_includes.h" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_intmath.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_malloc.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_malloc.h" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_stdint.h" />
-    <ClCompile Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\sparse_array.c" />
-    <ClInclude Include="..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\sparse_array.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\thread.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\thread.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\bio.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\bio.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\cio.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\cio.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\dwt.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\dwt.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\event.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\event.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\image.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\image.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\invert.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\invert.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\j2k.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\j2k.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\jp2.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\jp2.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\mct.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\mct.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\mqc.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\mqc.h" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\mqc_inl.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\openjpeg.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\openjpeg.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_clock.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_clock.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\pi.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\pi.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\t1.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\t1.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\t2.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\t2.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\tcd.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\tcd.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\tgt.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\tgt.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\function_list.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\function_list.h" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_codec.h" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_includes.h" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_intmath.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_malloc.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_malloc.h" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\opj_stdint.h" />
+    <ClCompile Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\sparse_array.c" />
+    <ClInclude Include="..\..\..\..\..\..\src\Utilities\gdcmopenjpeg\src\lib\openjp2\sparse_array.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

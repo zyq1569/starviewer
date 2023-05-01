@@ -68,7 +68,7 @@
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.dll</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">..\..\bin\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(SolutionDir)lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">gdcmMEXD.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">gdcmMEXD</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.dll</TargetExt>
@@ -154,7 +154,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>..\..\bin\Release\gdcmMSFF.lib;..\..\bin\Release\gdcmDICT.lib;..\..\bin\Release\gdcmIOD.lib;..\..\bin\Release\socketxx.lib;ws2_32.lib;..\..\bin\Release\gdcmDSED.lib;..\..\bin\Release\gdcmCommon.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)lib\$(Configuration)\gdcmMSFF.lib;$(SolutionDir)lib\$(Configuration)\gdcmDICT.lib;$(SolutionDir)lib\$(Configuration)\gdcmIOD.lib;$(SolutionDir)lib\$(Configuration)\socketxx.lib;ws2_32.lib;$(SolutionDir)lib\$(Configuration)\gdcmDSED.lib;$(SolutionDir)lib\$(Configuration)\gdcmCommon.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -197,7 +197,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>..\..\bin\MinSizeRel\gdcmMSFF.lib;..\..\bin\MinSizeRel\gdcmDICT.lib;..\..\bin\MinSizeRel\gdcmIOD.lib;..\..\bin\MinSizeRel\socketxx.lib;ws2_32.lib;..\..\bin\MinSizeRel\gdcmDSED.lib;..\..\bin\MinSizeRel\gdcmCommon.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)lib\$(Configuration)\gdcmMSFF.lib;$(SolutionDir)lib\$(Configuration)\gdcmDICT.lib;$(SolutionDir)lib\$(Configuration)\gdcmIOD.lib;$(SolutionDir)lib\$(Configuration)\socketxx.lib;ws2_32.lib;$(SolutionDir)lib\$(Configuration)\gdcmDSED.lib;$(SolutionDir)lib\$(Configuration)\gdcmCommon.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>

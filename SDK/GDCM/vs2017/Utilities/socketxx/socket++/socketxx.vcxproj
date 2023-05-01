@@ -68,7 +68,7 @@
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.dll</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">..\..\bin\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(SolutionDir)lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">socketxx.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">socketxx</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.dll</TargetExt>
@@ -253,16 +253,16 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\Utilities\socketxx\socket++\sockstream.cpp" />
-    <ClInclude Include="..\..\..\src\Utilities\socketxx\socket++\sockstream.h" />
-    <ClCompile Include="..\..\..\src\Utilities\socketxx\socket++\sockinet.cpp" />
-    <ClInclude Include="..\..\..\src\Utilities\socketxx\socket++\sockinet.h" />
-    <ClCompile Include="..\..\..\src\Utilities\socketxx\socket++\fork.cpp" />
-    <ClInclude Include="..\..\..\src\Utilities\socketxx\socket++\fork.h" />
-    <ClCompile Include="..\..\..\src\Utilities\socketxx\socket++\protocol.cpp" />
-    <ClInclude Include="..\..\..\src\Utilities\socketxx\socket++\protocol.h" />
-    <ClCompile Include="..\..\..\src\Utilities\socketxx\socket++\echo.cpp" />
-    <ClInclude Include="..\..\..\src\Utilities\socketxx\socket++\echo.h" />
+    <ClCompile Include="..\..\..\..\src\Utilities\socketxx\socket++\sockstream.cpp" />
+    <ClInclude Include="..\..\..\..\src\Utilities\socketxx\socket++\sockstream.h" />
+    <ClCompile Include="..\..\..\..\src\Utilities\socketxx\socket++\sockinet.cpp" />
+    <ClInclude Include="..\..\..\..\src\Utilities\socketxx\socket++\sockinet.h" />
+    <ClCompile Include="..\..\..\..\src\Utilities\socketxx\socket++\fork.cpp" />
+    <ClInclude Include="..\..\..\..\src\Utilities\socketxx\socket++\fork.h" />
+    <ClCompile Include="..\..\..\..\src\Utilities\socketxx\socket++\protocol.cpp" />
+    <ClInclude Include="..\..\..\..\src\Utilities\socketxx\socket++\protocol.h" />
+    <ClCompile Include="..\..\..\..\src\Utilities\socketxx\socket++\echo.cpp" />
+    <ClInclude Include="..\..\..\..\src\Utilities\socketxx\socket++\echo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
