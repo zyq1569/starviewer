@@ -1,0 +1,1 @@
+#define vtkRenderingCore_AUTOINIT 2(vtkRenderingFreeType,vtkRenderingOpenGL2)
