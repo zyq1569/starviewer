@@ -143,10 +143,7 @@ bool ReadStudyInfo(OFString filename,OFString dir, QStringList &data)
 }
 void AppImportFile::openDirectory(bool recursively)
 {
-    QString directoryName = QFileDialog::getExistingDirectory(0,
-                                                              tr("Choose a directory to scan"),
-                                                              m_workingDicomDirectory, QFileDialog::ShowDirsOnly);
-
+    QString directoryName = QFileDialog::getExistingDirectory(0,tr("Choose a directory to scan"), m_workingDicomDirectory, QFileDialog::ShowDirsOnly);
     if (!directoryName.isEmpty())
     {
         INFO_LOG("The directory is scanned: " + directoryName + " to open the studies it contains");
