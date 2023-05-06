@@ -17,6 +17,7 @@ namespace udg {
 /**
     @author Grup de Gràfics de Girona (GGG) <vismed@ima.udg.es>
 */
+//水肿分割
 class EdemaSegmentationExtensionMediator : public ExtensionMediator
 {
     Q_OBJECT

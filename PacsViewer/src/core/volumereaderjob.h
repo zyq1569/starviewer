@@ -30,6 +30,9 @@ class VolumeReader;
 /**
     Classe que s'encarrega de llegir el pixel data d'un Volume en forma de job de ThreadWeaver, és a dir
     asíncronament.
+
+    Class that is responsible for reading the pixel data of a Volume in the form of a ThreadWeaver job, that is,
+    asynchronously.
   */
 class VolumeReaderJob : public QObject, public ThreadWeaver::Job {
 Q_OBJECT

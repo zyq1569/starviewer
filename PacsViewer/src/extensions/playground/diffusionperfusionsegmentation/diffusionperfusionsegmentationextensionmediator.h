@@ -17,6 +17,7 @@ namespace udg{
 /**
     @author Grup de Gràfics de Girona (GGG) <vismed@ima.udg.es>
 */
+///扩散灌注分割
 class DiffusionPerfusionSegmentationExtensionMediator: public ExtensionMediator
 {
     Q_OBJECT

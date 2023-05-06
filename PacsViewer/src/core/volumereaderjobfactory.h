@@ -38,7 +38,13 @@ class Volume;
     Tal i com està ara, necessita que aquesta es mantingui "viva" fins que el job de càrrega retorni
     com a finalitzat. Si es destrueix l'objecte abans, el comportament pot ser indefinit.
     Aquesta classe no es pot cridar de forma concurrent des de diferents threads.
-  */
+
+    A class that lets you read your pixel data from a volume asynchronously.
+    As it stands now, it needs it to remain "alive" until the load job returns
+    as completed. If the object is destroyed earlier, the behavior may be indefinite.
+    This class cannot be called concurrently from different threads.
+//异步读取像素数据
+ */
 
 class VolumeReaderJobFactory : public QObject, public SingletonPointer<VolumeReaderJobFactory> {
 Q_OBJECT
