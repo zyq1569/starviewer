@@ -41,15 +41,20 @@ PatientBrowserMenuList::PatientBrowserMenuList(QWidget *parent)
     m_qmlView->setSource(QUrl("qrc:///qmlpatientbrowsermenu.qml"));
 
     QQuickItem *object = m_qmlView->rootObject();
-    object->setProperty("fusionLabelText", QVariant::fromValue(tr("Fusion")));
+    if (!object)
+    {
+        object->setProperty("fusionLabelText", QVariant::fromValue(tr("Fusion")));
 
-    connect(object, SIGNAL(isActive(QString)), this, SIGNAL(isActive(QString)));
-    connect(object, SIGNAL(selectedItem(QString)), this, SIGNAL(selectedItem(QString)));
-    connect(object, SIGNAL(sizeChanged()), this, SLOT(updateSize()));
+        connect(object, SIGNAL(isActive(QString)), this, SIGNAL(isActive(QString)));
+        connect(object, SIGNAL(selectedItem(QString)), this, SIGNAL(selectedItem(QString)));
+        connect(object, SIGNAL(sizeChanged()), this, SLOT(updateSize()));
+    }
 }
 
 PatientBrowserMenuList::~PatientBrowserMenuList()
 {
+    //delete m_qmlView;
+    m_qmlView->deleteLater();
 }
 
 void PatientBrowserMenuList::addItemsGroup(const QString &caption, const QList<QPair<QString, QString> > &itemsList)

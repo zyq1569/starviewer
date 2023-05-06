@@ -29,6 +29,14 @@ namespace udg
 ///
 ///Si un dos PACS tenen el mateix AETTitle, Address i QueryPort encara que tinguin altres camps diferents com pot ser el ID DICOMSource els considerà que
 ///són el mateix PACS
+///
+/// -------------PACS-----Source--------Net-------------------------------
+//This class tells us what the source of a DICOM object is.
+//Right now it only indicates which PACS comes from or we can download a DICOM object, but in the future we will also add which source BD, DICOMDIR, mhdm ...
+//Regardless of the source of the DICOM object all may have as information the PACS from which it can be downloaded, for example the source can be the BD and have
+//the information of where we can download the study again
+//If a two PACS have the same AETTitle, Address and QueryPort even if they have other different fields such as the DICOMSource ID, it will consider them to be
+//are the same PACS
 class DICOMSource {
 public:
 
