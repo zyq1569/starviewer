@@ -296,7 +296,7 @@ QPixmap ThumbnailCreator::convertToQPixmap(DicomImage *dicomImage)
             {
                 DEBUG_LOG("Buffer upload to thumbnail failed :(");
             }
-            thumbnail.save("E:/test.png");
+            //thumbnail.save("E:/test.png");
         }
         // Delete temporary pixel buffer
         delete[] buffer;
