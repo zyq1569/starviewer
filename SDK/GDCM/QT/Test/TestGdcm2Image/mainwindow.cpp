@@ -318,7 +318,7 @@ DcmObject* decompressImage(DcmFileFormat &fileformat, QString imageFileName)
 
     //OFLOG_INFO(dcmdjpegLogger, "decompressing file");
 
-    E_TransferSyntax opt_oxfer = EXS_LittleEndianExplicit;
+    E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit;
     //    if (cmd.findOption("--write-xfer-little")) opt_oxfer = EXS_LittleEndianExplicit;
     //    if (cmd.findOption("--write-xfer-big")) opt_oxfer = EXS_BigEndianExplicit;
     //    if (cmd.findOption("--write-xfer-implicit")) opt_oxfer = EXS_LittleEndianImplicit;
@@ -357,7 +357,6 @@ DcmObject* decompressImage(DcmFileFormat &fileformat, QString imageFileName)
 
 bool decoderDcm(const QString &imageFileName, int resolution = 96)
 {
-
     // JPEG parameters
     E_DecompressionColorSpaceConversion opt_decompCSconversion = EDC_photometricInterpretation;
     E_UIDCreation opt_uidcreation = EUC_default;
@@ -366,13 +365,8 @@ bool decoderDcm(const QString &imageFileName, int resolution = 96)
     OFBool opt_cornellWorkaroundEnable = OFFalse;
     OFBool opt_forceSingleFragmentPerFrame = OFFalse;
     // register global decompression codecs
-    DJDecoderRegistration::registerCodecs(
-                opt_decompCSconversion,
-                opt_uidcreation,
-                opt_planarconfig,
-                opt_predictor6WorkaroundEnable,
-                opt_cornellWorkaroundEnable,
-                opt_forceSingleFragmentPerFrame);
+    DJDecoderRegistration::registerCodecs(opt_decompCSconversion,  opt_uidcreation,  opt_planarconfig,
+                                          opt_predictor6WorkaroundEnable,  opt_cornellWorkaroundEnable, opt_forceSingleFragmentPerFrame);
     OFCondition error = EC_Normal;
 
     DcmFileFormat fileformat;
@@ -396,10 +390,7 @@ bool decoderDcm(const QString &imageFileName, int resolution = 96)
     //    EXS_LittleEndianImplicit  0
     //    EXS_BigEndianImplicit     1
     //    EXS_LittleEndianExplicit  2
-    E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit;//EXS_LittleEndianExplicit;
-    //    if (cmd.findOption("--write-xfer-little")) opt_oxfer = EXS_LittleEndianExplicit;
-    //    if (cmd.findOption("--write-xfer-big")) opt_oxfer = EXS_BigEndianExplicit;
-    //    if (cmd.findOption("--write-xfer-implicit")) opt_oxfer = EXS_LittleEndianImplicit;
+    E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit;
     DcmXfer opt_oxferSyn(opt_oxfer);
     DcmXfer original_xfer(dataset->getOriginalXfer());
 
@@ -443,38 +434,39 @@ bool decoderDcm(const QString &imageFileName, int resolution = 96)
     DJDecoderRegistration::cleanup();
     return  true;
 }
+
 QImage createQImage(/*DicomImage *dicomImage*/const QString &imageFileName, int resolution = 256)
 {
     QImage image;
+    DcmObject *obj = NULL;
 
     DicomImage *dicomImage = NULL;
 
     DcmFileFormat fileformat;
-    E_TransferSyntax opt_ixfer = EXS_Unknown;//EXS_LittleEndianExplicit;//EXS_JPEGProcess14;//EXS_Unknown;
-    E_FileReadMode opt_readMode = ERM_dataset;//ERM_autoDetect;
+    DicomImage reader(imageFileName.toLatin1().data());
+    E_TransferSyntax opt_ixfer = EXS_LittleEndianImplicit;//EXS_LittleEndianExplicit;//EXS_JPEGProcess14;//EXS_Unknown;
+    //E_FileReadMode opt_readMode = ERM_dataset;//ERM_autoDetect;
     OFCondition error = EC_Normal;
-    error = fileformat.loadFile(imageFileName.toLatin1().data(), opt_ixfer, EGL_noChange, DCM_MaxReadLength, opt_readMode);
+    error = fileformat.loadFile(imageFileName.toLatin1().data()/*, opt_ixfer, EGL_noChange, DCM_MaxReadLength, opt_readMode*/);
     if (error.bad())
     {
         //return image;
     }
 
-    //    DcmXfer original_xfer(fileformat.getDataset()->getOriginalXfer());
-    ////    if (!original_xfer.isEncapsulated())
-    ////    {
-    ////        DcmObject *obj =  decompressImage(fileformat,imageFileName);
-    ////        //DicomImage reader(obj, opt_ixfer);
-    ////        dicomImage = new DicomImage(obj,opt_ixfer);
-    ////    }
-    ////    else
-    //    //{
-    DicomImage reader(imageFileName.toLatin1().data());
-    dicomImage = &reader;//new DicomImage(imageFileName.toLatin1().data());//&reader;
-    //    //}
+    DcmXfer original_xfer(fileformat.getDataset()->getOriginalXfer());
+    if (!original_xfer.isEncapsulated())
+    {
+        dicomImage = &reader;
+    }
+    else
+    {
+        obj =  decompressImage(fileformat,imageFileName);
+        //DicomImage reader(obj, opt_ixfer);
+        dicomImage = new DicomImage(obj,opt_ixfer);
+    }
 
     QImage thumbnail;
     bool ok = false;
-
     if (dicomImage == NULL)
     {
         ok = false;
@@ -557,8 +549,13 @@ QImage createQImage(/*DicomImage *dicomImage*/const QString &imageFileName, int 
     {
         thumbnail = makeEmptyThumbnailWithCustomText(PreviewNotAvailableText);
     }
-    //delete dicomImage;
-    //dicomImage = NULL;
+    if (obj)
+    {
+        delete  obj;
+        obj = NULL;
+        delete dicomImage;
+        dicomImage = NULL;
+    }
     return thumbnail;
 }
 
@@ -599,7 +596,9 @@ void MainWindow::on_gdcm2Image_clicked()
         QString pngfilename = m_dcmpath+".png";
         QImage image =  createQImage(dcmfilename);
         image.save(pngfilename+"dcmtk.png");
+        ui->lbshowimage->clear();
         ui->lbshowimage->setPixmap(QPixmap(pngfilename+"dcmtk.png"));
+
     }else
     {
         QMessageBox::warning(this,"warning!","the dcm not exit!");
@@ -651,10 +650,11 @@ void MainWindow::on_pBshowimage_clicked()
     QFileInfo info(pngfile);
     if (info.isFile())
     {
+        ui->lbshowimage->clear();
         ui->lbshowimage->setPixmap(QPixmap(pngfile));
     }
     else
     {
-         QMessageBox::warning(this,"warning!","file not exit!");
+        QMessageBox::warning(this,"warning!","file not exit!");
     }
 }

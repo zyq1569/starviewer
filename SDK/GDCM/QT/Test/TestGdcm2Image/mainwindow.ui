@@ -99,19 +99,6 @@
      <string>png:</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="decoder_2">
-    <property name="geometry">
-     <rect>
-      <x>400</x>
-      <y>110</y>
-      <width>80</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>DJDecoder</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="lbshowimage">
     <property name="geometry">
      <rect>
@@ -133,6 +120,12 @@
       <width>241</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>241</width>
+      <height>22</height>
+     </size>
     </property>
     <property name="currentText">
      <string>EXS_Unknown</string>
