@@ -23,6 +23,8 @@ private slots:
 
     void on_decoder_clicked();
 
+    void on_pBshowimage_clicked();
+
 private:
     Ui::MainWindow *ui;
 

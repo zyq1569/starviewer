@@ -19,8 +19,8 @@
      <rect>
       <x>320</x>
       <y>110</y>
-      <width>75</width>
-      <height>23</height>
+      <width>80</width>
+      <height>22</height>
      </rect>
     </property>
     <property name="text">
@@ -30,9 +30,9 @@
    <widget class="QLineEdit" name="dcmpath">
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>57</x>
       <y>70</y>
-      <width>201</width>
+      <width>251</width>
       <height>21</height>
      </rect>
     </property>
@@ -42,8 +42,8 @@
      <rect>
       <x>320</x>
       <y>70</y>
-      <width>71</width>
-      <height>23</height>
+      <width>80</width>
+      <height>22</height>
      </rect>
     </property>
     <property name="text">
@@ -53,9 +53,9 @@
    <widget class="QLineEdit" name="pngpath">
     <property name="geometry">
      <rect>
-      <x>88</x>
+      <x>55</x>
       <y>110</y>
-      <width>201</width>
+      <width>251</width>
       <height>21</height>
      </rect>
     </property>
@@ -65,12 +65,123 @@
      <rect>
       <x>404</x>
       <y>70</y>
-      <width>75</width>
-      <height>23</height>
+      <width>80</width>
+      <height>22</height>
      </rect>
     </property>
     <property name="text">
      <string>DJDecoder</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>16</x>
+      <y>70</y>
+      <width>41</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>dcm:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>17</x>
+      <y>111</y>
+      <width>31</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>png:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="decoder_2">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>110</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>DJDecoder</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbshowimage">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>180</y>
+      <width>461</width>
+      <height>211</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Show Png</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>30</y>
+      <width>241</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="currentText">
+     <string>EXS_Unknown</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>EXS_Unknown</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>EXS_LittleEndianImplicit</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>EXS_BigEndianImplici</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>EXS_LittleEndianExplicit</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="lbSyntax">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>41</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TransferSyntax:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pBshowimage">
+    <property name="geometry">
+     <rect>
+      <x>318</x>
+      <y>140</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>showimage</string>
     </property>
    </widget>
   </widget>
@@ -80,7 +191,7 @@
      <x>0</x>
      <y>0</y>
      <width>488</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

@@ -48,20 +48,16 @@ MainWindow::~MainWindow()
 //未压缩：
 //Implicit VR Little Endian:
 //Default Transfer Syntax for DICOM               1.2.840.10008.1.2
-//Explicit VR Little Endian                        1.2.840.10008.1.2.1
+//Explicit VR Little Endian                       1.2.840.10008.1.2.1
 //Explicit VR Big Endian                          1.2.840.10008.1.2.2
 
 //无损压缩：
 //JPEG Lossless :
-//Default  Transfer Syntax for Lossless JPEG
-//ImageCompression                               1.2.840.10008.1.2.4.70
-//JPEG 2000 Image Compression
-//(Lossless Only)                                1.2.840.10008.1.2.4.90
+//Default  Transfer Syntax for Lossless JPEG ImageCompression               1.2.840.10008.1.2.4.70
+//JPEG 2000 Image Compression(Lossless Only)                                1.2.840.10008.1.2.4.90
 //RLE Lossless                                   1.2.840.10008.1.2.5
 //有损压缩：
-//Default Transfer Syntax for Lossy
-//JPEG 12 Bit Image Compression
-//                                            1.2.840.10008.1.2.4.51
+//Default Transfer Syntax for Lossy JPEG 12 Bit Image Compression           1.2.840.10008.1.2.4.51
 //LOSSY(8 bit)                                 1.2.840.10008.1.2.4.50
 //动态：
 //MPEG2 image Compression                     1.2.840.10008.1.2.4.100
@@ -83,6 +79,52 @@ MainWindow::~MainWindow()
 //LittleEndianImplicitTransferSyntax             1.2.840.10008.1.2
 //LittleEndianExplicitTransferSyntax             1.2.840.10008.1.2.1
 //BigEndianExplicitTransferSyntax                1.2.840.10008.1.2.2
+
+
+//dcmdjpeg supports the following transfer syntaxes for input (dcmfile-in):
+
+//LittleEndianImplicitTransferSyntax             1.2.840.10008.1.2
+//LittleEndianExplicitTransferSyntax             1.2.840.10008.1.2.1
+//DeflatedExplicitVRLittleEndianTransferSyntax   1.2.840.10008.1.2.1.99 (*)
+//BigEndianExplicitTransferSyntax                1.2.840.10008.1.2.2
+//JPEGProcess1TransferSyntax                     1.2.840.10008.1.2.4.50
+//JPEGProcess2_4TransferSyntax                   1.2.840.10008.1.2.4.51
+//JPEGProcess6_8TransferSyntax                   1.2.840.10008.1.2.4.53
+//JPEGProcess10_12TransferSyntax                 1.2.840.10008.1.2.4.55
+//JPEGProcess14TransferSyntax                    1.2.840.10008.1.2.4.57
+//JPEGProcess14SV1TransferSyntax                 1.2.840.10008.1.2.4.70
+//(*) if compiled with zlib support enabled
+
+//dcmdjpeg supports the following transfer syntaxes for output (dcmfile-out):
+
+//LittleEndianImplicitTransferSyntax             1.2.840.10008.1.2
+//LittleEndianExplicitTransferSyntax             1.2.840.10008.1.2.1
+//BigEndianExplicitTransferSyntax                1.2.840.10008.1.2.2
+
+
+//dcmcjpeg supports the following transfer syntaxes for input (dcmfile-in):
+
+//LittleEndianImplicitTransferSyntax             1.2.840.10008.1.2
+//LittleEndianExplicitTransferSyntax             1.2.840.10008.1.2.1
+//DeflatedExplicitVRLittleEndianTransferSyntax   1.2.840.10008.1.2.1.99 (*)
+//BigEndianExplicitTransferSyntax                1.2.840.10008.1.2.2
+//JPEGProcess1TransferSyntax                     1.2.840.10008.1.2.4.50
+//JPEGProcess2_4TransferSyntax                   1.2.840.10008.1.2.4.51
+//JPEGProcess6_8TransferSyntax                   1.2.840.10008.1.2.4.53
+//JPEGProcess10_12TransferSyntax                 1.2.840.10008.1.2.4.55
+//JPEGProcess14TransferSyntax                    1.2.840.10008.1.2.4.57
+//JPEGProcess14SV1TransferSyntax                 1.2.840.10008.1.2.4.70
+//(*) if compiled with zlib support enabled
+
+//dcmcjpeg supports the following transfer syntaxes for output (dcmfile-out):
+
+//JPEGProcess1TransferSyntax                     1.2.840.10008.1.2.4.50
+//JPEGProcess2_4TransferSyntax                   1.2.840.10008.1.2.4.51
+//JPEGProcess6_8TransferSyntax                   1.2.840.10008.1.2.4.53
+//JPEGProcess10_12TransferSyntax                 1.2.840.10008.1.2.4.55
+//JPEGProcess14TransferSyntax                    1.2.840.10008.1.2.4.57
+//JPEGProcess14SV1TransferSyntax                 1.2.840.10008.1.2.4.70
+
 bool ConvertToFormat_RGB888(gdcm::Image const & gimage, char *buffer, QImage* &imageQt)
 {
     const unsigned int* dimension = gimage.GetDimensions();
@@ -350,6 +392,10 @@ bool decoderDcm(const QString &imageFileName, int resolution = 96)
 
     //OFLOG_INFO(dcmdjpegLogger, "decompressing file");
 
+    //    EXS_Unknown -1
+    //    EXS_LittleEndianImplicit  0
+    //    EXS_BigEndianImplicit     1
+    //    EXS_LittleEndianExplicit  2
     E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit;//EXS_LittleEndianExplicit;
     //    if (cmd.findOption("--write-xfer-little")) opt_oxfer = EXS_LittleEndianExplicit;
     //    if (cmd.findOption("--write-xfer-big")) opt_oxfer = EXS_BigEndianExplicit;
@@ -397,7 +443,7 @@ bool decoderDcm(const QString &imageFileName, int resolution = 96)
     DJDecoderRegistration::cleanup();
     return  true;
 }
-QImage createQImage(/*DicomImage *dicomImage*/const QString &imageFileName, int resolution = 96)
+QImage createQImage(/*DicomImage *dicomImage*/const QString &imageFileName, int resolution = 256)
 {
     QImage image;
 
@@ -413,18 +459,18 @@ QImage createQImage(/*DicomImage *dicomImage*/const QString &imageFileName, int 
         //return image;
     }
 
-//    DcmXfer original_xfer(fileformat.getDataset()->getOriginalXfer());
-////    if (!original_xfer.isEncapsulated())
-////    {
-////        DcmObject *obj =  decompressImage(fileformat,imageFileName);
-////        //DicomImage reader(obj, opt_ixfer);
-////        dicomImage = new DicomImage(obj,opt_ixfer);
-////    }
-////    else
-//    //{
-        DicomImage reader(imageFileName.toLatin1().data());
-        dicomImage = &reader;//new DicomImage(imageFileName.toLatin1().data());//&reader;
-//    //}
+    //    DcmXfer original_xfer(fileformat.getDataset()->getOriginalXfer());
+    ////    if (!original_xfer.isEncapsulated())
+    ////    {
+    ////        DcmObject *obj =  decompressImage(fileformat,imageFileName);
+    ////        //DicomImage reader(obj, opt_ixfer);
+    ////        dicomImage = new DicomImage(obj,opt_ixfer);
+    ////    }
+    ////    else
+    //    //{
+    DicomImage reader(imageFileName.toLatin1().data());
+    dicomImage = &reader;//new DicomImage(imageFileName.toLatin1().data());//&reader;
+    //    //}
 
     QImage thumbnail;
     bool ok = false;
@@ -549,10 +595,11 @@ void MainWindow::on_gdcm2Image_clicked()
     QFileInfo info(m_dcmpath);
     if (info.isFile())
     {
-        QString dcmfilename = m_dcmpath;//"F:/temp/starviewer/SDK/GDCM/QT/Test/TestGdcm2Image/Dcm/123.dcm";
-        QString pngfilename = m_dcmpath+".png";//F:/temp/starviewer/SDK/GDCM/QT/Test/TestGdcm2Image/Dcm/123.png";
+        QString dcmfilename = m_dcmpath;
+        QString pngfilename = m_dcmpath+".png";
         QImage image =  createQImage(dcmfilename);
         image.save(pngfilename+"dcmtk.png");
+        ui->lbshowimage->setPixmap(QPixmap(pngfilename+"dcmtk.png"));
     }else
     {
         QMessageBox::warning(this,"warning!","the dcm not exit!");
@@ -587,7 +634,7 @@ void MainWindow::on_decoder_clicked()
         }
         else
         {
-             QMessageBox::information(this,"ok!","decoderDcm ok!");
+            QMessageBox::information(this,"ok!","decoderDcm ok!");
         }
 
     }else
@@ -596,47 +643,18 @@ void MainWindow::on_decoder_clicked()
     }
 }
 
-//dcmdjpeg supports the following transfer syntaxes for input (dcmfile-in):
-
-//LittleEndianImplicitTransferSyntax             1.2.840.10008.1.2
-//LittleEndianExplicitTransferSyntax             1.2.840.10008.1.2.1
-//DeflatedExplicitVRLittleEndianTransferSyntax   1.2.840.10008.1.2.1.99 (*)
-//BigEndianExplicitTransferSyntax                1.2.840.10008.1.2.2
-//JPEGProcess1TransferSyntax                     1.2.840.10008.1.2.4.50
-//JPEGProcess2_4TransferSyntax                   1.2.840.10008.1.2.4.51
-//JPEGProcess6_8TransferSyntax                   1.2.840.10008.1.2.4.53
-//JPEGProcess10_12TransferSyntax                 1.2.840.10008.1.2.4.55
-//JPEGProcess14TransferSyntax                    1.2.840.10008.1.2.4.57
-//JPEGProcess14SV1TransferSyntax                 1.2.840.10008.1.2.4.70
-//(*) if compiled with zlib support enabled
-
-//dcmdjpeg supports the following transfer syntaxes for output (dcmfile-out):
-
-//LittleEndianImplicitTransferSyntax             1.2.840.10008.1.2
-//LittleEndianExplicitTransferSyntax             1.2.840.10008.1.2.1
-//BigEndianExplicitTransferSyntax                1.2.840.10008.1.2.2
 
 
-//dcmcjpeg supports the following transfer syntaxes for input (dcmfile-in):
-
-//LittleEndianImplicitTransferSyntax             1.2.840.10008.1.2
-//LittleEndianExplicitTransferSyntax             1.2.840.10008.1.2.1
-//DeflatedExplicitVRLittleEndianTransferSyntax   1.2.840.10008.1.2.1.99 (*)
-//BigEndianExplicitTransferSyntax                1.2.840.10008.1.2.2
-//JPEGProcess1TransferSyntax                     1.2.840.10008.1.2.4.50
-//JPEGProcess2_4TransferSyntax                   1.2.840.10008.1.2.4.51
-//JPEGProcess6_8TransferSyntax                   1.2.840.10008.1.2.4.53
-//JPEGProcess10_12TransferSyntax                 1.2.840.10008.1.2.4.55
-//JPEGProcess14TransferSyntax                    1.2.840.10008.1.2.4.57
-//JPEGProcess14SV1TransferSyntax                 1.2.840.10008.1.2.4.70
-//(*) if compiled with zlib support enabled
-
-//dcmcjpeg supports the following transfer syntaxes for output (dcmfile-out):
-
-//JPEGProcess1TransferSyntax                     1.2.840.10008.1.2.4.50
-//JPEGProcess2_4TransferSyntax                   1.2.840.10008.1.2.4.51
-//JPEGProcess6_8TransferSyntax                   1.2.840.10008.1.2.4.53
-//JPEGProcess10_12TransferSyntax                 1.2.840.10008.1.2.4.55
-//JPEGProcess14TransferSyntax                    1.2.840.10008.1.2.4.57
-//JPEGProcess14SV1TransferSyntax                 1.2.840.10008.1.2.4.70
-
+void MainWindow::on_pBshowimage_clicked()
+{
+    QString pngfile = ui->pngpath->text();
+    QFileInfo info(pngfile);
+    if (info.isFile())
+    {
+        ui->lbshowimage->setPixmap(QPixmap(pngfile));
+    }
+    else
+    {
+         QMessageBox::warning(this,"warning!","file not exit!");
+    }
+}
