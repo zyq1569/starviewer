@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    m_TransferSyntax = 0;
 }
 
 MainWindow::~MainWindow()
@@ -279,7 +280,7 @@ QImage makeEmptyThumbnailWithCustomText(const QString &text, int resolution = 96
 }
 const QString PreviewNotAvailableText(QObject::tr("Preview image not available"));
 
-DcmObject* decompressImage(DcmFileFormat &fileformat, QString imageFileName)
+DcmObject* decompressImage(DcmFileFormat &fileformat, QString imageFileName,int transferSyntax = 0)
 {
     DcmObject *dcmimage = NULL;
 
@@ -322,6 +323,20 @@ DcmObject* decompressImage(DcmFileFormat &fileformat, QString imageFileName)
     //    if (cmd.findOption("--write-xfer-little")) opt_oxfer = EXS_LittleEndianExplicit;
     //    if (cmd.findOption("--write-xfer-big")) opt_oxfer = EXS_BigEndianExplicit;
     //    if (cmd.findOption("--write-xfer-implicit")) opt_oxfer = EXS_LittleEndianImplicit;
+    switch(transferSyntax)
+    {
+    case 1:
+        opt_oxfer = EXS_BigEndianImplicit;
+        break;
+    case 2:
+        opt_oxfer = EXS_BigEndianImplicit;
+        break;
+    case 3:
+        opt_oxfer = EXS_LittleEndianExplicit;
+        break;
+    default:
+        break;
+    }
     DcmXfer opt_oxferSyn(opt_oxfer);
     DcmXfer original_xfer(dataset->getOriginalXfer());
 
@@ -355,7 +370,7 @@ DcmObject* decompressImage(DcmFileFormat &fileformat, QString imageFileName)
     return  dcmimage;
 }
 
-bool decoderDcm(const QString &imageFileName, int resolution = 96)
+bool decoderDcm(const QString &imageFileName, int transferSyntax = 0, int resolution = 96)
 {
     // JPEG parameters
     E_DecompressionColorSpaceConversion opt_decompCSconversion = EDC_photometricInterpretation;
@@ -372,7 +387,7 @@ bool decoderDcm(const QString &imageFileName, int resolution = 96)
     DcmFileFormat fileformat;
     const char *opt_ifname = imageFileName.toLatin1().data();
     //const char *opt_ofname = (imageFileName+"_djpeg").toLatin1().data();
-    QString output = imageFileName+"_djpeg.dcm";
+    QString output = imageFileName+"_djpeg_LittleEndianImplicit.dcm";
     E_TransferSyntax opt_ixfer = EXS_JPEGProcess14;//EXS_Unknown;
     E_FileReadMode opt_readMode = ERM_dataset;//ERM_autoDetect;
     error = fileformat.loadFile(imageFileName.toLatin1().data(), opt_ixfer, EGL_noChange, DCM_MaxReadLength, opt_readMode);
@@ -384,13 +399,28 @@ bool decoderDcm(const QString &imageFileName, int resolution = 96)
 
     DcmDataset *dataset = fileformat.getDataset();
 
-    //OFLOG_INFO(dcmdjpegLogger, "decompressing file");
-
     //    EXS_Unknown -1
     //    EXS_LittleEndianImplicit  0
     //    EXS_BigEndianImplicit     1
     //    EXS_LittleEndianExplicit  2
     E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit;
+
+    switch(transferSyntax)
+    {
+    case 1:
+        opt_oxfer = EXS_BigEndianImplicit;
+        break;
+    case 2:
+        opt_oxfer = EXS_BigEndianImplicit;
+        output = imageFileName+"_djpeg_BigEndianImplicit.dcm";
+        break;
+    case 3:
+        opt_oxfer = EXS_LittleEndianExplicit;
+        output = imageFileName+"_djpeg_LittleEndianExplicit.dcm";
+        break;
+    default:
+        break;
+    }
     DcmXfer opt_oxferSyn(opt_oxfer);
     DcmXfer original_xfer(dataset->getOriginalXfer());
 
@@ -399,9 +429,13 @@ bool decoderDcm(const QString &imageFileName, int resolution = 96)
     {
         printf("%s decompressing file: %s", error.text(),opt_ifname);
         if (error == EJ_UnsupportedColorConversion)
+        {
             printf( "Try --conv-never to disable color space conversion");
+        }
         else if (error == EC_CannotChangeRepresentation)
+        {
             printf( "Input transfer syntax %s not supported", original_xfer.getXferName());
+        }
         return false;
     }
 
@@ -435,7 +469,7 @@ bool decoderDcm(const QString &imageFileName, int resolution = 96)
     return  true;
 }
 
-QImage createQImage(/*DicomImage *dicomImage*/const QString &imageFileName, int resolution = 256)
+QImage createQImage(/*DicomImage *dicomImage*/const QString &imageFileName, int transferSyntax = 0, int resolution = 256)
 {
     QImage image;
     DcmObject *obj = NULL;
@@ -589,12 +623,13 @@ QImage* GetQimage(QString input)
 
 void MainWindow::on_gdcm2Image_clicked()
 {
+    m_TransferSyntax = ui->cbmTransferSyntax->currentIndex();
     QFileInfo info(m_dcmpath);
     if (info.isFile())
     {
         QString dcmfilename = m_dcmpath;
         QString pngfilename = m_dcmpath+".png";
-        QImage image =  createQImage(dcmfilename);
+        QImage image =  createQImage(dcmfilename, m_TransferSyntax);
         image.save(pngfilename+"dcmtk.png");
         ui->lbshowimage->clear();
         ui->lbshowimage->setPixmap(QPixmap(pngfilename+"dcmtk.png"));
@@ -623,11 +658,12 @@ void MainWindow::on_pBdcmpath_clicked()
 
 void MainWindow::on_decoder_clicked()
 {
+    m_TransferSyntax = ui->cbmTransferSyntax->currentIndex();
     QFileInfo info(m_dcmpath);
     if (info.isFile())
     {
         QString dcmfilename = m_dcmpath;
-        if (!decoderDcm(dcmfilename))
+        if (!decoderDcm(dcmfilename,m_TransferSyntax))
         {
             QMessageBox::warning(this,"warning!","decoderDcm fail!");
         }
@@ -658,3 +694,14 @@ void MainWindow::on_pBshowimage_clicked()
         QMessageBox::warning(this,"warning!","file not exit!");
     }
 }
+
+void MainWindow::on_cbmTransferSyntax_currentIndexChanged(int index)
+{
+    m_TransferSyntax = ui->cbmTransferSyntax->currentIndex();
+}
+
+//void MainWindow::on_cbmTransferSyntax_currentIndexChanged(const QString &arg1)
+//{
+//    QString str = arg1;
+//    printf(" %s", str.toLatin1().data());
+//}

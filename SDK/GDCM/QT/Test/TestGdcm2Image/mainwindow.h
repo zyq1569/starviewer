@@ -15,6 +15,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public:
+    int m_TransferSyntax;
 private slots:
 
     void on_gdcm2Image_clicked();
@@ -24,6 +26,10 @@ private slots:
     void on_decoder_clicked();
 
     void on_pBshowimage_clicked();
+
+    void on_cbmTransferSyntax_currentIndexChanged(int index);
+
+//    void on_cbmTransferSyntax_currentIndexChanged(const QString &arg1);
 
 private:
     Ui::MainWindow *ui;

@@ -112,7 +112,7 @@
      <string>Show Png</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox">
+   <widget class="QComboBox" name="cbmTransferSyntax">
     <property name="geometry">
      <rect>
       <x>60</x>
