@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="gdcm2Image">
+   <widget class="QPushButton" name="dcm2Image">
     <property name="geometry">
      <rect>
       <x>320</x>

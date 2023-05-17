@@ -19,8 +19,6 @@ public:
     int m_TransferSyntax;
 private slots:
 
-    void on_gdcm2Image_clicked();
-
     void on_pBdcmpath_clicked();
 
     void on_decoder_clicked();
@@ -30,6 +28,8 @@ private slots:
     void on_cbmTransferSyntax_currentIndexChanged(int index);
 
 //    void on_cbmTransferSyntax_currentIndexChanged(const QString &arg1);
+
+    void on_dcm2Image_clicked();
 
 private:
     Ui::MainWindow *ui;

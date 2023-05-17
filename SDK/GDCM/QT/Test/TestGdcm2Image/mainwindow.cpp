@@ -126,85 +126,66 @@ MainWindow::~MainWindow()
 //JPEGProcess14TransferSyntax                    1.2.840.10008.1.2.4.57
 //JPEGProcess14SV1TransferSyntax                 1.2.840.10008.1.2.4.70
 
-bool ConvertToFormat_RGB888(gdcm::Image const & gimage, char *buffer, QImage* &imageQt)
+DcmDataset decompressImage( const DcmDataset *olddataset, E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit, QString derror = "")
 {
-    const unsigned int* dimension = gimage.GetDimensions();
-    unsigned int dimX = dimension[0];
-    unsigned int dimY = dimension[1];
-    if (!gimage.GetBuffer(buffer))
-    {
-        return  false;
-    }
-    if (gimage.IsLossy())
-    {
-        printf("IsLossy\n");
-    }
-    int row = gimage.GetRows();
-    int col = gimage.GetColumns();
-    printf("row: %d col: %d\n", row, col);
-    // Let's start with the easy case:
-    if( gimage.GetPhotometricInterpretation() == gdcm::PhotometricInterpretation::RGB )
-    {
-        if( gimage.GetPixelFormat() != gdcm::PixelFormat::UINT8 )
-        {
-            return false;
-        }
-        unsigned char *ubuffer = (unsigned char*)buffer;
-        // QImage::Format_RGB888  13  The image is stored using a 24-bit RGB format (8-8-8).
-        imageQt = new QImage((unsigned char *)ubuffer, dimX, dimY, 3*dimX, QImage::Format_RGB888);
-    }
-    else if( gimage.GetPhotometricInterpretation() == gdcm::PhotometricInterpretation::MONOCHROME2 )
-    {
-        if( gimage.GetPixelFormat() == gdcm::PixelFormat::UINT8 )
-        {
-            // We need to copy each individual 8bits into R / G and B:
-            unsigned char *ubuffer = new unsigned char[dimX*dimY*3];
-            unsigned char *pubuffer = ubuffer;
-            for(unsigned int i = 0; i < dimX*dimY; i++)
-            {
-                *pubuffer++ = *buffer;
-                *pubuffer++ = *buffer;
-                *pubuffer++ = *buffer++;
-                //printf("Pixel: %d ",*pubuffer);
-            }
+    DcmFileFormat fileformat;
+    // JPEG parameters
+    E_DecompressionColorSpaceConversion opt_decompCSconversion = EDC_photometricInterpretation;
+    E_UIDCreation opt_uidcreation = EUC_default;
+    E_PlanarConfiguration opt_planarconfig = EPC_default;
+    OFBool opt_predictor6WorkaroundEnable = OFFalse;
+    OFBool opt_cornellWorkaroundEnable = OFFalse;
+    //OFBool opt_forceSingleFragmentPerFrame = OFFalse;
+    // register global decompression codecs
+    DJDecoderRegistration::registerCodecs(
+                opt_decompCSconversion,
+                opt_uidcreation,
+                opt_planarconfig,
+                opt_predictor6WorkaroundEnable,
+                opt_cornellWorkaroundEnable);//,
+    //opt_forceSingleFragmentPerFrame);//3.6.5
+    OFCondition error = EC_Normal;
 
-            imageQt = new QImage(ubuffer, dimX, dimY, QImage::Format_RGB888);
-        }
-        else if( gimage.GetPixelFormat() == gdcm::PixelFormat::INT16 )
-        {
-            // We need to copy each individual 16bits into R / G and B (truncate value)
-            short *buffer16 = (short*)buffer;
-            unsigned char *ubuffer = new unsigned char[dimX*dimY*3];
-            unsigned char *pubuffer = ubuffer;
-            for(unsigned int i = 0; i < dimX*dimY; i++)
-            {
-                // Scalar Range of gdcmData/012345.002.050.dcm is [0,192], we could simply do:
-                // *pubuffer++ = *buffer16;
-                // *pubuffer++ = *buffer16;
-                // *pubuffer++ = *buffer16;
-                // instead do it right:
-                *pubuffer++ = (unsigned char)std::min(255, (32768 + *buffer16) / 255);
-                *pubuffer++ = (unsigned char)std::min(255, (32768 + *buffer16) / 255);
-                *pubuffer++ = (unsigned char)std::min(255, (32768 + *buffer16) / 255);
-                //printf("Pixel: %s ",(*buffer16));
-                buffer16++;
-            }
+    //DcmDataset *dataset = new DcmDataset(*olddataset);
+    DcmDataset dataset(*olddataset);
+    //OFLOG_INFO(dcmdjpegLogger, "decompressing file");
 
-            imageQt = new QImage(ubuffer, dimX, dimY, QImage::Format_RGB888);
-        }
-        else
-        {
-            std::cerr << "Pixel Format is: " << gimage.GetPixelFormat() << std::endl;
-            return false;
-        }
-    }
-    else
+    //E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit;
+    DcmXfer opt_oxferSyn(opt_oxfer);
+    DcmXfer original_xfer(dataset.getOriginalXfer());
+
+    error = dataset.chooseRepresentation(opt_oxfer, NULL);
+    if (error.bad())
     {
-        std::cerr << "Unhandled PhotometricInterpretation: " << gimage.GetPhotometricInterpretation() << std::endl;
-        return false;
+        //ERROR_LOG(QString( error.text()) + " decompressing file: " + opt_ifname);
+        derror = error.text();
+        if (error == EJ_UnsupportedColorConversion)
+        {
+            //ERROR_LOG( "Try --conv-never to disable color space conversion");
+            derror +=  "Try --conv-never to disable color space conversion";
+        }
+        else if (error == EC_CannotChangeRepresentation)
+        {
+            //ERROR_LOG( QString("Input transfer syntax ") +  original_xfer.getXferName() + "not supported");
+            derror +=  QString("Input transfer syntax ") +  original_xfer.getXferName() + "not supported";
+        }
+        // deregister global decompression codecs
+        DJDecoderRegistration::cleanup();
+        return dataset;
     }
 
-    return true;
+    if (!dataset.canWriteXfer(opt_oxfer))
+    {
+        // ERROR_LOG(QString ("no conversion to transfer syntax") + opt_oxferSyn.getXferName() + "possible");
+        // deregister global decompression codecs
+        DJDecoderRegistration::cleanup();
+        return dataset;
+    }
+
+    // deregister global decompression codecs
+    DJDecoderRegistration::cleanup();
+
+    return  dataset;
 }
 
 
@@ -283,7 +264,6 @@ const QString PreviewNotAvailableText(QObject::tr("Preview image not available")
 DcmObject* decompressImage(DcmFileFormat &fileformat, QString imageFileName,int transferSyntax = 0)
 {
     DcmObject *dcmimage = NULL;
-
     // JPEG parameters
     E_DecompressionColorSpaceConversion opt_decompCSconversion = EDC_photometricInterpretation;
     E_UIDCreation opt_uidcreation = EUC_default;
@@ -320,9 +300,6 @@ DcmObject* decompressImage(DcmFileFormat &fileformat, QString imageFileName,int 
     //OFLOG_INFO(dcmdjpegLogger, "decompressing file");
 
     E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit;
-    //    if (cmd.findOption("--write-xfer-little")) opt_oxfer = EXS_LittleEndianExplicit;
-    //    if (cmd.findOption("--write-xfer-big")) opt_oxfer = EXS_BigEndianExplicit;
-    //    if (cmd.findOption("--write-xfer-implicit")) opt_oxfer = EXS_LittleEndianImplicit;
     switch(transferSyntax)
     {
     case 1:
@@ -387,10 +364,10 @@ bool decoderDcm(const QString &imageFileName, int transferSyntax = 0, int resolu
     DcmFileFormat fileformat;
     const char *opt_ifname = imageFileName.toLatin1().data();
     //const char *opt_ofname = (imageFileName+"_djpeg").toLatin1().data();
-    QString output = imageFileName+"_djpeg_LittleEndianImplicit.dcm";
-    E_TransferSyntax opt_ixfer = EXS_JPEGProcess14;//EXS_Unknown;
-    E_FileReadMode opt_readMode = ERM_dataset;//ERM_autoDetect;
-    error = fileformat.loadFile(imageFileName.toLatin1().data(), opt_ixfer, EGL_noChange, DCM_MaxReadLength, opt_readMode);
+    QString output = imageFileName+"_djpeg_LI.dcm";
+    //E_TransferSyntax opt_ixfer = EXS_Unknown;//EXS_JPEGProcess14;
+    //E_FileReadMode opt_readMode = ERM_dataset;//ERM_autoDetect;
+    error = fileformat.loadFile(imageFileName.toLatin1().data());//, opt_ixfer, EGL_noChange, DCM_MaxReadLength, opt_readMode);
     if (error.bad())
     {
         //OFLOG_FATAL(dcmdjpegLogger, error.text() << ": reading file: " <<  opt_ifname);
@@ -399,6 +376,8 @@ bool decoderDcm(const QString &imageFileName, int transferSyntax = 0, int resolu
 
     DcmDataset *dataset = fileformat.getDataset();
 
+    DcmMetaInfo *info = fileformat.getMetaInfo();
+    std::cout<<info;
     //    EXS_Unknown -1
     //    EXS_LittleEndianImplicit  0
     //    EXS_BigEndianImplicit     1
@@ -412,11 +391,11 @@ bool decoderDcm(const QString &imageFileName, int transferSyntax = 0, int resolu
         break;
     case 2:
         opt_oxfer = EXS_BigEndianImplicit;
-        output = imageFileName+"_djpeg_BigEndianImplicit.dcm";
+        output = imageFileName+"_djpeg_BI.dcm";
         break;
     case 3:
         opt_oxfer = EXS_LittleEndianExplicit;
-        output = imageFileName+"_djpeg_LittleEndianExplicit.dcm";
+        output = imageFileName+"_djpeg_BE.dcm";
         break;
     default:
         break;
@@ -469,17 +448,17 @@ bool decoderDcm(const QString &imageFileName, int transferSyntax = 0, int resolu
     return  true;
 }
 
-QImage createQImage(/*DicomImage *dicomImage*/const QString &imageFileName, int transferSyntax = 0, int resolution = 256)
+QImage createQImage(const QString &imageFileName, int transferSyntax = 0, int resolution = 256)
 {
     QImage image;
     DcmObject *obj = NULL;
 
     DicomImage *dicomImage = NULL;
+    DicomImage *decodeImage = NULL;
 
     DcmFileFormat fileformat;
     DicomImage reader(imageFileName.toLatin1().data());
-    E_TransferSyntax opt_ixfer = EXS_LittleEndianImplicit;//EXS_LittleEndianExplicit;//EXS_JPEGProcess14;//EXS_Unknown;
-    //E_FileReadMode opt_readMode = ERM_dataset;//ERM_autoDetect;
+    E_TransferSyntax opt_ixfer = EXS_LittleEndianImplicit;
     OFCondition error = EC_Normal;
     error = fileformat.loadFile(imageFileName.toLatin1().data()/*, opt_ixfer, EGL_noChange, DCM_MaxReadLength, opt_readMode*/);
     if (error.bad())
@@ -494,9 +473,26 @@ QImage createQImage(/*DicomImage *dicomImage*/const QString &imageFileName, int 
     }
     else
     {
-        obj =  decompressImage(fileformat,imageFileName);
-        //DicomImage reader(obj, opt_ixfer);
-        dicomImage = new DicomImage(obj,opt_ixfer);
+        switch(transferSyntax)
+        {
+        case 1:
+            opt_ixfer = EXS_LittleEndianImplicit;
+            break;
+        case 2:
+            opt_ixfer = EXS_BigEndianImplicit;
+            break;
+        case 3:
+            opt_ixfer = EXS_LittleEndianExplicit;
+            break;
+        default:
+            break;
+        }
+        DcmDataset newdataset(decompressImage(fileformat.getDataset(), opt_ixfer));
+        if (!newdataset.isEmpty())
+        {
+            dicomImage = new DicomImage(&newdataset, newdataset.getCurrentXfer()/*, CIF_UsePartialAccessToPixelData, 0, 1*/);
+            decodeImage = dicomImage;
+        }
     }
 
     QImage thumbnail;
@@ -583,45 +579,16 @@ QImage createQImage(/*DicomImage *dicomImage*/const QString &imageFileName, int 
     {
         thumbnail = makeEmptyThumbnailWithCustomText(PreviewNotAvailableText);
     }
-    if (obj)
+    if (decodeImage)
     {
-        delete  obj;
-        obj = NULL;
-        delete dicomImage;
-        dicomImage = NULL;
+        delete  decodeImage;
+        decodeImage = NULL;
     }
     return thumbnail;
 }
 
 
-QImage* GetQimage(QString input)
-{
-    QImage *imageQt = NULL;
-    gdcm::ImageReader ir;
-    ir.SetFileName( input.toLatin1().data());
-    if(!ir.Read())
-    {
-        //Read failed
-        return imageQt;
-    }
-
-    std::cout<<"Getting image from ImageReader..."<<std::endl;
-
-    const gdcm::Image &gimage = ir.GetImage();
-    std::vector<char> vbuffer;
-    vbuffer.resize( gimage.GetBufferLength() );
-    char *buffer = &vbuffer[0];
-
-
-    if( !ConvertToFormat_RGB888( gimage, buffer, imageQt ) )
-    {
-        return NULL/*imageQt*/;
-    }
-
-    return imageQt;
-}
-
-void MainWindow::on_gdcm2Image_clicked()
+void MainWindow::on_dcm2Image_clicked()
 {
     m_TransferSyntax = ui->cbmTransferSyntax->currentIndex();
     QFileInfo info(m_dcmpath);
@@ -629,7 +596,7 @@ void MainWindow::on_gdcm2Image_clicked()
     {
         QString dcmfilename = m_dcmpath;
         QString pngfilename = m_dcmpath+".png";
-        QImage image =  createQImage(dcmfilename, m_TransferSyntax);
+        QImage image =  createQImage(dcmfilename, m_TransferSyntax - 1);
         image.save(pngfilename+"dcmtk.png");
         ui->lbshowimage->clear();
         ui->lbshowimage->setPixmap(QPixmap(pngfilename+"dcmtk.png"));
@@ -643,7 +610,7 @@ void MainWindow::on_gdcm2Image_clicked()
 
 void MainWindow::on_pBdcmpath_clicked()
 {
-    m_dcmpath = QFileDialog::getOpenFileName(this,tr("open a file."),"",tr("dcm file(*.dcm);All files(*.*)"));
+    m_dcmpath = QFileDialog::getOpenFileName(this,tr("open a file."),"",tr("dcm file(*.dcm);All files(*.*)"/*,nullptr,QFileDialog::DontUseNativeDialog*/));
     if (m_dcmpath.isEmpty())
     {
         QMessageBox::warning(this,"warning!","Failed to open the dcm");
@@ -663,12 +630,21 @@ void MainWindow::on_decoder_clicked()
     if (info.isFile())
     {
         QString dcmfilename = m_dcmpath;
-        if (!decoderDcm(dcmfilename,m_TransferSyntax))
+        DcmFileFormat fileformat;
+        fileformat.loadFile(dcmfilename.toLatin1().data());
+        DcmDataset newdataset(decompressImage(fileformat.getDataset()));
+
+        if (newdataset.isEmpty())
         {
             QMessageBox::warning(this,"warning!","decoderDcm fail!");
         }
         else
         {
+            QString newfilepath = dcmfilename+"_djpg.dcm";
+            //newdataset.saveFile(newfilepath.toLatin1().data());
+            //DcmFileFormat newDcmFile(&newdataset);
+            fileformat.loadAllDataIntoMemory();
+            fileformat.saveFile(newfilepath.toLatin1().data());
             QMessageBox::information(this,"ok!","decoderDcm ok!");
         }
 
