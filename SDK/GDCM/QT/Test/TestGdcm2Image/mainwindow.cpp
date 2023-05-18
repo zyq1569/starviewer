@@ -182,6 +182,7 @@ MainWindow::~MainWindow()
 /// https://dicomlibrary.com/dicom/transfer-syntax/
 const QString PreviewNotAvailableText(QObject::tr("Preview image not available"));
 
+QImage makeEmptyThumbnailWithCustomText(const QString &text, int resolution);
 QImage makeEmptyThumbnailWithCustomText(const QString &text, int resolution = 96)
 {
     QImage thumbnail;
@@ -196,7 +197,8 @@ QImage makeEmptyThumbnailWithCustomText(const QString &text, int resolution = 96
     return thumbnail;
 }
 
-DcmDataset decompressImage( const DcmDataset *olddataset, E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit, QString derror = "")
+DcmDataset decompressImage( const DcmDataset *olddataset, E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit, QString derror = "");
+DcmDataset decompressImage( const DcmDataset *olddataset, E_TransferSyntax opt_oxfer , QString derror)
 {
     DcmFileFormat fileformat;
     // JPEG parameters
@@ -257,6 +259,7 @@ DcmDataset decompressImage( const DcmDataset *olddataset, E_TransferSyntax opt_o
     return  dataset;
 }
 
+QPixmap convertToQPixmap(DicomImage *dicomImage);
 QPixmap convertToQPixmap(DicomImage *dicomImage)
 {
     Q_ASSERT(dicomImage);
@@ -313,7 +316,8 @@ QPixmap convertToQPixmap(DicomImage *dicomImage)
     return thumbnail;
 }
 
-QImage dcm2QImage(DicomImage *dicomImage, int transferSyntax = 0, int resolution = 256)
+QImage dcm2QImage(DicomImage *dicomImage, int resolution);
+QImage dcm2QImage(DicomImage *dicomImage, int resolution = 256)
 {
     QImage image;
     QImage thumbnail;
@@ -378,13 +382,11 @@ QImage dcm2QImage(DicomImage *dicomImage, int transferSyntax = 0, int resolution
                 ok = true;
             }
 
-            // DicomImage must be deleted to avoid memory leaks
             delete scaledImage;
         }
         else
         {
             ok = false;
-            //DEBUG_LOG(QString("The scaled image has errors. Error: %1 ").arg(DicomImage::getString(scaledImage->getStatus())));
         }
     }
     else
@@ -483,7 +485,6 @@ void MainWindow::on_pBdcmpath_clicked()
     }
 }
 
-
 void MainWindow::on_decoder_clicked()
 {
     m_TransferSyntax = ui->cbmTransferSyntax->currentIndex();
@@ -508,14 +509,11 @@ void MainWindow::on_decoder_clicked()
         else
         {
             QString newfilepath = dcmfilename+"_d_LI.dcm";
-            DcmFileFormat newDcmFile(&newdataset);
-            fileformat.loadAllDataIntoMemory();
             E_EncodingType opt_oenctype = EET_ExplicitLength;
             E_GrpLenEncoding opt_oglenc = EGL_recalcGL;
             E_PaddingEncoding opt_opadenc = EPD_noChange;
             OFCmdUnsignedInt opt_filepad = 0;
             OFCmdUnsignedInt opt_itempad = 0;
-            E_FileWriteMode opt_writeMode = EWM_createNewMeta;
             OFCondition error = EC_Normal;
 
             E_TransferSyntax opt_ixfer = EXS_LittleEndianImplicit;
@@ -523,7 +521,6 @@ void MainWindow::on_decoder_clicked()
             {
             case 1:
                 opt_ixfer = EXS_LittleEndianImplicit;
-//                newfilepath = dcmfilename+"_d_LI.dcm";
                 break;
             case 2:
                 opt_ixfer = EXS_BigEndianImplicit;
@@ -536,11 +533,11 @@ void MainWindow::on_decoder_clicked()
             default:
                 break;
             }
-            error = newDcmFile.saveFile( newfilepath.toLatin1().data(), opt_ixfer, opt_oenctype, opt_oglenc, opt_opadenc, OFstatic_cast(Uint32, opt_filepad),
-                                         OFstatic_cast(Uint32, opt_itempad), opt_writeMode);
+
+            newdataset.saveFile( newfilepath.toLatin1().data(), opt_ixfer, opt_oenctype, opt_oglenc, opt_opadenc, OFstatic_cast(Uint32, opt_filepad),
+                                 OFstatic_cast(Uint32, opt_itempad));
             if (error != EC_Normal)
             {
-                //OFLOG_FATAL(dcmdjpegLogger, error.text() << ": writing file: " <<  opt_ofname);
                 QMessageBox::warning(this,"warning!","decoderDcm save fail!" + newfilepath);
                 return ;
             }
