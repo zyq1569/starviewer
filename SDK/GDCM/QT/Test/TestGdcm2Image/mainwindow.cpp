@@ -247,6 +247,7 @@ DcmDataset decompressImage( const DcmDataset *olddataset, E_TransferSyntax opt_o
         // ERROR_LOG(QString ("no conversion to transfer syntax") + opt_oxferSyn.getXferName() + "possible");
         // deregister global decompression codecs
         DJDecoderRegistration::cleanup();
+        QMessageBox::warning(NULL,"warning!","conversion to transfer syntax fail!" + QString(opt_oxferSyn.getXferName()));
         return dataset;
     }
 
@@ -537,6 +538,12 @@ void MainWindow::on_decoder_clicked()
             }
             error = newDcmFile.saveFile( newfilepath.toLatin1().data(), opt_ixfer, opt_oenctype, opt_oglenc, opt_opadenc, OFstatic_cast(Uint32, opt_filepad),
                                          OFstatic_cast(Uint32, opt_itempad), opt_writeMode);
+            if (error != EC_Normal)
+            {
+                //OFLOG_FATAL(dcmdjpegLogger, error.text() << ": writing file: " <<  opt_ofname);
+                QMessageBox::warning(this,"warning!","decoderDcm save fail!" + newfilepath);
+                return ;
+            }
             QMessageBox::information(this,"ok!","decoderDcm ok!");
         }
 
