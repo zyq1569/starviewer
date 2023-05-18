@@ -126,6 +126,10 @@ MainWindow::~MainWindow()
 //JPEGProcess14TransferSyntax                    1.2.840.10008.1.2.4.57
 //JPEGProcess14SV1TransferSyntax                 1.2.840.10008.1.2.4.70
 
+
+///
+
+///dcmdjpeg.cc dcmcjpeg.cc
 const QString PreviewNotAvailableText(QObject::tr("Preview image not available"));
 
 QImage makeEmptyThumbnailWithCustomText(const QString &text, int resolution = 96)
@@ -441,7 +445,7 @@ void MainWindow::on_decoder_clicked()
         DcmXfer original_xfer(fileformat.getDataset()->getOriginalXfer());
         if (!original_xfer.isEncapsulated())
         {
-            QMessageBox::warning(this,"warning!","the dcm not Encapsulated!");
+            QMessageBox::warning(this,"warning!","is not JPEG-compressed DICOM file!");
             return;
         }
         DcmDataset newdataset(decompressImage(fileformat.getDataset()));
@@ -452,7 +456,7 @@ void MainWindow::on_decoder_clicked()
         }
         else
         {
-            QString newfilepath = dcmfilename+"_djpg.dcm";
+            QString newfilepath = dcmfilename+"_d_LI.dcm";
             DcmFileFormat newDcmFile(&newdataset);
             fileformat.loadAllDataIntoMemory();
             E_EncodingType opt_oenctype = EET_ExplicitLength;
@@ -468,12 +472,15 @@ void MainWindow::on_decoder_clicked()
             {
             case 1:
                 opt_ixfer = EXS_LittleEndianImplicit;
+//                newfilepath = dcmfilename+"_d_LI.dcm";
                 break;
             case 2:
                 opt_ixfer = EXS_BigEndianImplicit;
+                newfilepath = dcmfilename+"_d_BI.dcm";
                 break;
             case 3:
                 opt_ixfer = EXS_LittleEndianExplicit;
+                newfilepath = dcmfilename+"_d_LE.dcm";
                 break;
             default:
                 break;
