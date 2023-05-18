@@ -35,4 +35,5 @@ private:
 private:
     QString m_dcmpath,m_pngpath;
 };
+
 #endif // MAINWINDOW_H

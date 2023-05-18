@@ -181,8 +181,11 @@ MainWindow::~MainWindow()
 ///
 /// https://dicomlibrary.com/dicom/transfer-syntax/
 const QString PreviewNotAvailableText(QObject::tr("Preview image not available"));
-
+DcmDataset decompressImage( const DcmDataset *olddataset, E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit, QString derror = "");
 QImage makeEmptyThumbnailWithCustomText(const QString &text, int resolution);
+QPixmap convertToQPixmap(DicomImage *dicomImage);
+QImage dcm2QImage(DicomImage *dicomImage, int resolution);
+
 QImage makeEmptyThumbnailWithCustomText(const QString &text, int resolution = 96)
 {
     QImage thumbnail;
@@ -197,7 +200,6 @@ QImage makeEmptyThumbnailWithCustomText(const QString &text, int resolution = 96
     return thumbnail;
 }
 
-DcmDataset decompressImage( const DcmDataset *olddataset, E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit, QString derror = "");
 DcmDataset decompressImage( const DcmDataset *olddataset, E_TransferSyntax opt_oxfer , QString derror)
 {
     DcmFileFormat fileformat;
@@ -217,9 +219,7 @@ DcmDataset decompressImage( const DcmDataset *olddataset, E_TransferSyntax opt_o
                 opt_cornellWorkaroundEnable);
     OFCondition error = EC_Normal;
 
-    //DcmDataset *dataset = new DcmDataset(*olddataset);
     DcmDataset dataset(*olddataset);
-    //OFLOG_INFO(dcmdjpegLogger, "decompressing file");
 
     DcmXfer opt_oxferSyn(opt_oxfer);
     DcmXfer original_xfer(dataset.getOriginalXfer());
@@ -259,7 +259,6 @@ DcmDataset decompressImage( const DcmDataset *olddataset, E_TransferSyntax opt_o
     return  dataset;
 }
 
-QPixmap convertToQPixmap(DicomImage *dicomImage);
 QPixmap convertToQPixmap(DicomImage *dicomImage)
 {
     Q_ASSERT(dicomImage);
@@ -316,7 +315,6 @@ QPixmap convertToQPixmap(DicomImage *dicomImage)
     return thumbnail;
 }
 
-QImage dcm2QImage(DicomImage *dicomImage, int resolution);
 QImage dcm2QImage(DicomImage *dicomImage, int resolution = 256)
 {
     QImage image;
@@ -500,7 +498,25 @@ void MainWindow::on_decoder_clicked()
             QMessageBox::warning(this,"warning!","is not JPEG-compressed DICOM file!");
             return;
         }
-        DcmDataset newdataset(decompressImage(fileformat.getDataset()));
+        QString newfilepath = dcmfilename+"_d_LI.dcm";
+        E_TransferSyntax opt_ixfer = EXS_LittleEndianImplicit;
+        switch(m_TransferSyntax)
+        {
+        case 1:
+            opt_ixfer = EXS_LittleEndianImplicit;
+            break;
+        case 2:
+            opt_ixfer = EXS_BigEndianImplicit;
+            newfilepath = dcmfilename+"_d_BI.dcm";
+            break;
+        case 3:
+            opt_ixfer = EXS_LittleEndianExplicit;
+            newfilepath = dcmfilename+"_d_LE.dcm";
+            break;
+        default:
+            break;
+        }
+        DcmDataset newdataset(decompressImage(fileformat.getDataset(),opt_ixfer));
 
         if (newdataset.isEmpty())
         {
@@ -508,7 +524,7 @@ void MainWindow::on_decoder_clicked()
         }
         else
         {
-            QString newfilepath = dcmfilename+"_d_LI.dcm";
+
             E_EncodingType opt_oenctype = EET_ExplicitLength;
             E_GrpLenEncoding opt_oglenc = EGL_recalcGL;
             E_PaddingEncoding opt_opadenc = EPD_noChange;
@@ -516,26 +532,8 @@ void MainWindow::on_decoder_clicked()
             OFCmdUnsignedInt opt_itempad = 0;
             OFCondition error = EC_Normal;
 
-            E_TransferSyntax opt_ixfer = EXS_LittleEndianImplicit;
-            switch(m_TransferSyntax)
-            {
-            case 1:
-                opt_ixfer = EXS_LittleEndianImplicit;
-                break;
-            case 2:
-                opt_ixfer = EXS_BigEndianImplicit;
-                newfilepath = dcmfilename+"_d_BI.dcm";
-                break;
-            case 3:
-                opt_ixfer = EXS_LittleEndianExplicit;
-                newfilepath = dcmfilename+"_d_LE.dcm";
-                break;
-            default:
-                break;
-            }
-
-            newdataset.saveFile( newfilepath.toLatin1().data(), opt_ixfer, opt_oenctype, opt_oglenc, opt_opadenc, OFstatic_cast(Uint32, opt_filepad),
-                                 OFstatic_cast(Uint32, opt_itempad));
+            newdataset.saveFile( newfilepath.toLatin1().data(), opt_ixfer, opt_oenctype, opt_oglenc, opt_opadenc,
+                                 OFstatic_cast(Uint32, opt_filepad),  OFstatic_cast(Uint32, opt_itempad));
             if (error != EC_Normal)
             {
                 QMessageBox::warning(this,"warning!","decoderDcm save fail!" + newfilepath);
