@@ -208,7 +208,6 @@ QPixmap convertToQPixmap(DicomImage *dicomImage)
 
     // The following code creates a PGM or PPM image in memory and we load this buffer directly into the QImage
     // Based on the code of http://forum.dcmtk.org/viewtopic.php?t=120&highlight=qpixmap
-
     int bytesPerComponent;
     QString imageFormat;
     QString imageHeader;
@@ -257,105 +256,6 @@ QPixmap convertToQPixmap(DicomImage *dicomImage)
     }
 
     return thumbnail;
-}
-
-bool decoderDcm(const QString &imageFileName, int transferSyntax = 0, int resolution = 96)
-{
-    // JPEG parameters
-    E_DecompressionColorSpaceConversion opt_decompCSconversion = EDC_photometricInterpretation;
-    E_UIDCreation opt_uidcreation = EUC_default;
-    E_PlanarConfiguration opt_planarconfig = EPC_default;
-    OFBool opt_predictor6WorkaroundEnable = OFFalse;
-    OFBool opt_cornellWorkaroundEnable = OFFalse;
-    OFBool opt_forceSingleFragmentPerFrame = OFFalse;
-    // register global decompression codecs
-    DJDecoderRegistration::registerCodecs(opt_decompCSconversion,  opt_uidcreation,  opt_planarconfig,
-                                          opt_predictor6WorkaroundEnable,  opt_cornellWorkaroundEnable, opt_forceSingleFragmentPerFrame);
-    OFCondition error = EC_Normal;
-
-    DcmFileFormat fileformat;
-    const char *opt_ifname = imageFileName.toLatin1().data();
-    //const char *opt_ofname = (imageFileName+"_djpeg").toLatin1().data();
-    QString output = imageFileName+"_djpeg_LI.dcm";
-    error = fileformat.loadFile(imageFileName.toLatin1().data());//, opt_ixfer, EGL_noChange, DCM_MaxReadLength, opt_readMode);
-    if (error.bad())
-    {
-        //OFLOG_FATAL(dcmdjpegLogger, error.text() << ": reading file: " <<  opt_ifname);
-        return false;
-    }
-
-    DcmDataset *dataset = fileformat.getDataset();
-
-    DcmMetaInfo *info = fileformat.getMetaInfo();
-    std::cout<<info;
-    //EXS_Unknown -1
-    //EXS_LittleEndianImplicit  0
-    //EXS_BigEndianImplicit     1
-    //EXS_LittleEndianExplicit  2
-    E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit;
-
-    switch(transferSyntax)
-    {
-    case 1:
-        opt_oxfer = EXS_BigEndianImplicit;
-        break;
-    case 2:
-        opt_oxfer = EXS_BigEndianImplicit;
-        output = imageFileName+"_djpeg_BI.dcm";
-        break;
-    case 3:
-        opt_oxfer = EXS_LittleEndianExplicit;
-        output = imageFileName+"_djpeg_BE.dcm";
-        break;
-    default:
-        break;
-    }
-    DcmXfer opt_oxferSyn(opt_oxfer);
-    DcmXfer original_xfer(dataset->getOriginalXfer());
-
-    error = dataset->chooseRepresentation(opt_oxfer, NULL);
-    if (error.bad())
-    {
-        printf("%s decompressing file: %s", error.text(),opt_ifname);
-        if (error == EJ_UnsupportedColorConversion)
-        {
-            printf( "Try --conv-never to disable color space conversion");
-        }
-        else if (error == EC_CannotChangeRepresentation)
-        {
-            printf( "Input transfer syntax %s not supported", original_xfer.getXferName());
-        }
-        return false;
-    }
-
-    if (! dataset->canWriteXfer(opt_oxfer))
-    {
-        printf("no conversion to transfer syntax %s possible" , opt_oxferSyn.getXferName());
-        return false;
-    }
-
-    printf("creating output file %s",  output.toLatin1().data()/*opt_ofname*/);
-
-    fileformat.loadAllDataIntoMemory();
-    E_EncodingType opt_oenctype = EET_ExplicitLength;
-    E_GrpLenEncoding opt_oglenc = EGL_recalcGL;
-    E_PaddingEncoding opt_opadenc = EPD_noChange;
-    OFCmdUnsignedInt opt_filepad = 0;
-    OFCmdUnsignedInt opt_itempad = 0;
-    E_FileWriteMode opt_writeMode = EWM_createNewMeta;
-    error = fileformat.saveFile( output.toLatin1().data(), opt_oxfer, opt_oenctype, opt_oglenc, opt_opadenc, OFstatic_cast(Uint32, opt_filepad),
-                                OFstatic_cast(Uint32, opt_itempad), opt_writeMode);
-    if (error != EC_Normal)
-    {
-        printf("%s : writing file: %s", error.text() , /*opt_ofname*/ output.toLatin1().data());
-        return false;
-    }
-
-    printf("conversion successful \n");
-
-    // deregister global decompression codecs
-    DJDecoderRegistration::cleanup();
-    return  true;
 }
 
 QImage dcm2QImage(DicomImage *dicomImage, int transferSyntax = 0, int resolution = 256)
@@ -538,6 +438,12 @@ void MainWindow::on_decoder_clicked()
         QString dcmfilename = m_dcmpath;
         DcmFileFormat fileformat;
         fileformat.loadFile(dcmfilename.toLatin1().data());
+        DcmXfer original_xfer(fileformat.getDataset()->getOriginalXfer());
+        if (!original_xfer.isEncapsulated())
+        {
+            QMessageBox::warning(this,"warning!","the dcm not Encapsulated!");
+            return;
+        }
         DcmDataset newdataset(decompressImage(fileformat.getDataset()));
 
         if (newdataset.isEmpty())
@@ -547,10 +453,33 @@ void MainWindow::on_decoder_clicked()
         else
         {
             QString newfilepath = dcmfilename+"_djpg.dcm";
-            //newdataset.saveFile(newfilepath.toLatin1().data());
-            //DcmFileFormat newDcmFile(&newdataset);
+            DcmFileFormat newDcmFile(&newdataset);
             fileformat.loadAllDataIntoMemory();
-            fileformat.saveFile(newfilepath.toLatin1().data());
+            E_EncodingType opt_oenctype = EET_ExplicitLength;
+            E_GrpLenEncoding opt_oglenc = EGL_recalcGL;
+            E_PaddingEncoding opt_opadenc = EPD_noChange;
+            OFCmdUnsignedInt opt_filepad = 0;
+            OFCmdUnsignedInt opt_itempad = 0;
+            E_FileWriteMode opt_writeMode = EWM_createNewMeta;
+            OFCondition error = EC_Normal;
+
+            E_TransferSyntax opt_ixfer = EXS_LittleEndianImplicit;
+            switch(m_TransferSyntax-1)
+            {
+            case 1:
+                opt_ixfer = EXS_LittleEndianImplicit;
+                break;
+            case 2:
+                opt_ixfer = EXS_BigEndianImplicit;
+                break;
+            case 3:
+                opt_ixfer = EXS_LittleEndianExplicit;
+                break;
+            default:
+                break;
+            }
+            error = newDcmFile.saveFile( newfilepath.toLatin1().data(), opt_ixfer, opt_oenctype, opt_oglenc, opt_opadenc, OFstatic_cast(Uint32, opt_filepad),
+                                         OFstatic_cast(Uint32, opt_itempad), opt_writeMode);
             QMessageBox::information(this,"ok!","decoderDcm ok!");
         }
 
@@ -559,8 +488,6 @@ void MainWindow::on_decoder_clicked()
         QMessageBox::warning(this,"warning!","the dcm not exit!");
     }
 }
-
-
 
 void MainWindow::on_pBshowimage_clicked()
 {
@@ -581,9 +508,3 @@ void MainWindow::on_cbmTransferSyntax_currentIndexChanged(int index)
 {
     m_TransferSyntax = ui->cbmTransferSyntax->currentIndex();
 }
-
-//void MainWindow::on_cbmTransferSyntax_currentIndexChanged(const QString &arg1)
-//{
-//    QString str = arg1;
-//    printf(" %s", str.toLatin1().data());
-//}

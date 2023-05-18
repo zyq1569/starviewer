@@ -27,8 +27,6 @@ private slots:
 
     void on_cbmTransferSyntax_currentIndexChanged(int index);
 
-//    void on_cbmTransferSyntax_currentIndexChanged(const QString &arg1);
-
     void on_dcm2Image_clicked();
 
 private:
