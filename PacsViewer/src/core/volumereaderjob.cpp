@@ -83,6 +83,8 @@ void VolumeReaderJob::run(ThreadWeaver::JobPointer self, ThreadWeaver::Thread *t
     {
         // El locker només serà vàlid dintre de l'scope. Es fa així en comptes de fer-ho amb un .lock o .unlock per
         // assegurar-nos que si salta una excepció s'alliberarà el lock.
+        //The locker will only be valid within the scope. It is done this way instead of with a .lock or .unlock for
+        //make sure that if an exception jumps, the lock will be released.
         QMutexLocker locker(&m_volumeReaderToAbortMutex);
         m_volumeReaderToAbort = volumeReader;
     }

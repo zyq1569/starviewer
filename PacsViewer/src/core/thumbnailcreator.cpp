@@ -29,6 +29,13 @@
 #include <dcmimage.h>
 #include <ofbmanip.h>
 #include <dcdatset.h>
+
+#include "dcmtk/dcmdata/dctk.h"
+#include "dcmtk/dcmdata/cmdlnarg.h"
+#include "dcmtk/ofstd/ofconapp.h"
+#include "dcmtk/dcmdata/dcuid.h"       /* for dcmtk version name */
+#include "dcmtk/dcmjpeg/djdecode.h"    /* for dcmjpeg decoders */
+#include "dcmtk/dcmjpeg/dipijpeg.h"    /* for dcmimage JPEG plugin */
 // Needed to support color images
 #include <diregist.h>
 
@@ -70,6 +77,123 @@ QImage ThumbnailCreator::getThumbnail(const Series *series, int resolution)
 
     return thumbnail;
 }
+
+DcmDataset decompressImage( const DcmDataset *olddataset)
+{
+    DcmFileFormat fileformat;
+    // JPEG parameters
+    E_DecompressionColorSpaceConversion opt_decompCSconversion = EDC_photometricInterpretation;
+    E_UIDCreation opt_uidcreation = EUC_default;
+    E_PlanarConfiguration opt_planarconfig = EPC_default;
+    OFBool opt_predictor6WorkaroundEnable = OFFalse;
+    OFBool opt_cornellWorkaroundEnable = OFFalse;
+    //OFBool opt_forceSingleFragmentPerFrame = OFFalse;
+    // register global decompression codecs
+    DJDecoderRegistration::registerCodecs(
+                opt_decompCSconversion,
+                opt_uidcreation,
+                opt_planarconfig,
+                opt_predictor6WorkaroundEnable,
+                opt_cornellWorkaroundEnable);//,
+    //opt_forceSingleFragmentPerFrame);//3.6.5
+    OFCondition error = EC_Normal;
+
+    //DcmDataset *dataset = new DcmDataset(*olddataset);
+    DcmDataset dataset(*olddataset);
+    //OFLOG_INFO(dcmdjpegLogger, "decompressing file");
+
+    E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit;
+    DcmXfer opt_oxferSyn(opt_oxfer);
+    DcmXfer original_xfer(dataset.getOriginalXfer());
+
+    error = dataset.chooseRepresentation(opt_oxfer, NULL);
+    if (error.bad())
+    {
+        //ERROR_LOG(QString( error.text()) + " decompressing file: " + opt_ifname);
+        if (error == EJ_UnsupportedColorConversion)
+        {
+            ERROR_LOG( "Try --conv-never to disable color space conversion");
+        }
+        else if (error == EC_CannotChangeRepresentation)
+        {
+            ERROR_LOG( QString("Input transfer syntax ") +  original_xfer.getXferName() + "not supported");
+        }
+        // deregister global decompression codecs
+        DJDecoderRegistration::cleanup();
+        return dataset;
+    }
+
+    if (!dataset.canWriteXfer(opt_oxfer))
+    {
+        ERROR_LOG(QString ("no conversion to transfer syntax") + opt_oxferSyn.getXferName() + "possible");
+        // deregister global decompression codecs
+        DJDecoderRegistration::cleanup();
+        return dataset;
+    }
+
+    // deregister global decompression codecs
+    DJDecoderRegistration::cleanup();
+
+    return  dataset;
+}
+
+//QImage ThumbnailCreator::getThumbnail(QString filename, int resolution)
+//{
+//    DICOMTagReader reader(filename);
+//    QImage thumbnail;
+//    if (isSuitableForThumbnailCreation(&reader))
+//    {
+//        try
+//        {
+//            /// Let's load the dicom file to scale
+//            /// Let's say that in the case of a multiframe image,
+//            /// just load the first image and enough, saving unnecessarily hosting memory
+//            ///
+//            DicomImage *dicomImage = NULL;
+//            //DcmDataset *newdataset = NULL;
+//            DcmFileFormat fileformat;
+//            QString imageFileName = reader.getFileName();
+//            DicomImage dcmreader(imageFileName.toLatin1().data());
+
+//            DcmXfer original_xfer(reader.getDcmDataset()->getOriginalXfer());
+//            if (!original_xfer.isEncapsulated())
+//            {
+//                dicomImage = new DicomImage(reader.getDcmDataset(), reader.getDcmDataset()->getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
+//            }
+//            else
+//            {
+//                E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit;
+//                DcmDataset newdataset(decompressImage(reader.getDcmDataset()));
+//                if (!newdataset.isEmpty())
+//                {
+//                    dicomImage = new DicomImage(&newdataset, opt_oxfer, CIF_UsePartialAccessToPixelData, 0, 1);
+//                }
+//            }
+
+//            // DicomImage *dicomImage = new DicomImage(reader->getDcmDataset(), reader->getDcmDataset()->getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
+//            thumbnail = createThumbnail(dicomImage, resolution);
+
+//            // DicomImage must be deleted to avoid memory leaks
+//            if (dicomImage)
+//            {
+//                delete dicomImage;
+//                dicomImage = NULL;
+//            }
+//        }
+//        catch (std::bad_alloc &e)
+//        {
+//            ERROR_LOG(QString("Failed to generate thumbnail due to memory failure: %1").arg(e.what()));
+//            thumbnail = makeEmptyThumbnailWithCustomText(PreviewNotAvailableText);
+//        }
+//    }
+//    else
+//    {
+//        //We create an alternative thumbnail indicating that a preview image cannot be displayed
+//        thumbnail = makeEmptyThumbnailWithCustomText(PreviewNotAvailableText);
+//    }
+
+//    return thumbnail;
+//}
 
 QImage ThumbnailCreator::getThumbnail(const Image *image, int resolution)
 {
@@ -127,6 +251,7 @@ QImage ThumbnailCreator::createThumbnail(const DICOMTagReader *reader, int resol
             if (dicomImage)
             {
                 delete dicomImage;
+                dicomImage = NULL;
             }
         }
         catch (std::bad_alloc &e)
