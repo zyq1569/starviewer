@@ -58,7 +58,7 @@
 #include <QEvent>
 #include <QMouseEvent>
 #include <QPainter>
-
+#include <QPainterPath>
 #define printf
 
 namespace udg {
