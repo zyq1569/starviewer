@@ -139,6 +139,7 @@ INCLUDEPATH +=  $${VTKINCLUDEDIR} \
                 $${VTKINCLUDEDIR}/Utilities/KWIML/vtkkwiml/ \
                 $${VTKINCLUDEDIR}/Interaction/Widgets/ \
                 $${VTKINCLUDEDIR}/Interaction/Style/ \
+                $${VTKINCLUDEDIR}/Interaction/Image/ \
                 $${VTKINCLUDEDIR}/Filters/Verdict
 
 VTKLIBSUFFIX = -8.2

@@ -36,6 +36,8 @@
 #include <vtkStreamingDemandDrivenPipeline.h>
 #include <vtkStringArray.h>
 
+#include <vtkObjectFactory.h>
+
 #include <dcfilefo.h>   // DcmFileFormat
 #include <dcmimage.h>   // DicomImage
 
