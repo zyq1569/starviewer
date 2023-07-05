@@ -18,7 +18,11 @@
 #include "patientfillerinput.h"
 #include "series.h"
 #include "thumbnailcreator.h"
-
+///-------------add 2023 0507
+//
+///#include <QImageWriter>
+///#include "gdcmImageReader.h"
+///-------------------------
 #include <QFileInfo>
 
 namespace udg {
@@ -112,18 +116,20 @@ bool VolumeFillerStep::fillIndividually()
 
 void VolumeFillerStep::saveThumbnail(const Image *image)
 {
-    int volumeNumber = m_input->getCurrentVolumeNumber();
-    QString thumbnailPath = QFileInfo(image->getPath()).absolutePath();
+    //int volumeNumber = m_input->getCurrentVolumeNumber();
+//    QString thumbnailPath = QFileInfo(image->getPath()).absolutePath();
 
-    ThumbnailCreator thumbnailCreator;
-    QImage thumbnail = thumbnailCreator.getThumbnail(image);
-    thumbnail.save(QString("%1/thumbnail%2.png").arg(thumbnailPath).arg(volumeNumber), "PNG");
+//    ThumbnailCreator thumbnailCreator;
+//    QImage thumbnail = thumbnailCreator.getThumbnail(image);
+    //QImage thumbnail = thumbnailCreator.getThumbnail(image->getPath());
+    //thumbnail.save(QString("%1/thumbnail%2.png").arg(thumbnailPath).arg(volumeNumber), "PNG");
 
-//    // Si és el primer thumbnail, també creem el thumbnail ordinari que s'havia fet sempre
+    // Si és el primer thumbnail, també creem el thumbnail ordinari que s'havia fet sempre
 //    if (volumeNumber == 1)
 //    {
 //        thumbnail.save(QString("%1/thumbnail.png").arg(thumbnailPath), "PNG");
 //    }
+
 }
 
 VolumeFillerStep::ImageProperties::ImageProperties(const Image *image)
