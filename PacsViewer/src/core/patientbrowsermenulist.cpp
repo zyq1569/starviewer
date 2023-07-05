@@ -38,10 +38,14 @@ PatientBrowserMenuList::PatientBrowserMenuList(QWidget *parent)
 
     layout->addWidget(m_qmlView);
 
+//#if (QT_DEPRECATED_VERSION > QT_VERSION_CHECK(5,12,12))
+//    m_qmlView->setSource(QUrl("qrc:qml/qmlpatientbrowsermenu.qml"));
+//#else
     m_qmlView->setSource(QUrl("qrc:///qmlpatientbrowsermenu.qml"));
+//#endif
 
     QQuickItem *object = m_qmlView->rootObject();
-    if (!object)
+    if (object)
     {
         object->setProperty("fusionLabelText", QVariant::fromValue(tr("Fusion")));
 
