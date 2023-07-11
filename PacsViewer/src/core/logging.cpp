@@ -23,7 +23,7 @@ namespace udg
 
 const char* getPID(const el::LogMessage*)
 {
-#ifdef MSVC
+#ifdef Q_OS_WIN
     static std::string stdpid = QString::number(qApp->applicationPid()).toStdString();
 #else
     static std::string stdpid = QString::number(getpid()).toStdString();
