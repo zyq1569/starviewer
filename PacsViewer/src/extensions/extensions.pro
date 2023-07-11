@@ -6,3 +6,4 @@ SUBDIRS = main \
           playground
 
 include(../compilationtype.pri)
+DESTDIR = ../../bin

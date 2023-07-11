@@ -841,3 +841,5 @@ QT += xml \
     webenginewidgets
 
 INCLUDEPATH += ../thirdparty/easylogging++
+
+DESTDIR = ../../bin

@@ -112,3 +112,4 @@ include(../../basicconfextensions.pri)
 include(../../../cuda.pri)
 include(../../../thirdparty/glew/glew.pri)
 QT += opengl concurrent
+DESTDIR = ../../../../bin

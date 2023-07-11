@@ -195,3 +195,6 @@ QT += xml \
     network \
     widgets \
     sql
+
+
+DESTDIR = ../../bin

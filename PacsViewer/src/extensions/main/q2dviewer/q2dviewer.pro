@@ -33,3 +33,4 @@ RESOURCES += q2dviewer.qrc
 
 EXTENSION_DIR = $$PWD
 include(../../basicconfextensions.pri)
+DESTDIR = ../../../../bin

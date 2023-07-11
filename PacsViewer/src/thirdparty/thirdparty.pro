@@ -4,3 +4,5 @@ TEMPLATE = subdirs
 SUBDIRS = qtsingleapplication breakpad easylogging++
 
 include(../compilationtype.pri)
+
+DESTDIR = ../../bin

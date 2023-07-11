@@ -8,3 +8,5 @@ DESTDIR = ./
 
 HEADERS += easylogging++.h
 SOURCES += easylogging++.cc
+
+DESTDIR = ../../../bin

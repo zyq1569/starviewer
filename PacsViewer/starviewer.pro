@@ -4,6 +4,7 @@
 # The goal is a subdirectory of the project
 
 # win32-msvc2017 +  >=qt5.9
+#message($$DESTDIR)
 include(src/compilationtype.pri)
 
 SUBDIRS += src

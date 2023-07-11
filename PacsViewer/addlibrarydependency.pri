@@ -7,8 +7,10 @@ defineTest(addLibraryDependency) {
 
     exists($$directoryName/$$libraryName) {
         unix:PRE_TARGETDEPS += $$outputDirectoryName/$$libraryName/lib$${libraryName}.a
-        win32:PRE_TARGETDEPS += $$outputDirectoryName/$$libraryName/$${libraryName}.lib
-        LIBS += -L$$outputDirectoryName/$$libraryName -l$${libraryName}
+#        win32:PRE_TARGETDEPS += $$outputDirectoryName/$$libraryName/$${libraryName}.lib
+        win32:PRE_TARGETDEPS += $$outputDirectoryName/$${libraryName}.lib
+#        LIBS += -L$$outputDirectoryName/$$libraryName -l$${libraryName}
+        LIBS += -L$$outputDirectoryName -l$${libraryName}
         INCLUDEPATH += $$directoryName/$$libraryName
     }
 

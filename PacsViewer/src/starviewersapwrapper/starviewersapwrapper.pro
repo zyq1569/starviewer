@@ -18,7 +18,15 @@ SOURCES = starviewersapwrapper.cpp \
 INCLUDEPATH += ../core
 
 include(../../addlibrarydependency.pri)
-addLibraryDependency(../thirdparty, ../thirdparty, easylogging++)
+#addLibraryDependency(../thirdparty, ../thirdparty, easylogging++)
+
+# --------------------include  lib
+outputDirectory = ../../bin
+LIBS += -L$${outputDirectory} \
+        -leasylogging++
+
+INCLUDEPATH += ../thirdparty/ easylogging++
+# --------------------include  lib
 
 official_release {
     win32:RESOURCES += ../main/qtconf/win/qtconf.qrc

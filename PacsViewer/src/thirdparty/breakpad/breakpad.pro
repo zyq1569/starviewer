@@ -161,3 +161,5 @@ linux {
         common/linux/memory_mapped_file.cc \
         common/linux/safe_readlink.cc
 }
+
+DESTDIR = ../../../bin

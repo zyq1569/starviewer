@@ -21,3 +21,4 @@ for(dir, SUBDIRS){
     SUBDIRS -= $$dir
   }
 }
+DESTDIR = ../../../../bin

@@ -40,3 +40,4 @@ RESOURCES += dicomprint.qrc
 
 EXTENSION_DIR = $$PWD
 include(../../basicconfextensions.pri)
+DESTDIR = ../../../../bin

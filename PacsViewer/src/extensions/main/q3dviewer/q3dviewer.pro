@@ -16,3 +16,4 @@ RESOURCES += q3dviewer.qrc
 
 EXTENSION_DIR = $$PWD
 include(../../basicconfextensions.pri)
+DESTDIR = ../../../../bin

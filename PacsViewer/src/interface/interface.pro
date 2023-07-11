@@ -57,3 +57,6 @@ include(../compilationtype.pri)
 
 QT += widgets
 QT += network
+
+
+DESTDIR = ../../bin

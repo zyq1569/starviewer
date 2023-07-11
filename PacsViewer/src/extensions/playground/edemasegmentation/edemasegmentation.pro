@@ -15,3 +15,4 @@ RESOURCES += edemasegmentation.qrc
 
 EXTENSION_DIR = $$PWD
 include(../../basicconfextensions.pri)
+DESTDIR = ../../../../bin
