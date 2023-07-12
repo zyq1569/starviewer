@@ -205,7 +205,7 @@ QStringList AppImportFile::generateFilenames(const QString &dirPath)
     foreach (const QFileInfo &fileInfo, fileInfoList)
     {
         suffix = fileInfo.suffix();
-        if(( suffix.length() > 0 && suffix == "dcm" ) || suffix.length() == 0)
+        if(( suffix.length() > 0 && suffix.toLower() == "dcm" ) || suffix.length() == 0)
         {
             list << fileInfo.absoluteFilePath();
         }
