@@ -41,6 +41,9 @@ VolumePixelDataReaderVTKDCMTK::~VolumePixelDataReaderVTKDCMTK()
     m_vtkQtConnections->Delete();
 }
 
+//chinese path error???
+//https://github.com/InsightSoftwareConsortium/ITK/pull/2847
+//https://github.com/InsightSoftwareConsortium/ITK/commit/94b80ea4bc4a7789f5be962967a7ed09bd187d34
 int VolumePixelDataReaderVTKDCMTK::read(const QStringList &filenames)
 {
     int errorCode = NoError;
