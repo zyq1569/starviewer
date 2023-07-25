@@ -167,7 +167,9 @@ ITKLIBS = \
         ITKIOImageBase \
         itksys \
         itkdouble-conversion \
-        ITKTransform
+        ITKTransform \
+        itkzlib \
+        ITKEXPAT
 
 macx:official_release:ITKLIBS += itkzlib
 

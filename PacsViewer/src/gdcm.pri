@@ -39,7 +39,7 @@ LIBS += -L$${GDCMLIBDIR} \
         -lgdcmjpeg12 \
         -lgdcmjpeg16 \
         -lgdcmMSFF \
--lgdcmopenjp2 \
+        -lgdcmopenjp2 \
         -lvtkgdcm
 
 win32 {
