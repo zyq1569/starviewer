@@ -223,7 +223,7 @@ void RetrieveDICOMFilesFromPACS::storeSCPCallback(void *callbackData, T_DIMSE_St
 #if PACKAGE_VERSION_NUMBER < 365
                     if (!DU_findSOPClassAndInstanceInDataSet(*imageDataSet, sopClass, sopInstance, correctUIDPadding))
 #else if  PACKAGE_VERSION_NUMBER == 365
-                    if (!DU_findSOPClassAndInstanceInDataSet(*imageDataSet, sopClass,sizeof(sopClass), sopInstance, sizeof(correctUIDPadding)))
+                    if (!DU_findSOPClassAndInstanceInDataSet(*imageDataSet, sopClass,sizeof(sopClass), sopInstance, sizeof(sopInstance)))
 #endif
 #endif
                     {
@@ -237,6 +237,9 @@ void RetrieveDICOMFilesFromPACS::storeSCPCallback(void *callbackData, T_DIMSE_St
                     }
                     else if (strcmp(sopInstance, storeRequest->AffectedSOPInstanceUID) != 0)
                     {
+                        QString sopinst = sopInstance;
+                        QString affSopInst = storeRequest->AffectedSOPInstanceUID;
+                        ERROR_LOG("sopInstance != storeRequest->AffectedSOPInstanceUID:" + sopinst + "!=" + affSopInst);
                         storeResponse->DimseStatus = STATUS_STORE_Error_DataSetDoesNotMatchSOPClass;
                         ERROR_LOG(QString("It does not match the received instance with the one requested by the image %1").arg(storeSCPCallbackData->fileName));
                     }
