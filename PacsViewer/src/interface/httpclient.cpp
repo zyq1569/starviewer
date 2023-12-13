@@ -1,4 +1,4 @@
-#include "httpclient.h"
+﻿#include "httpclient.h"
 
 #include "ui_authenticationdialog.h"
 
@@ -128,10 +128,12 @@ void HttpClient::ParseDwonData()
         {
             QJsonObject paserObj = paserDoc.object();
             study.StudyUID = paserObj.take("studyuid").toString();
+            //studyDate
+            study.StudyDate = paserObj.take("studyDate").toString();
             study.imageCount = paserObj.take("numImages").toInt();
             QJsonArray array = paserObj.take("seriesList").toArray();
             CreatDir(m_downDir+"/"+study.StudyUID);
-            TRACE_LOG("------step 2/3---:  parse dcm studyuid:: " + study.StudyUID);
+            TRACE_LOG("------step 2/3---:  parse dcm studyuid|StudyDate:: " + study.StudyUID +"|"+study.StudyDate);
             m_listStudyuid.clear();
             QList<HttpInfo> httpinfo;
             int size = array.size();
@@ -147,7 +149,7 @@ void HttpClient::ParseDwonData()
                 {
                     QString imageuid = iarray.at(j).toObject().take("imageId").toString();
                     series.ImageSOPUI.push_back(imageuid);
-                    QString newurl = m_host+"/WADO?studyuid="+study.StudyUID+"&seriesuid="+series.SeriesUID+"&sopinstanceuid="+imageuid;
+                    QString newurl = m_host+"/WADO?studyuid="+study.StudyUID+"&studyDate="+study.StudyDate+"&seriesuid="+series.SeriesUID+"&sopinstanceuid="+imageuid;
                     HttpInfo info;
                     info.url = QUrl(newurl);
                     info.fullpathfilename = m_downDir + "/"+study.StudyUID+"/"+series.SeriesUID+"/"+imageuid+".dcm";
@@ -175,7 +177,7 @@ void HttpClient::ParseDwonData()
 
 void HttpClient::downFileFromWeb(QUrl httpUrl, QString savefilename, QString downDir)
 {
-    QString fileName = savefilename;
+    QString fileName = savefilename.replace("&studyDate=","");
     QString downloadDirectory = downDir;
     bool useDirectory = !downloadDirectory.isEmpty() && QFileInfo(downloadDirectory).isDir();
     if (useDirectory)

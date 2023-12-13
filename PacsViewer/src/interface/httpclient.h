@@ -1,4 +1,4 @@
-#ifndef HTTPCLIENT_H
+﻿#ifndef HTTPCLIENT_H
 #define HTTPCLIENT_H
 
 
@@ -67,7 +67,7 @@ struct HSeries
 
 struct HStudy
 {
-    QString StudyUID;
+    QString StudyUID,StudyDate;
     int imageCount;
     QList <HSeries> Serieslist;
 };

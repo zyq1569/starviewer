@@ -1,4 +1,4 @@
-/*************************************************************************************
+﻿/*************************************************************************************
   Copyright (C) 2014 Laboratori de Gràfics i Imatge, Universitat de Girona &
   Institut de Diagnòstic per la Imatge.
   Girona 2014. All rights reserved.
@@ -665,11 +665,11 @@ void ExtensionHandler::fromClientNotify()
     //-----------------------------------------------------------------------------
     QStringList list = msg.split("&");
     QString HttpServerHost, DownDir,Studyuid;
-    if (list.size() >2)
+    if (list.size() >3)
     {
         HttpServerHost = list[0];
         DownDir = list[1];
-        Studyuid = list[2];
+        Studyuid = list[2]+"&"+list[3];//http://127.0.0.1:80&D:/bak/HealthApp2023/MHealthReport/cache&1.2.826.0.1.3680043.9.7604..16050010109105933.20000&studyDate=20010109105933
         QDir downdir(DownDir);
         if(!downdir.exists())
         {
