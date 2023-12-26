@@ -18,6 +18,7 @@ INCLUDEPATH +=  $${GDCMINCLUDEDIR} \
                 $${GDCMINCLUDEDIR}/Utilities/gdcmjpeg/ \
                 $${GDCMINCLUDEDIR}/Utilities/gdcmmd5/ \
                 $${GDCMINCLUDEDIR}/Utilities/gdcmopenjpeg/ \
+                $${GDCMINCLUDEDIR}/Utilities/gdcmopenjpeg/src/lib/openjp2 \
                 $${GDCMINCLUDEDIR}/Utilities/gdcmrle/ \
                 $${GDCMINCLUDEDIR}/Utilities/gdcmutfcpp/ \
                 $${GDCMINCLUDEDIR}/Utilities/gdcmuuid/ \

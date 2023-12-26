@@ -25,6 +25,7 @@ LIBS += -L$${DCMTKLIBDIR} \
         -ldcmtls \
         -ldcmdsig \
         -ldcmjpeg \
+        -ldcmjpls \
         -lijg8 \
         -lijg12 \
         -lijg16 \
