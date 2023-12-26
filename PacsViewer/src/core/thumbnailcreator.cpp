@@ -1,4 +1,4 @@
-/*************************************************************************************
+﻿/*************************************************************************************
   Copyright (C) 2014 Laboratori de Gràfics i Imatge, Universitat de Girona &
   Institut de Diagnòstic per la Imatge.
   Girona 2014. All rights reserved.
@@ -35,7 +35,16 @@
 #include "dcmtk/ofstd/ofconapp.h"
 #include "dcmtk/dcmdata/dcuid.h"       /* for dcmtk version name */
 #include "dcmtk/dcmjpeg/djdecode.h"    /* for dcmjpeg decoders */
-#include "dcmtk/dcmjpeg/dipijpeg.h"    /* for dcmimage JPEG plugin */
+#include "dcmtk/dcmjpeg/djencode.h"    /* for dcmjpeg decoders */
+#include "dcmtk/dcmjpls/djdecode.h"
+#include "dcmtk/dcmjpls/djencode.h"
+#include "dcmtk/dcmdata/dcrleerg.h"
+#include "dcmtk/dcmdata/dcrledrg.h"
+#include "dcmtk/dcmimgle/dcmimage.h"
+#include "dcmtk/dcmimgle/digsdfn.h"      /* for DiGSDFunction */
+#include "dcmtk/dcmimgle/diciefn.h"      /* for DiCIELABFunction */
+#include "../fmjpeg2k/fmjpeg2k/djdecode.h"
+#include "../fmjpeg2k/fmjpeg2k/djencode.h"
 // Needed to support color images
 #include <diregist.h>
 
@@ -77,31 +86,54 @@ QImage ThumbnailCreator::getThumbnail(const Series *series, int resolution)
 
     return thumbnail;
 }
+void ThumbnailCreator::registerCodecs()
+{
+    // register global JPEG decompression codecs
+    DJDecoderRegistration::registerCodecs();
 
-DcmDataset decompressImage( const DcmDataset *olddataset)
+    // register global JPEG compression codecs
+    DJEncoderRegistration::registerCodecs();
+
+    // register JPEG-LS decompression codecs
+    DJLSDecoderRegistration::registerCodecs();
+
+    //        // register JPEG-LS compression codecs
+    DJLSEncoderRegistration::registerCodecs();
+
+    // register RLE compression codec
+    DcmRLEEncoderRegistration::registerCodecs();
+
+    // register RLE decompression codec
+    DcmRLEDecoderRegistration::registerCodecs();
+
+    // jpeg2k
+    FMJPEG2KEncoderRegistration::registerCodecs();
+    FMJPEG2KDecoderRegistration::registerCodecs();
+}
+
+void ThumbnailCreator::registerCleanup()
+{
+    // deregister JPEG codecs
+    DJDecoderRegistration::cleanup();
+    DJEncoderRegistration::cleanup();
+
+    // deregister JPEG-LS codecs
+    DJLSDecoderRegistration::cleanup();
+    DJLSEncoderRegistration::cleanup();
+
+    // deregister RLE codecs
+    DcmRLEDecoderRegistration::cleanup();
+    DcmRLEEncoderRegistration::cleanup();
+
+    // jpeg2k
+    FMJPEG2KEncoderRegistration::cleanup();
+    FMJPEG2KDecoderRegistration::cleanup();
+}
+DcmDataset ThumbnailCreator::decompressImage( const DcmDataset *olddataset)
 {
     DcmFileFormat fileformat;
-    // JPEG parameters
-    E_DecompressionColorSpaceConversion opt_decompCSconversion = EDC_photometricInterpretation;
-    E_UIDCreation opt_uidcreation = EUC_default;
-    E_PlanarConfiguration opt_planarconfig = EPC_default;
-    OFBool opt_predictor6WorkaroundEnable = OFFalse;
-    OFBool opt_cornellWorkaroundEnable = OFFalse;
-    //OFBool opt_forceSingleFragmentPerFrame = OFFalse;
-    // register global decompression codecs
-    DJDecoderRegistration::registerCodecs(
-                opt_decompCSconversion,
-                opt_uidcreation,
-                opt_planarconfig,
-                opt_predictor6WorkaroundEnable,
-                opt_cornellWorkaroundEnable);//,
-    //opt_forceSingleFragmentPerFrame);//3.6.5
     OFCondition error = EC_Normal;
-
-    //DcmDataset *dataset = new DcmDataset(*olddataset);
     DcmDataset dataset(*olddataset);
-    //OFLOG_INFO(dcmdjpegLogger, "decompressing file");
-
     E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit;
     DcmXfer opt_oxferSyn(opt_oxfer);
     DcmXfer original_xfer(dataset.getOriginalXfer());
@@ -109,7 +141,6 @@ DcmDataset decompressImage( const DcmDataset *olddataset)
     error = dataset.chooseRepresentation(opt_oxfer, NULL);
     if (error.bad())
     {
-        //ERROR_LOG(QString( error.text()) + " decompressing file: " + opt_ifname);
         if (error == EJ_UnsupportedColorConversion)
         {
             ERROR_LOG( "Try --conv-never to disable color space conversion");
@@ -118,82 +149,17 @@ DcmDataset decompressImage( const DcmDataset *olddataset)
         {
             ERROR_LOG( QString("Input transfer syntax ") +  original_xfer.getXferName() + "not supported");
         }
-        // deregister global decompression codecs
-        DJDecoderRegistration::cleanup();
         return dataset;
     }
 
     if (!dataset.canWriteXfer(opt_oxfer))
     {
         ERROR_LOG(QString ("no conversion to transfer syntax") + opt_oxferSyn.getXferName() + "possible");
-        // deregister global decompression codecs
-        DJDecoderRegistration::cleanup();
         return dataset;
     }
 
-    // deregister global decompression codecs
-    DJDecoderRegistration::cleanup();
-
     return  dataset;
 }
-
-//QImage ThumbnailCreator::getThumbnail(QString filename, int resolution)
-//{
-//    DICOMTagReader reader(filename);
-//    QImage thumbnail;
-//    if (isSuitableForThumbnailCreation(&reader))
-//    {
-//        try
-//        {
-//            /// Let's load the dicom file to scale
-//            /// Let's say that in the case of a multiframe image,
-//            /// just load the first image and enough, saving unnecessarily hosting memory
-//            ///
-//            DicomImage *dicomImage = NULL;
-//            //DcmDataset *newdataset = NULL;
-//            DcmFileFormat fileformat;
-//            QString imageFileName = reader.getFileName();
-//            DicomImage dcmreader(imageFileName.toLatin1().data());
-
-//            DcmXfer original_xfer(reader.getDcmDataset()->getOriginalXfer());
-//            if (!original_xfer.isEncapsulated())
-//            {
-//                dicomImage = new DicomImage(reader.getDcmDataset(), reader.getDcmDataset()->getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
-//            }
-//            else
-//            {
-//                E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit;
-//                DcmDataset newdataset(decompressImage(reader.getDcmDataset()));
-//                if (!newdataset.isEmpty())
-//                {
-//                    dicomImage = new DicomImage(&newdataset, opt_oxfer, CIF_UsePartialAccessToPixelData, 0, 1);
-//                }
-//            }
-
-//            // DicomImage *dicomImage = new DicomImage(reader->getDcmDataset(), reader->getDcmDataset()->getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
-//            thumbnail = createThumbnail(dicomImage, resolution);
-
-//            // DicomImage must be deleted to avoid memory leaks
-//            if (dicomImage)
-//            {
-//                delete dicomImage;
-//                dicomImage = NULL;
-//            }
-//        }
-//        catch (std::bad_alloc &e)
-//        {
-//            ERROR_LOG(QString("Failed to generate thumbnail due to memory failure: %1").arg(e.what()));
-//            thumbnail = makeEmptyThumbnailWithCustomText(PreviewNotAvailableText);
-//        }
-//    }
-//    else
-//    {
-//        //We create an alternative thumbnail indicating that a preview image cannot be displayed
-//        thumbnail = makeEmptyThumbnailWithCustomText(PreviewNotAvailableText);
-//    }
-
-//    return thumbnail;
-//}
 
 QImage ThumbnailCreator::getThumbnail(const Image *image, int resolution)
 {
@@ -244,8 +210,28 @@ QImage ThumbnailCreator::createThumbnail(const DICOMTagReader *reader, int resol
             /// Let's load the dicom file to scale
             /// Let's say that in the case of a multiframe image,
             /// just load the first image and enough, saving unnecessarily hosting memory
-            DicomImage *dicomImage = new DicomImage(reader->getDcmDataset(), reader->getDcmDataset()->getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
+
+            ///
+            ///20231222
+            DicomImage *dicomImage = NULL;
+            DcmXfer original_xfer(reader->getDcmDataset()->getOriginalXfer());
+            if (original_xfer.isEncapsulated())
+            {
+                registerCodecs();
+                DcmDataset codeData = decompressImage(reader->getDcmDataset());//EXS_LittleEndianImplicit
+                dicomImage = new DicomImage(&codeData, codeData.getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
+                registerCleanup();
+
+            }
+            else
+            {
+                dicomImage = new DicomImage(reader->getDcmDataset(), reader->getDcmDataset()->getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
+            }
             thumbnail = createThumbnail(dicomImage, resolution);
+            ///
+//            DicomImage *dicomImage = new DicomImage(reader->getDcmDataset(), reader->getDcmDataset()->getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
+//            thumbnail = createThumbnail(dicomImage, resolution);
+            //
 
             // DicomImage must be deleted to avoid memory leaks
             if (dicomImage)

@@ -431,6 +431,16 @@ HEADERS +=  extensionfactory.h \
             systemrequirementstest.h
 
 SOURCES  += extensionmediator.cpp \
+            ../fmjpeg2k/dcmcjp2k.cc \
+            ../fmjpeg2k/dcmdjp2k.cc \
+            ../fmjpeg2k/djcodecd.cc \
+            ../fmjpeg2k/djcodece.cc \
+            ../fmjpeg2k/djcparam.cc \
+            ../fmjpeg2k/djdecode.cc \
+            ../fmjpeg2k/djencode.cc \
+            ../fmjpeg2k/djrparam.cc \
+            ../fmjpeg2k/djutils.cc \
+            ../fmjpeg2k/memory_file.cpp \
             displayableid.cpp \
             mathtools.cpp \
             harddiskinformation.cpp \

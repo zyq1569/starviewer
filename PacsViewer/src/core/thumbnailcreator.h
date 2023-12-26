@@ -1,4 +1,4 @@
-/*************************************************************************************
+﻿/*************************************************************************************
   Copyright (C) 2014 Laboratori de Gràfics i Imatge, Universitat de Girona &
   Institut de Diagnòstic per la Imatge.
   Girona 2014. All rights reserved.
@@ -19,13 +19,12 @@ class QImage;
 class QPixmap;
 class QString;
 class DicomImage;
-
+class DcmDataset;
 namespace udg {
 
 class Series;
 class Image;
 class DICOMTagReader;
-
 class ThumbnailCreator {
 public:
     /// Create a thumbnail from the images in the series
@@ -39,6 +38,10 @@ public:
 
     /// Create a custom blank thumbnail with the text we give it
     static QImage makeEmptyThumbnailWithCustomText(const QString &text, int resolution = 96);
+
+    void registerCodecs();
+    void registerCleanup();
+    DcmDataset decompressImage( const DcmDataset *olddataset);
 
 private:
     /// Create the thumbnail of an object that is said to be an image
