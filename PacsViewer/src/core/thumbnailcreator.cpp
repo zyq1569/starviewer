@@ -35,14 +35,14 @@
 #include "dcmtk/ofstd/ofconapp.h"
 #include "dcmtk/dcmdata/dcuid.h"       /* for dcmtk version name */
 #include "dcmtk/dcmjpeg/djdecode.h"    /* for dcmjpeg decoders */
-#include "dcmtk/dcmjpeg/djencode.h"    /* for dcmjpeg decoders */
-#include "dcmtk/dcmjpls/djdecode.h"
-#include "dcmtk/dcmjpls/djencode.h"
-#include "dcmtk/dcmdata/dcrleerg.h"
-#include "dcmtk/dcmdata/dcrledrg.h"
-#include "dcmtk/dcmimgle/dcmimage.h"
-#include "dcmtk/dcmimgle/digsdfn.h"      /* for DiGSDFunction */
-#include "dcmtk/dcmimgle/diciefn.h"      /* for DiCIELABFunction */
+//#include "dcmtk/dcmjpeg/djencode.h"    /* for dcmjpeg decoders */
+//#include "dcmtk/dcmjpls/djdecode.h"
+//#include "dcmtk/dcmjpls/djencode.h"
+//#include "dcmtk/dcmdata/dcrleerg.h"
+//#include "dcmtk/dcmdata/dcrledrg.h"
+//#include "dcmtk/dcmimgle/dcmimage.h"
+//#include "dcmtk/dcmimgle/digsdfn.h"      /* for DiGSDFunction */
+//#include "dcmtk/dcmimgle/diciefn.h"      /* for DiCIELABFunction */
 #include "../fmjpeg2k/fmjpeg2k/djdecode.h"
 #include "../fmjpeg2k/fmjpeg2k/djencode.h"
 // Needed to support color images
@@ -86,80 +86,80 @@ QImage ThumbnailCreator::getThumbnail(const Series *series, int resolution)
 
     return thumbnail;
 }
-void ThumbnailCreator::registerCodecs()
-{
+//void ThumbnailCreator::jpeg2kregisterCodecs()
+//{
     // register global JPEG decompression codecs
-    DJDecoderRegistration::registerCodecs();
+//    DJDecoderRegistration::registerCodecs();
 
-    // register global JPEG compression codecs
-    DJEncoderRegistration::registerCodecs();
+//    // register global JPEG compression codecs
+//    DJEncoderRegistration::registerCodecs();
 
-    // register JPEG-LS decompression codecs
-    DJLSDecoderRegistration::registerCodecs();
+//    // register JPEG-LS decompression codecs
+//    DJLSDecoderRegistration::registerCodecs();
 
-    //        // register JPEG-LS compression codecs
-    DJLSEncoderRegistration::registerCodecs();
+//    // register JPEG-LS compression codecs
+//    DJLSEncoderRegistration::registerCodecs();
 
-    // register RLE compression codec
-    DcmRLEEncoderRegistration::registerCodecs();
+//    // register RLE compression codec
+//    DcmRLEEncoderRegistration::registerCodecs();
 
-    // register RLE decompression codec
-    DcmRLEDecoderRegistration::registerCodecs();
+//    // register RLE decompression codec
+//    DcmRLEDecoderRegistration::registerCodecs();
 
     // jpeg2k
-    FMJPEG2KEncoderRegistration::registerCodecs();
-    FMJPEG2KDecoderRegistration::registerCodecs();
-}
+//    FMJPEG2KEncoderRegistration::registerCodecs();
+//    FMJPEG2KDecoderRegistration::registerCodecs();
+//}
 
-void ThumbnailCreator::registerCleanup()
-{
+//void ThumbnailCreator::jpeg2kregisterCleanup()
+//{
     // deregister JPEG codecs
-    DJDecoderRegistration::cleanup();
-    DJEncoderRegistration::cleanup();
+//    DJDecoderRegistration::cleanup();
+//    DJEncoderRegistration::cleanup();
 
-    // deregister JPEG-LS codecs
-    DJLSDecoderRegistration::cleanup();
-    DJLSEncoderRegistration::cleanup();
+//    // deregister JPEG-LS codecs
+//    DJLSDecoderRegistration::cleanup();
+//    DJLSEncoderRegistration::cleanup();
 
-    // deregister RLE codecs
-    DcmRLEDecoderRegistration::cleanup();
-    DcmRLEEncoderRegistration::cleanup();
+//    // deregister RLE codecs
+//    DcmRLEDecoderRegistration::cleanup();
+//    DcmRLEEncoderRegistration::cleanup();
 
     // jpeg2k
-    FMJPEG2KEncoderRegistration::cleanup();
-    FMJPEG2KDecoderRegistration::cleanup();
-}
-DcmDataset ThumbnailCreator::decompressImage( const DcmDataset *olddataset)
-{
-    DcmFileFormat fileformat;
-    OFCondition error = EC_Normal;
-    DcmDataset dataset(*olddataset);
-    E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit;
-    DcmXfer opt_oxferSyn(opt_oxfer);
-    DcmXfer original_xfer(dataset.getOriginalXfer());
+//    FMJPEG2KEncoderRegistration::cleanup();
+//    FMJPEG2KDecoderRegistration::cleanup();
+//}
+//DcmDataset ThumbnailCreator::decompressImage( const DcmDataset *olddataset)
+//{
+//    DcmFileFormat fileformat;
+//    OFCondition error = EC_Normal;
+//    DcmDataset dataset(*olddataset);
+//    E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit;
+//    DcmXfer opt_oxferSyn(opt_oxfer);
+//    DcmXfer original_xfer(dataset.getOriginalXfer());
 
-    error = dataset.chooseRepresentation(opt_oxfer, NULL);
-    if (error.bad())
-    {
-        if (error == EJ_UnsupportedColorConversion)
-        {
-            ERROR_LOG( "Try --conv-never to disable color space conversion");
-        }
-        else if (error == EC_CannotChangeRepresentation)
-        {
-            ERROR_LOG( QString("Input transfer syntax ") +  original_xfer.getXferName() + "not supported");
-        }
-        return dataset;
-    }
+//    error = dataset.chooseRepresentation(opt_oxfer, NULL);
+//    if (error.bad())
+//    {
+//        if (error == EJ_UnsupportedColorConversion)
+//        {
+//            ERROR_LOG( "Try --conv-never to disable color space conversion");
+//        }
+//        else if (error == EC_CannotChangeRepresentation)
+//        {
+//            ERROR_LOG( QString("Input transfer syntax ") +  original_xfer.getXferName() + "not supported");
+//        }
+//        return dataset;
+//    }
 
-    if (!dataset.canWriteXfer(opt_oxfer))
-    {
-        ERROR_LOG(QString ("no conversion to transfer syntax") + opt_oxferSyn.getXferName() + "possible");
-        return dataset;
-    }
+//    if (!dataset.canWriteXfer(opt_oxfer))
+//    {
+//        ERROR_LOG(QString ("no conversion to transfer syntax") + opt_oxferSyn.getXferName() + "possible");
+//        return dataset;
+//    }
 
-    return  dataset;
-}
+//    return  dataset;
+//}
 
 QImage ThumbnailCreator::getThumbnail(const Image *image, int resolution)
 {
@@ -213,26 +213,36 @@ QImage ThumbnailCreator::createThumbnail(const DICOMTagReader *reader, int resol
 
             ///
             ///20231222
+            /// /// JPEG 2000 (lossless)
+            //EXS_JPEG2000LosslessOnly = 26,
+            ///// JPEG 2000 (lossless or lossy)
+            //EXS_JPEG2000 = 27,
+            ///// JPEG 2000 part 2 multi-component extensions (lossless)
+            //EXS_JPEG2000MulticomponentLosslessOnly = 28,
+            ///// JPEG 2000 part 2 multi-component extensions (lossless or lossy)
+            //EXS_JPEG2000Multicomponent = 29,
             DicomImage *dicomImage = NULL;
-            DcmXfer original_xfer(reader->getDcmDataset()->getOriginalXfer());
-            if (original_xfer.isEncapsulated())
+            E_TransferSyntax OriginalXfer = reader->getDcmDataset()->getOriginalXfer();
+            if (OriginalXfer == EXS_JPEG2000LosslessOnly || OriginalXfer == EXS_JPEG2000  ||
+                OriginalXfer == EXS_JPEG2000MulticomponentLosslessOnly  || OriginalXfer == EXS_JPEG2000Multicomponent)
             {
-                registerCodecs();
-                DcmDataset codeData = decompressImage(reader->getDcmDataset());//EXS_LittleEndianImplicit
-                dicomImage = new DicomImage(&codeData, codeData.getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
-                registerCleanup();
-
+                // jpeg2k
+                FMJPEG2KDecoderRegistration::registerCodecs();
+                //DcmDataset codeData = decompressImage(reader->getDcmDataset());//EXS_LittleEndianImplicit
+                //dicomImage = new DicomImage(&codeData, codeData.getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
+                dicomImage = new DicomImage(reader->getDcmDataset(), OriginalXfer, CIF_UsePartialAccessToPixelData, 0, 1);
+                // jpeg2k
+                FMJPEG2KDecoderRegistration::cleanup();
             }
             else
             {
-                dicomImage = new DicomImage(reader->getDcmDataset(), reader->getDcmDataset()->getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
+                dicomImage = new DicomImage(reader->getDcmDataset(), OriginalXfer, CIF_UsePartialAccessToPixelData, 0, 1);
             }
             thumbnail = createThumbnail(dicomImage, resolution);
             ///
-//            DicomImage *dicomImage = new DicomImage(reader->getDcmDataset(), reader->getDcmDataset()->getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
-//            thumbnail = createThumbnail(dicomImage, resolution);
+            //DicomImage *dicomImage = new DicomImage(reader->getDcmDataset(), reader->getDcmDataset()->getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
+            //thumbnail = createThumbnail(dicomImage, resolution);
             //
-
             // DicomImage must be deleted to avoid memory leaks
             if (dicomImage)
             {

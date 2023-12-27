@@ -19,7 +19,7 @@ class QImage;
 class QPixmap;
 class QString;
 class DicomImage;
-class DcmDataset;
+//class DcmDataset;
 namespace udg {
 
 class Series;
@@ -39,9 +39,9 @@ public:
     /// Create a custom blank thumbnail with the text we give it
     static QImage makeEmptyThumbnailWithCustomText(const QString &text, int resolution = 96);
 
-    void registerCodecs();
-    void registerCleanup();
-    DcmDataset decompressImage( const DcmDataset *olddataset);
+//    void jpeg2kregisterCodecs();
+//    void jpeg2kregisterCleanup();
+//    DcmDataset decompressImage( const DcmDataset *olddataset);
 
 private:
     /// Create the thumbnail of an object that is said to be an image
