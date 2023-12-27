@@ -1,4 +1,4 @@
-/*************************************************************************************
+﻿/*************************************************************************************
   Copyright (C) 2014 Laboratori de Gràfics i Imatge, Universitat de Girona &
   Institut de Diagnòstic per la Imatge.
   Girona 2014. All rights reserved.
@@ -43,7 +43,7 @@ bool VolumeFillerStep::fillIndividually()
 
     Image *image = currentImages.first();
     int volumeNumber = m_input->getCurrentVolumeNumber();
-    bool mustCreateThumbnail = false;
+//    bool mustCreateThumbnail = false;
     Series *series = m_input->getCurrentSeries();
     ImageProperties imageProperties(image);
 
@@ -60,7 +60,7 @@ bool VolumeFillerStep::fillIndividually()
         // else: First file of the series: no need to increment volumeNumber
 
         m_imagesProperties[series][volumeNumber] = imageProperties;
-        mustCreateThumbnail = true;
+//        mustCreateThumbnail = true;
     }
     else if (m_imagesProperties.contains(series) && m_imagesProperties[series].contains(volumeNumber))
     {
@@ -86,7 +86,7 @@ bool VolumeFillerStep::fillIndividually()
                 // Not found: insert imageProperties with a new volumeNumber
                 volumeNumber = m_imagesProperties[series].lastKey() + 1;
                 m_imagesProperties[series][volumeNumber] = imageProperties;
-                mustCreateThumbnail = true;
+//                mustCreateThumbnail = true;
             }
         }
         // else Match: no need to change volumeNumber nor create thumbnail
@@ -95,7 +95,7 @@ bool VolumeFillerStep::fillIndividually()
     {
         // First image of this volume: insert imageProperties at current series and volumeNumber
         m_imagesProperties[series][volumeNumber] = imageProperties;
-        mustCreateThumbnail = true;
+//        mustCreateThumbnail = true;
     }
 
     m_input->setCurrentVolumeNumber(volumeNumber);
@@ -106,31 +106,30 @@ bool VolumeFillerStep::fillIndividually()
         image->setVolumeNumberInSeries(volumeNumber);
     }
 
-    if (mustCreateThumbnail)
-    {
-        saveThumbnail(currentImages.first());
-    }
+//    if (mustCreateThumbnail)
+//    {
+//        saveThumbnail(currentImages.first());
+//    }
 
     return true;
 }
 
-void VolumeFillerStep::saveThumbnail(const Image *image)
-{
-    //int volumeNumber = m_input->getCurrentVolumeNumber();
+//void VolumeFillerStep::saveThumbnail(const Image *image)
+//{
+//    int volumeNumber = m_input->getCurrentVolumeNumber();
 //    QString thumbnailPath = QFileInfo(image->getPath()).absolutePath();
 
 //    ThumbnailCreator thumbnailCreator;
 //    QImage thumbnail = thumbnailCreator.getThumbnail(image);
-    //QImage thumbnail = thumbnailCreator.getThumbnail(image->getPath());
-    //thumbnail.save(QString("%1/thumbnail%2.png").arg(thumbnailPath).arg(volumeNumber), "PNG");
+//    thumbnail.save(QString("%1/thumbnail%2.png").arg(thumbnailPath).arg(volumeNumber), "PNG");
 
-    // Si és el primer thumbnail, també creem el thumbnail ordinari que s'havia fet sempre
+//    // Si és el primer thumbnail, també creem el thumbnail ordinari que s'havia fet sempre
 //    if (volumeNumber == 1)
 //    {
 //        thumbnail.save(QString("%1/thumbnail.png").arg(thumbnailPath), "PNG");
 //    }
 
-}
+//}
 
 VolumeFillerStep::ImageProperties::ImageProperties(const Image *image)
     : multiframe(false), rows(image->getRows()), columns(image->getColumns()), photometricInterpretation(image->getPhotometricInterpretation()),

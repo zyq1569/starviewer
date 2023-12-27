@@ -1,4 +1,4 @@
-/*************************************************************************************
+﻿/*************************************************************************************
   Copyright (C) 2014 Laboratori de Gràfics i Imatge, Universitat de Girona &
   Institut de Diagnòstic per la Imatge.
   Girona 2014. All rights reserved.
@@ -430,8 +430,10 @@ void createSeriesThumbnail(const Series *series)
 {
     QString thumbnailFilePath = getSeriesThumbnailPath(series->getParentStudy()->getInstanceUID(), series);
 
+
     // Create thumbnail only if it doesn't already exist
-    if (!QFileInfo(thumbnailFilePath).exists())
+    //if (!QFileInfo(thumbnailFilePath).exists())
+    if (!QFileInfo::exists(thumbnailFilePath))
     {
         ThumbnailCreator().getThumbnail(series).save(thumbnailFilePath, "PNG");
     }
