@@ -1,4 +1,4 @@
-/*************************************************************************************
+﻿/*************************************************************************************
   Copyright (C) 2014 Laboratori de Gràfics i Imatge, Universitat de Girona &
   Institut de Diagnòstic per la Imatge.
   Girona 2014. All rights reserved.
@@ -20,7 +20,7 @@
 namespace udg {
 
 const QString StarviewerVersionString("0.15.0-devel");
-const QString StarviewerBuildID("2021012900");
+const QString StarviewerBuildID("2023122700");
 
 #ifdef Q_OS_WIN
 const QString StarviewerBuildPlatform("Windows");
