@@ -1,4 +1,4 @@
-/*************************************************************************************
+﻿/*************************************************************************************
   Copyright (C) 2014 Laboratori de Gràfics i Imatge, Universitat de Girona &
   Institut de Diagnòstic per la Imatge.
   Girona 2014. All rights reserved.
@@ -57,8 +57,8 @@ void beginLogging()
     if (!logDir.exists())
     {
         // Creem el directori
-        //logDir.mkpath(udg::UserLogsPath);
-        logDir.mkpath(udg::UserCurrentAppPath);
+        logDir.mkpath(udg::UserLogsPath);
+        //logDir.mkpath(udg::UserCurrentAppPath);
     }
     QDir logConf = getLogConfFilePath();
     if (logConf.exists())
