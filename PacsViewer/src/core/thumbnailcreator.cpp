@@ -48,6 +48,15 @@
 // Needed to support color images
 #include <diregist.h>
 
+//itk
+#include <itkImage.h>
+#include <itkImageFileReader.h>
+#include <itkImageFileWriter.h>
+#include <itkRescaleIntensityImageFilter.h>
+#include <itkGDCMImageIO.h>
+#include <itkTileImageFilter.h>
+#include <itkJPEGImageIOFactory.h>
+//
 namespace udg {
 
 const QString PreviewNotAvailableText(QObject::tr("Preview image not available"));
@@ -86,80 +95,6 @@ QImage ThumbnailCreator::getThumbnail(const Series *series, int resolution)
 
     return thumbnail;
 }
-//void ThumbnailCreator::jpeg2kregisterCodecs()
-//{
-    // register global JPEG decompression codecs
-//    DJDecoderRegistration::registerCodecs();
-
-//    // register global JPEG compression codecs
-//    DJEncoderRegistration::registerCodecs();
-
-//    // register JPEG-LS decompression codecs
-//    DJLSDecoderRegistration::registerCodecs();
-
-//    // register JPEG-LS compression codecs
-//    DJLSEncoderRegistration::registerCodecs();
-
-//    // register RLE compression codec
-//    DcmRLEEncoderRegistration::registerCodecs();
-
-//    // register RLE decompression codec
-//    DcmRLEDecoderRegistration::registerCodecs();
-
-    // jpeg2k
-//    FMJPEG2KEncoderRegistration::registerCodecs();
-//    FMJPEG2KDecoderRegistration::registerCodecs();
-//}
-
-//void ThumbnailCreator::jpeg2kregisterCleanup()
-//{
-    // deregister JPEG codecs
-//    DJDecoderRegistration::cleanup();
-//    DJEncoderRegistration::cleanup();
-
-//    // deregister JPEG-LS codecs
-//    DJLSDecoderRegistration::cleanup();
-//    DJLSEncoderRegistration::cleanup();
-
-//    // deregister RLE codecs
-//    DcmRLEDecoderRegistration::cleanup();
-//    DcmRLEEncoderRegistration::cleanup();
-
-    // jpeg2k
-//    FMJPEG2KEncoderRegistration::cleanup();
-//    FMJPEG2KDecoderRegistration::cleanup();
-//}
-//DcmDataset ThumbnailCreator::decompressImage( const DcmDataset *olddataset)
-//{
-//    DcmFileFormat fileformat;
-//    OFCondition error = EC_Normal;
-//    DcmDataset dataset(*olddataset);
-//    E_TransferSyntax opt_oxfer = EXS_LittleEndianImplicit;
-//    DcmXfer opt_oxferSyn(opt_oxfer);
-//    DcmXfer original_xfer(dataset.getOriginalXfer());
-
-//    error = dataset.chooseRepresentation(opt_oxfer, NULL);
-//    if (error.bad())
-//    {
-//        if (error == EJ_UnsupportedColorConversion)
-//        {
-//            ERROR_LOG( "Try --conv-never to disable color space conversion");
-//        }
-//        else if (error == EC_CannotChangeRepresentation)
-//        {
-//            ERROR_LOG( QString("Input transfer syntax ") +  original_xfer.getXferName() + "not supported");
-//        }
-//        return dataset;
-//    }
-
-//    if (!dataset.canWriteXfer(opt_oxfer))
-//    {
-//        ERROR_LOG(QString ("no conversion to transfer syntax") + opt_oxferSyn.getXferName() + "possible");
-//        return dataset;
-//    }
-
-//    return  dataset;
-//}
 
 QImage ThumbnailCreator::getThumbnail(const Image *image, int resolution)
 {
@@ -171,10 +106,103 @@ QImage ThumbnailCreator::getThumbnail(const DICOMTagReader *reader, int resoluti
     return createThumbnail(reader, resolution);
 }
 
-QImage ThumbnailCreator::makeEmptyThumbnailWithCustomText(const QString &text, int resolution)
+QImage ThumbnailCreator::makeEmptyThumbnailWithCustomText(const QString &text,  const DICOMTagReader *reader, int resolution)
 {
     QImage thumbnail;
+	
+	if (reader)
+    {
+        QString dcmfileName = reader->getFileName();
 
+        using InputPixelType = signed short;
+        const unsigned int InputDimension = 2;
+        using InputImageType = itk::Image<InputPixelType, InputDimension>;
+        //创建reader，设置读取的文件名
+        using ReaderType = itk::ImageFileReader<InputImageType>;
+        ReaderType::Pointer reader = ReaderType::New();
+        //
+        reader->SetFileName(dcmfileName.toLatin1().data());
+        //创建读取DCM的GDCMIOImage类
+        using ImageIOType = itk::GDCMImageIO;
+        ImageIOType::Pointer gdcmImageIO = ImageIOType::New();
+        reader->SetImageIO(gdcmImageIO);
+        //调用Update()触发过程,放置在try-catch模块
+        try
+        {
+            reader->Update();
+#ifdef  ITKIMAGE  //test
+			using PixelType = unsigned char;
+			constexpr unsigned int Dimension = 2;
+			using ImageType = itk::Image<PixelType, Dimension>;
+			// 将 ITK 图像转换为 QImage
+			itk::JPEGImageIOFactory::RegisterOneFactory();
+			InputImageType::Pointer image = reader->GetOutput();
+			int h = image->GetBufferedRegion().GetSize()[0];
+			int w = image->GetBufferedRegion().GetSize()[1];
+			QImage qImage((uchar*)image->GetBufferPointer(),image->GetBufferedRegion().GetSize()[0], image->GetBufferedRegion().GetSize()[1], QImage::Format_Grayscale8);
+			if (qImage.height() < qImage.width())
+			{
+				thumbnail = qImage.scaledToWidth(96, Qt::SmoothTransformation);
+			}
+			else
+			{
+				thumbnail = qImage.scaledToHeight(96, Qt::SmoothTransformation);
+			}
+			return thumbnail;
+			//QImage qImage(image->GetBufferPointer(), image->GetWidth(), image->GetHeight(), QImage::Format_Grayscale8);
+#endif // DEBUG
+        }
+        catch (itk::ExceptionObject& e)
+        {
+            std::cerr << "exception in file reader" << std::endl;
+            std::cerr << e << std::endl;
+
+            thumbnail = QImage(resolution, resolution, QImage::Format_RGB32);
+            thumbnail.fill(Qt::black);
+
+            QPainter painter(&thumbnail);
+            painter.setPen(Qt::white);
+            painter.drawText(0, 0, resolution, resolution, Qt::AlignCenter | Qt::TextWordWrap, text);
+
+            return thumbnail;
+        }
+        using WriterPixelType = unsigned char;
+        using WriteImageType = itk::Image<WriterPixelType, 2>;
+        using RescaleFilterType = itk::RescaleIntensityImageFilter<InputImageType, WriteImageType>;
+        RescaleFilterType::Pointer rescaler = RescaleFilterType::New();
+        rescaler->SetOutputMinimum(0);
+        rescaler->SetOutputMaximum(255);
+        //再次创建一个writer，写入到文件,这个时候文件变成了一个灰度图
+        using Writer2Type = itk::ImageFileWriter<WriteImageType>;
+        Writer2Type::Pointer writer2 = Writer2Type::New();
+        QString jpegpath = dcmfileName+".jpg";
+        writer2->SetFileName(jpegpath.toLatin1().data());
+        rescaler->SetInput(reader->GetOutput());
+        writer2->SetInput(rescaler->GetOutput());
+        itk::JPEGImageIOFactory::RegisterOneFactory();
+        try
+        {
+            writer2->Update();
+			if (thumbnail.load(jpegpath))
+			{
+				if (thumbnail.height() < thumbnail.width())
+				{
+					return thumbnail.scaledToWidth(96);
+				}
+				else
+				{
+					return thumbnail.scaledToHeight(96);
+				}
+			}
+        }
+        catch (itk::ExceptionObject& e)
+        {
+            std::cerr << "Exception in file writer " << std::endl;
+            std::cerr << e << std::endl;
+        }
+		ERROR_LOG("Failed to generate thumbnail: ITK");
+    }
+	
     thumbnail = QImage(resolution, resolution, QImage::Format_RGB32);
     thumbnail.fill(Qt::black);
 
@@ -201,6 +229,7 @@ QImage ThumbnailCreator::createIconThumbnail(const QString &iconFileName, int re
 
 QImage ThumbnailCreator::createThumbnail(const DICOMTagReader *reader, int resolution)
 {
+	resolution = 256;
     QImage thumbnail;
 
     if (isSuitableForThumbnailCreation(reader))
@@ -228,21 +257,38 @@ QImage ThumbnailCreator::createThumbnail(const DICOMTagReader *reader, int resol
             {
                 // jpeg2k
                 FMJPEG2KDecoderRegistration::registerCodecs();
-                //DcmDataset codeData = decompressImage(reader->getDcmDataset());//EXS_LittleEndianImplicit
-                //dicomImage = new DicomImage(&codeData, codeData.getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
                 dicomImage = new DicomImage(reader->getDcmDataset(), OriginalXfer, CIF_UsePartialAccessToPixelData, 0, 1);
                 // jpeg2k
                 FMJPEG2KDecoderRegistration::cleanup();
             }
             else
             {
-                dicomImage = new DicomImage(reader->getDcmDataset(), OriginalXfer, CIF_UsePartialAccessToPixelData, 0, 1);
+				DcmFileFormat fileformat;
+				dicomImage = new DicomImage(qPrintable(reader->getFileName()));
+                //dicomImage = new DicomImage(reader->getDcmDataset(), OriginalXfer, CIF_UsePartialAccessToPixelData, 0, 1);
             }
-            thumbnail = createThumbnail(dicomImage, resolution);
+			if (dicomImage)
+			{
+				OFString value;
+				reader->getDcmDataset()->findAndGetOFString(DCM_SeriesDescription, value);
+				QString vl = value.c_str();		
+				dicomImage->hideAllOverlays();
+				if (vl.length() > 1 && vl.toLower().contains("report"))
+				{
+					dicomImage->setWindow(-2, 1);
+					thumbnail = createThumbnail(dicomImage, 512);
+				}
+				else
+				{
+					dicomImage->setMinMaxWindow(1);
+					thumbnail = createThumbnail(dicomImage, resolution);
+				}
+			}
+            //thumbnail = createThumbnail(dicomImage, resolution);
+			
             ///
             //DicomImage *dicomImage = new DicomImage(reader->getDcmDataset(), reader->getDcmDataset()->getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
             //thumbnail = createThumbnail(dicomImage, resolution);
-            //
             // DicomImage must be deleted to avoid memory leaks
             if (dicomImage)
             {
@@ -253,13 +299,13 @@ QImage ThumbnailCreator::createThumbnail(const DICOMTagReader *reader, int resol
         catch (std::bad_alloc &e)
         {
             ERROR_LOG(QString("Failed to generate thumbnail due to memory failure: %1").arg(e.what()));
-            thumbnail = makeEmptyThumbnailWithCustomText(PreviewNotAvailableText);
+            thumbnail = makeEmptyThumbnailWithCustomText(PreviewNotAvailableText, reader);
         }
     }
     else
     {
         //We create an alternative thumbnail indicating that a preview image cannot be displayed
-        thumbnail = makeEmptyThumbnailWithCustomText(PreviewNotAvailableText);
+        thumbnail = makeEmptyThumbnailWithCustomText(PreviewNotAvailableText, reader);
     }
 
     return thumbnail;
@@ -277,8 +323,9 @@ QImage ThumbnailCreator::createThumbnail(DicomImage *dicomImage, int resolution)
     }
     else if (dicomImage->getStatus() == EIS_Normal)
     {
-        dicomImage->hideAllOverlays();
-        dicomImage->setMinMaxWindow(1);
+        //dicomImage->hideAllOverlays();
+        //dicomImage->setMinMaxWindow(1);
+
         // We scale the image
         DicomImage *scaledImage;
         // We climb the biggest corner

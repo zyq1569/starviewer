@@ -37,11 +37,7 @@ public:
     QImage getThumbnail(const DICOMTagReader *reader, int resolution = 96);
 
     /// Create a custom blank thumbnail with the text we give it
-    static QImage makeEmptyThumbnailWithCustomText(const QString &text, int resolution = 96);
-
-//    void jpeg2kregisterCodecs();
-//    void jpeg2kregisterCleanup();
-//    DcmDataset decompressImage( const DcmDataset *olddataset);
+    static QImage makeEmptyThumbnailWithCustomText(const QString &text, const DICOMTagReader *reader = nullptr, int resolution = 96);
 
 private:
     /// Create the thumbnail of an object that is said to be an image
