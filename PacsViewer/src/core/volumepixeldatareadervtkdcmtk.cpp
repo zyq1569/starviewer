@@ -40,7 +40,7 @@ VolumePixelDataReaderVTKDCMTK::~VolumePixelDataReaderVTKDCMTK()
     m_reader->Delete();
     m_vtkQtConnections->Delete();
 }
-
+//https://www.cnblogs.com/deng-c-q/p/10113234.html
 //chinese path error???
 //https://github.com/InsightSoftwareConsortium/ITK/pull/2847
 //https://github.com/InsightSoftwareConsortium/ITK/commit/94b80ea4bc4a7789f5be962967a7ed09bd187d34
@@ -48,13 +48,11 @@ int VolumePixelDataReaderVTKDCMTK::read(const QStringList &filenames)
 {
     int errorCode = NoError;
     m_abortRequested = false;
-
     if (filenames.isEmpty())
     {
         WARN_LOG("Empty file list");
         return InvalidFileName;
     }
-
     // Convert QStringList to vtkStringArray
     if (filenames.size() > 1)
     {
@@ -62,7 +60,7 @@ int VolumePixelDataReaderVTKDCMTK::read(const QStringList &filenames)
         
         for (int i = 0; i < filenames.size(); i++)
         {
-            stringArray->InsertNextValue(filenames.at(i).toStdString());
+            stringArray->InsertNextValue(filenames.at(i).toUtf8());
         }
 
         DEBUG_LOG("Reading multiple files with VTK-DCMTK");
@@ -72,7 +70,7 @@ int VolumePixelDataReaderVTKDCMTK::read(const QStringList &filenames)
     else
     {
         DEBUG_LOG("Reading a single file with VTK-DCMTK");
-        m_reader->SetFileName(qPrintable(filenames.first()));
+        m_reader->SetFileName((filenames.first().toUtf8()));
     }
 
     // Set frame numbers to the reader (needed for multiframe files)
