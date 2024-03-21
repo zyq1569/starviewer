@@ -316,3 +316,55 @@ int main(int argc, char *argv[])
 
     return returnValue;
 }
+
+
+//InsightToolkit-5.0.1\Modules\ThirdParty\KWSys\src\KWSys
+///EncodingCXX.cxx -->>std::wstring Encoding::ToWide(const std::string& str)
+///std::wstring Encoding::ToWide(const std::string& str)
+///{
+///	std::wstring wstr;
+///#  if defined(_WIN32)
+///	/*
+///	20240317 zyq
+///	const int wlength = MultiByteToWideChar(
+///	  KWSYS_ENCODING_DEFAULT_CODEPAGE, 0, str.data(), int(str.size()), NULL, 0);
+///	if (wlength > 0) {
+///	  wchar_t* wdata = new wchar_t[wlength];
+///	  int r = MultiByteToWideChar(KWSYS_ENCODING_DEFAULT_CODEPAGE, 0, str.data(),
+///								  int(str.size()), wdata, wlength);
+///	  if (r > 0) {
+///		wstr = std::wstring(wdata, wlength);
+///	  }
+///	  delete[] wdata;
+///	}
+///	*/
+///	size_t    size = str.length();
+///	const int wlength = ::MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
+///	if (wlength > 0)
+///	{
+///		wchar_t* wdata = new wchar_t[wlength];
+///		memset(wdata, 0, (wlength + 1) * sizeof(wchar_t));
+///		int r = MultiByteToWideChar(CP_ACP, 0, str.c_str(), size, (LPWSTR)wdata, wlength);
+///		if (r > 0)
+///		{
+///			wstr = wdata;
+///		}
+///		delete[] wdata;
+///	}
+///
+///#  else
+///	size_t pos = 0;
+///	size_t nullPos = 0;
+///	do {
+///		if (pos < str.size() && str.at(pos) != '\0') {
+///			wstr += ToWide(str.c_str() + pos);
+///		}
+///		nullPos = str.find('\0', pos);
+///		if (nullPos != std::string::npos) {
+///			pos = nullPos + 1;
+///			wstr += wchar_t('\0');
+///		}
+///	} while (nullPos != std::string::npos);
+///#  endif
+///	return wstr;
+///}
