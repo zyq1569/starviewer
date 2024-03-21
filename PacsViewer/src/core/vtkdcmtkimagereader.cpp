@@ -233,7 +233,7 @@ size_t voxelSize(int scalarType, int numberOfComponents)
 QSharedPointer<DcmDataset> getDataset(const char *filename)
 {
     DcmFileFormat dicomFile;
-    OFCondition status = dicomFile.loadFile(filename);
+    OFCondition status = dicomFile.loadFile(qPrintable(QString(filename)));
 
     if (status.bad())
     {
