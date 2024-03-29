@@ -164,6 +164,7 @@ ITKLIBS = \
         ITKOptimizers \
         ITKVTK \
         ITKIOGDCM \
+        ITKIOJPEG \
         ITKIOImageBase \
         itksys \
         itkdouble-conversion \
