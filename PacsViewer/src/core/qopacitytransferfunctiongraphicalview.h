@@ -24,6 +24,7 @@ class QOpacityTransferFunctionGraphicalViewNode;
 
 /**
     Vista gràfica d'una funció de transferència d'opacitat.
+	Graphical view of an opacity transfer function.
   */
 class QOpacityTransferFunctionGraphicalView : public QGraphicsView {
 Q_OBJECT
