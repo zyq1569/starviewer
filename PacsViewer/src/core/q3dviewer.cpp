@@ -33,6 +33,7 @@
 #include <vtkVolume.h>
 #include <vtkVolumeProperty.h>
 
+#include <QMessageBox>
 namespace udg {
 
 Q3DViewer* Q3DViewer::castFromQViewer(QViewer *viewer)
@@ -149,15 +150,16 @@ vtkPlanes* Q3DViewer::getClippingPlanes() const
 
 void Q3DViewer::setInput(Volume *volume)
 {
+	//zyq20240408
+	if (!checkInputVolume(volume = QViewer::selectVolume()))
+	{
+		//unsetCursor();
+		QMessageBox::warning(0, "3D-Viewer", tr("当前图像不符合重建三维!"));
+		return;
+	}
+
     setCursor(Qt::WaitCursor);
     setViewerStatus(VisualizingVolume);
-	//zyq20240408
-	volume = QViewer::selectVolume();
-    if (!checkInputVolume(volume))
-    {
-        unsetCursor();
-        return;
-    }
 
     if (m_clippingPlanes)
     {
