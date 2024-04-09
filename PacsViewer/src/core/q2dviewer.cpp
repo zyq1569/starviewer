@@ -158,7 +158,8 @@ PatientOrientation Q2DViewer::getCurrentDisplayedImagePatientOrientation() const
     {
         return PatientOrientation();
     }
-    
+	//zyq20240408
+	QViewer::selectVolume(getMainInput());
     // If we are not in the axial view (original acquisition) we will get
     // orientation through the first image
     int index = (getCurrentViewPlane() == OrthogonalPlane::XYPlane) ? getCurrentSlice() : 0;

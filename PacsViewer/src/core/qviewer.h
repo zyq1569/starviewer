@@ -369,6 +369,10 @@ private:
 
     /// Layout that allows us to create different widgets for different viewer states.
     QStackedLayout *m_stackedLayout;
+
+	//zyq20240408
+public:
+	static  Volume* selectVolume( Volume* volume = NULL);
 };
 
 };  // End namespace udg

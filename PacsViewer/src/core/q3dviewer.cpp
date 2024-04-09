@@ -151,7 +151,8 @@ void Q3DViewer::setInput(Volume *volume)
 {
     setCursor(Qt::WaitCursor);
     setViewerStatus(VisualizingVolume);
-
+	//zyq20240408
+	volume = QViewer::selectVolume();
     if (!checkInputVolume(volume))
     {
         unsetCursor();

@@ -976,4 +976,15 @@ void QViewer::setupRenderWindow()
     m_windowToImageFilter->SetInput(renderWindow);
 }
 
+Volume* QViewer::selectVolume(Volume* volume)
+{
+	/// The volume to select
+	static Volume *m_selectVolume = NULL;
+	if (volume && m_selectVolume != volume)
+	{
+		m_selectVolume = volume;
+	}
+	return m_selectVolume;
+}
+
 };  // End namespace udg
