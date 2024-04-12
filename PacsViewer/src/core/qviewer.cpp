@@ -54,9 +54,9 @@
 #include <vtkCamera.h>
 
 namespace udg {
-
+	static Volume *m_selectVolume = NULL;
 QViewer::QViewer(QWidget *parent)
-    :QWidget(parent), m_mainVolume(0), m_contextMenuActive(true),
+    :QWidget(parent),/* m_mainVolume(0),*/ m_contextMenuActive(true),
       m_mouseHasMoved(false), m_voiLutData(0),m_isRenderingEnabled(true), m_isActive(false)
 {
     m_lastAngleDelta = QPoint();
@@ -122,11 +122,13 @@ vtkRenderer* QViewer::getRenderer() const
 {
     return m_renderer;
 }
-
+/*
 Volume* QViewer::getMainInput() const
 {
-    return m_mainVolume;
+	return NULL m_mainVolume;
 }
+*/
+
 
 int QViewer::getNumberOfInputs() const
 {
@@ -234,8 +236,15 @@ void QViewer::eventHandler(vtkObject *object, unsigned long vtkEvent, void *clie
     /// not be necessary to re-send this signal. The system needs to be improved
     switch (vtkEvent)
     {
+	case vtkCommand::LeftButtonPressEvent:
+		{
+			 Volume* volume = getMainInput();
+			 if (volume)
+			 {
+				 m_selectVolume = volume;//QViewer::selectVolume(volume);
+			 }
+		}
     case QVTKWidget::ContextMenuEvent:
-    case vtkCommand::LeftButtonPressEvent:
     case vtkCommand::RightButtonPressEvent:
     case vtkCommand::MiddleButtonPressEvent:
     case vtkCommand::MouseWheelForwardEvent:
@@ -266,7 +275,7 @@ void QViewer::setActive(bool active)
 {
     if (!m_isActive && active)
     {
-        m_isActive = true;
+        m_isActive = true;		
         emit selected();
     }
     else
@@ -979,7 +988,7 @@ void QViewer::setupRenderWindow()
 Volume* QViewer::selectVolume(Volume* volume)
 {
 	/// The volume to select
-	static Volume *m_selectVolume = NULL;
+	//static Volume *m_selectVolume = NULL;
 	if (volume && m_selectVolume != volume)
 	{
 		m_selectVolume = volume;

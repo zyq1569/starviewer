@@ -41,6 +41,7 @@ public:
 
     void screenshot(const QString &fileName);
 
+	Volume* getMainInput() const override;
 public slots:
     /// Força l'execució de la visualització.
     virtual void render();

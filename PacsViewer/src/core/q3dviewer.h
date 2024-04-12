@@ -67,7 +67,7 @@ public:
     /// Obté els plans de tall que s'han definit sobre el volum
     vtkPlanes* getClippingPlanes() const;
 
-
+	Volume* getMainInput() const override;
 public slots:
     void setInput(Volume* volume) override;
 

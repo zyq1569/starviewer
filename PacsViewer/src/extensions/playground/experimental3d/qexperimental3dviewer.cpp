@@ -125,4 +125,9 @@ void QExperimental3DViewer::getCurrentRenderedItemBounds(double bounds[6])
     Q_UNUSED(bounds)
 }
 
+Volume* QExperimental3DViewer::getMainInput() const
+{
+	return m_mainVolume;
+}
+
 } // namespace udg

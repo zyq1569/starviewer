@@ -67,7 +67,7 @@ public:
     virtual vtkRenderer* getRenderer() const;
 
     /// Returns the main input
-    virtual Volume* getMainInput() const;
+    virtual Volume* getMainInput() const = 0;
 
     /// Returns the total number of inputs of the viewer
     virtual int getNumberOfInputs() const;

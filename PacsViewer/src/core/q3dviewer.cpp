@@ -154,7 +154,6 @@ void Q3DViewer::setInput(Volume *volume)
 	if (!checkInputVolume(volume = QViewer::selectVolume()))
 	{
 		//unsetCursor();
-		QMessageBox::warning(0, "3D-Viewer", tr("当前图像不符合重建三维!"));
 		return;
 	}
 
@@ -389,4 +388,8 @@ void Q3DViewer::setDefaultViewForCurrentInput()
     resetViewToCoronal();
 }
 
+Volume* Q3DViewer::getMainInput() const
+{
+	return m_mainVolume;
+}
 }

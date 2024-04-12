@@ -222,6 +222,9 @@ public:
     /// Returns true if all the images in this volume are in the same anatomical plane.
     bool areAllImagesInTheSameAnatomicalPlane() const;
 
+	//zyq20240412
+	bool creat3Dimage() const;
+
 signals:
     /// It emits the state of the progress in which the data load of the volume is
     /// @param progress load progress on a scale of 1 to 100

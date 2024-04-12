@@ -834,4 +834,25 @@ bool Volume::areAllImagesInTheSameAnatomicalPlane() const
     return m_allImagesAreInTheSameAnatomicalPlane;
 }
 
+//zyq20240412
+bool Volume::creat3Dimage() const
+{
+	int NumberOfFrames = getNumberOfFrames();
+	if (NumberOfFrames < 5 )
+	{
+		return false;
+	}
+	if (NumberOfFrames < 10)
+	{
+		for (int i = 0; i < NumberOfFrames; i++)
+		{
+			if (m_imageSet.at(i)->getSliceThickness() == 0.0)
+			{
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
 };
