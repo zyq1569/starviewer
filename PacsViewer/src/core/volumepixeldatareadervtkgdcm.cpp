@@ -36,7 +36,10 @@
 #include <QDir>
 
 namespace udg {
-
+	//zyq20240409
+#if (VTK_MAJOR_VERSION >= 5) || ( VTK_MAJOR_VERSION == 4 && VTK_MINOR_VERSION > 5 )
+	//DEBUG_LOG("VTK_MAJOR_VERSION >= 5 :" + QString(VTK_MAJOR_VERSION));
+#else
 VolumePixelDataReaderVTKGDCM::VolumePixelDataReaderVTKGDCM(QObject *parent)
 : VolumePixelDataReader(parent)
 {
@@ -302,5 +305,7 @@ void VolumePixelDataReaderVTKGDCM::slotProgress()
 {
     emit progress((int)(m_vtkGDCMReader->GetProgress() * 100));
 }
+
+#endif  //#if (VTK_MAJOR_VERSION >= 5) || ( VTK_MAJOR_VERSION == 4 && VTK_MINOR_VERSION > 5 )
 
 } // End namespace udg

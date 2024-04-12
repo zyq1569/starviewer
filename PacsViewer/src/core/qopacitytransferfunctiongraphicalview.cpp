@@ -141,6 +141,13 @@ void QOpacityTransferFunctionGraphicalView::mousePressEvent(QMouseEvent *event)
             // Això cal perquè el node no s'afegeix sempre just a sota el cursor perquè l'opacitat està limitada entre 0 i 1.
             // Llavors fem que QGraphicsView processi aquest nou esdeveniment i l'enganyem perquè faci el que volem (trollface.jpg).
             // De pas també posem el cursor a sobre el node.
+
+			//After adding the node to the view we want to be able to move it before definitely adding it to the function.
+			//To do this we need QGraphicsView to start the interaction with the node as if we had clicked on it from the beginning.
+			//To achieve this, we create a new event like the one we are processing but with the updated position.
+			//This is necessary because the node is not always added just below the cursor because the opacity is limited between 0 and 1.
+			//Then we have QGraphicsView process this new event and trick it into doing what we want(trollface.jpg).
+			//Incidentally, we also put the cursor over the node.
             QPoint position = mapFromScene(node->pos());
             QCursor::setPos(mapToGlobal(position));
             QMouseEvent mouseEvent(event->type(), position, event->button(), event->buttons(), event->modifiers());

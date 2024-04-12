@@ -59,8 +59,13 @@ VolumePixelDataReader* VolumePixelDataReaderFactory::getReader() const
             break;
 
         case VTKGDCMPixelDataReader:
+			//zyq20240409
+#if (VTK_MAJOR_VERSION >= 5) || ( VTK_MAJOR_VERSION == 4 && VTK_MINOR_VERSION > 5 )
+			DEBUG_LOG("VTK_MAJOR_VERSION >= 5 :" + QString(VTK_MAJOR_VERSION));
+#else
             reader = new VolumePixelDataReaderVTKGDCM();
             DEBUG_LOG("Volume pixel data will be read using VTK-GDCM");
+#endif
             break;
     }
 

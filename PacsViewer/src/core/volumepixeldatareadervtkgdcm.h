@@ -15,6 +15,8 @@
 #ifndef UDGVOLUMEPIXELDATAREADERVTKGDCM_H
 #define UDGVOLUMEPIXELDATAREADERVTKGDCM_H
 
+#include <vtkVersionMacros.h>
+
 #include "volumepixeldatareader.h"
 
 class vtkGDCMImageReader;
@@ -25,7 +27,11 @@ namespace udg {
 /**
     Lector de dades d'imatge per Volume.
     Aquest lector fa ús de la interfície vtkGDCM per llegir les dades.
-  */
+ */
+//zyq20240409
+#if (VTK_MAJOR_VERSION >= 5) || ( VTK_MAJOR_VERSION == 4 && VTK_MINOR_VERSION > 5 )
+	//DEBUG_LOG("VTK_MAJOR_VERSION >= 5 :" + QString(VTK_MAJOR_VERSION));
+#else
 class VolumePixelDataReaderVTKGDCM : public VolumePixelDataReader {
 Q_OBJECT
 public:
@@ -57,6 +63,7 @@ private:
     bool m_abortRequested;
 };
 
+#endif
 } // End namespace udg
 
 #endif
