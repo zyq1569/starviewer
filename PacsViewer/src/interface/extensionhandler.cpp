@@ -34,7 +34,7 @@
 #include "patientcomparer.h"
 #include "patient.h"
 #include "image.h"
-
+#include "qviewer.h"
 // PACS --------------------------------------------
 #include "queryscreen.h"
 #include "patientfiller.h"
@@ -244,9 +244,22 @@ bool ExtensionHandler::createExtension(const QString &who)
 }
 bool ExtensionHandler::request(const QString &who)
 {
-    //QObject *object = sender();
-    //QAction *act=qobject_cast<QAction*>(sender());
-    //QVariant str = object->
+	if (who == "Q3DViewerExtension")
+	{
+		Volume* volume = QViewer::selectVolume();
+		if (!volume)
+		{
+			QMessageBox::warning(0, "3D-Viewer", ("3D-Viewer fail!!! No image is selected!!"));
+			return true;
+		}
+		int NumberOfFrames = volume->getNumberOfFrames();
+		int *imensions = volume->getDimensions();
+		if (!volume->creat3Dimage())
+		{
+			QMessageBox::warning(0, "3D-Viewer", ("3D-Viewer fail!!! images < 5 or SliceThickness = 0.0"));
+			return true;
+		}			
+	}
     QList<Patient*> Patients;
     Patients<<m_mainApp->getCurrentPatient();
     setPatientsThumbnail(Patients);
