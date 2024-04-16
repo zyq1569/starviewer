@@ -837,14 +837,14 @@ bool Volume::areAllImagesInTheSameAnatomicalPlane() const
 //zyq20240412
 bool Volume::is3Dimage() const
 {
-	int NumberOfFrames = getNumberOfFrames();
-	if (NumberOfFrames < 5 )
+	int NumberOfSlices = getNumberOfSlicesPerPhase();
+	if (NumberOfSlices < 5 )
 	{
 		return false;
 	}
-	if (NumberOfFrames < 10)
+	if (NumberOfSlices < 10)
 	{
-		for (int i = 0; i < NumberOfFrames; i++)
+		for (int i = 0; i < NumberOfSlices; i++)
 		{
 			if (m_imageSet.at(i)->getSliceThickness() == 0.0)
 			{
