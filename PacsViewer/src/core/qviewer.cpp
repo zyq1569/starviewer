@@ -238,8 +238,7 @@ void QViewer::eventHandler(vtkObject *object, unsigned long vtkEvent, void *clie
     {
 	case vtkCommand::LeftButtonPressEvent:
 		{
-			 Volume* volume = getMainInput();
-			 if (volume)
+			 if (Volume* volume = getMainInput())
 			 {
 				 m_selectVolume = volume;//QViewer::selectVolume(volume);
 			 }
@@ -826,10 +825,11 @@ void QViewer::contextMenuEvent(QContextMenuEvent *menuEvent)
 
         QString selectedItem = getInputIdentifier();
 
-        //m_patientBrowserMenu->popup(menuEvent->globalPos(), selectedItem); //->globalPos() ?
-        //QPoint point = QCursor::pos();
+        m_patientBrowserMenu->popup(menuEvent->globalPos(), selectedItem); //->globalPos() ?
+        //zyq20240416
+		//QPoint point = QCursor::pos();
         //menuEvent->globalPos() -> error???????!!! (windows 10:now 2020-09-09)
-        m_patientBrowserMenu->popup(QCursor::pos(), selectedItem);
+        //m_patientBrowserMenu->popup(QCursor::pos(), selectedItem);
     }
 }
 
