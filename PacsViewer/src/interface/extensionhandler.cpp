@@ -254,7 +254,7 @@ bool ExtensionHandler::request(const QString &who)
 		}
 		int NumberOfFrames = volume->getNumberOfFrames();
 		int *imensions = volume->getDimensions();
-		if (!volume->creat3Dimage())
+		if (!volume->is3Dimage())
 		{
 			QMessageBox::warning(0, "3D-Viewer", ("3D-Viewer fail!!! images < 5 or SliceThickness = 0.0"));
 			return true;
