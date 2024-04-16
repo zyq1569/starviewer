@@ -31,6 +31,17 @@ namespace udg {
 //zyq20240409
 #if (VTK_MAJOR_VERSION >= 5) || ( VTK_MAJOR_VERSION == 4 && VTK_MINOR_VERSION > 5 )
 	//DEBUG_LOG("VTK_MAJOR_VERSION >= 5 :" + QString(VTK_MAJOR_VERSION));
+class VolumePixelDataReaderVTKGDCM : public VolumePixelDataReader
+{
+	Q_OBJECT
+public:
+	VolumePixelDataReaderVTKGDCM(QObject *parent = 0);
+	~VolumePixelDataReaderVTKGDCM();
+private slots:
+	/// Captura el senyal de vtk perquè poguem notificar el progrés de la lectura
+	void slotProgress();
+};
+
 #else
 class VolumePixelDataReaderVTKGDCM : public VolumePixelDataReader {
 Q_OBJECT
