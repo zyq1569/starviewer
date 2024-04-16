@@ -252,13 +252,25 @@ bool ExtensionHandler::request(const QString &who)
 			QMessageBox::warning(0, "3D-Viewer", ("3D-Viewer fail!!! No image is selected!!"));
 			return true;
 		}
-		int NumberOfFrames = volume->getNumberOfFrames();
-		int *imensions = volume->getDimensions();
 		if (!volume->is3Dimage())
 		{
 			QMessageBox::warning(0, "3D-Viewer", ("3D-Viewer fail!!! images < 5 or SliceThickness = 0.0"));
 			return true;
 		}			
+	}
+	else if (who == "MPRExtension")
+	{
+		Volume* volume = QViewer::selectVolume();
+		if (!volume)
+		{
+			QMessageBox::warning(0, "MPR-2DViewer", ("MPR-2D fail!!! No image is selected!!"));
+			return true;
+		}
+		if (volume->getNumberOfSlicesPerPhase() < 5)
+		{
+			QMessageBox::warning(0, "MPR-2DViewer", ("MPR-2D fail!!! images < 5!!"));
+			return true;
+		}
 	}
     QList<Patient*> Patients;
     Patients<<m_mainApp->getCurrentPatient();
