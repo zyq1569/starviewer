@@ -223,7 +223,7 @@ public:
     bool areAllImagesInTheSameAnatomicalPlane() const;
 
 	//zyq20240412
-	bool creat3Dimage() const;
+	bool is3Dimage() const;
 
 signals:
     /// It emits the state of the progress in which the data load of the volume is

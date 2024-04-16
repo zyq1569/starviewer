@@ -835,7 +835,7 @@ bool Volume::areAllImagesInTheSameAnatomicalPlane() const
 }
 
 //zyq20240412
-bool Volume::creat3Dimage() const
+bool Volume::is3Dimage() const
 {
 	int NumberOfFrames = getNumberOfFrames();
 	if (NumberOfFrames < 5 )
