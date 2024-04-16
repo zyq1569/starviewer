@@ -982,6 +982,7 @@ void QMPRExtension::pushSagitalViewAxialAxisActor()
 
 void QMPRExtension::setInput(Volume *input)
 {
+	input = QViewer::selectVolume();
     // HACK To make universal scrolling work properly. Issue #2019.
     if (input->objectName() == "Dummy Volume")
     {
