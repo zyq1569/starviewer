@@ -427,6 +427,7 @@ bool QViewer::saveGrabbedViews(const QString &baseName, FileType extension)
         case META:
             // TODO A suportar
             DEBUG_LOG("The META format is not yet supported for saving images");
+			clearGrabbedViews();
             return false;
         }
         int count = m_grabList.count();
