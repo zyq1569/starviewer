@@ -397,10 +397,33 @@ bool QViewer::saveGrabbedViews(const QString &baseName, FileType extension)
             break;
 
         case DICOM:
-            // TODO A suportar
-            DEBUG_LOG("DICOM format is not yet supported for saving images");
-            return false;
-
+		{	
+			if (Volume *volume = m_selectVolume)
+			{	
+				fileExtension = "dcm";
+				WARN_LOG("DICOM format file for saving images");
+				QList<Image*> images = volume->getImages();
+				int count = images.size();
+				if (count == 1)
+				{
+					QFile file(images.at(0)->getPath());
+					file.copy(QString("%1.%2").arg(baseName).arg(fileExtension));
+				}
+				else 
+				{
+					int i = 0;
+					int padding = QString::number(count).size();
+					foreach(Image* image, images)
+					{
+						QFile file(image->getPath());
+						file.copy((QString("%1-%2.%3").arg(baseName).arg(i, padding, 10, QChar('0')).arg(fileExtension)));
+						i++;
+					}
+				}		
+			}
+			clearGrabbedViews();
+			return true;
+		}
         case META:
             // TODO A suportar
             DEBUG_LOG("The META format is not yet supported for saving images");
