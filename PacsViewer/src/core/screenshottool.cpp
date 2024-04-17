@@ -37,13 +37,13 @@ const QString ScreenShotTool::PngFileFilter = tr("PNG (*.png)");
 const QString ScreenShotTool::JpegFileFilter = tr("JPEG (*.jpg)");
 const QString ScreenShotTool::BmpFileFilter = tr("BMP (*.bmp)");
 const QString ScreenShotTool::TiffFileFilter = tr("TIFF (*.tiff)");
-
+const QString ScreenShotTool::DcmFileFilter = tr("DCM (*.dcm)");
 ScreenShotTool::ScreenShotTool(QViewer *viewer, QObject *parent)
     : Tool(viewer, parent)
 {
     m_toolName = "ScreenShotTool";
     readSettings();
-    m_fileExtensionFilters = PngFileFilter + ";;" + JpegFileFilter + ";;" + BmpFileFilter + ";;" + TiffFileFilter;
+    m_fileExtensionFilters = PngFileFilter + ";;" + JpegFileFilter + ";;" + BmpFileFilter + ";;" + DcmFileFilter + ";;" + TiffFileFilter;
     if (!viewer)
     {
         DEBUG_LOG("El viewer proporcionat és NUL!");
@@ -180,6 +180,10 @@ void ScreenShotTool::screenShot(bool singleShot)
         {
             fileExtension = QViewer::TIFF;
         }
+		else if (m_lastScreenShotExtensionFilter == DcmFileFilter)
+		{
+			fileExtension = QViewer::DICOM;
+		}
         else
         {
             DEBUG_LOG("No pattern matches, image cannot be saved! We assign PNG, by default. This mistake should NEVER happen! ");
