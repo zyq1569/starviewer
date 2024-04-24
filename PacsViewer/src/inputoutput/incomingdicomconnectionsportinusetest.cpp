@@ -27,7 +27,7 @@ IncomingDICOMConnectionsPortInUseTest::~IncomingDICOMConnectionsPortInUseTest()
 {
 }
 
-QString IncomingDICOMConnectionsPortInUseTest::getDescription()
+QString IncomingDICOMConnectionsPortInUseTest::getDescription() const 
 {
     return tr("Incoming DICOM connections port is available");
 }

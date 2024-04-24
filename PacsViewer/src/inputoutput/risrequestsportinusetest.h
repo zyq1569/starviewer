@@ -26,7 +26,7 @@ public:
     ~RISRequestsPortInUseTest();
 
     ///Retorna descripcio del test
-    QString getDescription();
+    QString getDescription()const override;
 };
 
 static DiagnosisTestFactoryRegister<RISRequestsPortInUseTest> registerRISRequestsPortInUseTest("RISRequestsPortInUseTest");

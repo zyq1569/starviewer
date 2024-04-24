@@ -26,7 +26,7 @@ public:
     ~IncomingDICOMConnectionsPortInUseTest();
 
     ///Returns test description
-    QString getDescription();
+    QString getDescription()const override;
 };
 
 static DiagnosisTestFactoryRegister<IncomingDICOMConnectionsPortInUseTest>

@@ -27,7 +27,7 @@ RISRequestsPortInUseTest::~RISRequestsPortInUseTest()
 {
 }
 
-QString RISRequestsPortInUseTest::getDescription()
+QString RISRequestsPortInUseTest::getDescription() const
 {
     return tr("RIS request port is available");
 }
