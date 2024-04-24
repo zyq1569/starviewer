@@ -17,6 +17,7 @@
 
 #include "orthogonalplane.h"
 #include "anatomicalplane.h"
+#include "vector3.h"
 
 #include <QWidget>
 //List of screenshots
@@ -120,11 +121,10 @@ public:
     }
 
     /// Zoom in on the scene with the given factor
-    /// @param factor Zoom factor we want to apply to the camera
-    void zoom(double factor);
+    void zoom(double factor, QPoint zoomCenter);
 
     /// Absolute zoom to the scene based on the factor value
-    void absoluteZoom(double factor);
+    void absoluteZoom(double factor, QPoint zoomCenter);
 
     /// Move the camera according to the motion vector we pass to it
     /// @param motionVector [] Motion vector that determines where and how far the camera moves
@@ -177,6 +177,9 @@ public:
     /// Returns the VOI LUT that is currently applied to the image in this viewer.
     /// The default implementation returns a default VoiLut.
     virtual VoiLut getCurrentVoiLut() const;
+
+    /// Returns the view plane normal from the camera.
+    Vector3 getViewPlaneNormal();
 
 public slots:
     /// We indicate the input data
@@ -233,7 +236,7 @@ signals:
     void selected(void);
 
     /// Reports that the zoom has changed
-    void zoomFactorChanged(double factor);
+    void zoomChanged(double factor, QPoint zoomCenter);
 
     /// Reports that the image has been moved
     void panChanged(double *translation);
