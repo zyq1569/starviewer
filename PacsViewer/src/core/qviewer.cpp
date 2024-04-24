@@ -40,8 +40,9 @@
 #include <QScreen>
 
 // Include's vtk
-#include <QVTKWidget.h>
-#include <vtkRenderWindow.h>
+#include <QVTKOpenGLNativeWidget.h>
+#include <QVTKInteractor.h>
+#include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkBMPWriter.h>
 #include <vtkPNGWriter.h>
@@ -61,7 +62,7 @@ QViewer::QViewer(QWidget *parent)
 {
     m_lastAngleDelta = QPoint();
     m_defaultFitIntoViewportMarginRate = 0.0;
-    m_vtkWidget = new QVTKWidget(this);//the QWidget of VTK(lib)
+    m_vtkWidget = new QVTKOpenGLNativeWidget(this);
     m_vtkWidget->setFocusPolicy(Qt::WheelFocus);
     m_renderer = vtkRenderer::New();
 
@@ -97,6 +98,7 @@ QViewer::QViewer(QWidget *parent)
     this->setMouseTracking(false);
     m_patientBrowserMenu = new PatientBrowserMenu(0);
     //Right now the default behavior will be that once a
+    this->setContextMenuPolicy(Qt::ContextMenuPolicy::NoContextMenu);
     //volume is selected we immediately assign it as input
     this->setAutomaticallyLoadPatientBrowserMenuSelectedInput(true);
 }
@@ -115,7 +117,7 @@ QViewer::~QViewer()
 
 vtkRenderWindowInteractor* QViewer::getInteractor() const
 {
-    return m_vtkWidget->GetRenderWindow()->GetInteractor();
+    return m_vtkWidget->GetInteractor();
 }
 
 vtkRenderer* QViewer::getRenderer() const
@@ -243,7 +245,7 @@ void QViewer::eventHandler(vtkObject *object, unsigned long vtkEvent, void *clie
 				 m_selectVolume = volume;//QViewer::selectVolume(volume);
 			 }
 		}
-    case QVTKWidget::ContextMenuEvent:
+    case QVTKInteractor::vtkCustomEvents::ContextMenuEvent:
     case vtkCommand::RightButtonPressEvent:
     case vtkCommand::MiddleButtonPressEvent:
     case vtkCommand::MouseWheelForwardEvent:
@@ -253,6 +255,10 @@ void QViewer::eventHandler(vtkObject *object, unsigned long vtkEvent, void *clie
         if (vtkEvent == vtkCommand::LeftButtonPressEvent && getInteractor()->GetRepeatCount() == 1)
         {
             emit doubleClicked();
+			if (getToolProxy()->isToolActive("ZoomTool"))
+			{
+				return; // avoid accidental pan when doing a double click (#2854)
+			}
         }
         break;
 
@@ -983,7 +989,7 @@ void QViewer::handleNotEnoughMemoryForVisualizationError()
 
 void QViewer::setupRenderWindow()
 {
-    vtkSmartPointer<vtkRenderWindow> renderWindow = vtkSmartPointer<vtkRenderWindow>::New();
+    vtkSmartPointer<vtkGenericOpenGLRenderWindow> renderWindow = vtkSmartPointer<vtkGenericOpenGLRenderWindow>::New();
     // TODO getInteractor() forces m_vtkWiget to create a render window the first time just to return the interactor,
     // that render window is unused afterwards.
     //      Could this be improved?
