@@ -22,6 +22,8 @@
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderWindow.h>
 
+static constexpr double MinimumWindowWidth = 0.0001;
+
 namespace udg {
 
 WindowLevelTool::WindowLevelTool(QViewer *viewer, QObject *parent)
@@ -108,7 +110,12 @@ void WindowLevelTool::doWindowLevel()
     double dx = 4.0 * (m_windowLevelCurrentPosition.x() - m_windowLevelStartPosition.x()) / size.width();
     double dy = 4.0 * (m_windowLevelStartPosition.y() - m_windowLevelCurrentPosition.y()) / size.height();
 
+ // Obtain absolute (to preserve sign of dx and dy) initial window width and ensure that it's not smaller than MinimumWindowWidth.
+    double initialWindowWidth = std::max(std::abs(m_initialWindow), MinimumWindowWidth);
     // Scale by current values
+    dx *= initialWindowWidth;
+    dy *= initialWindowWidth;
+    /*
     if (fabs(m_initialWindow) > 0.01)
     {
         dx = dx * m_initialWindow;
@@ -135,7 +142,7 @@ void WindowLevelTool::doWindowLevel()
     {
         dy = -1 * dy;
     }
-
+	*/
     // Compute new window level
     double newWindow;
     double newLevel;
@@ -155,6 +162,10 @@ void WindowLevelTool::doWindowLevel()
         double newX2 = newLevel + newWindow / 2.0;
         voiLut = VoiLut(m_initialLut.toNewRange(oldX1, oldX2, newX1, newX2), m_initialLut.name());
     }
+
+    // This is really only needed when burning (because in the other case it's eventually set in another place) but it's more consistent to do it in both cases.
+    // It ensures that the new VOI LUT is detected as custom.
+    voiLut.setExplanation(VoiLutPresetsToolData::getCustomPresetName());
 
     if (m_state == WindowLevelling)
     {
@@ -214,50 +225,24 @@ void WindowLevelTool::computeWindowLevelValuesWithFixedMinimumBehaviour(double d
 {
     // HACK We use absolute window value to properly handle the windowlevelling when 
     // values have been inverted with the invert tool (window value is negative)
-    window = deltaX + fabs(m_initialWindow);
-    level = window * 0.5;
-
-    avoidZeroAndNegative(window, level);
-    
     // HACK We use this little hack to properly handle the windowlevelling when 
-    // values have been inverted with the invert tool (window value is negative)
-    if (m_initialWindow < 0)
-    {
-        window = -window;
-    }
+    window = deltaX + std::abs(m_initialWindow);
+    window = std::max(window, MinimumWindowWidth);
+    level = window * 0.5;   // done here because window is guaranteed to be positive
+    window = std::copysign(window, m_initialWindow);
 }
 
 void WindowLevelTool::computeWindowLevelValuesWithDefaultBehaviour(double deltaX, double deltaY, double &window, double &level)
 {
     window = deltaX + m_initialWindow;
-    level = m_initialLevel - deltaY;
 
-    avoidZero(window, level);
-}
-
-void WindowLevelTool::avoidZero(double &window, double &level)
-{
     // Stay away from zero and really
-    if (fabs(window) < 0.01)
+    if (window > -MinimumWindowWidth && window < MinimumWindowWidth)
     {
-        window = 0.01 * (window < 0 ? -1 : 1);
-    }
-    if (fabs(level) < 0.01)
-    {
-        level = 0.01 * (level < 0 ? -1 : 1);
-    }
+        window = std::copysign(MinimumWindowWidth, window);
 }
 
-void WindowLevelTool::avoidZeroAndNegative(double &window, double &level)
-{
-    if (window < 0.01)
-    {
-        window =  1;
-    }
-    if (level < 0.01)
-    {
-        level = 1;
-    }
+    level = m_initialLevel - deltaY;
 }
 
 }
