@@ -20,7 +20,6 @@
 #include "voilut.h"
 #include "volume.h"
 
-#include <QVTKWidget.h>
 #include <vtkActor.h>
 #include <vtkImageMarchingCubes.h>
 #include <vtkMatrix4x4.h>
@@ -57,8 +56,6 @@ Q3DViewer* Q3DViewer::castFromQViewer(QViewer *viewer)
 Q3DViewer::Q3DViewer(QWidget *parent)
     : QViewer(parent), m_firstRender(true), m_clippingPlanes(nullptr)
 {
-    m_vtkWidget->setAutomaticImageCacheEnabled(true);
-
     vtkNew<AbortRenderCommand> abortRenderCommand;
     getRenderWindow()->AddObserver(vtkCommand::AbortCheckEvent, abortRenderCommand);
 
