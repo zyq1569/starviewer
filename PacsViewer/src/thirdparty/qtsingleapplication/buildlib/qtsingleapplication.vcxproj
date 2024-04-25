@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6E924A49-F0E2-3046-881C-A54401A22C9A}</ProjectGuid>
+    <ProjectGuid>{AC1BB3A7-2876-432E-AACB-5165D99378DD}</ProjectGuid>
     <RootNamespace>Qt5Solutions_SingleApplication-head</RootNamespace>
     <Keyword>Qt4VSv1.0</Keyword>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
