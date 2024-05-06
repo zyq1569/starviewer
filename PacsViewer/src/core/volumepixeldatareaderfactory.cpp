@@ -15,22 +15,59 @@
 #include "volumepixeldatareaderfactory.h"
 
 #include "computezspacingpostprocessor.h"
+#include "dicomtagreader.h"
 #include "pixelspacingamenderpostprocessor.h"
 #include "coresettings.h"
 #include "image.h"
-#include "itkgdcmbydefaultvolumepixeldatareaderselector.h"
 #include "logging.h"
-#include "series.h"
+#include "patient.h"
 #include "volume.h"
 #include "volumepixeldatareaderitkdcmtk.h"
 #include "volumepixeldatareaderitkgdcm.h"
-#include "vtkdcmtkbydefaultvolumepixeldatareaderselector.h"
+#include "volumepixeldatareadervtk.h"
 #include "volumepixeldatareadervtkdcmtk.h"
 #include "volumepixeldatareadervtkgdcm.h"
 
 #include <QList>
 
 namespace udg {
+
+namespace {
+
+// Returns true if the volume contains at least one image with a JPEG2000 transfer syntax.
+bool hasJPEG2000TransferSyntax(const Volume *volume)
+{
+    const QString JPEG2000LosslessOnlyTransferSyntax = "1.2.840.10008.1.2.4.90";
+    const QString JPEG2000TransferSyntax = "1.2.840.10008.1.2.4.91";
+
+    foreach (Image *image, volume->getImages())
+    {
+        if (image->getTransferSyntaxUID() == JPEG2000LosslessOnlyTransferSyntax || image->getTransferSyntaxUID() == JPEG2000TransferSyntax)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// Returns true if the images in the volume have a segmented palette attribute.
+// For speed reasons, it just checks for the presence of the segmented red palette in the first image.
+bool hasSegmentedPalette(const Volume *volume)
+{
+    // We only need to check for the tag if the photometric interpretion is palette color
+    if (volume->getImage(0)->getPhotometricInterpretation() == PhotometricInterpretation::Palette_Color)
+    {
+        DICOMTagReader tagReader(volume->getImage(0)->getPath());
+        return tagReader.tagExists(DICOMSegmentedRedPaletteColorLookupTableData);
+    }
+    else
+    {
+        return false;
+    }
+}
+
+}
 
 void VolumePixelDataReaderFactory::setVolume(Volume *volume)
 {
@@ -62,10 +99,16 @@ VolumePixelDataReader* VolumePixelDataReaderFactory::getReader() const
 			//zyq20240409
 #if (VTK_MAJOR_VERSION >= 5) || ( VTK_MAJOR_VERSION == 4 && VTK_MINOR_VERSION > 5 )
 			DEBUG_LOG("VTK_MAJOR_VERSION >= 5 :" + QString(VTK_MAJOR_VERSION));
+			reader = new VolumePixelDataReaderVTKDCMTK();
 #else
             reader = new VolumePixelDataReaderVTKGDCM();
             DEBUG_LOG("Volume pixel data will be read using VTK-GDCM");
 #endif
+            break;
+
+        case VTKPixelDataReader:
+            reader = new VolumePixelDataReaderVtk();
+            DEBUG_LOG("Volume pixel data will be read using VTK");
             break;
     }
 
@@ -102,19 +145,22 @@ VolumePixelDataReaderFactory::PixelDataReaderType VolumePixelDataReaderFactory::
     if (!mustForceReaderLibraryBackdoor(volume, readerType))
     {
         // If the reader type is not forced by settings, use the selector
-        VolumePixelDataReaderSelector *selector;
-
-        if (settings->getValue(CoreSettings::UseItkGdcmImageReaderByDefault).toBool())
+		QString ID = volume->getPatient()->getID(); 
+        if (ID.startsWith("Non-DICOM") || ID.startsWith("MHD Patient"))
         {
-            selector = new ItkGdcmByDefaultVolumePixelDataReaderSelector();
+
+            return VolumePixelDataReaderFactory::VTKPixelDataReader;
         }
+        //else if (hasJPEG2000TransferSyntax(volume) || hasSegmentedPalette(volume))
+        //{
+            // DCMTK doesn't support JPEG2000 for free, and doesn't support segmented palettes either
+            //return VolumePixelDataReaderFactory::VTKGDCMPixelDataReader;
+        //}
         else
         {
-            selector = new VtkDcmtkByDefaultVolumePixelDataReaderSelector();
+            // Read with VTK-DCMTK by default
+            return VolumePixelDataReaderFactory::VTKDCMTKPixelDataReader;
         }
-
-        readerType = selector->selectVolumePixelDataReader(volume);
-        delete selector;
     }
 
     return readerType;
