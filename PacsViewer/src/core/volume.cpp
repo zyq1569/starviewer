@@ -33,7 +33,7 @@ Volume::Volume(QObject *parent)
     m_numberOfPhases = 1;
     m_numberOfSlicesPerPhase = 1;
 
-    m_volumePixelData = new VolumePixelData(this);
+    m_volumePixelData = new VolumePixelData();
 }
 
 Volume::~Volume()
@@ -65,6 +65,7 @@ void Volume::setData(vtkImageData *vtkImage)
 void Volume::setPixelData(VolumePixelData *pixelData)
 {
     Q_ASSERT(pixelData != 0);
+    delete m_volumePixelData;
     m_volumePixelData = pixelData;
     // Set the number of phases to the new pixel data
     m_volumePixelData->setNumberOfPhases(m_numberOfPhases);
@@ -239,10 +240,7 @@ void Volume::addImage(Image *image)
         //If we have uploaded data they become invalid
         if (isPixelDataLoaded())
         {
-            /// WARNING Possible temporary memory leak: the previous VolumePixelData
-            /// will be hung undestroyed until his father is destroyed (if he has any,
-            /// but forever).
-            m_volumePixelData = new VolumePixelData(this);
+            setPixelData(new VolumePixelData());
         }
 
         m_checkedImagesAnatomicalPlane = false;
@@ -256,10 +254,7 @@ void Volume::setImages(const QList<Image*> &imageList)
     // If we have uploaded data they become invalid
     if (isPixelDataLoaded())
     {
-        // WARNING Possible temporary memory leak: the previous VolumePixelData
-        // will be hung undestroyed until his father is destroyed (if he has any, otherwise
-        // forever).
-        m_volumePixelData = new VolumePixelData(this);
+        setPixelData(new VolumePixelData());
     }
 
     m_checkedImagesAnatomicalPlane = false;
@@ -854,5 +849,17 @@ bool Volume::is3Dimage() const
 	}
 	return true;
 }
+
+bool Volume::isMHDImage() const
+{
+	QString SOPInstanceUID = getImages().at(0)->getSOPInstanceUID();
+	if (SOPInstanceUID.contains("MHDImage"))
+	{
+		return true;
+	}
+	return false;
+
+}
+
 
 };
