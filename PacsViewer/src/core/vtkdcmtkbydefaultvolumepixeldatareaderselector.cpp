@@ -23,6 +23,7 @@ namespace udg {
 namespace {
 
 // Returns true if the volume contains at least one image with a JPEG2000 transfer syntax.
+/*
 bool hasJPEG2000TransferSyntax(const Volume *volume)
 {
     const QString JPEG2000LosslessOnlyTransferSyntax = "1.2.840.10008.1.2.4.90";
@@ -37,7 +38,9 @@ bool hasJPEG2000TransferSyntax(const Volume *volume)
     }
 
     return false;
-}
+}	
+*/
+
 
 // Returns true if the images in the volume have a segmented palette attribute.
 // For speed reasons, it just checks for the presence of the segmented red palette in the first image.
@@ -59,16 +62,19 @@ bool hasSegmentedPalette(const Volume *volume)
 
 VolumePixelDataReaderFactory::PixelDataReaderType VtkDcmtkByDefaultVolumePixelDataReaderSelector::selectVolumePixelDataReader(Volume *volume) const
 {
-    if (volume->getImage(0)->getSOPInstanceUID().contains("MHDImage"))
+	QString SOPInstanceUID = volume->getImage(0)->getSOPInstanceUID();
+    if (SOPInstanceUID.contains("MHDImage"))
     {
         // MetaImages currently must be read with ITK-GDCM
         return VolumePixelDataReaderFactory::ITKGDCMPixelDataReader;
     }
-    else if (hasJPEG2000TransferSyntax(volume) || hasSegmentedPalette(volume))
-    {
-        // DCMTK doesn't support JPEG2000 for free, and doesn't support segmented palettes either
-        return VolumePixelDataReaderFactory::VTKGDCMPixelDataReader;
-    }
+	/*
+	else if (hasJPEG2000TransferSyntax(volume) || hasSegmentedPalette(volume))
+	{
+		// DCMTK doesn't support JPEG2000 for free, and doesn't support segmented palettes either
+		return VolumePixelDataReaderFactory::VTKGDCMPixelDataReader;
+	}	
+	*/
     else
     {
         // Read with VTK-DCMTK by default
