@@ -35,16 +35,8 @@
 #include "dcmtk/ofstd/ofconapp.h"
 #include "dcmtk/dcmdata/dcuid.h"       /* for dcmtk version name */
 #include "dcmtk/dcmjpeg/djdecode.h"    /* for dcmjpeg decoders */
-//#include "dcmtk/dcmjpeg/djencode.h"    /* for dcmjpeg decoders */
-//#include "dcmtk/dcmjpls/djdecode.h"
-//#include "dcmtk/dcmjpls/djencode.h"
-//#include "dcmtk/dcmdata/dcrleerg.h"
-//#include "dcmtk/dcmdata/dcrledrg.h"
-//#include "dcmtk/dcmimgle/dcmimage.h"
-//#include "dcmtk/dcmimgle/digsdfn.h"      /* for DiGSDFunction */
-//#include "dcmtk/dcmimgle/diciefn.h"      /* for DiCIELABFunction */
-#include "../fmjpeg2k/fmjpeg2k/djdecode.h"
-#include "../fmjpeg2k/fmjpeg2k/djencode.h"
+
+//#include "../fmjpeg2k/fmjpeg2k/djencode.h"
 // Needed to support color images
 #include <diregist.h>
 
@@ -130,27 +122,6 @@ QImage ThumbnailCreator::makeEmptyThumbnailWithCustomText(const QString &text,  
         try
         {
             reader->Update();
-#ifdef  ITKIMAGE  //test
-			using PixelType = unsigned char;
-			constexpr unsigned int Dimension = 2;
-			using ImageType = itk::Image<PixelType, Dimension>;
-			// 将 ITK 图像转换为 QImage
-			itk::JPEGImageIOFactory::RegisterOneFactory();
-			InputImageType::Pointer image = reader->GetOutput();
-			int h = image->GetBufferedRegion().GetSize()[0];
-			int w = image->GetBufferedRegion().GetSize()[1];
-			QImage qImage((uchar*)image->GetBufferPointer(),image->GetBufferedRegion().GetSize()[0], image->GetBufferedRegion().GetSize()[1], QImage::Format_Grayscale8);
-			if (qImage.height() < qImage.width())
-			{
-				thumbnail = qImage.scaledToWidth(96, Qt::SmoothTransformation);
-			}
-			else
-			{
-				thumbnail = qImage.scaledToHeight(96, Qt::SmoothTransformation);
-			}
-			return thumbnail;
-			//QImage qImage(image->GetBufferPointer(), image->GetWidth(), image->GetHeight(), QImage::Format_Grayscale8);
-#endif // DEBUG
         }
         catch (itk::ExceptionObject& e)
         {
@@ -215,6 +186,16 @@ QImage ThumbnailCreator::makeEmptyThumbnailWithCustomText(const QString &text,  
 
 QImage ThumbnailCreator::createImageThumbnail(const QString &imageFileName, int resolution)
 {
+	if (imageFileName.right(3).toUpper().contains("MHD"))
+	{
+		QImage thumbnail;
+		thumbnail = QImage(resolution, resolution, QImage::Format_RGB32);
+		thumbnail.fill(Qt::black);
+		QPainter painter(&thumbnail);
+		painter.setPen(Qt::white);
+		painter.drawText(0, 0, resolution, resolution, Qt::AlignCenter | Qt::TextWordWrap, "MHD image:    Preview image not available");
+		return thumbnail;
+	}
     DICOMTagReader reader(imageFileName);
     return createThumbnail(&reader, resolution);
 }
@@ -239,9 +220,6 @@ QImage ThumbnailCreator::createThumbnail(const DICOMTagReader *reader, int resol
             /// Let's load the dicom file to scale
             /// Let's say that in the case of a multiframe image,
             /// just load the first image and enough, saving unnecessarily hosting memory
-
-            ///
-            ///20231222
             /// /// JPEG 2000 (lossless)
             //EXS_JPEG2000LosslessOnly = 26,
             ///// JPEG 2000 (lossless or lossy)
@@ -251,22 +229,7 @@ QImage ThumbnailCreator::createThumbnail(const DICOMTagReader *reader, int resol
             ///// JPEG 2000 part 2 multi-component extensions (lossless or lossy)
             //EXS_JPEG2000Multicomponent = 29,
             DicomImage *dicomImage = NULL;
-            E_TransferSyntax OriginalXfer = reader->getDcmDataset()->getOriginalXfer();
-            if (OriginalXfer == EXS_JPEG2000LosslessOnly || OriginalXfer == EXS_JPEG2000  ||
-                OriginalXfer == EXS_JPEG2000MulticomponentLosslessOnly  || OriginalXfer == EXS_JPEG2000Multicomponent)
-            {
-                // jpeg2k
-                FMJPEG2KDecoderRegistration::registerCodecs();
-                dicomImage = new DicomImage(reader->getDcmDataset(), OriginalXfer, CIF_UsePartialAccessToPixelData, 0, 1);
-                // jpeg2k
-                FMJPEG2KDecoderRegistration::cleanup();
-            }
-            else
-            {
-				DcmFileFormat fileformat;
-				dicomImage = new DicomImage(qPrintable(reader->getFileName()));
-                //dicomImage = new DicomImage(reader->getDcmDataset(), OriginalXfer, CIF_UsePartialAccessToPixelData, 0, 1);
-            }
+			dicomImage = new DicomImage(qPrintable(reader->getFileName()));
 			if (dicomImage)
 			{
 				OFString value;
@@ -284,11 +247,6 @@ QImage ThumbnailCreator::createThumbnail(const DICOMTagReader *reader, int resol
 					thumbnail = createThumbnail(dicomImage, resolution);
 				}
 			}
-            //thumbnail = createThumbnail(dicomImage, resolution);
-			
-            ///
-            //DicomImage *dicomImage = new DicomImage(reader->getDcmDataset(), reader->getDcmDataset()->getOriginalXfer(), CIF_UsePartialAccessToPixelData, 0, 1);
-            //thumbnail = createThumbnail(dicomImage, resolution);
             // DicomImage must be deleted to avoid memory leaks
             if (dicomImage)
             {
