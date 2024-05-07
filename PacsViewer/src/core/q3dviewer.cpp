@@ -108,6 +108,10 @@ Q3DViewer::~Q3DViewer()
     {
         m_clippingPlanes->Delete();
     }
+	if (m_orientationMarker)
+	{
+		delete m_orientationMarker;
+	}
 }
 
 VoiLut Q3DViewer::getCurrentVoiLut() const
@@ -148,10 +152,17 @@ vtkPlanes* Q3DViewer::getClippingPlanes() const
 void Q3DViewer::setInput(Volume *volume)
 {
 	//zyq20240408
-	if (!checkInputVolume(volume = QViewer::selectVolume()))
+	Volume *selVolume = QViewer::selectVolume();
+	if (!selVolume)
 	{
-		//unsetCursor();
-		return;
+		if (!selVolume->isMHDImage())
+		{
+			if (!checkInputVolume(volume = selVolume/*QViewer::selectVolume()*/))
+			{
+				//unsetCursor();
+				return;
+			}
+		}
 	}
 
     setCursor(Qt::WaitCursor);
