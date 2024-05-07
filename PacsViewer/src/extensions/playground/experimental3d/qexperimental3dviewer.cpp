@@ -3,7 +3,7 @@
 #include "abortrendercommand.h"
 #include "experimental3dvolume.h"
 
-#include <QVTKWidget.h>
+#include <QVTKOpenGLNativeWidget.h>
 
 #include <vtkCamera.h>
 #include <vtkEncodedGradientEstimator.h>
@@ -25,8 +25,6 @@ QExperimental3DViewer::QExperimental3DViewer(QWidget *parent)
     style->Delete();
 
     m_renderer->SetBackground(1.0, 1.0, 1.0);
-
-    m_vtkWidget->setAutomaticImageCacheEnabled(true);
 
     // avortar render
     AbortRenderCommand *abortRenderCommand = AbortRenderCommand::New();
@@ -94,10 +92,13 @@ void QExperimental3DViewer::setCamera(const Vector3 &position, const Vector3 &fo
 
 void QExperimental3DViewer::screenshot(const QString &fileName)
 {
+	/*
     uchar *rawImage = reinterpret_cast<uchar*>(m_vtkWidget->cachedImage()->GetScalarPointer());
     QImage image(rawImage, m_vtkWidget->width(), m_vtkWidget->height(), QImage::Format_RGB888);
     QImage mirroredImage = image.mirrored();
-    mirroredImage.save(fileName);
+    mirroredImage.save(fileName);	
+	*/
+
 }
 
 void QExperimental3DViewer::render()
