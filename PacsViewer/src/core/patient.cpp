@@ -98,6 +98,10 @@ Patient::Patient(const Patient &patient, QObject *parent)
     m_studiesList = patient.m_studiesList;
 }
 
+void Patient::clearAllStudy()
+{
+	m_studiesList.clear();
+}
 Patient::~Patient()
 {
     m_studiesList.clear();
