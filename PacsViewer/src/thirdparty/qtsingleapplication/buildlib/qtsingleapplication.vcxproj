@@ -120,7 +120,7 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">..\..\..\..\tmp\$(Configuration)\obj\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='NProfile|x64'">..\..\..\..\tmp\$(Configuration)\obj\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='StaticDebug|x64'">..\..\..\..\tmp\$(Configuration)\obj\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">..\..\..\..\tmp\$(Configuration)\obj\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">..\..\..\..\tmp\obj\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectName)</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">$(ProjectName)</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='NProfile|x64'">$(ProjectName)</TargetName>
@@ -324,11 +324,10 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ObjectFileName>release\</ObjectFileName>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WINDOWS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
-      <ProgramDataBaseFileName>
-      </ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>$(TargetDir)$(ProjectName).pdb</ProgramDataBaseFileName>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
