@@ -144,8 +144,7 @@ INCLUDEPATH +=  $${ITKINCLUDEDIR} \
                 $${ITKINCLUDEDIR}/Modules/Video/IO/include/ \
                 $${ITKINCLUDEDIR}/more/
 
-#ITKLIBSUFFIX = -4.13
-ITKLIBSUFFIX = -5.0
+ITKLIBSUFFIX = -5.3.0
 ITKLIBS = \
         ITKCommon \
         ITKMetaIO \
@@ -163,7 +162,7 @@ ITKLIBS = \
         ITKznz \
         ITKOptimizers \
         ITKVTK \
-        ITKIOGDCM \
+#        ITKIOGDCM \
         ITKIOJPEG \
         ITKIOImageBase \
         itksys \
