@@ -120,7 +120,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ObjectFileName>..\..\tmp\obj\</ObjectFileName>
-      <Optimization>Disabled</Optimization>
+      <Optimization>Custom</Optimization>
       <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;MSVC;GLEW_STATIC;NOMINMAX;ELPP_THREAD_SAFE;ELPP_NO_DEFAULT_LOG_FILE;ELPP_DISABLE_DEFAULT_CRASH_HANDLING;QT_NO_DEBUG;QT_OPENGL_LIB;QT_QUICKWIDGETS_LIB;QT_WEBENGINEWIDGETS_LIB;QT_PRINTSUPPORT_LIB;QT_WIDGETS_LIB;QT_WEBENGINECORE_LIB;QT_QUICK_LIB;QT_GUI_LIB;QT_XML_LIB;QT_XMLPATTERNS_LIB;QT_WEBCHANNEL_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CONCURRENT_LIB;QT_POSITIONING_LIB;QT_CORE_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <ProgramDataBaseFileName>$(TargetDir)$(ProjectName).pdb</ProgramDataBaseFileName>
