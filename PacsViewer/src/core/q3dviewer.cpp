@@ -151,20 +151,6 @@ vtkPlanes* Q3DViewer::getClippingPlanes() const
 
 void Q3DViewer::setInput(Volume *volume)
 {
-	//zyq20240408
-	Volume *selVolume = QViewer::selectVolume();
-	if (!selVolume)
-	{
-		if (!selVolume->isMHDImage())
-		{
-			if (!checkInputVolume(volume = selVolume/*QViewer::selectVolume()*/))
-			{
-				//unsetCursor();
-				return;
-			}
-		}
-	}
-
     setCursor(Qt::WaitCursor);
     setViewerStatus(VisualizingVolume);
 
