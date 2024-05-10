@@ -242,7 +242,7 @@ void QViewer::eventHandler(vtkObject *object, unsigned long vtkEvent, void *clie
 		{
 			 if (Volume* volume = getMainInput())
 			 {
-				 m_selectVolume = volume;//QViewer::selectVolume(volume);
+				 m_selectVolume = volume;
 			 }
 		}
     case QVTKInteractor::vtkCustomEvents::ContextMenuEvent:
