@@ -119,7 +119,7 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">..\..\tmp\$(Configuration)\obj\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='NProfile|x64'">..\..\tmp\$(Configuration)\obj\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='StaticDebug|x64'">..\..\tmp\$(Configuration)\obj\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">..\..\tmp2\obj\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">..\..\starviewer\obj\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">starviewer</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">starviewer</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='NProfile|x64'">starviewer</TargetName>
