@@ -41,6 +41,8 @@ public:
     /// we have patient (case mhd's) do it with the volumeIdentifier
     Volume* getDefaultVolume() const;
 
+	Volume* getDefaultVolumeNoLocalizer() const;
+
     ///   /// Returns true if the patient of this context contains at least one image and false otherwise.
     bool hasImages() const;
     /// /// Returns true if the patient of this context contains at least one encapsulated document and false otherwise.

@@ -44,7 +44,9 @@ bool MPRExtensionMediator::initializeExtension(QWidget *extension, const Extensi
         return false;
     }
 
-    Volume *input = extensionContext.getDefaultVolume();
+    //Volume *input = extensionContext.getDefaultVolume();
+	Volume * selVolume = QViewer::selectVolume();
+	Volume *input = selVolume ? selVolume : extensionContext.getDefaultVolumeNoLocalizer();
     if (!input)
     {
         QMessageBox::information(0, tr("Starviewer"), tr("The selected item is not an image"));

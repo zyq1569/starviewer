@@ -54,6 +54,7 @@ Volume *ExtensionContext::getDefaultVolume() const
         // EVERYTHING at the moment we only take the first of the possible ones selected
         defaultSeries = selectedSeries.at(0);
         // We need the series to be viewable
+		defaultSeries->isCTLocalizer();
         if (!defaultSeries->isViewable())
         {
             searchForDefaultSeries = true;
@@ -88,6 +89,60 @@ Volume *ExtensionContext::getDefaultVolume() const
     return defaultVolume;
 }
 
+Volume *ExtensionContext::getDefaultVolumeNoLocalizer() const
+{
+	Volume *defaultVolume = NULL;
+	Series *defaultSeries = NULL;
+	bool searchForDefaultSeries = false;
+	QList<Series*> selectedSeries = m_patient->getSelectedSeries();
+
+	if (selectedSeries.isEmpty())
+	{
+		searchForDefaultSeries = true;
+	}
+	else
+	{
+		// EVERYTHING at the moment we only take the first of the possible ones selected
+		defaultSeries = selectedSeries.at(0);
+		// We need the series to be viewable
+		if (!defaultSeries->isViewable() || defaultSeries->isCTLocalizer())
+		{
+			searchForDefaultSeries = true;
+		}
+		else
+		{
+			defaultVolume = defaultSeries->getFirstVolume();
+		}
+	}
+	// Instead of searchForDefaultSeries we could use
+	// defaultVolume, but with var. boolean code is more readable
+	if (searchForDefaultSeries)
+	{
+		bool ok = false;
+		foreach(Study *study, m_patient->getStudies())
+		{
+			QList<Series*> viewableSeries = study->getViewableSeries();
+			if (!viewableSeries.isEmpty())
+			{
+				foreach (Series*  series , viewableSeries)
+				{
+					if (!series->isCTLocalizer())
+					{
+						defaultVolume = series->getFirstVolume();
+						return defaultVolume;
+					}
+				}
+			}
+		}
+		if (!ok)
+		{
+			DEBUG_LOG("There is no current patient series that is viewable. Return volume NULL.");
+			ERROR_LOG("There is no current patient series that is viewable. Return volume NULL.");
+		}
+	}
+
+	return defaultVolume;
+}
 bool ExtensionContext::hasImages() const
 {
     if (!m_patient)
