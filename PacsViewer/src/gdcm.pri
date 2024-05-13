@@ -31,7 +31,7 @@ INCLUDEPATH +=  $${GDCMINCLUDEDIR} \
 
 LIBS += -L$${GDCMLIBDIR} \
         -lgdcmcharls \
-        -lgdcmCommon \
+#        -lgdcmCommon \
         -lgdcmDICT \
         -lgdcmDSED \
         -lgdcmexpat \

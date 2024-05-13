@@ -47,7 +47,7 @@ include(../../sourcelibsdependencies.pri)
 
 # Thirdparty libraries
 #addLibraryDependency($$PWD/../thirdparty, $$OUT_PWD/../thirdparty, breakpad)
-addLibraryDependency($$PWD/../thirdparty,$$PWD/../../bin, breakpad)
+addLibraryDependency($$PWD/../thirdparty,$$PWD/../../bin/bin, breakpad)
 # --------------------include  lib
 #outputDirectory = ../../bin
 #LIBS += -L$${outputDirectory} \

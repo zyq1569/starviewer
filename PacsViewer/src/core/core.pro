@@ -445,6 +445,7 @@ SOURCES  += extensionmediator.cpp \
             logging.cpp \
             volume.cpp \
             volumehelper.cpp \
+            volumepixeldatareadervtk.cpp \
             volumereader.cpp \
             volumepixeldatareader.cpp \
             volumepixeldatareadervtkgdcm.cpp \
