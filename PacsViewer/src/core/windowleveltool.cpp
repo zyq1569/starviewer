@@ -240,7 +240,7 @@ void WindowLevelTool::computeWindowLevelValuesWithDefaultBehaviour(double deltaX
     if (window > -MinimumWindowWidth && window < MinimumWindowWidth)
     {
         window = std::copysign(MinimumWindowWidth, window);
-}
+    }
 
     level = m_initialLevel - deltaY;
 }
