@@ -24,7 +24,7 @@
 namespace udg {
 
 class DicomPrintExtensionMediator : public ExtensionMediator {
-Q_OBJECT
+//Q_OBJECT
 public:
     DicomPrintExtensionMediator(QObject *parent = 0);
 

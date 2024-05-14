@@ -20,7 +20,7 @@
 namespace udg {
 
 const int g_DockWidgetwith = 133;
-const QSize IMAGE_SIZE(96,99);
+const QSize IMAGE_SIZE(96,96);
 const QSize ITEM_SIZE(109,140);
 
 ImageThumbnailDockWidget::ImageThumbnailDockWidget(const QString &title,QApplicationMainWindow *mainApp, QWidget *parent,

@@ -19,7 +19,7 @@ namespace udg {
 */
 class AngioSubstractionExtensionMediator : public ExtensionMediator
 {
-Q_OBJECT
+//Q_OBJECT
 public:
     AngioSubstractionExtensionMediator(QObject *parent = 0);
 

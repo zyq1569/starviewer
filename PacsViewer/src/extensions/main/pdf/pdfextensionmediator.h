@@ -23,7 +23,7 @@
 namespace udg {
 
 class PdfExtensionMediator : public ExtensionMediator {
-    Q_OBJECT
+    //Q_OBJECT
 public:
 
     explicit PdfExtensionMediator(QObject *parent = 0);

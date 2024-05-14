@@ -19,7 +19,7 @@ namespace udg {
 */
 class PerfusionMapReconstructionExtensionMediator : public ExtensionMediator
 {
-Q_OBJECT
+//Q_OBJECT
 public:
     PerfusionMapReconstructionExtensionMediator(QObject *parent = 0);
 

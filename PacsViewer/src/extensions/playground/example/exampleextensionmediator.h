@@ -23,7 +23,7 @@
 namespace udg {
 
 class ExampleExtensionMediator : public ExtensionMediator {
-    Q_OBJECT
+    //Q_OBJECT
 public:
 
     explicit ExampleExtensionMediator(QObject *parent = nullptr);

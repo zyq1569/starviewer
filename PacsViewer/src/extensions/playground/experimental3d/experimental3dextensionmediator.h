@@ -9,7 +9,7 @@
 namespace udg {
 
 class Experimental3DExtensionMediator : public ExtensionMediator {
-    Q_OBJECT
+    //Q_OBJECT
 public:
 
     Experimental3DExtensionMediator(QObject *parent = 0);

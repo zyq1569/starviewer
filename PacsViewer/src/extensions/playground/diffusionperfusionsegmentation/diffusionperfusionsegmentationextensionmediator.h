@@ -20,7 +20,7 @@ namespace udg{
 ///扩散灌注分割
 class DiffusionPerfusionSegmentationExtensionMediator: public ExtensionMediator
 {
-    Q_OBJECT
+    //Q_OBJECT
 public:
     DiffusionPerfusionSegmentationExtensionMediator(QObject *parent = 0);
 

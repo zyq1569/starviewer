@@ -20,7 +20,7 @@ namespace udg {
 //水肿分割
 class EdemaSegmentationExtensionMediator : public ExtensionMediator
 {
-    Q_OBJECT
+    //Q_OBJECT
 public:
     EdemaSegmentationExtensionMediator(QObject *parent = 0);
 
