@@ -7,8 +7,12 @@ DESTDIR = ../../bin
 TEMPLATE = app
 
 # CrashHandler
-SOURCES += crashhandler.cpp
-HEADERS += crashhandler.h
+SOURCES += crashhandler.cpp \
+            ../thirdparty/qtsingleapplication/src/qtlocalpeer.cpp \
+            ../thirdparty/qtsingleapplication/src/qtsingleapplication.cpp
+HEADERS += crashhandler.h \
+            ../thirdparty/qtsingleapplication/src/qtlocalpeer.h \
+            ../thirdparty/qtsingleapplication/src/qtsingleapplication.h
 
 # End CrashHandler
 
@@ -47,7 +51,7 @@ include(../../sourcelibsdependencies.pri)
 
 # Thirdparty libraries
 #addLibraryDependency($$PWD/../thirdparty, $$OUT_PWD/../thirdparty, breakpad)
-addLibraryDependency($$PWD/../thirdparty,$$PWD/../../bin/bin, breakpad)
+addLibraryDependency($$PWD/../thirdparty,$$OUT_PWD/../../bin, breakpad)
 # --------------------include  lib
 #outputDirectory = ../../bin
 #LIBS += -L$${outputDirectory} \
@@ -57,11 +61,11 @@ addLibraryDependency($$PWD/../thirdparty,$$PWD/../../bin/bin, breakpad)
 
 # --------------------include  lib
 include(../corelibsconfiguration.pri)
-include(../thirdparty/qtsingleapplication/src/qtsingleapplication.pri)
+#include(../thirdparty/qtsingleapplication/src/qtsingleapplication.pri)
 
 include(installextensions.pri)
 
 QT += xml opengl network xmlpatterns qml concurrent quick quickwidgets sql webenginewidgets
 
 #TODO: Qt 4.5.3 does not add UI_DIR information as include when compiling main.cpp
-INCLUDEPATH += ../../tmp/ui
+INCLUDEPATH += ../../QTtmp/ui

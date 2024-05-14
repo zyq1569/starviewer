@@ -13,10 +13,10 @@ DESTDIR = ./
 
 INCLUDEPATH += ./
 
-OBJECTS_DIR = ../../../tmp/obj
-UI_DIR = ../../../tmp/ui
-MOC_DIR = ../../../tmp/moc
-RCC_DIR = ../../../tmp/rcc
+OBJECTS_DIR = ../../../QTtmp/obj
+UI_DIR = ../../../QTtmp/ui
+MOC_DIR = ../../../QTtmp/moc
+RCC_DIR = ../../../QTtmp/rcc
 
 HEADERS += \
     common/scoped_ptr.h \

@@ -6,15 +6,15 @@ DESTDIR = $$OUT_PWD
 
 INCLUDEPATH += ../../../core \
                ../../../inputoutput
-MOC_DIR = ../../../../tmp/moc
-UI_DIR = ../../../../tmp/ui
+MOC_DIR = ../../../../QTtmp/moc
+UI_DIR = ../../../../QTtmp/ui
 win32-msvc2013 {
-    OBJECTS_DIR = ../../../../tmp/obj/$${TARGET}
+    OBJECTS_DIR = ../../../../QTtmp/obj/$${TARGET}
     }
     else {
-    OBJECTS_DIR = ../../../../tmp/obj
+    OBJECTS_DIR = ../../../../QTtmp/obj
     }
-RCC_DIR = ../../../../tmp/rcc
+RCC_DIR = ../../../../QTtmp/rcc
 CONFIG += warn_on \
           qt \
           opengl \

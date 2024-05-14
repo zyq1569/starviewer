@@ -6,14 +6,14 @@ CONFIG += warn_on \
           stl
           
 win32-msvc2013 {
-    OBJECTS_DIR = ../../tmp/obj/$${TARGET}
+    OBJECTS_DIR = ../../QTtmp/obj/$${TARGET}
     }
     else {
-    OBJECTS_DIR = ../../tmp/obj
+    OBJECTS_DIR = ../../QTtmp/obj
     }
 
-UI_DIR  = ../../tmp/ui
-MOC_DIR = ../../tmp/moc
-RCC_DIR = ../../tmp/rcc
+UI_DIR  = ../../QTtmp/ui
+MOC_DIR = ../../QTtmp/moc
+RCC_DIR = ../../QTtmp/rcc
 
 include(makefixdebug.pri)
