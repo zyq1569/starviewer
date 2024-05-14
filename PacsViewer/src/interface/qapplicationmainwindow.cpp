@@ -33,6 +33,8 @@
 #include "qaboutdialog.h"
 #include "externalapplication.h"
 #include "externalapplicationsmanager.h"
+#include "queryscreen.h"
+#include "risrequestmanager.h"
 //------------------------------------
 #include "imagethumbnaildockwidget.h"
 //------------------------------------
@@ -207,10 +209,6 @@ void QApplicationMainWindow::checkNewVersionAndShowReleaseNotes()
 
 void QApplicationMainWindow::createActions()
 {
-    m_signalMapper = new QSignalMapper(this);
-    connect(m_signalMapper, SIGNAL(mapped(int)), m_extensionHandler, SLOT(request(int)));
-    connect(m_signalMapper, SIGNAL(mapped(const QString)), m_extensionHandler, SLOT(request(const QString)));
-
     m_newAction = new QAction(this);
     m_newAction->setText(tr("&New Window"));
     m_newAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::NewWindow));
@@ -223,16 +221,14 @@ void QApplicationMainWindow::createActions()
     m_openAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::OpenFile));
     m_openAction->setStatusTip(tr("Open one or several existing volume files"));
     m_openAction->setIcon(QIcon(":/images/icons/document-open.svg"));
-    m_signalMapper->setMapping(m_openAction, 1);
-    connect(m_openAction, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
+    connect(m_openAction, &QAction::triggered, [this] { m_extensionHandler->request(1); });
 
     m_openDirAction = new QAction(this);
     m_openDirAction->setText(tr("Open Files from a Directory..."));
     m_openDirAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::OpenDirectory));
     m_openDirAction->setStatusTip(tr("Open an existing DICOM folder"));
     m_openDirAction->setIcon(QIcon(":/images/icons/document-open.svg"));
-    m_signalMapper->setMapping(m_openDirAction, 6);
-    connect(m_openDirAction, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
+    connect(m_openDirAction, &QAction::triggered, [this] { m_extensionHandler->request(6); });
 
     m_pacsAction = new QAction(this);
 #ifdef STARVIEWER_LITE
@@ -250,40 +246,39 @@ void QApplicationMainWindow::createActions()
     m_localDatabaseAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::OpenLocalDatabaseStudies));
     m_localDatabaseAction->setStatusTip(tr("Browse local database studies"));
     m_localDatabaseAction->setIcon(QIcon(":/images/icons/database-local.svg"));
-    m_signalMapper->setMapping(m_localDatabaseAction, 10);
-    connect(m_localDatabaseAction, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
+    connect(m_localDatabaseAction, &QAction::triggered, [this] { m_extensionHandler->request(10); });
 #endif
     // TODO maybe at least for the Lite version the icon would have to be changed
     m_pacsAction->setIcon(QIcon(":/images/icons/document-open-remote.svg"));
-    m_signalMapper->setMapping(m_pacsAction, 7);
-    connect(m_pacsAction, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
+    connect(m_pacsAction, &QAction::triggered, [this] { m_extensionHandler->request(7); });
 
     m_openDICOMDIRAction = new QAction(this);
     m_openDICOMDIRAction->setText(tr("Open DICOMDIR..."));
     m_openDICOMDIRAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::OpenDICOMDIR));
     m_openDICOMDIRAction->setStatusTip(tr("Open DICOMDIR from CD, DVD, USB flash drive or hard disk"));
     m_openDICOMDIRAction->setIcon(QIcon(":/images/icons/document-open-dicomdir.svg"));
-    m_signalMapper->setMapping(m_openDICOMDIRAction, 8);
-    connect(m_openDICOMDIRAction, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
+    connect(m_openDICOMDIRAction, &QAction::triggered, [this] { m_extensionHandler->request(8); });
 
     QStringList extensionsMediatorNames = ExtensionMediatorFactory::instance()->getFactoryIdentifiersList();
-    foreach (const QString &name, extensionsMediatorNames)
+    foreach(const QString &name, extensionsMediatorNames)
     {
         ///20200924 add   name == ???  delete other QAction-------------------------------------------------------------------------
         ///Comment out uncommon functions temporarily , keep follow  four QAction
-        if (name == "DicomPrintExtension" || name == "MPRExtension" || name == "Q2DViewerExtension" || name == "Q3DViewerExtension")
+        if (name != "Example" || name != "Rectum Segmentation" || name != "Perfusion Map Reconstruction")// || name != "Q3DViewerExtension")
         {
             ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create(name);
 
             if (mediator)
             {
                 QAction *action = new QAction(this);
-                QString lable = mediator->getExtensionID().getLabel();
+                const DisplayableID &extensionId = mediator->getExtensionID();
+                QString lable = extensionId.getLabel();
                 action->setText(lable);
                 action->setStatusTip(tr("Open the %1 Application").arg(mediator->getExtensionID().getLabel()));
                 action->setEnabled(false);
-                m_signalMapper->setMapping(action, mediator->getExtensionID().getID());
-                connect(action, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
+                //m_signalMapper->setMapping(action, mediator->getExtensionID().getID());
+                //connect(action, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
+                connect(action, &QAction::triggered, [=] { m_extensionHandler->request(extensionId.getID()); });
                 m_actionsList.append(action);
                 delete mediator;
             }
@@ -362,10 +357,11 @@ void QApplicationMainWindow::createActions()
     m_closeAction->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::CloseCurrentExtension));
     m_closeAction->setStatusTip(tr("Close current extension page"));
     m_closeAction->setIcon(QIcon(":/images/icons/project-development-close.svg"));
-    connect(m_closeAction, SIGNAL(triggered()), m_extensionWorkspace, SLOT(closeCurrentApplication()));
+    //connect(m_closeAction, SIGNAL(triggered()), m_extensionWorkspace, SLOT(closeCurrentApplication()));
+    connect(m_closeAction, SIGNAL(triggered()), this, SLOT(closeCurrentPatient()));
 
     //----------20200921---------------------------------------------------------------------------------
-    connect(m_closeAction, SIGNAL(triggered()), m_DockImageThumbnail, SLOT(mainAppclearThumbnail()));
+    //connect(m_closeAction, SIGNAL(triggered()), m_DockImageThumbnail, SLOT(mainAppclearThumbnail()));
     //----------------------------------------------------------------------------------------------------
     m_exitAction = new QAction(this);
     m_exitAction->setText(tr("E&xit"));
@@ -385,6 +381,7 @@ void QApplicationMainWindow::createActions()
     m_runDiagnosisTestsAction->setText(tr("&Run Diagnosis Tests"));
     m_runDiagnosisTestsAction->setStatusTip(tr("Run %1 diagnosis tests").arg(ApplicationNameString));
     connect(m_runDiagnosisTestsAction, SIGNAL(triggered()), SLOT(showDiagnosisTestDialog()));
+
 }
 
 void QApplicationMainWindow::maximizeMultipleScreens()
@@ -891,6 +888,28 @@ void QApplicationMainWindow::addPatientsThumbnail(QList<Patient*> patientsList)
 QWidget *QApplicationMainWindow::currentWidgetOfExtensionWorkspace()
 {
     return m_extensionWorkspace->currentWidget();
+}
+
+void QApplicationMainWindow::closeCurrentPatient()
+{
+	//connect(m_closeAction, SIGNAL(triggered()), m_extensionWorkspace, SLOT(closeCurrentApplication()));
+	//----------20200921---------------------------------------------------------------------------------
+	//connect(m_closeAction, SIGNAL(triggered()), m_DockImageThumbnail, SLOT(mainAppclearThumbnail()));
+	//----------------------------------------------------------------------------------------------------
+	if (m_extensionWorkspace->currentWidget())
+	{
+		m_extensionWorkspace->closeCurrentApplication();
+		m_DockImageThumbnail->mainAppclearThumbnail();
+
+		this->killBill();
+		/*
+		if (m_patient)
+		{
+			m_patient->clearAllStudy();
+		}		
+		*/
+		
+	}
 }
 ///------------------------------------------------------------------------------------------------------------
 

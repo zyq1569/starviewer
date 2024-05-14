@@ -194,6 +194,8 @@ private slots:
     /// If no external applications are defined, the menu is not created.
     void createExternalApplicationsMenu();
 
+//add slot
+	void closeCurrentPatient();
 private:
     ///The mini-applications area
     ExtensionWorkspace *m_extensionWorkspace;
