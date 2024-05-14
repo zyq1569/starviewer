@@ -50,12 +50,16 @@ INITIALIZE_EASYLOGGINGPP
 #include <QDir>
 #include <QMessageBox>
 #include <QLibraryInfo>
+#include <QScreen>
 #include <qtsingleapplication.h>
 
 #include <vtkNew.h>
 #include <vtkOutputWindow.h>
 #include <vtkOverrideInformation.h>
 #include <vtkOverrideInformationCollection.h>
+
+#include "../fmjpeg2k/fmjpeg2k/djdecode.h"
+#include "../fmjpeg2k/fmjpeg2k/djencode.h"
 
 typedef udg::SingletonPointer<udg::StarviewerApplicationCommandLine> StarviewerSingleApplicationCommandLineSingleton;
 
@@ -217,6 +221,9 @@ int main(int argc, char *argv[])
     DJDecoderRegistration::registerCodecs();
     DcmRLEDecoderRegistration::registerCodecs();
 
+	//jp2k
+	FMJPEG2KDecoderRegistration::registerCodecs();
+
     // Following the recommendations of the Qt documentation,
     // we save the list of arguments in a variable, as this operation is expensive
     // http://doc.trolltech.com/4.7/qcoreapplication.html#arguments
@@ -308,7 +315,7 @@ int main(int argc, char *argv[])
         }
     }
 
-
+	 
     //We mark the end of the application in the log
     INFO_LOG(QString("%1 Version %2 BuildID %3, returnValue %4").arg(udg::ApplicationNameString).arg(udg::StarviewerVersionString)
              .arg(udg::StarviewerBuildID).arg(returnValue));
