@@ -49,7 +49,7 @@ template<typename MDType> class TypedMDRVA;
 // damaged, it will not allocate heap memory.
 // Sample usage:
 // MinidumpFileWriter writer;
-// writer.Open("/tmp/minidump.dmp");
+// writer.Open("/QTtmp/minidump.dmp");
 // TypedMDRVA<MDRawHeader> header(&writer_);
 // header.Allocate();
 // header->get()->signature = MD_HEADER_SIGNATURE;
@@ -111,7 +111,7 @@ public:
 
   // Copies |size| bytes from |src| to |position|
   // Return true on success, or false on failure
-  bool Copy(MDRVA position, const void *src, ssize_t size);
+  bool Copy(MDRVA position, const void *src, size_t size);
 
   // Return the current position for writing to the minidump
   inline MDRVA position() const { return position_; }
