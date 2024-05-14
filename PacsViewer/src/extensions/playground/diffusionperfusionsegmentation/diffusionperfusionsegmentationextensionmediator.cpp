@@ -36,9 +36,13 @@ bool DiffusionPerfusionSegmentationExtensionMediator::initializeExtension(QWidge
         return false;
     }
 
-    Volume *input = extensionContext.getDefaultVolume();
-    if(!input)
-        QMessageBox::information(0,tr("Starviewer"), tr("The selected item is not an image"));
+    //Volume *input = extensionContext.getDefaultVolume();
+    Volume * selVolume = QViewer::selectVolume();
+    Volume *input = selVolume ? selVolume : extensionContext.getDefaultVolumeNoLocalizer();
+    if (!input)
+    {
+        QMessageBox::information(0, tr("Starviewer"), tr("The selected item is not an image"));
+    }
     else
     {
         difuPerfuExtension->setDiffusionInput(input);

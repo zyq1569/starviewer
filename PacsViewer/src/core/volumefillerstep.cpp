@@ -27,7 +27,8 @@
 
 namespace udg {
 
-VolumeFillerStep::VolumeFillerStep()
+VolumeFillerStep::VolumeFillerStep(bool dontCreateThumbnails)
+    : m_dontCreateThumbnails(dontCreateThumbnails)
 {
 }
 
@@ -43,7 +44,7 @@ bool VolumeFillerStep::fillIndividually()
 
     Image *image = currentImages.first();
     int volumeNumber = m_input->getCurrentVolumeNumber();
-//    bool mustCreateThumbnail = false;
+    bool mustCreateThumbnail = false;
     Series *series = m_input->getCurrentSeries();
     ImageProperties imageProperties(image);
 
@@ -60,7 +61,7 @@ bool VolumeFillerStep::fillIndividually()
         // else: First file of the series: no need to increment volumeNumber
 
         m_imagesProperties[series][volumeNumber] = imageProperties;
-//        mustCreateThumbnail = true;
+        mustCreateThumbnail = true;
     }
     else if (m_imagesProperties.contains(series) && m_imagesProperties[series].contains(volumeNumber))
     {
@@ -86,7 +87,7 @@ bool VolumeFillerStep::fillIndividually()
                 // Not found: insert imageProperties with a new volumeNumber
                 volumeNumber = m_imagesProperties[series].lastKey() + 1;
                 m_imagesProperties[series][volumeNumber] = imageProperties;
-//                mustCreateThumbnail = true;
+                mustCreateThumbnail = true;
             }
         }
         // else Match: no need to change volumeNumber nor create thumbnail
@@ -95,7 +96,7 @@ bool VolumeFillerStep::fillIndividually()
     {
         // First image of this volume: insert imageProperties at current series and volumeNumber
         m_imagesProperties[series][volumeNumber] = imageProperties;
-//        mustCreateThumbnail = true;
+        mustCreateThumbnail = true;
     }
 
     m_input->setCurrentVolumeNumber(volumeNumber);
@@ -106,16 +107,16 @@ bool VolumeFillerStep::fillIndividually()
         image->setVolumeNumberInSeries(volumeNumber);
     }
 
-//    if (mustCreateThumbnail)
-//    {
-//        saveThumbnail(currentImages.first());
-//    }
+    if (!m_dontCreateThumbnails && mustCreateThumbnail)
+    {
+        saveThumbnail(currentImages.first());
+    }
 
     return true;
 }
 
-//void VolumeFillerStep::saveThumbnail(const Image *image)
-//{
+void VolumeFillerStep::saveThumbnail(const Image *image)
+{
 //    int volumeNumber = m_input->getCurrentVolumeNumber();
 //    QString thumbnailPath = QFileInfo(image->getPath()).absolutePath();
 
@@ -128,7 +129,7 @@ bool VolumeFillerStep::fillIndividually()
 //    {
 //        thumbnail.save(QString("%1/thumbnail.png").arg(thumbnailPath), "PNG");
 //    }
-
+}
 //}
 
 VolumeFillerStep::ImageProperties::ImageProperties(const Image *image)

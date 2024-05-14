@@ -44,14 +44,14 @@ RelatedStudiesManager::~RelatedStudiesManager()
 
 void RelatedStudiesManager::queryMergedStudies(Patient *patient)
 {
-    INFO_LOG("Patient studies will be sought " + patient->getFullName() + " amb ID " + patient->getID());
+    INFO_LOG("Patient studies will be sought " + patient->getFullName() + "  with ID " + patient->getID());
 
     this->makeAsynchronousStudiesQuery(patient);
 }
 
 void RelatedStudiesManager::queryMergedPreviousStudies(Study *study)
 {
-    INFO_LOG("Previous patient studies will be sought " + study->getParentPatient()->getFullName() + " amb ID " + study->getParentPatient()->getID() +
+    INFO_LOG("Previous patient studies will be sought " + study->getParentPatient()->getFullName() + " with ID " + study->getParentPatient()->getID() +
              " of the study " + study->getInstanceUID() + "done to date " + study->getDate().toString());
 
     m_studyInstanceUIDOfStudyToFindRelated = study->getInstanceUID();

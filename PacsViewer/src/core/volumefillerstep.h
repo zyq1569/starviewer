@@ -34,7 +34,7 @@ class Image;
 class VolumeFillerStep : public PatientFillerStep
 {
 public:
-    VolumeFillerStep();
+    VolumeFillerStep(bool dontCreateThumbnails = false);
 
     virtual bool fillIndividually() override;
 
@@ -44,7 +44,7 @@ private:
     /// multiframe i enhanced ja que actualment és molt costós perquè hem de carregar tot el volum
     /// a memòria i aquí podem aprofitar que el dataset està a memòria evitant la càrrega posterior
     /// Tot i així es pot fer servir en altres casos que es cregui necessari avançar la creació del thumbnail
-    //void saveThumbnail(const Image *image);
+    void saveThumbnail(const Image *image);
 
 private:
     /**
@@ -66,6 +66,8 @@ private:
 
     /// ImageProperties for each volume number in each series.
     QHash<Series*, QMap<int, ImageProperties>> m_imagesProperties;
+    /// If true, thumbnails won't be created.
+    bool m_dontCreateThumbnails;
 
 };
 

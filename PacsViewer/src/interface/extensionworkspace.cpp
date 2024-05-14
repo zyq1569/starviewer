@@ -30,7 +30,7 @@ ExtensionWorkspace::ExtensionWorkspace(QWidget *parent)
     // QTabWidget takes much less time to be painted when DocumentMode is enabled
     setDocumentMode(true);
 
-    this->setTabPosition(QTabWidget::South);
+    //this->setTabPosition(QTabWidget::South);
     this->setDarkBackgroundColorEnabled(true);
 
     createConnections();
@@ -115,7 +115,10 @@ QMap<QWidget *, QString> ExtensionWorkspace::getActiveExtensions() const
 void ExtensionWorkspace::closeCurrentApplication()
 {
     QWidget *w = this->currentWidget();
-    removeApplication(w);
+	if (w)
+	{
+		removeApplication(w);
+	}
 }
 
 void ExtensionWorkspace::closeApplicationByTabIndex(int index)

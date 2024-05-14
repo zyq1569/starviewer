@@ -36,11 +36,17 @@ bool PerfusionMapReconstructionExtensionMediator::initializeExtension(QWidget* e
         return false;
     }
 
-    Volume *input = extensionContext.getDefaultVolume();
-    if(!input)
+    //Volume *input = extensionContext.getDefaultVolume();
+	Volume * selVolume = QViewer::selectVolume();
+	Volume *input = selVolume ? selVolume : extensionContext.getDefaultVolumeNoLocalizer();
+    if (!input)
+    {
         QMessageBox::information(0,tr("Starviewer"), tr("The selected item is not an image"));
+    }
     else
+    {
         perfusionMapReconstructionExtension->setInput(input);
+    }
 
     return true;
 }

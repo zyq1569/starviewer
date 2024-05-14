@@ -260,34 +260,34 @@ void QApplicationMainWindow::createActions()
     connect(m_openDICOMDIRAction, &QAction::triggered, [this] { m_extensionHandler->request(8); });
 
     QStringList extensionsMediatorNames = ExtensionMediatorFactory::instance()->getFactoryIdentifiersList();
+    extensionsMediatorNames.removeAll("ExampleExtension");
+    extensionsMediatorNames.removeAll("RectumSegmentationExtension");
+    extensionsMediatorNames.removeAll("PerfusionMapReconstructionExtension");
     foreach(const QString &name, extensionsMediatorNames)
     {
         ///20200924 add   name == ???  delete other QAction-------------------------------------------------------------------------
         ///Comment out uncommon functions temporarily , keep follow  four QAction
-        if (name != "Example" || name != "Rectum Segmentation" || name != "Perfusion Map Reconstruction")// || name != "Q3DViewerExtension")
+        //if (name != "Example" || name != "Rectum Segmentation" || name != "Perfusion Map Reconstruction")// || name != "Q3DViewerExtension")
+        //{
+        ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create(name);
+        if (mediator)
         {
-            ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create(name);
-
-            if (mediator)
-            {
-                QAction *action = new QAction(this);
-                const DisplayableID &extensionId = mediator->getExtensionID();
-                QString lable = extensionId.getLabel();
-                action->setText(lable);
-                action->setStatusTip(tr("Open the %1 Application").arg(mediator->getExtensionID().getLabel()));
-                action->setEnabled(false);
-                //m_signalMapper->setMapping(action, mediator->getExtensionID().getID());
-                //connect(action, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
-                connect(action, &QAction::triggered, [=] { m_extensionHandler->request(extensionId.getID()); });
-                m_actionsList.append(action);
-                delete mediator;
-            }
-            else
-            {
-                ERROR_LOG("Error loading mediator from " + name);
-            }
+            QAction *action = new QAction(this);
+            const DisplayableID &extensionId = mediator->getExtensionID();
+            QString lable = extensionId.getLabel();
+            action->setText(lable);
+            action->setStatusTip(tr("Open the %1 Application").arg(mediator->getExtensionID().getLabel()));
+            action->setEnabled(false);
+            //m_signalMapper->setMapping(action, mediator->getExtensionID().getID());
+            //connect(action, SIGNAL(triggered()), m_signalMapper, SLOT(map()));
+            connect(action, &QAction::triggered, [=] { m_extensionHandler->request(extensionId.getID()); });
+            m_actionsList.append(action);
+            delete mediator;
         }
-
+        else
+        {
+            ERROR_LOG("Error loading mediator from " + name);
+        } //}
     }
 
     m_maximizeAction = new QAction(this);

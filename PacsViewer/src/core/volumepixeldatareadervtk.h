@@ -25,9 +25,7 @@ namespace udg {
  *  @brief The VolumePixelDataReaderVtk class uses only VTK to read volume pixel data.
  */
 class VolumePixelDataReaderVtk : public VolumePixelDataReader {
-
-    Q_OBJECT
-
+    //Q_OBJECT
 public:
     explicit VolumePixelDataReaderVtk(QObject *parent = nullptr);
     virtual ~VolumePixelDataReaderVtk();

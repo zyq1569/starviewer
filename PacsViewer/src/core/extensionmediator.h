@@ -34,7 +34,7 @@ A Mediator object is instantiated for each Extension object.
 \ TODO This whole scheme needs to be reviewed. It is now temporary to be able to separate in directories waiting for "New Design (tm)"
 */
 class ExtensionMediator : public QObject {
-    Q_OBJECT
+    //Q_OBJECT
 public:
     ExtensionMediator(QObject *parent = 0);
 

@@ -38,8 +38,8 @@ class Voxel;
 Class whose responsibility is to maintain the date pixel of a Volume.
 The date pixel of a volume is the memory location where the different voxel values of a Volume are stored.
 */
-class VolumePixelData : public QObject {
-    Q_OBJECT
+class VolumePixelData {
+
 public:
 
     ///Default internal image type of itk
@@ -49,7 +49,7 @@ public:
     typedef itk::Image<ItkPixelType, VDimension> ItkImageType;
     typedef ItkImageType::Pointer ItkImageTypePointer;
 
-    explicit VolumePixelData(QObject *parent = 0);
+    VolumePixelData();
 
     /// Assignem/Retornem les dades en format ITK
     void setData(ItkImageTypePointer itkImage);

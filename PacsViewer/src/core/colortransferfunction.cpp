@@ -103,6 +103,9 @@ vtkColorTransferFunction* ColorTransferFunction::vtkColorTransferFunction() cons
     while (it.hasNext())
     {
         it.next();
+		//double a, b, c, d;
+		//a = it.key(); b = it.value().redF(), c = it.value().greenF(), d = it.value().blueF();
+		//m_vtkColorTransferFunction->AddRGBPoint(a, b, c, d);
         m_vtkColorTransferFunction->AddRGBPoint(it.key(), it.value().redF(), it.value().greenF(), it.value().blueF());
     }
 

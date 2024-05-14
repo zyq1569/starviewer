@@ -93,7 +93,7 @@ int VolumePixelDataReaderITKGDCM::readMultipleFiles(const QStringList &filenames
     {
         m_seriesReader->Update();
     }
-    catch (itk::ProcessAborted)
+    catch (const itk::ProcessAborted&)
     {
         errorCode = ReadAborted;
     }
@@ -106,7 +106,7 @@ int VolumePixelDataReaderITKGDCM::readMultipleFiles(const QStringList &filenames
         // Llegim el missatge d'error per esbrinar de quin error es tracta
         errorCode = identifyErrorMessage(QString(e.GetDescription()));
     }
-    catch (std::bad_alloc)
+    catch (const std::bad_alloc&)
     {
         errorCode = OutOfMemory;
     }
@@ -161,31 +161,31 @@ int VolumePixelDataReaderITKGDCM::readSingleFile(const QString &fileName)
     {
         reader->Update();
     }
-    catch (itk::ProcessAborted)
+    catch (const itk::ProcessAborted&)
     {
         errorCode = ReadAborted;
     }
     catch (itk::ExceptionObject &e)
     {
-        WARN_LOG(QString("Excepció llegint l'arxiu [%1] Descripció: [%2]").arg(fileName).arg(e.GetDescription()));
-        DEBUG_LOG(QString("Excepció llegint l'arxiu [%1] Descripció: [%2]").arg(fileName).arg(e.GetDescription()));
-        // Llegim el missatge d'error per esbrinar de quin error es tracta
+        WARN_LOG(QString("Exception reading the file [%1] Description: [%2]").arg(fileName).arg(e.GetDescription()));
+        //DEBUG_LOG(QString("Exception reading the file [%1] Description: [%2]").arg(fileName).arg(e.GetDescription()));
+        //We read the error message to find out what the error is
         errorCode = identifyErrorMessage(QString(e.GetDescription()));
     }
-    catch (std::bad_alloc)
+    catch (const std::bad_alloc&)
     {
         errorCode = OutOfMemory;
     }
     catch (gdcm::Exception &e)
     {
-        WARN_LOG(QString("Excepció llegint l'arxiu [%1] Descripció: [%2]").arg(fileName).arg(e.GetDescription()));
-        DEBUG_LOG(QString("Excepció llegint l'arxiu [%1] Descripció: [%2]").arg(fileName).arg(e.GetDescription()));
+        WARN_LOG(QString("Exception reading the file  [%1] Description: [%2]").arg(fileName).arg(e.GetDescription()));
+        //DEBUG_LOG(QString("Exception reading the file [%1] Description: [%2]").arg(fileName).arg(e.GetDescription()));
         errorCode = identifyErrorMessage(QString(e.GetDescription()));;
     }
     catch (...)
     {
-        WARN_LOG(QString("Excepció desconeguda llegint l'arxiu [%1]").arg(fileName));
-        DEBUG_LOG(QString("Excepció desconeguda llegint l'arxiu [%1]").arg(fileName));
+        WARN_LOG(QString("Unknown exception reading the file [%1]").arg(fileName));
+        //DEBUG_LOG(QString("Unknown exception reading the file [%1]").arg(fileName));
         errorCode = UnknownError;
     }
 
@@ -197,9 +197,9 @@ int VolumePixelDataReaderITKGDCM::readSingleFile(const QString &fileName)
 
         case ZeroSpacingNotAllowed:
             errorCode = NoError;
-            // Assignem les dades llegides, aquesta excepció simplement és una mena de warning.
-            // En el cas del z-spacing 0 es pot deure a que la informació estigui "amagada" en una seqüència privada
-            // o que realment la imatge en sí­ només té sentit com a 2D i no 3D
+			//We assign the data read, this exception is simply a kind of warning.
+			//In the case of z - spacing 0 it may be because the information is "hidden" in a private sequence
+			//or that the image itself really only makes sense as 2D and not 3D
             setData(reader->GetOutput());
             checkZeroSpacingException();
             break;
@@ -216,8 +216,8 @@ void VolumePixelDataReaderITKGDCM::readDifferentSizeImagesIntoOneVolume(const QS
     // Declarem el filtre de tiling
     typedef itk::TileImageFilter<Volume::ItkImageType, Volume::ItkImageType> TileFilterType;
     TileFilterType::Pointer tileFilter = TileFilterType::New();
-    // Inicialitzem les seves variables
-    // El layout ens serveix per indicar cap on creix la cua. En aquest cas volem fer creixer la coordenada Z
+	//We initialize its variables
+	//The layout serves to indicate where the queue grows.In this case we want to grow the Z coordinate
     TileFilterType::LayoutArrayType layout;
     layout[0] = 1;
     layout[1] = 1;
@@ -242,30 +242,30 @@ void VolumePixelDataReaderITKGDCM::readDifferentSizeImagesIntoOneVolume(const QS
         }
         catch (itk::ExceptionObject &e)
         {
-            WARN_LOG(QString("Excepció llegint els arxius del directori [%1] Descripció: [%2]").arg(QFileInfo(filenames.at(0)).dir().path())
+            WARN_LOG(QString("Exception reading directory files [%1] Description: [%2]").arg(QFileInfo(filenames.at(0)).dir().path())
                         .arg(e.GetDescription()));
-            DEBUG_LOG(QString("Excepció llegint els arxius del directori [%1] Descripció: [%2]").arg(QFileInfo(filenames.at(0)).dir().path())
-                         .arg(e.GetDescription()));
+            //DEBUG_LOG(QString("Exception reading directory files [%1] Description: [%2]").arg(QFileInfo(filenames.at(0)).dir().path())
+            //             .arg(e.GetDescription()));
 
             // Llegim el missatge d'error per esbrinar de quin error es tracta
             errorCode = identifyErrorMessage(QString(e.GetDescription()));
         }
-        catch (std::bad_alloc)
+        catch (const std::bad_alloc&)
         {
             errorCode = OutOfMemory;
         }
         catch (gdcm::Exception &e)
         {
-            WARN_LOG(QString("Excepció llegint els arxius del directori [%1] Descripció: [%2]")
+            WARN_LOG(QString("Exception reading directory files[%1] Description: [%2]")
                 .arg(QFileInfo(filenames.at(0)).dir().path()).arg(e.GetDescription()));
-            DEBUG_LOG(QString("Excepció llegint els arxius del directori [%1] Descripció: [%2]")
-                .arg(QFileInfo(filenames.at(0)).dir().path()).arg(e.GetDescription()));
+            //DEBUG_LOG(QString("Exception reading directory files [%1] Description: [%2]")
+            //    .arg(QFileInfo(filenames.at(0)).dir().path()).arg(e.GetDescription()));
             errorCode = identifyErrorMessage(QString(e.GetDescription()));;
         }
         catch (...)
         {
-            WARN_LOG(QString("Excepció desconeguda llegint els arxius del directori [%1]").arg(QFileInfo(filenames.at(0)).dir().path()));
-            DEBUG_LOG(QString("Excepció desconeguda els arxius del directori [%1]").arg(QFileInfo(filenames.at(0)).dir().path()));
+            WARN_LOG(QString("Unknown exception by reading the directory files [%1]").arg(QFileInfo(filenames.at(0)).dir().path()));
+            //DEBUG_LOG(QString("Unknown exception by reading the directory files[%1]").arg(QFileInfo(filenames.at(0)).dir().path()));
             errorCode = UnknownError;
         }
         
