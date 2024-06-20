@@ -202,7 +202,8 @@
         <string>Remove Bed</string>
        </property>
        <property name="icon">
-        <iconset theme="removebed"/>
+        <iconset >
+		<normaloff>:/images/icons/removebed.svg</normaloff>:/images/icons/removebed.svg</iconset>
        </property>
        <property name="iconSize">
         <size>

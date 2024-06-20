@@ -77,6 +77,8 @@ private:
     void disableAutoUpdate();
 
 private slots:
+    void removeBed();
+private slots:
     void render();
     void loadClut();
     void saveClut();
@@ -113,6 +115,9 @@ private:
 
     /// Timer used to make quality renderings after a quick render.
     QTimer *m_timer;
+
+    //
+    bool m_firstRemoveBed;
 };
 
 } // end namespace udg

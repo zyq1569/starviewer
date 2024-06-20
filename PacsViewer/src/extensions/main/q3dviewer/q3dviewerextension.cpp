@@ -29,6 +29,7 @@
 #include <QTimer>
 // Vtk
 #include <vtkImageData.h>
+#include <vtkImageThreshold.h>
 // Actualització ràpida
 #include <vtkRenderWindow.h>
 // Actualització ràpida
@@ -60,6 +61,8 @@ Q3DViewerExtension::Q3DViewerExtension(QWidget *parent)
     m_screenshotsExporterToolButton->setToolTip(tr("Export viewer image to DICOM and send it to a PACS server"));
     m_customStyleToolButton->setToolTip(tr("Show/Hide advanced colour options"));
     setWindowTitle("Q3DViewerExtension");
+
+    m_firstRemoveBed = false;
 }
 
 Q3DViewerExtension::~Q3DViewerExtension()
@@ -77,7 +80,11 @@ void Q3DViewerExtension::initializeTools()
     m_rotate3DToolButton->setDefaultAction(m_toolManager->registerTool("Rotate3DTool"));
     m_windowLevelToolButton->setDefaultAction(m_toolManager->registerTool("WindowLevelTool"));
     m_toolManager->registerTool("TranslateTool");
-    m_clippingBoxToolButton->setDefaultAction(m_toolManager->registerTool("ClippingPlanesTool"));
+    m_clippingBoxToolButton->setDefaultAction(m_toolManager->registerTool("ClippingPlanesTool"));   
+    //m_removeBed->setDefaultAction(m_toolManager->registerTool("ClippingPlanesTool"));
+    m_removeBed->setText("Remove Bed");
+    m_removeBed->setToolTip("Auto Remove Bed");
+
     m_toolManager->registerTool("ScreenShotTool");
     m_screenShotToolButton->setToolTip(m_toolManager->getRegisteredToolAction("ScreenShotTool")->toolTip());
 
@@ -102,6 +109,7 @@ void Q3DViewerExtension::initializeTools()
     //Let's make a screen shot when the button is clicked
     ScreenShotTool *screenShotTool = dynamic_cast<ScreenShotTool*>(m_3DView->getToolProxy()->getTool("ScreenShotTool"));
     connect(m_screenShotToolButton, SIGNAL(clicked()), screenShotTool, SLOT(singleCapture()));
+    connect(m_removeBed, SIGNAL(clicked()), this, SLOT(removeBed()));
 }
 
 void Q3DViewerExtension::loadClutPresets()
@@ -320,6 +328,26 @@ void Q3DViewerExtension::createConnections()
 
     //To display export
     connect(m_screenshotsExporterToolButton, SIGNAL(clicked()), SLOT(showScreenshotsExporterDialog()));
+}
+
+void Q3DViewerExtension::removeBed()
+{
+    if (m_firstRemoveBed)
+    {
+        return;//only first;
+    }
+    vtkImageData* vtkdata = m_input->getVtkData();
+    vtkImageThreshold* threshold = vtkImageThreshold::New();
+    threshold->SetInputData(vtkdata);
+    threshold->ThresholdBetween(-500,500); // Adjust the threshold value based on your data
+    threshold->ReplaceInOn();
+    threshold->SetInValue(0); // Set the value of the bed pixels to 0
+    threshold->Update();
+    vtkdata->DeepCopy(threshold->GetOutput());
+
+    m_3DView->getRenderWindow()->Render();
+    threshold->Delete();
+    m_firstRemoveBed = true;
 }
 
 void Q3DViewerExtension::setInput(Volume *input)
