@@ -63,6 +63,7 @@ Q3DViewerExtension::Q3DViewerExtension(QWidget *parent)
     setWindowTitle("Q3DViewerExtension");
 
     m_firstRemoveBed = false;
+    m_saveVtkdata = NULL;
 }
 
 Q3DViewerExtension::~Q3DViewerExtension()
@@ -70,6 +71,11 @@ Q3DViewerExtension::~Q3DViewerExtension()
     // What we want to do here is force all tools first before deleting the viewer
     // EVERYTHING might need to refactor the name of this method or create one for this task
     m_toolManager->disableAllToolsTemporarily();
+
+    if (m_saveVtkdata)
+    {
+        m_saveVtkdata->Delete();
+    }
 }
 
 void Q3DViewerExtension::initializeTools()
@@ -336,15 +342,20 @@ void Q3DViewerExtension::removeBed()
     {
         return;//only first;
     }
-    vtkImageData* vtkdata = m_input->getVtkData();
+    if (!m_saveVtkdata)
+    {
+        m_saveVtkdata = vtkImageData::New();
+    }
+    vtkImageData *data = m_input->getVtkData();
     vtkImageThreshold* threshold = vtkImageThreshold::New();
-    threshold->SetInputData(vtkdata);
+    threshold->SetInputData(data);
     threshold->ThresholdBetween(-500,500); // Adjust the threshold value based on your data
     threshold->ReplaceInOn();
-    threshold->SetInValue(0); // Set the value of the bed pixels to 0
+    threshold->SetInValue(0); // Set the value of the bed pixels to 0 Bitter@2live
     threshold->Update();
-    vtkdata->DeepCopy(threshold->GetOutput());
+    m_saveVtkdata->DeepCopy(threshold->GetOutput());
 
+    m_3DView->changevtkImageData(m_saveVtkdata);
     m_3DView->getRenderWindow()->Render();
     threshold->Delete();
     m_firstRemoveBed = true;

@@ -118,6 +118,7 @@ private:
 
     //
     bool m_firstRemoveBed;
+    vtkImageData *m_saveVtkdata;
 };
 
 } // end namespace udg
