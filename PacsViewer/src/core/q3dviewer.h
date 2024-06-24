@@ -68,6 +68,8 @@ public:
     vtkPlanes* getClippingPlanes() const;
 
 	Volume* getMainInput() const override;
+
+    void changevtkImageData(vtkImageData *data);
 public slots:
     void setInput(Volume* volume) override;
 

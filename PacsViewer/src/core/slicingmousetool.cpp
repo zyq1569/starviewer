@@ -48,13 +48,13 @@ void SlicingMouseTool::handleEvent(unsigned long eventID)
     {
         // To Qt device independant pixels
         QPoint position = m_2DViewer->getEventPosition() / m_2DViewer->devicePixelRatioF();
-        onMousePress(position);
+        //onMousePress(position);
     }
     else if (eventID == vtkCommand::LeftButtonReleaseEvent || eventID == vtkCommand::RightButtonReleaseEvent)
     {
         // To Qt device independant pixels
         QPoint position = m_2DViewer->getEventPosition() / m_2DViewer->devicePixelRatioF();
-        onMouseRelease(position);
+        //onMouseRelease(position);
     }
     else if (eventID == vtkCommand::MouseMoveEvent)
     {
@@ -90,9 +90,9 @@ void SlicingMouseTool::reassignAxes()
 void SlicingMouseTool::readConfiguration()
 {
     Settings settings;
-    m_config.sliceScrollLoop = settings.getValue(CoreSettings::EnableQ2DViewerSliceScrollLoop).toBool();;
-    m_config.phaseScrollLoop = settings.getValue(CoreSettings::EnableQ2DViewerPhaseScrollLoop).toBool();;
-    m_config.wraparound = settings.getValue(CoreSettings::EnableQ2DViewerMouseWraparound).toBool();;
+    m_config.sliceScrollLoop = settings.getValue(CoreSettings::EnableQ2DViewerSliceScrollLoop).toBool();
+    m_config.phaseScrollLoop = settings.getValue(CoreSettings::EnableQ2DViewerPhaseScrollLoop).toBool();
+    m_config.wraparound = settings.getValue(CoreSettings::EnableQ2DViewerMouseWraparound).toBool();
 }
 
 void SlicingMouseTool::onMousePress(const QPoint &position)
@@ -383,7 +383,8 @@ void SlicingMouseTool::beginScroll(const QPoint& startPosition)
     }
     
     // Step lenght determined by the viewer size.
-    {
+    /*
+	{
         unsigned int windowLength = std::max(1, m_currentDirection == Direction::Horizontal ? m_2DViewer->size().width() : m_2DViewer->size().height()); // Always greater than zero
         unsigned int rangeSize = std::max(1.0, getRangeSize(axis)); // Always greater than zero
         
@@ -396,7 +397,15 @@ void SlicingMouseTool::beginScroll(const QPoint& startPosition)
         {
             m_stepLength = DefaultMinimumStepLength;
         }
-    }
+    }	
+	*/
+	// Step length determined by the viewer size.
+	{
+		// Window length and range size always greater than zero
+		int windowLength = std::max(1, m_currentDirection == Direction::Horizontal ? m_2DViewer->size().width() : m_2DViewer->size().height());
+		double rangeSize = std::max(1.0, getRangeSize(axis));
+		m_stepLength = qBound<double>(DefaultMinimumStepLength, windowLength / rangeSize, DefaultMaximumStepLength);
+	}
 }
 
 SlicingMouseTool::Direction SlicingMouseTool::directionDetection(const QPoint& currentPosition) const

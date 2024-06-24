@@ -149,6 +149,13 @@ vtkPlanes* Q3DViewer::getClippingPlanes() const
     return m_clippingPlanes;
 }
 
+void  Q3DViewer::changevtkImageData(vtkImageData *data)
+{
+    m_volumeMapper->SetInputData(data);
+
+    m_isosurfaceFilter->SetInputData(data);
+}
+
 void Q3DViewer::setInput(Volume *volume)
 {
     setCursor(Qt::WaitCursor);
