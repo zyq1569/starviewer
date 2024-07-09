@@ -184,12 +184,9 @@ Q2DViewerExtension::Q2DViewerExtension(QWidget *parent)
     m_transferFunctionComboBox->view()->setTextElideMode(Qt::ElideRight);
     m_transferFunctionComboBox->view()->setMinimumWidth(MinimumComboBoxViewWidth);
 
-    //m_3D->setText("3D-Viewer");
+    //20240708
     m_3D->setToolTip("3D-Viewer");
-
-    //m_MPR->setText("MPR2D");
     m_MPR->setToolTip("MPR2D-Viewer");
-
     connect(m_3D, SIGNAL(clicked()), SLOT(start3DViewer()));
     connect(m_MPR, SIGNAL(clicked()), SLOT(startMPR2DViewer()));
 }
