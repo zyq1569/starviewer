@@ -41,6 +41,7 @@ class TableMenu;
 class QDICOMDumpBrowser;
 class StatsWatcher;
 class LayoutManager;
+class ExtensionHandler;
 
 #ifndef STARVIEWER_LITE
 class QRelatedStudiesWidget;
@@ -280,6 +281,10 @@ private:
 public:
     void  updateQ2DViewer(Volume* volume);
 
+    ExtensionHandler *m_extensionHandler;
+private slots:
+    void start3DViewer();
+    void startMPR2DViewer();
 };
 
 } // end namespace udg
