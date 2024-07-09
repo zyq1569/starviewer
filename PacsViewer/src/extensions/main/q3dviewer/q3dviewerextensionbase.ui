@@ -121,6 +121,9 @@
          <property name="checkable">
           <bool>true</bool>
          </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
          <property name="toolButtonStyle">
           <enum>Qt::ToolButtonTextUnderIcon</enum>
          </property>
@@ -202,8 +205,8 @@
         <string>Remove Bed</string>
        </property>
        <property name="icon">
-        <iconset >
-		<normaloff>:/images/icons/removebed.svg</normaloff>:/images/icons/removebed.svg</iconset>
+        <iconset>
+         <normaloff>:/images/icons/removebed.svg</normaloff>:/images/icons/removebed.svg</iconset>
        </property>
        <property name="iconSize">
         <size>
