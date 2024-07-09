@@ -70,7 +70,7 @@ void Q2DViewerExtensionMediator::viewNewStudiesFromSamePatient(QWidget *extensio
 }
 
 //---20200919---add-----------------------------------------------------------------------------------------------
-void Q2DViewerExtensionMediator::executionCommand(QWidget *extension, Volume* volume, int command)
+void Q2DViewerExtensionMediator::executionCommand(QWidget *extension, Volume* volume, void *data , int command )
 {
     Q2DViewerExtension *q2dviewerExtension;
 
@@ -78,7 +78,10 @@ void Q2DViewerExtensionMediator::executionCommand(QWidget *extension, Volume* vo
     {
         return;
     }
-
+    if (data != NULL)
+    {
+        q2dviewerExtension->m_extensionHandler = (ExtensionHandler *)data;
+    }
     q2dviewerExtension->updateQ2DViewer(volume);
 }
 

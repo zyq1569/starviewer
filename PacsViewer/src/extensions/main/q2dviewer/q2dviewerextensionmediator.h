@@ -22,7 +22,6 @@
 
 namespace udg {
 class Volume;
-
 class Q2DViewerExtensionMediator : public ExtensionMediator {
 //Q_OBJECT
 public:
@@ -37,8 +36,7 @@ public:
     virtual void viewNewStudiesFromSamePatient(QWidget *extension, const QString &newStudyUID);
 
     //---20200919---add--------------------------------------------------------------
-    virtual void executionCommand(QWidget *extension,Volume* volume,int command=0);
-
+    virtual void executionCommand(QWidget *extension, Volume* volume, void *data = NULL, int command = 0);
 };
 
 static InstallExtension<Q2DViewerExtension, Q2DViewerExtensionMediator> registerQ2DViewerExtension;

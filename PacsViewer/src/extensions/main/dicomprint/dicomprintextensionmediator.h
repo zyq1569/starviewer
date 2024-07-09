@@ -35,7 +35,7 @@ public:
     virtual DisplayableID getExtensionID() const;
 
     //---20200919---add
-    virtual void executionCommand(QWidget *extension,Volume* volume, int command=0)
+    virtual void executionCommand(QWidget *extension, Volume* volume, void *data = NULL, int command = 0)
     {
 
     }

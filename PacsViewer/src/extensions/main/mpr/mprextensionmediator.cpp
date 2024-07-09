@@ -18,7 +18,8 @@
 
 // QT
 #include <QMessageBox>
-
+//MPR-3D https://blog.csdn.net/seugxf/article/details/105201516
+//https://blog.csdn.net/weixin_38500110/article/details/78807196
 namespace udg {
 
 MPRExtensionMediator::MPRExtensionMediator(QObject *parent)
@@ -44,9 +45,9 @@ bool MPRExtensionMediator::initializeExtension(QWidget *extension, const Extensi
         return false;
     }
 
-    //Volume *input = extensionContext.getDefaultVolume();
-	Volume * selVolume = QViewer::selectVolume();
-	Volume *input = selVolume ? selVolume : extensionContext.getDefaultVolumeNoLocalizer();
+    Volume *input = extensionContext.getDefaultVolume();
+	//Volume * selVolume = QViewer::selectVolume();
+	//Volume *input = selVolume ? selVolume : extensionContext.getDefaultVolumeNoLocalizer();
     if (!input)
     {
         QMessageBox::information(0, tr("Starviewer"), tr("The selected item is not an image"));
