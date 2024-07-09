@@ -35,7 +35,7 @@ public:
     virtual bool initializeExtension(QWidget *extension, const ExtensionContext &extensionContext);
 
     //---20200919---add
-    virtual void executionCommand(QWidget *extension,Volume* volume, int command=0);
+    virtual void executionCommand(QWidget *extension, Volume* volume, void *data = NULL, int command = 0);
 };
 
 static InstallExtension<Q3DViewerExtension, Q3DViewerExtensionMediator> registerQ3DViewerExtensionMediator;
