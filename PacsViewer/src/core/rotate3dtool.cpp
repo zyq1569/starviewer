@@ -43,7 +43,11 @@ void Rotate3DTool::handleEvent(unsigned long eventID)
 {
     switch (eventID)
     {
-        case vtkCommand::RightButtonPressEvent:
+ //       case vtkCommand::RightButtonPressEvent:
+ //           this->startRotate3D();
+ //           break;
+
+        case vtkCommand::LeftButtonPressEvent:
             this->startRotate3D();
             break;
 
@@ -51,7 +55,11 @@ void Rotate3DTool::handleEvent(unsigned long eventID)
             this->doRotate3D();
             break;
 
-        case vtkCommand::RightButtonReleaseEvent:
+//       case vtkCommand::RightButtonReleaseEvent:
+//           this->endRotate3D();
+//           break;
+
+        case vtkCommand::LeftButtonReleaseEvent:
             this->endRotate3D();
             break;
 
