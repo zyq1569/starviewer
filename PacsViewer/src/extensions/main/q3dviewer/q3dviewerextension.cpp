@@ -101,7 +101,7 @@ void Q3DViewerExtension::initializeTools()
 
     // We activate the tools we want to have by default, this is as if we clicked on each of the ToolButton
     QStringList defaultTools;
-    defaultTools << "ZoomTool" << "TranslateTool" << "Rotate3DTool" << "ScreenShotTool";
+    defaultTools << "WindowLevelTool"  << "TranslateTool" << "Rotate3DTool" << "ScreenShotTool";
     m_toolManager->triggerTools(defaultTools);
 
     // We register to the manager the tools that go with the main viewer
@@ -109,8 +109,8 @@ void Q3DViewerExtension::initializeTools()
     m_toolManager->enableRegisteredActionTools(m_3DView);
 
     QStringList rightButtonExclusiveTools;
-    rightButtonExclusiveTools << "Rotate3DTool" << "WindowLevelTool";
-    m_toolManager->addExclusiveToolsGroup("RightButtonGroup", rightButtonExclusiveTools);
+    rightButtonExclusiveTools << "Rotate3DTool"<< "ZoomTool";
+    m_toolManager->addExclusiveToolsGroup("LeftButtonGroup", rightButtonExclusiveTools);
 
     //Let's make a screen shot when the button is clicked
     ScreenShotTool *screenShotTool = dynamic_cast<ScreenShotTool*>(m_3DView->getToolProxy()->getTool("ScreenShotTool"));
