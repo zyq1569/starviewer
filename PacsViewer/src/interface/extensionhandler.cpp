@@ -44,6 +44,7 @@
 #include "hmanagethread.h"
 
 ///
+#include <QLocalSocket>
 #include <QLocalServer>
 
 ///
@@ -221,6 +222,11 @@ bool ExtensionHandler::createExtension(const QString &who)
         if (extension)
         {
             INFO_LOG("Activate extension: " + who);
+            if ("Q2DViewerExtension" == who)
+            {
+                //(Q2DViewerExtension*)extension->m_extensionHandler = this;
+                mediator->executionCommand(extension, NULL, this, 0);
+            }
             mediator->initializeExtension(extension, m_extensionContext);
             m_mainApp->getExtensionWorkspace()->addApplication(extension, requestedExtensionLabel, who);
 
@@ -736,12 +742,12 @@ void ExtensionHandler::socketDisconnect()
     INFO_LOG("Disconnected");
 }
 
-void ExtensionHandler::socketError(QLocalSocket::LocalSocketError socketError)
+void ExtensionHandler::socketError(/*QLocalSocket::LocalSocketError*/int socketError)
 {
     INFO_LOG("socketError");
 }
 
-void ExtensionHandler::socketStateChanged(QLocalSocket::LocalSocketState socketState)
+void ExtensionHandler::socketStateChanged(/*QLocalSocket::LocalSocketState*/int socketState)
 {
     INFO_LOG("socketStateChanged");
 }

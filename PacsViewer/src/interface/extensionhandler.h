@@ -19,11 +19,12 @@
 #include <QString>
 #include <QList>
 #include <QMutex>
-#include <QLocalSocket>
 
 
 class QLocalServer;
 class HttpClient;
+class QLocalSocket;
+
 
 #include "extensioncontext.h"
 #include "appimportfile.h"
@@ -34,9 +35,9 @@ class HttpClient;
 
 namespace udg
 {
-
 // Fordward Declarations
 class QApplicationMainWindow;
+
 /**
    Manager of mini-applications and services of the main application
 */
@@ -75,9 +76,10 @@ public slots:
     void readFromServer(int fd);
     void socketConnect();
     void socketDisconnect();
-    void socketError(QLocalSocket::LocalSocketError socketError);
-    void socketStateChanged(QLocalSocket::LocalSocketState socketState);
-
+    //void socketError(QLocalSocket::LocalSocketError socketError);
+    //void socketStateChanged(QLocalSocket::LocalSocketState socketState);
+    void socketError(int socketError);
+    void socketStateChanged(int socketState);
 private slots:
     ///20201206 add
     /// Processes a set of httpServer input files and processes them to decide what to do with them, such as
