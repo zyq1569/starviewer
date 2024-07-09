@@ -115,7 +115,7 @@
         <file>images/icons/adjustrgb.svg</file>
         <file>images/icons/draw-erase-all.svg</file>
         <file>images/icons/node.svg</file>
-		<file>images/icons/removebed.svg</file>
+        <file>images/icons/removebed.svg</file>
         <file>images/icons/pencil.svg</file>
         <file>images/icons/roi.svg</file>
         <file>images/icons/seed.svg</file>
@@ -221,5 +221,7 @@
         <file>images/icons/tools-media-optical-burn.svg</file>
         <file>images/icons/send-dicom.svg</file>
         <file>images/icons/kmag.svg</file>
+        <file>images/icons/MPR-2D.svg</file>
+        <file>images/icons/3D.svg</file>
     </qresource>
 </RCC>
