@@ -201,6 +201,9 @@
      </item>
      <item>
       <widget class="QToolButton" name="m_removeBed">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Remove Bed</string>
        </property>

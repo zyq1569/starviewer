@@ -116,6 +116,7 @@ void Q3DViewerExtension::initializeTools()
     ScreenShotTool *screenShotTool = dynamic_cast<ScreenShotTool*>(m_3DView->getToolProxy()->getTool("ScreenShotTool"));
     connect(m_screenShotToolButton, SIGNAL(clicked()), screenShotTool, SLOT(singleCapture()));
     connect(m_removeBed, SIGNAL(clicked()), this, SLOT(removeBed()));
+    m_removeBed->hide();
 }
 
 void Q3DViewerExtension::loadClutPresets()
