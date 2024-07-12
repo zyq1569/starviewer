@@ -902,12 +902,15 @@ void QApplicationMainWindow::closeCurrentPatient()
 		m_DockImageThumbnail->mainAppclearThumbnail();
 
 		this->killBill();
-		/*
+        this->setWindowTitle("NULL");
+        //m_patient->setID("NULL");
+        //m_patient->setFullName("NULL");
 		if (m_patient)
 		{
-			m_patient->clearAllStudy();
+			//m_patient->clearAllStudy();
+            delete m_patient;
+            m_patient = NULL;
 		}		
-		*/
 		
 	}
 }
