@@ -915,6 +915,46 @@
       </layout>
      </item>
      <item>
+      <widget class="QToolButton" name="m_3D">
+       <property name="text">
+        <string>3D</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>:/images/icons/3D.svg</normaloff>:/images/icons/3D.svg</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="m_MPR">
+       <property name="text">
+        <string>MPR</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>:/images/icons/MPR-2D.svg</normaloff>:/images/icons/MPR-2D.svg</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
