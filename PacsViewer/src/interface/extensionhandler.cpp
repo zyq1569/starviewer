@@ -758,4 +758,13 @@ void ExtensionHandler::readFromServer(int fd)
     INFO_LOG("readFromServer");
 }
 
+void  ExtensionHandler::closeCurrentPatient()
+{
+    if (m_mainApp)
+    {
+       m_mainApp->closePatient();
+    }
+
+}
+
 }   // end namespace udg

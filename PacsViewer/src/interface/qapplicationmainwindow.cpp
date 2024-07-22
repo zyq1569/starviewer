@@ -880,6 +880,22 @@ void QApplicationMainWindow::addPatientsThumbnail(QList<Patient*> patientsList)
     m_DockImageThumbnail->addPatientsThumbmailList(patientsList);
 }
 
+void QApplicationMainWindow::closePatient()
+{
+    if (m_DockImageThumbnail)
+    {
+        m_DockImageThumbnail->mainAppclearThumbnail();
+    }
+    this->killBill();
+    this->setWindowTitle("NULL");
+    if (m_patient)
+    {
+        m_patient->clearAllStudy();
+        delete m_patient;
+        m_patient = NULL;
+    }
+}
+
 //ExtensionHandler* QApplicationMainWindow::getExtensionHandler()
 //{
 //    return  m_extensionHandler;

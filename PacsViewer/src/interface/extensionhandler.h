@@ -151,6 +151,8 @@ private:
     ///Mutex to avoid concurrent access to the patient comparer singleton.
     QMutex m_patientComparerMutex;
 
+ public:
+    void closeCurrentPatient();
 };
 
 };  // end namespace udg

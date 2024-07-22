@@ -269,6 +269,8 @@ public:
     void addPatientsThumbnail(QList<Patient*> patientsList);
     //ExtensionHandler *getExtensionHandler();
     //----------------------------------------------------------------
+    //20240715
+    void closePatient();
 public:
     void clearImageThumbnailDockWidget();
     QWidget *currentWidgetOfExtensionWorkspace();
