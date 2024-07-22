@@ -123,7 +123,7 @@ void SlicingKeyboardTool::processAccumulation()
     bool configSliceScrollLoop = settings.getValue(CoreSettings::EnableQ2DViewerSliceScrollLoop).toBool();
     bool configPhaseScrollLoop = settings.getValue(CoreSettings::EnableQ2DViewerPhaseScrollLoop).toBool();
     
-    int upDown = m_keyAccumulator.up - m_keyAccumulator.down;
+    int upDown = -(m_keyAccumulator.up - m_keyAccumulator.down);//20240724
     int rightLeft = m_keyAccumulator.right - m_keyAccumulator.left;
     int plusMinus = m_keyAccumulator.plus - m_keyAccumulator.minus;
     
