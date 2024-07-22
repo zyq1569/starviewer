@@ -93,6 +93,11 @@ Q2DViewerWidget::Q2DViewerWidget(QWidget *parent)
 
 Q2DViewerWidget::~Q2DViewerWidget()
 {
+    //20240717
+    delete m_statsWatcher;
+    delete m_fusionBalanceWidget;
+    delete m_synchronizeButtonAction;
+    delete m_fusionLayoutWidget;
 }
 
 void Q2DViewerWidget::updateViewerSliceAccordingToSliderAction(int action)

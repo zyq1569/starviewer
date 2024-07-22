@@ -214,6 +214,17 @@ Q2DViewerExtension::~Q2DViewerExtension()
     delete m_hangingProtocolsMenu;
     delete m_viewersLayoutGrid;
     delete m_dicomDumpCurrentDisplayedImage;
+
+    //2024 07 15
+    if (m_extensionHandler)
+    {
+        m_extensionHandler->closeCurrentPatient();
+    }
+    //2024 07 16
+    delete m_emptyTransferFunctionModel;
+    delete m_statsWatcher;
+    delete m_layoutToSyncActionManagerAdapter;
+    delete m_syncActionManager;
 }
 
 void Q2DViewerExtension::createConnections()
