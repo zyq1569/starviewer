@@ -54,13 +54,15 @@ SlicingWheelTool::~SlicingWheelTool()
 
 void SlicingWheelTool::handleEvent(unsigned long eventID)
 {
+    //20240724
+    int delta = -m_2DViewer->getWheelAngleDelta().y();
     if (eventID == vtkCommand::MouseWheelForwardEvent)
     {
-        onWheelMoved(m_2DViewer->getWheelAngleDelta().y());
+        onWheelMoved(delta);
     }
     else if (eventID == vtkCommand::MouseWheelBackwardEvent)
     {
-        onWheelMoved(m_2DViewer->getWheelAngleDelta().y());
+        onWheelMoved(delta);
     }
     else if (eventID == vtkCommand::MiddleButtonPressEvent)
     {
