@@ -57,7 +57,7 @@ addLibraryDependency($$PWD/../thirdparty,$$OUT_PWD/../../bin, breakpad)
 #LIBS += -L$${outputDirectory} \
 #        -breakpad
 
-#INCLUDEPATH += $$PWD/../thirdparty/breakpad
+INCLUDEPATH += $$PWD/../thirdparty/qtsingleapplication/src
 
 # --------------------include  lib
 include(../corelibsconfiguration.pri)
