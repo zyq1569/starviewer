@@ -324,7 +324,7 @@ int main(int argc, char *argv[])
     return returnValue;
 }
 
-
+//xcopy D:\SDK\threadweaver-5.46.0_vc17\*.h /s D:\SDK\threadweaver-5.46.0_vc17_include
 //InsightToolkit-5.0.1\Modules\ThirdParty\KWSys\src\KWSys
 ///EncodingCXX.cxx -->>std::wstring Encoding::ToWide(const std::string& str)
 ///std::wstring Encoding::ToWide(const std::string& str)
