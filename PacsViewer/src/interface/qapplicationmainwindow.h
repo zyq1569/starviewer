@@ -196,6 +196,8 @@ private slots:
 
 //add slot
 	void closeCurrentPatient();
+
+	void showhideDockImage();
 private:
     ///The mini-applications area
     ExtensionWorkspace *m_extensionWorkspace;

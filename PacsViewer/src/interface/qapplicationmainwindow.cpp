@@ -67,6 +67,7 @@
 #include <QPair>
 #include <QWidgetAction>
 #include <QShortcut>
+#include <QToolBar>
 /////////
 #include <QSplitter>
 #include <QDesktopWidget>
@@ -141,9 +142,39 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 
     m_logViewer = new QLogViewer(this);
 
-    createActions();
-    createMenus();
+	//20240729
+    //createActions();
+    //createMenus();
 
+	//add toolbar
+	QToolBar *toolbar = new QToolBar(this);
+	this->addToolBar(Qt::TopToolBarArea, toolbar);
+	toolbar->setIconSize(QSize(30, 30));
+	toolbar->layout()->setSpacing(10);
+	toolbar->setFloatable(false);
+	toolbar->setMovable(false);
+	toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+
+	QAction *actionHide = new QAction(QIcon(":/images/showhide.png"), "show or hide Thumbnail ...", this);
+	toolbar->addAction(actionHide);
+	connect(actionHide, SIGNAL(triggered()), SLOT(showhideDockImage()));//Open an existing DICOM folder
+
+    QAction *actionFile = new QAction(QIcon(":/images/folderopen.png"), "Open Files from a Directory...", this);
+	toolbar->addAction(actionFile);
+	connect(actionFile, &QAction::triggered, [this] { m_extensionHandler->request(6); });//Open an existing DICOM folder
+
+	QAction *action3D = new QAction(QIcon(":/images/icons/3D.svg"), "3D Viewer", this);
+	toolbar->addAction(action3D);
+	connect(action3D, &QAction::triggered, [this] { m_extensionHandler->request("Q3DViewerExtension"); });
+
+	QAction *actionMPR = new QAction(QIcon(":/images/icons/MPR-2D.svg"), "MPR-2D Viewer", this);
+	toolbar->addAction(actionMPR);
+	connect(actionMPR, &QAction::triggered, [this] { m_extensionHandler->request("MPRExtension"); });
+
+	//m_extensionHandler->request("Q3DViewerExtension");
+
+	//m_extensionHandler->request("MPRExtension");
+	//---------------------------------------------------------------------------------------------------
     // We read the application settings, window status, position, etc.
     readSettings();
     // Application icon
@@ -931,5 +962,20 @@ void QApplicationMainWindow::closeCurrentPatient()
 	}
 }
 ///------------------------------------------------------------------------------------------------------------
+
+void QApplicationMainWindow::showhideDockImage()
+{
+	static bool flag = true;
+	if (flag)
+	{
+		m_DockImageThumbnail->hide();
+		flag = false;
+	}
+	else
+	{
+		m_DockImageThumbnail->show();
+		flag = true;
+	}
+}
 
 } // end namespace udg
