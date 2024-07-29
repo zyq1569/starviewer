@@ -250,13 +250,18 @@ bool ExtensionHandler::createExtension(const QString &who)
 }
 bool ExtensionHandler::request(const QString &who)
 {
+	if (!m_mainApp->getCurrentPatient())
+	{
+		return true;
+	}
+
 	if (who == "Q3DViewerExtension")
 	{
 		Volume * selVolume = QViewer::selectVolume();		
 		Volume *volume = selVolume ? selVolume: m_extensionContext.getDefaultVolumeNoLocalizer();
 		if (!volume)
 		{
-			QMessageBox::warning(0, "3D-Viewer", ("3D-Viewer fail!!! No image is selected!!"));
+			QMessageBox::warning(0, "3D-Viewer", ("3D-Viewer: No image is selected!!"));
 			//QMessageBox::information(0, tr("Starviewer"), tr("The selected item is not an image"));
 			return true;
 		}
@@ -272,7 +277,7 @@ bool ExtensionHandler::request(const QString &who)
 		Volume *volume = selVolume ? selVolume : m_extensionContext.getDefaultVolumeNoLocalizer();
 		if (!volume)
 		{
-			QMessageBox::warning(0, "MPR-2DViewer", ("MPR-2D fail!!! No image is selected!!"));
+			QMessageBox::warning(0, "MPR-2DViewer", ("MPR-2D fail: No image is selected!!"));
 			return true;
 		}
 		if (volume->getNumberOfSlicesPerPhase() < 5)
