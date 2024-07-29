@@ -223,5 +223,7 @@
         <file>images/icons/kmag.svg</file>
         <file>images/icons/MPR-2D.svg</file>
         <file>images/icons/3D.svg</file>
+        <file>images/folderopen.png</file>
+        <file>images/showhide.png</file>
     </qresource>
 </RCC>
