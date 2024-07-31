@@ -3,7 +3,7 @@
 
 <svg
    version="1.1"
-   id="svg9"
+   id="svg133"
    width="32"
    height="32"
    viewBox="0 0 32 32"
@@ -15,9 +15,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs13" />
+     id="defs137" />
   <sodipodi:namedview
-     id="namedview11"
+     id="namedview135"
      pagecolor="#505050"
      bordercolor="#eeeeee"
      borderopacity="1"
@@ -34,21 +34,21 @@
      inkscape:window-x="1358"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g15" />
+     inkscape:current-layer="g139" />
   <g
      inkscape:groupmode="layer"
      inkscape:label="Image"
-     id="g15">
+     id="g139">
     <image
        width="32"
        height="32"
        preserveAspectRatio="none"
-       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAL5JREFU
-WIXlVdsOQyEIK8v+/5fZ486IR6UUl2x9M1xaARH4d1jS3w9yyci9ECshr8RLyEsCFOR0HhU5lUtJ
-ns6nJp/anjeOjAjqnUcBbCJ6yh9soApfFzBqwQf8Ul4L7fGwbKKdgYdD6XyX94ppC7I3MsAmIvIC
-TmA5A8C7tIoeR2xVwABjyisT0ImpgOyNnXiK0xmIZR8lX9mzOPoTAv0z4FhUpVPAkrxTwBZ5l4Bt
-8g4BKXIMnKubTr6qfx8viR4/D1kvJroAAAAASUVORK5CYII=
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAANBJREFU
+WIXFl0EOxCAIRWHS+1+ZWTVpUPmIAuwaK/+JgMoiItRov05xIqJn52dmDgutAu0GYOalEzTPMtcW
+nIijeRAgUxwCZIubABXiS4Aq8SlApTiRKsO3ZCL1Hm2oQx+o7sztrbgdALfibz7o7dG5cpqEU/Gv
+U/2tRWfjwOwt2F2RyBiVI4AC8x3H76oSStQXAZFQeO8BJJoNsLviQBXYOaDDPnOOxo8AkFOHIDol
+U3Pgyp0wUzwN4MqdsEL8OkDkWjZUQcbzyw3Q8VBub8V/Jn5uSLDKYCUAAAAASUVORK5CYII=
 "
-       id="image17" />
+       id="image141" />
   </g>
 </svg>
