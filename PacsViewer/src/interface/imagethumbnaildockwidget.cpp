@@ -38,7 +38,7 @@ ImageThumbnailDockWidget::ImageThumbnailDockWidget(const QString &title,QApplica
     m_ImagelistWidge->setMovement(QListView::Static);
     m_ImagelistWidge->setSelectionRectVisible(true);
     m_ImagelistWidge->setSpacing(0);
-    m_ImagelistWidge->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);//always show!!?? set
+    m_ImagelistWidge->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);//always show!!?? set
     m_ImagelistWidge->setWordWrap(true);
     //QPalette palette;
     //palette.setColor(QPalette::Background, Qt::red);
