@@ -44,7 +44,7 @@ class Patient;
 class StatsWatcher;
 class ExternalApplication;
 class ImageThumbnailDockWidget;
-
+class QScreenDistribution;
 class QApplicationMainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -267,6 +267,8 @@ private:
     ImageThumbnailDockWidget* m_DockImageThumbnail;////////||
     //-----------------------------------------------------||
     //-----------------------------------------------------//
+	QWidgetAction *m_moveDesktopAction;
+	QScreenDistribution *m_screen;
 public:
     void addPatientsThumbnail(QList<Patient*> patientsList);
     //ExtensionHandler *getExtensionHandler();

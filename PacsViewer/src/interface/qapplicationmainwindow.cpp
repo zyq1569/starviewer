@@ -121,11 +121,20 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     m_extensionWorkspace = new ExtensionWorkspace(this);
     this->setCentralWidget(m_extensionWorkspace);
 
+	//setAutoFillBackground(true);
+	//setPalette(QPalette(QColor(0, 0, 0)));
     ///-------add QDockWidget-----------------------------------------------------
+	//setWindowFlags(Qt::FramelessWindowHint);
     m_DockImageThumbnail= new ImageThumbnailDockWidget("",this);//("Thumbnail");
     addDockWidget(Qt::LeftDockWidgetArea,m_DockImageThumbnail);
-    m_DockImageThumbnail->setFeatures(QDockWidget::DockWidgetMovable);
+    //m_DockImageThumbnail->setFeatures(QDockWidget::DockWidgetMovable);
     m_DockImageThumbnail->setObjectName("ImageThumbnail");
+	QPalette pal;
+	pal.setColor(QPalette::Background, QColor(0, 0, 0));
+	m_DockImageThumbnail->setAutoFillBackground(true);
+	m_DockImageThumbnail->setPalette(pal);
+	//m_DockImageThumbnail->col
+	//m_DockImageThumbnail->hide();
     /// addd connect(m_tab, SIGNAL(currentChanged(int)), SLOT(refreshTab(int)));
     //connect(m_extensionWorkspace, SIGNAL(currentChanged(int)),m_DockImageThumbnail, SLOT(refreshTab(int)));
     //-----------------------------------------------------------------------------
@@ -155,13 +164,14 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	toolbar->setMovable(false);
 	toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
 
-	QAction *actionHide = new QAction(QIcon(":/images/showhide.png"), "show or hide Thumbnail ...", this);
-	toolbar->addAction(actionHide);
-	connect(actionHide, SIGNAL(triggered()), SLOT(showhideDockImage()));//Open an existing DICOM folder
+	//QAction *actionHide = new QAction(QIcon(":/images/showhide.png"), "show or hide Thumbnail ...", this);
+	//toolbar->addAction(actionHide);
+	//connect(actionHide, SIGNAL(triggered()), SLOT(showhideDockImage()));//Open an existing DICOM folder
 
     QAction *actionFile = new QAction(QIcon(":/images/folderopen.png"), "Open Files from a Directory...", this);
 	toolbar->addAction(actionFile);
 	connect(actionFile, &QAction::triggered, [this] { m_extensionHandler->request(6); });//Open an existing DICOM folder
+	toolbar->insertSeparator(actionFile);
 
 	QAction *action3D = new QAction(QIcon(":/images/icons/3D.svg"), "3D Viewer", this);
 	toolbar->addAction(action3D);
@@ -171,9 +181,22 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	toolbar->addAction(actionMPR);
 	connect(actionMPR, &QAction::triggered, [this] { m_extensionHandler->request("MPRExtension"); });
 
-	//m_extensionHandler->request("Q3DViewerExtension");
+	QAction *actionPACS = new QAction(QIcon(":/images/icons/document-open-remote.svg"), "PACS Images", this);
+	toolbar->addAction(actionPACS);
+	connect(actionPACS, &QAction::triggered, [this] { m_extensionHandler->request(7); });
 
-	//m_extensionHandler->request("MPRExtension");
+	/*
+	m_moveDesktopAction = new QWidgetAction(this);	
+	QScreenDistribution *screen = new QScreenDistribution(this);
+	m_moveDesktopAction->setDefaultWidget(screen);
+	m_moveDesktopAction->setText(tr("Move to Screen"));
+	m_moveDesktopAction->setStatusTip(tr("Move the window to the screen..."));
+	m_moveDesktopAction->setCheckable(false);
+	connect(screen, SIGNAL(screenClicked(int)), this, SLOT(moveToDesktop(int)));
+	toolbar->addAction(m_moveDesktopAction);	
+	*/
+
+
 	//---------------------------------------------------------------------------------------------------
     // We read the application settings, window status, position, etc.
     readSettings();
