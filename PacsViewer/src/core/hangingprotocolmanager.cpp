@@ -21,7 +21,7 @@
 #include "volume.h"
 #include "q2dviewerwidget.h"
 #include "hangingprotocolsrepository.h"
-//#include "hangingprotocol.h"
+#include "hangingprotocol.h"
 #include "hangingprotocollayout.h"
 #include "hangingprotocolmask.h"
 #include "hangingprotocolimageset.h"
@@ -45,6 +45,8 @@ HangingProtocolManager::HangingProtocolManager(QObject *parent)
     copyHangingProtocolRepository();
 
     connect(m_relatedStudiesManager, SIGNAL(errorDownloadingStudy(QString)), SLOT(errorDownloadingPreviousStudies(QString)));
+
+	m_Identifier = -1;
 }
 
 HangingProtocolManager::~HangingProtocolManager()
@@ -227,7 +229,7 @@ void HangingProtocolManager::applyHangingProtocol(HangingProtocol *hangingProtoc
         }
         else
         {
-			m_HangingProtocol.setIdentifier(displaySet->getHangingProtocol()->getIdentifier());
+			m_Identifier = displaySet->getHangingProtocol()->getIdentifier();
             setInputToViewer(viewerWidget, displaySet);
         }
     }
@@ -410,8 +412,7 @@ void HangingProtocolManager::setInputToViewer(Q2DViewerWidget *viewerWidget, Han
                 inputVolume = series->getFirstVolume();
             }
 	
-			int Identifier = m_HangingProtocol.getIdentifier();
-			if (Identifier == 9 || Identifier == 10 || Identifier == 12)
+			if (m_Identifier == 9 || m_Identifier == 10 || m_Identifier == 12)
 			{
 				if (QViewer::selectVolume())
 				{

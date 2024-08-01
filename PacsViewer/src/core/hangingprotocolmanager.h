@@ -14,7 +14,6 @@
 
 #ifndef UDGHANGINGPROTOCOLMANAGER_H
 #define UDGHANGINGPROTOCOLMANAGER_H
-#include "hangingprotocol.h"
 #include <QObject>
 #include <QList>
 #include <QMultiHash>
@@ -24,7 +23,7 @@
 namespace udg {
 
 class ViewersLayout;
-//class HangingProtocol;
+class HangingProtocol;
 class HangingProtocolImageSet;
 class HangingProtocolDisplaySet;
 class Patient;
@@ -115,7 +114,7 @@ private:
     RelatedStudiesManager *m_relatedStudiesManager;
 public:
 	//HangingProtocol
-	HangingProtocol m_HangingProtocol;
+	int m_Identifier;
 };
 
 }
