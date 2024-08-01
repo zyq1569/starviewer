@@ -19,7 +19,7 @@
 #include <QMessageBox>
 namespace udg {
 
-const int g_DockWidgetwith = 133;
+const int g_DockWidgetwith = 120;
 const QSize IMAGE_SIZE(96,96);
 const QSize ITEM_SIZE(109,140);
 
@@ -30,7 +30,7 @@ ImageThumbnailDockWidget::ImageThumbnailDockWidget(const QString &title,QApplica
 
     //m_background.setColor(QPalette::Background,Qt::black);
     //setAutoFillBackground(true);
-    setPalette(m_background);
+    //setPalette(m_background);
     m_ImagelistWidge = new QListWidget(this);
     m_ImagelistWidge->setIconSize(IMAGE_SIZE);
     m_ImagelistWidge->setResizeMode(QListView::Adjust);
@@ -40,20 +40,24 @@ ImageThumbnailDockWidget::ImageThumbnailDockWidget(const QString &title,QApplica
     m_ImagelistWidge->setSpacing(0);
     m_ImagelistWidge->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);//always show!!?? set
     m_ImagelistWidge->setWordWrap(true);
+	m_ImagelistWidge->setAutoScroll(true);
+	//m_ImagelistWidge->setItemWidget()
     //QPalette palette;
     //palette.setColor(QPalette::Background, Qt::red);
     //m_ImagelistWidge->setPalette(palette);
-
-    m_mainlayout = new QHBoxLayout;
-    m_mainlayout->addWidget(m_ImagelistWidge);
-    m_mainlayout->setMargin(0);
-    setLayout(m_mainlayout);
-    m_ImagelistWidge->show();
+	//setWidget(m_ImagelistWidge);
+    //m_mainlayout = new QHBoxLayout;
+    //m_mainlayout->addWidget(m_ImagelistWidge);
+    //m_mainlayout->setMargin(0);
+	//this->setContentsMargins(0, 0, 0, 0);
+    //setLayout(m_mainlayout);
+	m_ImagelistWidge->setItemAlignment(Qt::AlignCenter);
     setMinimumWidth(g_DockWidgetwith);
     setMaximumWidth(g_DockWidgetwith);
 
     m_lastExtension = 0;
-
+	m_ImagelistWidge->setStyleSheet("border: 0px; background-color:lightgray");
+	//this->setStyleSheet("border: 0px; background-color:lightgray");
 }
 
 void ImageThumbnailDockWidget::clearThumbmailList()
@@ -188,6 +192,21 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<Patient*> patients
         item->setWhatsThis(itemPair.second); // set Volume ( QString id = item->whatsThis())->updateActiveItemView
         item->setToolTip(itemPair.first);
         m_ImagelistWidge->insertItem(index++,item);
+
+		//https://blog.csdn.net/abcd552191868/article/details/110147743
+		//QWidget *itemWidge = new QWidget(m_ImagelistWidge);
+		//QLabel *lblPicture = new QLabel("");
+		//QListWidgetItem *listItem = new QListWidgetItem(m_ImagelistWidge);
+		//QGridLayout *itemLayout = new QGridLayout;
+		//QHBoxLayout *itemContentLayout = new QHBoxLayout;
+		//lblPicture->setPixmap((pixmap.scaled(IMAGE_SIZE)));
+		//itemLayout->addWidget(lblPicture);
+		//itemWidge->setLayout(itemLayout);
+		////itemWidge->setSizeHint(ITEM_SIZE);
+		//itemWidge->setWhatsThis(itemPair.second); // set Volume ( QString id = item->whatsThis())->updateActiveItemView
+		//itemWidge->setToolTip(itemPair.first);
+		//m_ImagelistWidge->setItemWidget(item,itemWidge);
+
     }
     //????-------->  m_mainApp->getExtensionWorkspace()->addApplication(extension, requestedExtensionLabel, who);
     connect(m_ImagelistWidge, SIGNAL(itemDoubleClicked(QListWidgetItem *)),this, SLOT(updateActiveItemView(QListWidgetItem*)));

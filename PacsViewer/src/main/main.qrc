@@ -225,5 +225,11 @@
         <file>images/icons/3D.svg</file>
         <file>images/folderopen.png</file>
         <file>images/showhide.png</file>
+        <file>images/preferences.png</file>
+        <file>images/pacsNodes.png</file>
+        <file>images/help.ico</file>
+        <file>images/3D.ico</file>
+        <file>images/3D.png</file>
+        <file>images/3D.svg</file>
     </qresource>
 </RCC>

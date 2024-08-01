@@ -49,14 +49,16 @@ void ExtensionWorkspace::setDarkBackgroundColorEnabled(bool enabled)
 {
     if (enabled)
     {
-        QFile file(":css/mainwindowbackground.css");
-
-        if (file.open(QFile::ReadOnly | QFile::Text))
-        {
-            QTextStream textStream(&file);
-            this->setStyleSheet(textStream.readAll());
-            file.close();
-        }
+        //QFile file(":css/mainwindowbackground.css");
+		//
+        //if (file.open(QFile::ReadOnly | QFile::Text))
+        //{
+        //    QTextStream textStream(&file);
+        //    this->setStyleSheet(textStream.readAll());
+        //    file.close();
+        //}
+		this->setStyleSheet("background-color:rgb(30,30,30)}");
+		//this->setStyleSheet("background-color:lightgray}");
     }
     else
     {

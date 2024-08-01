@@ -14,7 +14,7 @@
 
 #ifndef UDGHANGINGPROTOCOLMANAGER_H
 #define UDGHANGINGPROTOCOLMANAGER_H
-
+#include "hangingprotocol.h"
 #include <QObject>
 #include <QList>
 #include <QMultiHash>
@@ -24,7 +24,7 @@
 namespace udg {
 
 class ViewersLayout;
-class HangingProtocol;
+//class HangingProtocol;
 class HangingProtocolImageSet;
 class HangingProtocolDisplaySet;
 class Patient;
@@ -113,6 +113,9 @@ private:
     ///Object used to download related studies.
     ///  QueryScreen is not used for folder dependency issues.
     RelatedStudiesManager *m_relatedStudiesManager;
+public:
+	//HangingProtocol
+	HangingProtocol m_HangingProtocol;
 };
 
 }

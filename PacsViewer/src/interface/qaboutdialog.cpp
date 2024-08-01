@@ -55,9 +55,11 @@ QAboutDialog::QAboutDialog(QWidget *parent)
 #endif
 
     aboutMessage += tr("<p align='justify'>%1 is the result of the close collaboration between IDI and GiLab and experience of both entities in the fields of "
-                "radiology, medical imaging and image processing.").arg(ApplicationNameString);;
-    aboutMessage += tr("<p>Version: %1 </p>").arg(StarviewerVersionString);
-    aboutMessage += tr("<p>Support email: <a href=\"mailto:%1\">%1</a></p>").arg(OrganizationEmailString);
+                "radiology, medical imaging and image processing.").arg(ApplicationNameString);
+	aboutMessage = tr("<p>Down Web: <a href=\"%1\">%1</a></p>").arg("https://zyq1569.github.io/down.html");
+	aboutMessage += tr("<p>Build: %1 </p>").arg(StarviewerBuildID);
+    //aboutMessage += tr("<p>Version: %1 </p>").arg(StarviewerVersionString);
+    aboutMessage += tr("<p>starviewer.udg.edu email: <a href=\"mailto:%1\">%1</a></p>").arg(OrganizationEmailString);
     aboutMessage += tr("<p>Web: <a href=\"%1\">%1</a></p>").arg(OrganizationWebURL);
     m_aboutTextLabel->setText(aboutMessage);
     m_aboutTextLabel->setOpenExternalLinks(true);

@@ -116,7 +116,6 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     connect(StarviewerSingleApplicationCommandLineSingleton::instance(), SIGNAL(newOptionsToRun()), SLOT(newCommandLineOptionsToRun()));
 
     this->setAttribute(Qt::WA_DeleteOnClose);
-
     ///class ExtensionWorkspace : public QTabWidget
     m_extensionWorkspace = new ExtensionWorkspace(this);
     this->setCentralWidget(m_extensionWorkspace);
@@ -129,10 +128,7 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     addDockWidget(Qt::LeftDockWidgetArea,m_DockImageThumbnail);
     //m_DockImageThumbnail->setFeatures(QDockWidget::DockWidgetMovable);
     m_DockImageThumbnail->setObjectName("ImageThumbnail");
-	QPalette pal;
-	pal.setColor(QPalette::Background, QColor(0, 0, 0));
-	m_DockImageThumbnail->setAutoFillBackground(true);
-	m_DockImageThumbnail->setPalette(pal);
+
 	//m_DockImageThumbnail->col
 	//m_DockImageThumbnail->hide();
     /// addd connect(m_tab, SIGNAL(currentChanged(int)), SLOT(refreshTab(int)));
@@ -163,7 +159,12 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	toolbar->setFloatable(false);
 	toolbar->setMovable(false);
 	toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
-
+	//toolbar->setStyleSheet("background-color:rgb(150,150,150)}");
+	//toolbar->setStyleSheet("background-color:lightgray;");
+	//toolbar->setStyleSheet("background-color:rgb(128,128,128);");
+	//toolbar->setStyleSheet("QToolButton:!hover {background-color:lightgray} QToolBar {background: rgb(150,150,150)}");
+	toolbar->setStyleSheet("QToolButton:!hover {background-color:lightgray} QToolBar {background:lightgray}");
+	//this->setStyleSheet("background-color:lightgray}");
 	//QAction *actionHide = new QAction(QIcon(":/images/showhide.png"), "show or hide Thumbnail ...", this);
 	//toolbar->addAction(actionHide);
 	//connect(actionHide, SIGNAL(triggered()), SLOT(showhideDockImage()));//Open an existing DICOM folder
@@ -171,7 +172,7 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     QAction *actionFile = new QAction(QIcon(":/images/folderopen.png"), "Open Files from a Directory...", this);
 	toolbar->addAction(actionFile);
 	connect(actionFile, &QAction::triggered, [this] { m_extensionHandler->request(6); });//Open an existing DICOM folder
-	toolbar->insertSeparator(actionFile);
+	toolbar->insertSeparator(actionFile);	
 
 	QAction *action3D = new QAction(QIcon(":/images/icons/3D.svg"), "3D Viewer", this);
 	toolbar->addAction(action3D);
@@ -181,10 +182,28 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	toolbar->addAction(actionMPR);
 	connect(actionMPR, &QAction::triggered, [this] { m_extensionHandler->request("MPRExtension"); });
 
-	QAction *actionPACS = new QAction(QIcon(":/images/icons/document-open-remote.svg"), "PACS Images", this);
+	QAction *actionPACS = new QAction(QIcon(":/images/pacsNodes"), "PACS Images", this);
 	toolbar->addAction(actionPACS);
 	connect(actionPACS, &QAction::triggered, [this] { m_extensionHandler->request(7); });
 
+	QAction *actionConfig = new QAction(QIcon(":/images/preferences.png"), "&Configuration...", this);
+	actionConfig->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::Preferences));
+	toolbar->addAction(actionConfig);
+	connect(actionConfig, SIGNAL(triggered()), SLOT(showConfigurationDialog()));
+
+	QAction *aboutAction = new QAction(QIcon(":/images/help.ico"), "&About", this);
+	aboutAction->setStatusTip(tr("Show the application's About box"));
+	connect(aboutAction, SIGNAL(triggered()), SLOT(about()));
+	toolbar->addAction(aboutAction);
+
+	//QMenu* menu = new QMenu("windows", this); //创建一个menu对象
+	//QAction* actionWelcome = menu->addAction("欢迎"); //在menu对象上添加action
+	//QMenu* menuWelcome = new QMenu("...", this); //创建第二个menu对象
+	//actionWelcome->setMenu(menuWelcome); //将第二个menu对象依附于action
+	//menuWelcome->addAction("双屏"); //在action上添加action
+	//menuWelcome->addAction("前屏"); //在action上添加action
+	//menuWelcome->addAction("后屏"); //在action上添加action
+	//toolbar->addAction(actionWelcome); //将action对象依附于QToolBar
 	/*
 	m_moveDesktopAction = new QWidgetAction(this);	
 	QScreenDistribution *screen = new QScreenDistribution(this);
@@ -195,8 +214,6 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	connect(screen, SIGNAL(screenClicked(int)), this, SLOT(moveToDesktop(int)));
 	toolbar->addAction(m_moveDesktopAction);	
 	*/
-
-
 	//---------------------------------------------------------------------------------------------------
     // We read the application settings, window status, position, etc.
     readSettings();
