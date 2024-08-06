@@ -62,16 +62,16 @@ bool Q3DViewerExtensionMediator::initializeExtension(QWidget *extension, const E
 }
 
 //---20200919---add-----------------------------------------------------------------------------------------------
-void Q3DViewerExtensionMediator::executionCommand(QWidget *extension, Volume* volume, void *data , int command)
+void Q3DViewerExtensionMediator::executionCommand(QWidget *extension, Volume* volume, void *extensionHandler, int command)
 {
-//    QMessageBox::about(NULL, "Q3DViewerExtensionMediator", QString(command));
-//    Q3DViewerExtension *q3dviewerExtension;
-
-//    if (!(q3dviewerExtension = qobject_cast<Q3DViewerExtension*>(extension)))
-//    {
-//        return;
-//    }
-
-    //Q3DViewerExtensionMediator->updateQ2DViewer(volume);
+	Q3DViewerExtension *q3dviewerExtension;
+	if (!(q3dviewerExtension = qobject_cast<Q3DViewerExtension*>(extension)))
+	{
+		return;
+	}
+	if (volume)
+	{
+		q3dviewerExtension->updateInput(volume);
+	}
 }
 }
