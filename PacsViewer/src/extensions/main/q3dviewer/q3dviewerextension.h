@@ -25,6 +25,7 @@
 class QAction;
 class QModelIndex;
 class QStandardItemModel;
+class ExtensionHandler;
 
 namespace udg {
 
@@ -43,6 +44,9 @@ public:
 
     /// We give it input to process
     void setInput(Volume *input);
+
+	//20240802
+	void updateInput(Volume *input);
 
 public slots:
     ///Applies a predefined transfer function to the display.
@@ -116,9 +120,11 @@ private:
     /// Timer used to make quality renderings after a quick render.
     QTimer *m_timer;
 
-    //
+    //2024
     bool m_firstRemoveBed;
     vtkImageData *m_saveVtkdata;
+	//20240802
+	Volume *m_lastInput;
 };
 
 } // end namespace udg

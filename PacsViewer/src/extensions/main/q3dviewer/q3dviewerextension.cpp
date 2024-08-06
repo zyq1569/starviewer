@@ -22,6 +22,7 @@
 #include "screenshottool.h"
 #include "toolproxy.h"
 #include "qexportertool.h"
+#include "series.h"
 // Qt
 #include <QAction>
 #include <QFileDialog>
@@ -32,6 +33,7 @@
 #include <vtkImageThreshold.h>
 // Actualització ràpida
 #include <vtkRenderWindow.h>
+#include <vtkRenderer.h>
 // Actualització ràpida
 #include <vtkRenderWindowInteractor.h>
 
@@ -60,10 +62,11 @@ Q3DViewerExtension::Q3DViewerExtension(QWidget *parent)
     hideClutEditor();
     m_screenshotsExporterToolButton->setToolTip(tr("Export viewer image to DICOM and send it to a PACS server"));
     m_customStyleToolButton->setToolTip(tr("Show/Hide advanced colour options"));
-    setWindowTitle("Q3DViewerExtension");
+    setWindowTitle("3DViewer");
 
     m_firstRemoveBed = false;
     m_saveVtkdata = NULL;
+	m_lastInput = NULL;
 }
 
 Q3DViewerExtension::~Q3DViewerExtension()
@@ -88,8 +91,8 @@ void Q3DViewerExtension::initializeTools()
     m_toolManager->registerTool("TranslateTool");
     m_clippingBoxToolButton->setDefaultAction(m_toolManager->registerTool("ClippingPlanesTool"));   
     //m_removeBed->setDefaultAction(m_toolManager->registerTool("ClippingPlanesTool"));
-    m_removeBed->setText("Remove Bed");
-    m_removeBed->setToolTip("Auto Remove Bed");
+    //m_removeBed->setText("Remove Bed");
+    //m_removeBed->setToolTip("Auto Remove Bed");
 
     m_toolManager->registerTool("ScreenShotTool");
     m_screenShotToolButton->setToolTip(m_toolManager->getRegisteredToolAction("ScreenShotTool")->toolTip());
@@ -115,7 +118,7 @@ void Q3DViewerExtension::initializeTools()
     //Let's make a screen shot when the button is clicked
     ScreenShotTool *screenShotTool = dynamic_cast<ScreenShotTool*>(m_3DView->getToolProxy()->getTool("ScreenShotTool"));
     connect(m_screenShotToolButton, SIGNAL(clicked()), screenShotTool, SLOT(singleCapture()));
-    connect(m_removeBed, SIGNAL(clicked()), this, SLOT(removeBed()));
+    //connect(m_removeBed, SIGNAL(clicked()), this, SLOT(removeBed()));
     m_removeBed->hide();
 }
 
@@ -364,6 +367,7 @@ void Q3DViewerExtension::removeBed()
 
 void Q3DViewerExtension::setInput(Volume *input)
 {
+	m_lastInput = input;
     m_input = input;
     m_3DView->setInput(m_input);
 
@@ -647,5 +651,21 @@ void Q3DViewerExtension::disableAutoUpdate()
     //Isosurfaces
     disconnect(m_isoValueSpinBox, SIGNAL(valueChanged(int)), this, SLOT(updateView()));
 }
+
+void Q3DViewerExtension::updateInput(Volume *input)
+{
+	if (m_lastInput != input)
+	{
+		m_input = input;
+		m_3DView->setInput(m_input);
+		m_lastInput = input;
+		m_3DView->getRenderer()->ResetCamera();
+		m_3DView->getRenderWindow()->Render();
+		Series* ser = input->getSeries();
+		QString title = ser->getSeriesNumber();
+		setWindowTitle(title);
+	}
+}
+
 
 }
