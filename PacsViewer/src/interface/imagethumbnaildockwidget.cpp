@@ -7,7 +7,7 @@
 #include "qapplicationmainwindow.h"
 #include "patient.h"
 #include "VolumeRepository.h"
-//#include "ExtensionWorkspace.h"
+#include "ExtensionWorkspace.h"
 #include "extensionmediatorfactory.h"
 
 #include <QSize>
@@ -231,7 +231,13 @@ void ImageThumbnailDockWidget::updateActiveItemView(QListWidgetItem *item)
     {
         if (widget)
         {
-            mediator->executionCommand(widget,VolumeRepository::getRepository()->getVolume(Identifier(id.toInt())));
+			Volume *volume = VolumeRepository::getRepository()->getVolume(Identifier(id.toInt()));
+			int extensionIndex = m_mainApp->getExtensionWorkspace()->currentIndex();
+			if (m_mainApp->getExtensionWorkspace()->tabText(extensionIndex).contains("3D-Viewer"))
+			{
+				m_mainApp->getExtensionWorkspace()->setTabText(extensionIndex, "3D-Viewer#Series:" + volume->getSeries()->getSeriesNumber());
+			}		
+            mediator->executionCommand(widget, volume);
         }
         else
         {
