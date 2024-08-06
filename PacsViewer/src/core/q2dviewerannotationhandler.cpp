@@ -300,8 +300,8 @@ QString Q2DViewerAnnotationHandler::getStandardAdditionalInformation() const
         {
             lateralityString = QString("Lat: %1").arg(laterality);
         }
-
-        QString seriesLabel = getSeriesDescriptiveLabel(m_2DViewer->getMainInput()->getSeries());
+		Series *series = m_2DViewer->getMainInput()->getSeries();
+		QString seriesLabel = getSeriesDescriptiveLabel(series);
         QString fusionBalance;
 
         if (m_2DViewer->getNumberOfInputs() == 2)
@@ -395,8 +395,9 @@ QString Q2DViewerAnnotationHandler::getVoiLutString() const
 
         thresholdPart = "\n" + QObject::tr("Threshold: %1%").arg(percent, 0, 'f', 2);
     }
-
-    return lutPart + windowLevelPart + thresholdPart;
+	Series *series = m_2DViewer->getMainInput()->getSeries();
+	QString sliceLocation = "\nSeries:" + series->getSeriesNumber().trimmed() + " \n";
+    return lutPart + windowLevelPart + thresholdPart + sliceLocation;
 }
 
 QString Q2DViewerAnnotationHandler::getSliceLocationString() const
