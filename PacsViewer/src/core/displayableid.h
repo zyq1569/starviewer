@@ -50,6 +50,11 @@ public:
     }
     QString getLabel() const
     {
+		int pos = m_name.indexOf("#");
+		if (pos > 0)
+		{
+			return m_name.mid(0, pos);
+		}
         return m_name;
     }
 
