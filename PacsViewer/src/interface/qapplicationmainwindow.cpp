@@ -178,9 +178,9 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	toolbar->addAction(action3D);
 	connect(action3D, &QAction::triggered, [this] { m_extensionHandler->request("Q3DViewerExtension"); });
 
-	QAction *actionMPR = new QAction(QIcon(":/images/icons/MPR-2D.svg"), "MPR-2D Viewer", this);
-	toolbar->addAction(actionMPR);
-	connect(actionMPR, &QAction::triggered, [this] { m_extensionHandler->request("MPRExtension"); });
+	//QAction *actionMPR = new QAction(QIcon(":/images/icons/MPR-2D.svg"), "MPR-2D Viewer", this);
+	//toolbar->addAction(actionMPR);
+	//connect(actionMPR, &QAction::triggered, [this] { m_extensionHandler->request("MPRExtension"); });
 
 	QAction *actionPACS = new QAction(QIcon(":/images/pacsNodes"), "PACS Images", this);
 	toolbar->addAction(actionPACS);
