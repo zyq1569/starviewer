@@ -105,9 +105,9 @@ void ImageThumbnailDockWidget::addPatientsThumbmailList(QList<Patient*> patients
             //QList<QPair<QString, QString> > fusionItemsList;
             foreach (Series *series, study->getViewableSeries())
             {
-                label = tr("Series %1: %2%3%4%5(%6 Images)")
+                label = tr("Se:%1 %3%4%5(%6 Ims)")//tr("Series %1: %2%3%4%5(%6 Images)")
                         .arg(series->getSeriesNumber().trimmed())
-                        .arg(series->getProtocolName().trimmed())
+                        //.arg(series->getProtocolName().trimmed())
                         .arg(series->getDescription().trimmed())
                         .arg(series->getBodyPartExamined())
                         .arg(series->getViewPosition())
