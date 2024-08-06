@@ -153,6 +153,8 @@ private:
     /// Plans de tall
     vtkPlanes *m_clippingPlanes;
 
+public:
+	void updateMainInput(Volume* volume);
 };
 
 }
