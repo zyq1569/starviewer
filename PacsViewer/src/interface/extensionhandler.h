@@ -125,7 +125,7 @@ private:
     ///----add creat Extension object 20200925-------
 
 private:
-    bool createExtension(const QString &who);
+    bool createExtension(const QString &who, QString tableText = "");
     //-----------------------------------------------
     ///----add  20201207-------
 

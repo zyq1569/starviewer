@@ -160,7 +160,7 @@ void ExtensionHandler::request(int who)
     }
 }
 
-bool ExtensionHandler::createExtension(const QString &who)
+bool ExtensionHandler::createExtension(const QString &who, QString tableText)
 {
     bool ok = true;
     ///template <typename T>
@@ -180,7 +180,7 @@ bool ExtensionHandler::createExtension(const QString &who)
         ok = false;
         return ok;
     }
-
+	bool bQ3DViewerExtension = ("Q3DViewerExtension" == who);
     bool createExtension = true;
     int extensionIndex = 0;
     QString requestedExtensionLabel = mediator->getExtensionID().getLabel();
@@ -192,7 +192,7 @@ bool ExtensionHandler::createExtension(const QString &who)
         bool found = false;
         while (extensionIndex < count && !found)
         {
-            if (m_mainApp->getExtensionWorkspace()->tabText(extensionIndex) == requestedExtensionLabel)
+            if (m_mainApp->getExtensionWorkspace()->tabText(extensionIndex).contains(requestedExtensionLabel))
             {
                 found = true;
             }
@@ -227,6 +227,10 @@ bool ExtensionHandler::createExtension(const QString &who)
                 //(Q2DViewerExtension*)extension->m_extensionHandler = this;
                 mediator->executionCommand(extension, NULL, this, 0);
             }
+			else if (bQ3DViewerExtension)
+			{
+				requestedExtensionLabel = "3D-Viewer#Series:" + tableText;
+			}
             mediator->initializeExtension(extension, m_extensionContext);
             m_mainApp->getExtensionWorkspace()->addApplication(extension, requestedExtensionLabel, who);
 
@@ -241,6 +245,20 @@ bool ExtensionHandler::createExtension(const QString &who)
     {
         //Otherwise we show the already existing extension
         m_mainApp->getExtensionWorkspace()->setCurrentIndex(extensionIndex);
+		if (bQ3DViewerExtension)
+		{
+			Volume * selVolume = QViewer::selectVolume();
+			Volume *volume = selVolume ? selVolume : m_extensionContext.getDefaultVolumeNoLocalizer();
+			if (volume && volume->is3Dimage())
+			{
+				m_mainApp->getExtensionWorkspace()->setTabText(extensionIndex, "3D-Viewer#Series:" + volume->getSeries()->getSeriesNumber());
+				QWidget* widget = m_mainApp->currentWidgetOfExtensionWorkspace();
+				if (widget)
+				{
+					mediator->executionCommand(widget, volume);
+				}
+			}
+		}
     }
 
     delete mediator;
@@ -254,7 +272,7 @@ bool ExtensionHandler::request(const QString &who)
 	{
 		return true;
 	}
-
+	QString tableText;
 	if (who == "Q3DViewerExtension")
 	{
 		Volume * selVolume = QViewer::selectVolume();		
@@ -269,7 +287,8 @@ bool ExtensionHandler::request(const QString &who)
 		{
 			QMessageBox::warning(0, "3D-Viewer", ("The selected item : 3D-Viewer fail!!! images < 5 or SliceThickness = 0.0"));
 			return true;
-		}			
+		}	
+		tableText = volume->getSeries()->getSeriesNumber();
 	}
 	else if (who == "MPRExtension")
 	{
@@ -290,7 +309,7 @@ bool ExtensionHandler::request(const QString &who)
     QList<Patient*> Patients;
     Patients<<m_mainApp->getCurrentPatient();
     setPatientsThumbnail(Patients);
-    return createExtension(who);
+    return createExtension(who, tableText);
 }
 
 ///20201205
