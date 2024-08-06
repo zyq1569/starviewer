@@ -189,6 +189,7 @@ Q2DViewerExtension::Q2DViewerExtension(QWidget *parent)
     m_MPR->setToolTip("MPR2D-Viewer");
     connect(m_3D, SIGNAL(clicked()), SLOT(start3DViewer()));
     connect(m_MPR, SIGNAL(clicked()), SLOT(startMPR2DViewer()));
+	m_MPR->hide();
 }
 
 void Q2DViewerExtension::start3DViewer()

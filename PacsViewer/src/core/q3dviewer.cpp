@@ -194,7 +194,6 @@ void Q3DViewer::setInput(Volume *volume)
     emit volumeChanged(getMainInput());
 
     unsetCursor();
-	m_annotationsHandler->updateAnnotations(MainInformationAnnotation | AdditionalInformationAnnotation);
 }
 
 void Q3DViewer::setBlendMode(const BlendMode &mode)
