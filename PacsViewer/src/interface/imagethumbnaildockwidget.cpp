@@ -232,10 +232,24 @@ void ImageThumbnailDockWidget::updateActiveItemView(QListWidgetItem *item)
         if (widget)
         {
 			Volume *volume = VolumeRepository::getRepository()->getVolume(Identifier(id.toInt()));
-			int extensionIndex = m_mainApp->getExtensionWorkspace()->currentIndex();
-			if (m_mainApp->getExtensionWorkspace()->tabText(extensionIndex).contains("3D-Viewer"))
+			ExtensionWorkspace *extensionWorkspace = m_mainApp->getExtensionWorkspace();
+			int extensionIndex = extensionWorkspace->currentIndex();
+			if (extensionWorkspace->tabText(extensionIndex).contains("3D-Viewer"))
 			{
-				m_mainApp->getExtensionWorkspace()->setTabText(extensionIndex, "3D-Viewer#Series:" + volume->getSeries()->getSeriesNumber());
+				if (!volume)
+				{
+					QMessageBox::warning(0, "3D-Viewer", ("3D-Viewer: No image is selected!!"));
+					delete mediator;
+					return ;
+				}
+				if (!volume->is3Dimage())
+				{
+					QMessageBox::warning(0, "3D-Viewer", ("The selected item : 3D-Viewer fail!!! images < 5 or SliceThickness = 0.0"));
+					delete mediator;
+					return;
+				}
+
+				extensionWorkspace->setTabText(extensionIndex, "3D-Viewer#Series:" + volume->getSeries()->getSeriesNumber());
 			}		
             mediator->executionCommand(widget, volume);
         }
