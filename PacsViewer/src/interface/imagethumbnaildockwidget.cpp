@@ -220,12 +220,9 @@ ImageThumbnailDockWidget::~ImageThumbnailDockWidget()
 void ImageThumbnailDockWidget::updateActiveItemView(QListWidgetItem *item)
 {
     QWidget* widget = m_mainApp->currentWidgetOfExtensionWorkspace();
-    //QString str = widget->windowTitle();
     QString className = widget->metaObject()->className();
     QString str = className.section("::",1,1);
-
     QString id = item->whatsThis();
-    //QMessageBox::about(NULL, "Volume", id);
     ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create(str);
     if (mediator)
     {
