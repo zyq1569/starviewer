@@ -113,7 +113,7 @@ private:
     ///  QueryScreen is not used for folder dependency issues.
     RelatedStudiesManager *m_relatedStudiesManager;
 public:
-	//HangingProtocol
+	//20240801 HangingProtocol Identifier
 	int m_Identifier;
 };
 
