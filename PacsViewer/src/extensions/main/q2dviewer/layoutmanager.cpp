@@ -422,7 +422,6 @@ void LayoutManager::setWorkingStudies(const QString &currentStudyUID, const QStr
     applyProperLayoutChoice(changeCurrentStudyLayout, changePriorStudyLayout, comparativeModeToggled);
 }
 
-
 HangingProtocol* LayoutManager::setHangingProtocol(int hangingProtocolNumber, const QList<HangingProtocol*> &hangingProtocols, const QRectF &geometry)
 {
     HangingProtocol *hangingProtocol = 0;
@@ -743,6 +742,16 @@ QRectF LayoutManager::prepareToChangeLayoutOfStudy(Study *study)
         setCurrentHangingProtocolApplied(0);
         return WholeGeometry;
     }
+}
+
+
+void LayoutManager::thumbnailUpateImages()
+{
+	if (m_hangingProtocolManager)
+	{
+		QRectF geometry = (!m_priorStudy) ? WholeGeometry : LeftHalfGeometry;
+		m_hangingProtocolManager->thumbnailUpateImages(m_layout, m_patient, geometry);
+	}
 }
 
 } // end namespace udg
