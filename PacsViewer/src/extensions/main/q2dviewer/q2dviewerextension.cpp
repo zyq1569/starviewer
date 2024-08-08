@@ -351,10 +351,13 @@ void Q2DViewerExtension::setupLayoutManager()
     connect(m_layoutManager, &LayoutManager::hangingProtocolCandidatesFound, m_hangingProtocolsMenu, &QHangingProtocolsWidget::setItems);
     connect(m_layoutManager, &LayoutManager::activeCombinedHangingProtocolChanged,
             m_hangingProtocolsMenu, &QHangingProtocolsWidget::setActiveCombinedHangingProtocol);
+
     connect(m_layoutManager, &LayoutManager::activeCurrentHangingProtocolChanged,
             m_hangingProtocolsMenu, &QHangingProtocolsWidget::setActiveCurrentHangingProtocol);
+
     connect(m_layoutManager, &LayoutManager::activePriorHangingProtocolChanged,
             m_hangingProtocolsMenu, &QHangingProtocolsWidget::setActivePriorHangingProtocol);
+
     connect(m_hangingProtocolsMenu, &QHangingProtocolsWidget::selectedCurrent, m_layoutManager, &LayoutManager::setCurrentHangingProtocol);
     connect(m_hangingProtocolsMenu, &QHangingProtocolsWidget::selectedPrior, m_layoutManager, &LayoutManager::setPriorHangingProtocol);
     connect(m_hangingProtocolsMenu, &QHangingProtocolsWidget::selectedCombined, m_layoutManager, &LayoutManager::setCombinedHangingProtocol);
@@ -659,6 +662,7 @@ void Q2DViewerExtension::changeSelectedViewer(Q2DViewerWidget *viewerWidget)
         // If the selected viewer is not null
         if (m_lastSelectedViewer)
         {
+			QViewer::selectVolume(m_lastSelectedViewer->getViewer()->getInput(0));
             Q2DViewer *selected2DViewer = viewerWidget->getViewer();
 
             connect(viewerWidget->getViewer(), SIGNAL(viewChanged(int)), SLOT(updateDICOMInformationButton()));
@@ -1177,7 +1181,12 @@ void Q2DViewerExtension::setFusionLayoutMprRight(const QList<Volume *> &volumes)
 //---20200919 add-----------------------------------------------------------------------
 void  Q2DViewerExtension::updateQ2DViewer(Volume* volume)
 {
-    m_lastSelectedViewer->setInputAsynchronously(volume);
+    m_lastSelectedViewer->changeInputAsynchronously(volume);
+	//20240808 for MPR Protocol
+	if (m_layoutManager)
+	{
+		m_layoutManager->thumbnailUpateImages();
+	}
 }
 
 }
