@@ -74,7 +74,8 @@ void QHangingProtocolsGroupWidget::setActiveItem(HangingProtocol *activeHangingP
 {
     foreach (ItemMenu *item, m_itemList)
     {
-        if (activeHangingProtocol && activeHangingProtocol->getIdentifier() == item->getData().toInt())
+        //if (activeHangingProtocol && activeHangingProtocol->getIdentifier() == item->getData().toInt())
+		if (activeHangingProtocol? activeHangingProtocol->getIdentifier() == item->getData().toInt():false)
         {
             item->setSelected(true);
         }
