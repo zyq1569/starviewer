@@ -917,21 +917,60 @@
      <item>
       <widget class="QToolButton" name="m_MPRL">
        <property name="text">
-        <string>...</string>
+        <string>MPRL</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>:/images/icons/3D.svg</normaloff>:/images/icons/MPR/MPRL.svg</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QToolButton" name="m_MPRR">
        <property name="text">
-        <string>...</string>
+        <string>MPRR</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>:/images/icons/3D.svg</normaloff>:/images/icons/MPR/MPRR.svg</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QToolButton" name="m_SA">
        <property name="text">
-        <string>...</string>
+        <string>SA</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>:/images/icons/3D.svg</normaloff>:/images/icons/MPR/SA.svg</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
