@@ -26,9 +26,11 @@ QHangingProtocolsWidget::QHangingProtocolsWidget(QWidget *parent)
 
     connect(m_combinedGroupWidget, &QHangingProtocolsGroupWidget::selected, this, &QHangingProtocolsWidget::hide);
     connect(m_combinedGroupWidget, &QHangingProtocolsGroupWidget::selected, this, &QHangingProtocolsWidget::selectedCombined);
+
     connect(m_currentGroupWidget, &QHangingProtocolsGroupWidget::selected, this, &QHangingProtocolsWidget::hide);
     connect(m_currentGroupWidget, &QHangingProtocolsGroupWidget::selected, this, &QHangingProtocolsWidget::selectedCurrent);
     connect(m_currentGroupWidget, &QHangingProtocolsGroupWidget::selected, this, &QHangingProtocolsWidget::selectedGrid);
+
     connect(m_priorGroupWidget, &QHangingProtocolsGroupWidget::selected, this, &QHangingProtocolsWidget::hide);
     connect(m_priorGroupWidget, &QHangingProtocolsGroupWidget::selected, this, &QHangingProtocolsWidget::selectedPrior);
 }
