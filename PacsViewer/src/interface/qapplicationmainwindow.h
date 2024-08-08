@@ -268,6 +268,7 @@ private:
     //-----------------------------------------------------||
     //-----------------------------------------------------//
 	QWidgetAction *m_moveDesktopAction;
+	QAction *m_actionMultiScreens;
 	QScreenDistribution *m_screen;
 public:
     void addPatientsThumbnail(QList<Patient*> patientsList);

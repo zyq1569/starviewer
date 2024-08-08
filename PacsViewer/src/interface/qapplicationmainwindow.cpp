@@ -191,11 +191,6 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	toolbar->addAction(actionConfig);
 	connect(actionConfig, SIGNAL(triggered()), SLOT(showConfigurationDialog()));
 
-	QAction *aboutAction = new QAction(QIcon(":/images/help.ico"), "&About", this);
-	aboutAction->setStatusTip(tr("Show the application's About box"));
-	connect(aboutAction, SIGNAL(triggered()), SLOT(about()));
-	toolbar->addAction(aboutAction);
-
 	//QMenu* menu = new QMenu("windows", this); //创建一个menu对象
 	//QAction* actionWelcome = menu->addAction("欢迎"); //在menu对象上添加action
 	//QMenu* menuWelcome = new QMenu("...", this); //创建第二个menu对象
@@ -204,16 +199,28 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	//menuWelcome->addAction("前屏"); //在action上添加action
 	//menuWelcome->addAction("后屏"); //在action上添加action
 	//toolbar->addAction(actionWelcome); //将action对象依附于QToolBar
-	/*
-	m_moveDesktopAction = new QWidgetAction(this);	
-	QScreenDistribution *screen = new QScreenDistribution(this);
-	m_moveDesktopAction->setDefaultWidget(screen);
-	m_moveDesktopAction->setText(tr("Move to Screen"));
-	m_moveDesktopAction->setStatusTip(tr("Move the window to the screen..."));
-	m_moveDesktopAction->setCheckable(false);
-	connect(screen, SIGNAL(screenClicked(int)), this, SLOT(moveToDesktop(int)));
-	toolbar->addAction(m_moveDesktopAction);	
-	*/
+
+    //QMenu* menu = new QMenu("windows", this);
+	//QAction* m_moveDesktopAction = menu->addAction("MutileScreens");
+	//QScreenDistribution *screen = new QScreenDistribution(this);
+	//((QWidgetAction*)m_moveDesktopAction)->setDefaultWidget(screen);
+	//toolbar->addAction(m_moveDesktopAction);
+	//actionMutileScreens->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::MaximizeMultipleScreens));
+	//connect(actionMutileScreens, SIGNAL(triggered(bool)), this, SLOT(maximizeMultipleScreens()));
+	
+	//m_moveDesktopAction = new QWidgetAction(this);
+	//QScreenDistribution *screen = new QScreenDistribution(this);
+	//m_moveDesktopAction->setDefaultWidget(screen);
+	//m_moveDesktopAction->setText(tr("Move to Screen"));
+	//m_moveDesktopAction->setStatusTip(tr("Move the window to the screen..."));
+	//m_moveDesktopAction->setCheckable(false);
+	//connect(screen, SIGNAL(screenClicked(int)), this, SLOT(moveToDesktop(int)));
+	//toolbar->addAction(m_moveDesktopAction);
+
+	QAction *aboutAction = new QAction(QIcon(":/images/help.ico"), "&About", this);
+	aboutAction->setStatusTip(tr("Show the application's About box"));
+	connect(aboutAction, SIGNAL(triggered()), SLOT(about()));
+	toolbar->addAction(aboutAction);
 	//---------------------------------------------------------------------------------------------------
     // We read the application settings, window status, position, etc.
     readSettings();
