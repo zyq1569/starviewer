@@ -364,4 +364,14 @@ void Q2DViewerWidget::requestFusionLayoutMprRight()
     }
 }
 
+void Q2DViewerWidget::changeInputAsynchronously(Volume *input, QViewerCommand *command)
+{
+	if (input)
+	{
+		m_2DView->setInputAsynchronously(input, command);
+		updateProjectionLabel();
+		QViewer::selectVolume(input);
+	}
+}
+
 }
