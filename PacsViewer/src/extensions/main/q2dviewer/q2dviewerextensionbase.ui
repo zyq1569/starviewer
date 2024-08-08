@@ -921,7 +921,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/images/icons/3D.svg</normaloff>:/images/icons/MPR/MPRL.svg</iconset>
+         <normaloff>:/images/icons/MPR/MPRL.svg</normaloff>:/images/icons/MPR/MPRL.svg</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -941,7 +941,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/images/icons/3D.svg</normaloff>:/images/icons/MPR/MPRR.svg</iconset>
+         <normaloff>:/images/icons/MPR/MPRR.svg</normaloff>:/images/icons/MPR/MPRR.svg</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -961,7 +961,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/images/icons/3D.svg</normaloff>:/images/icons/MPR/SA.svg</iconset>
+         <normaloff>:/images/icons/MPR/SA.svg</normaloff>:/images/icons/MPR/SA.svg</iconset>
        </property>
        <property name="iconSize">
         <size>
