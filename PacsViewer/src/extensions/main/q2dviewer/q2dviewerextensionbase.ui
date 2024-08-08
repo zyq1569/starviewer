@@ -94,7 +94,7 @@
               <string>...</string>
              </property>
              <property name="icon">
-              <iconset resource="../../../main/main.qrc">
+              <iconset>
                <normaloff>:/images/icons/view-list-icons.svg</normaloff>:/images/icons/view-list-icons.svg</iconset>
              </property>
              <property name="iconSize">
@@ -129,7 +129,7 @@
               <string>...</string>
              </property>
              <property name="icon">
-              <iconset resource="../../../main/main.qrc">
+              <iconset>
                <normaloff>:/images/icons/view-list-details.svg</normaloff>:/images/icons/view-list-details.svg</iconset>
              </property>
              <property name="iconSize">
@@ -172,7 +172,7 @@
           <string>Previous</string>
          </property>
          <property name="icon">
-          <iconset resource="../../../main/main.qrc">
+          <iconset>
            <normaloff>:/images/icons/view-calendar.svg</normaloff>:/images/icons/view-calendar.svg</iconset>
          </property>
          <property name="iconSize">
@@ -583,7 +583,7 @@
           <string>Exporter</string>
          </property>
          <property name="icon">
-          <iconset resource="../../../main/main.qrc">
+          <iconset>
            <normaloff>:/images/icons/upload-media.svg</normaloff>:/images/icons/upload-media.svg</iconset>
          </property>
          <property name="iconSize">
@@ -633,7 +633,7 @@
           <string>Info</string>
          </property>
          <property name="icon">
-          <iconset resource="../../../main/main.qrc">
+          <iconset>
            <normaloff>:/images/icons/dicom-tags.svg</normaloff>:/images/icons/dicom-tags.svg</iconset>
          </property>
          <property name="iconSize">
@@ -692,7 +692,7 @@
           <string>Info</string>
          </property>
          <property name="icon">
-          <iconset resource="../../../main/main.qrc">
+          <iconset>
            <normaloff>:/images/icons/edit-select.svg</normaloff>:/images/icons/edit-select.svg</iconset>
          </property>
          <property name="iconSize">
@@ -801,7 +801,7 @@
           <string>Propagate</string>
          </property>
          <property name="icon">
-          <iconset resource="../../../main/main.qrc">
+          <iconset>
            <normaloff>:/images/icons/feed-subscribe.svg</normaloff>:/images/icons/feed-subscribe.svg</iconset>
          </property>
          <property name="iconSize">
@@ -827,7 +827,7 @@
           <string>Auto-Sync</string>
          </property>
          <property name="icon">
-          <iconset resource="../../../main/main.qrc">
+          <iconset>
            <normaloff>:/images/icons/emblem-symbolic-link.svg</normaloff>:/images/icons/emblem-symbolic-link.svg</iconset>
          </property>
          <property name="iconSize">
@@ -864,7 +864,7 @@
             <string>All</string>
            </property>
            <property name="icon">
-            <iconset resource="../../../main/main.qrc">
+            <iconset>
              <normaloff>:/images/icons/insert-link.svg</normaloff>:/images/icons/insert-link.svg</iconset>
            </property>
            <property name="iconSize">
@@ -893,7 +893,7 @@
             <string>None</string>
            </property>
            <property name="icon">
-            <iconset resource="../../../main/main.qrc">
+            <iconset>
              <normaloff>:/images/icons/remove-link.svg</normaloff>:/images/icons/remove-link.svg</iconset>
            </property>
            <property name="iconSize">
@@ -913,6 +913,27 @@
         </layout>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QToolButton" name="m_MPRL">
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="m_MPRR">
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="m_SA">
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QToolButton" name="m_3D">
@@ -1017,10 +1038,6 @@
    <header>qmrusortedtoolbuttonwithmenu.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../../../main/main.qrc"/>
-  <include location="../../../main/main.qrc"/>
-  <include location="../../../main/main.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
