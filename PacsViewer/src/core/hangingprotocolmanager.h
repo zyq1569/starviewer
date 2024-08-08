@@ -115,6 +115,8 @@ private:
 public:
 	//20240801 HangingProtocol Identifier
 	int m_Identifier;
+	QList<HangingProtocolDisplaySet*> m_lastHangingProtocolDisplaySet;
+	void thumbnailUpateImages(ViewersLayout *layout, Patient *patient, const QRectF &geometry);
 };
 
 }

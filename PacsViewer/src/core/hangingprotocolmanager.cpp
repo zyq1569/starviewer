@@ -196,6 +196,9 @@ void HangingProtocolManager::applyHangingProtocol(HangingProtocol *hangingProtoc
     }
 
     QList<HangingProtocolDisplaySet*> displaySets = hangingProtocol->getDisplaySets();
+	//20240808
+	m_lastHangingProtocolDisplaySet = displaySets;
+	//-----
     for(int i = 0; i < displaySets.size(); ++i)
     {
         HangingProtocolDisplaySet *displaySet = displaySets[i];
@@ -412,17 +415,45 @@ void HangingProtocolManager::setInputToViewer(Q2DViewerWidget *viewerWidget, Han
                 inputVolume = series->getFirstVolume();
             }
 	
-			if (m_Identifier == 9 || m_Identifier == 10 || m_Identifier == 12)
+			//if (m_Identifier == 9 || m_Identifier == 10 || m_Identifier == 12)
+			if (m_Identifier > 8)
 			{
-				if (QViewer::selectVolume())
+				Volume *vol = QViewer::selectVolume();
+				if (vol)
 				{
-					inputVolume = QViewer::selectVolume();
+					inputVolume = vol;
 				}
 			}
             ApplyHangingProtocolQViewerCommand *command = new ApplyHangingProtocolQViewerCommand(viewerWidget, displaySet);
             viewerWidget->setInputAsynchronously(inputVolume, command);
         }
     }
+}
+
+void HangingProtocolManager::thumbnailUpateImages(ViewersLayout *layout, Patient *patient, const QRectF &geometry)
+{
+
+	// Clean up viewer of the working area
+	//layout->cleanUp(geometry);
+	if (m_Identifier < 9)
+		return;
+
+	QList<HangingProtocolDisplaySet*> displaySets = m_lastHangingProtocolDisplaySet;
+	for (int i = 0; i < displaySets.size(); ++i)
+	{
+		HangingProtocolDisplaySet *displaySet = displaySets[i];
+		HangingProtocolImageSet *hangingProtocolImageSet = displaySet->getImageSet();
+		Q2DViewerWidget *viewerWidget = layout->getViewerWidget(i);//layout->addViewer(layout->convertGeometry(displaySet->getGeometry(), geometry));
+		if (i == 0)
+		{
+			layout->setSelectedViewer(viewerWidget);
+			INFO_LOG(QString("thumbnailUpateImages: %1").arg(displaySet->getDescription()));
+		}
+
+	    setInputToViewer(viewerWidget, displaySet);
+	}
+
+	
 }
 
 }
