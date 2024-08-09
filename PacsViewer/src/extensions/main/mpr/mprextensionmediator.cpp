@@ -60,4 +60,9 @@ bool MPRExtensionMediator::initializeExtension(QWidget *extension, const Extensi
     return true;
 }
 
+void  MPRExtensionMediator::executionCommand(QWidget *extension, Volume* volume, void *data , int command )
+{
+
+}
+
 } // End udg namespace
