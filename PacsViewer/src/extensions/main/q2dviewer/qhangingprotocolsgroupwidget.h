@@ -76,6 +76,10 @@ private:
     /// List of hanging protocol items.
     QList<ItemMenu*> m_itemList;
 
+public:
+	//20240808
+	void mprSelected(int index);
+
 };
 
 } // namespace udg
