@@ -929,6 +929,9 @@
          <height>32</height>
         </size>
        </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextUnderIcon</enum>
+       </property>
        <property name="autoRaise">
         <bool>true</bool>
        </property>
@@ -949,6 +952,9 @@
          <height>32</height>
         </size>
        </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextUnderIcon</enum>
+       </property>
        <property name="autoRaise">
         <bool>true</bool>
        </property>
@@ -957,7 +963,7 @@
      <item>
       <widget class="QToolButton" name="m_SA">
        <property name="text">
-        <string>SA</string>
+        <string>SA+AX</string>
        </property>
        <property name="icon">
         <iconset>
@@ -968,6 +974,9 @@
          <width>32</width>
          <height>32</height>
         </size>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextUnderIcon</enum>
        </property>
        <property name="autoRaise">
         <bool>true</bool>

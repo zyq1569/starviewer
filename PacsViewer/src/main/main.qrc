@@ -231,5 +231,8 @@
         <file>images/3D.ico</file>
         <file>images/3D.png</file>
         <file>images/3D.svg</file>
+        <file>images/icons/MPR/MPRL.svg</file>
+        <file>images/icons/MPR/MPRR.svg</file>
+        <file>images/icons/MPR/SA.svg</file>
     </qresource>
 </RCC>

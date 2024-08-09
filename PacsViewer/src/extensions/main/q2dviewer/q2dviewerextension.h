@@ -285,6 +285,8 @@ public:
 private slots:
     void start3DViewer();
     void startMPR2DViewer();
+	//20240808
+	void mprSelected(int index);
 };
 
 } // end namespace udg

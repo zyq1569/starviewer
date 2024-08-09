@@ -190,6 +190,13 @@ Q2DViewerExtension::Q2DViewerExtension(QWidget *parent)
     connect(m_3D, SIGNAL(clicked()), SLOT(start3DViewer()));
     connect(m_MPR, SIGNAL(clicked()), SLOT(startMPR2DViewer()));
 	m_MPR->hide();
+
+	//connect(m_MPRL, &QToolButton::clicked, [=] {mprSelected(9); });
+	//connect(m_MPRR, &QToolButton::clicked, [=] {mprSelected(10); });
+	//connect(m_SA,   &QToolButton::clicked, [=] {mprSelected(12); });
+	connect(m_MPRL, &QToolButton::clicked, [=] {m_hangingProtocolsMenu->mprSelected(9); });
+	connect(m_MPRR, &QToolButton::clicked, [=] {m_hangingProtocolsMenu->mprSelected(10); });
+	connect(m_SA,   &QToolButton::clicked, [=] {m_hangingProtocolsMenu->mprSelected(12); });
 }
 
 void Q2DViewerExtension::start3DViewer()
@@ -1187,6 +1194,12 @@ void  Q2DViewerExtension::updateQ2DViewer(Volume* volume)
 	{
 		m_layoutManager->thumbnailUpateImages();
 	}
+}
+
+
+void  Q2DViewerExtension::mprSelected(int index)
+{
+	m_hangingProtocolsMenu->mprSelected(index);
 }
 
 }
