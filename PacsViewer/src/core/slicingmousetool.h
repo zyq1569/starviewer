@@ -275,7 +275,8 @@ private:
 private:
     
     /// \brief Store readed settings.
-    struct {
+    struct 
+	{
         bool sliceScrollLoop;
         bool phaseScrollLoop;
         bool wraparound;

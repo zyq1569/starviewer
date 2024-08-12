@@ -48,13 +48,13 @@ void SlicingMouseTool::handleEvent(unsigned long eventID)
     {
         // To Qt device independant pixels
         QPoint position = m_2DViewer->getEventPosition() / m_2DViewer->devicePixelRatioF();
-        //onMousePress(position);
+        onMousePress(position);
     }
     else if (eventID == vtkCommand::LeftButtonReleaseEvent || eventID == vtkCommand::RightButtonReleaseEvent)
     {
         // To Qt device independant pixels
         QPoint position = m_2DViewer->getEventPosition() / m_2DViewer->devicePixelRatioF();
-        //onMouseRelease(position);
+        onMouseRelease(position);
     }
     else if (eventID == vtkCommand::MouseMoveEvent)
     {
@@ -225,7 +225,7 @@ void SlicingMouseTool::cursorIcon(const QPoint &currentPosition)
         {
             index += 2;
             axis = VerticalAxis;
-            positionIncrement = currentPosition.y() - m_cursorIcon_lastPosition.y();
+            positionIncrement = m_cursorIcon_lastPosition.y() - currentPosition.y();
         }
         else if (m_currentDirection == Direction::Horizontal)
         {
@@ -282,12 +282,12 @@ void SlicingMouseTool::cursorIcon(const QPoint &currentPosition)
         {
             case 0:  m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/scroll-slice-left.svg"))); break;
             case 1:  m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/scroll-slice-right.svg"))); break;
-            case 2:  m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/scroll-slice-down.svg"))); break;
-            case 3:  m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/scroll-slice-up.svg"))); break;
+            case 2:  m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/scroll-slice-up.svg"))); break;
+            case 3:  m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/scroll-slice-down.svg"))); break;
             case 4:  m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/scroll-slice-left-limit.svg"))); break;
             case 5:  m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/scroll-slice-right-limit.svg"))); break;
-            case 6:  m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/scroll-slice-down-limit.svg"))); break;
-            case 7:  m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/scroll-slice-up-limit.svg"))); break;
+            case 6:  m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/scroll-slice-up-limit.svg"))); break;
+            case 7:  m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/scroll-slice-down-limit.svg"))); break;
             case 8:  m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/scroll-phase-left.svg"))); break;
             case 9:  m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/scroll-phase-right.svg"))); break;
             case 10: m_2DViewer->setCursor(QCursor(QPixmap(":/images/cursors/scroll-phase-down.svg"))); break;
@@ -330,7 +330,7 @@ double SlicingMouseTool::scroll(const QPoint& currentPosition)
     else if (m_currentDirection == Direction::Vertical)
     {
         axis = VerticalAxis;
-        shift = currentPosition.y() - m_startPosition.y();
+        shift = m_startPosition.y() - currentPosition.y() ;
     }
     
     // Calculate the destination location
@@ -376,11 +376,11 @@ void SlicingMouseTool::beginScroll(const QPoint& startPosition)
     m_startPosition = startPosition;
     
     // Determine if closed loop scrolling must be enabled
-    {
-         m_scrollLoop = false;
-         m_scrollLoop = m_scrollLoop || (getMode(axis) == SlicingMode::Slice && m_config.sliceScrollLoop);
-         m_scrollLoop = m_scrollLoop || (getMode(axis) == SlicingMode::Phase && m_config.phaseScrollLoop);
-    }
+    //{
+    m_scrollLoop = false;
+    m_scrollLoop = m_scrollLoop || (getMode(axis) == SlicingMode::Slice && m_config.sliceScrollLoop);
+    m_scrollLoop = m_scrollLoop || (getMode(axis) == SlicingMode::Phase && m_config.phaseScrollLoop);
+    //}
     
     // Step lenght determined by the viewer size.
     /*
@@ -400,12 +400,12 @@ void SlicingMouseTool::beginScroll(const QPoint& startPosition)
     }	
 	*/
 	// Step length determined by the viewer size.
-	{
-		// Window length and range size always greater than zero
-		int windowLength = std::max(1, m_currentDirection == Direction::Horizontal ? m_2DViewer->size().width() : m_2DViewer->size().height());
-		double rangeSize = std::max(1.0, getRangeSize(axis));
-		m_stepLength = qBound<double>(DefaultMinimumStepLength, windowLength / rangeSize, DefaultMaximumStepLength);
-	}
+	//{
+	// Window length and range size always greater than zero
+	int windowLength = std::max(1, m_currentDirection == Direction::Horizontal ? m_2DViewer->size().width() : m_2DViewer->size().height());
+	double rangeSize = std::max(1.0, getRangeSize(axis));
+	m_stepLength = qBound<double>(DefaultMinimumStepLength, windowLength / rangeSize, DefaultMaximumStepLength);
+	//}
 }
 
 SlicingMouseTool::Direction SlicingMouseTool::directionDetection(const QPoint& currentPosition) const
