@@ -58,6 +58,7 @@ LayoutManager::LayoutManager(Patient *patient, ViewersLayout *layout, QObject *p
     m_currentHangingProtocolApplied = 0;
     m_priorHangingProtocolApplied = 0;
     m_combinedHangingProtocolApplied = 0;
+	m_layoutGrid = true;
 }
 
 LayoutManager::~LayoutManager()
@@ -108,6 +109,8 @@ void LayoutManager::setGrid(int rows, int columns)
 
     QRectF geometry = prepareToChangeLayoutOfStudy(study);
     applyLayoutCandidates(getLayoutCandidates(study), study, geometry, rows, columns);
+	//20240811 set thumbnailUpateImages:false
+	m_layoutGrid = true;
 }
 
 void LayoutManager::applyProperLayoutChoice(bool changeCurrentStudyLayout, bool changePriorStudyLayout, bool comparativeModeToggled)
@@ -692,6 +695,9 @@ void LayoutManager::setCombinedHangingProtocolApplied(HangingProtocol *combinedH
 
 void LayoutManager::setCurrentHangingProtocolApplied(HangingProtocol *currentHangingProtocolApplied)
 {
+	//20240811
+	m_layoutGrid = false;//set CurrentHangingProtocol
+
     if (m_currentHangingProtocolApplied != currentHangingProtocolApplied)
     {
         m_currentHangingProtocolApplied = currentHangingProtocolApplied;
@@ -747,6 +753,11 @@ QRectF LayoutManager::prepareToChangeLayoutOfStudy(Study *study)
 
 void LayoutManager::thumbnailUpateImages()
 {
+	if (m_layoutGrid)
+	{
+		return;
+	}
+
 	if (m_hangingProtocolManager)
 	{
 		QRectF geometry = (!m_priorStudy) ? WholeGeometry : LeftHalfGeometry;

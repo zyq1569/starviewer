@@ -178,6 +178,7 @@ private:
 
 //20240808
 public:
+	bool m_layoutGrid;
 	void thumbnailUpateImages();
 
 };
