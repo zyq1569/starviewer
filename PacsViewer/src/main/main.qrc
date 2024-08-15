@@ -234,5 +234,7 @@
         <file>images/icons/MPR/MPRL.svg</file>
         <file>images/icons/MPR/MPRR.svg</file>
         <file>images/icons/MPR/SA.svg</file>
+        <file>images/icons/Monitor.svg</file>
+        <file>images/icons/MonitorNext.svg</file>
     </qresource>
 </RCC>
