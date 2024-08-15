@@ -268,6 +268,9 @@ bool DatabaseInstallation::checkDatabaseFile()
 
 bool DatabaseInstallation::checkDatabaseRevision()
 {
+	//20240813 think: DatabaseRevision no update
+	return true;
+
     LocalDatabaseManager localDatabaseManager;
     int databaseRevision = localDatabaseManager.getDatabaseRevision();
 
