@@ -265,11 +265,15 @@ private:
     //-----------------------------------------------------//
     //-------QDockWidget-----------------------------------||
     ImageThumbnailDockWidget* m_DockImageThumbnail;////////||
+#ifdef DOCKRIGHT
+	ImageThumbnailDockWidget* m_DockImageThumbnailRight;
+#endif
     //-----------------------------------------------------||
     //-----------------------------------------------------//
 	QWidgetAction *m_moveDesktopAction;
 	QAction *m_actionMultiScreens;
 	QScreenDistribution *m_screen;
+	QToolBar *m_mainToolbar;
 public:
     void addPatientsThumbnail(QList<Patient*> patientsList);
     //ExtensionHandler *getExtensionHandler();

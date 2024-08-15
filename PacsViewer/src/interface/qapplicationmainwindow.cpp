@@ -124,13 +124,16 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	//setPalette(QPalette(QColor(0, 0, 0)));
     ///-------add QDockWidget-----------------------------------------------------
 	//setWindowFlags(Qt::FramelessWindowHint);
-    m_DockImageThumbnail= new ImageThumbnailDockWidget("",this);//("Thumbnail");
+    m_DockImageThumbnail = new ImageThumbnailDockWidget("",this);//("Thumbnail");
     addDockWidget(Qt::LeftDockWidgetArea,m_DockImageThumbnail);
     //m_DockImageThumbnail->setFeatures(QDockWidget::DockWidgetMovable);
     m_DockImageThumbnail->setObjectName("ImageThumbnail");
 
-	//m_DockImageThumbnail->col
-	//m_DockImageThumbnail->hide();
+#ifdef DOCKRIGHT
+	m_DockImageThumbnailRight = new ImageThumbnailDockWidget("", this);//("Thumbnail");
+	addDockWidget(Qt::RightDockWidgetArea, m_DockImageThumbnailRight);
+	m_DockImageThumbnailRight->setObjectName("ImageThumbnailRight");
+#endif
     /// addd connect(m_tab, SIGNAL(currentChanged(int)), SLOT(refreshTab(int)));
     //connect(m_extensionWorkspace, SIGNAL(currentChanged(int)),m_DockImageThumbnail, SLOT(refreshTab(int)));
     //-----------------------------------------------------------------------------
@@ -151,46 +154,72 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     //createActions();
     //createMenus();
 
-	//add toolbar
-	QToolBar *toolbar = new QToolBar(this);
-	this->addToolBar(Qt::TopToolBarArea, toolbar);
-	toolbar->setIconSize(QSize(30, 30));
-	toolbar->layout()->setSpacing(10);
-	toolbar->setFloatable(false);
-	toolbar->setMovable(false);
-	toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
-	//toolbar->setStyleSheet("background-color:rgb(150,150,150)}");
-	//toolbar->setStyleSheet("background-color:lightgray;");
-	//toolbar->setStyleSheet("background-color:rgb(128,128,128);");
-	//toolbar->setStyleSheet("QToolButton:!hover {background-color:lightgray} QToolBar {background: rgb(150,150,150)}");
-	toolbar->setStyleSheet("QToolButton:!hover {background-color:lightgray} QToolBar {background:lightgray}");
+	//add m_mainToolbar
+	m_mainToolbar = new QToolBar(this);
+	this->addToolBar(Qt::TopToolBarArea, m_mainToolbar);
+	m_mainToolbar->setIconSize(QSize(30, 30));
+	m_mainToolbar->layout()->setSpacing(10);
+	m_mainToolbar->setFloatable(false);
+	m_mainToolbar->setMovable(false);
+	m_mainToolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+	//m_mainToolbar->setStyleSheet("background-color:rgb(150,150,150)}");
+	//m_mainToolbar->setStyleSheet("background-color:lightgray;");
+	//m_mainToolbar->setStyleSheet("background-color:rgb(128,128,128);");
+	//m_mainToolbar->setStyleSheet("QToolButton:!hover {background-color:lightgray} QToolBar {background: rgb(150,150,150)}");
+	m_mainToolbar->setStyleSheet("QToolButton:!hover {background-color:lightgray} QToolBar {background:lightgray}");
 	//this->setStyleSheet("background-color:lightgray}");
 	//QAction *actionHide = new QAction(QIcon(":/images/showhide.png"), "show or hide Thumbnail ...", this);
-	//toolbar->addAction(actionHide);
+	//m_mainToolbar->addAction(actionHide);
 	//connect(actionHide, SIGNAL(triggered()), SLOT(showhideDockImage()));//Open an existing DICOM folder
 
     QAction *actionFile = new QAction(QIcon(":/images/folderopen.png"), "Open Files from a Directory...", this);
-	toolbar->addAction(actionFile);
+	m_mainToolbar->addAction(actionFile);
 	connect(actionFile, &QAction::triggered, [this] { m_extensionHandler->request(6); });//Open an existing DICOM folder
-	toolbar->insertSeparator(actionFile);	
+	m_mainToolbar->insertSeparator(actionFile);	
 
 	QAction *action3D = new QAction(QIcon(":/images/icons/3D.svg"), "3D Viewer", this);
-	toolbar->addAction(action3D);
+	m_mainToolbar->addAction(action3D);
 	connect(action3D, &QAction::triggered, [this] { m_extensionHandler->request("Q3DViewerExtension"); });
 
+	//QAction *actionMultScreens = new QAction(QIcon(":/images/icons/Monitor.svg"), "MultiScreens", this);
+	//m_mainToolbar->addAction(actionMultScreens);
+	//connect(actionMultScreens, SIGNAL(triggered(bool)), this, SLOT(maximizeMultipleScreens()));
+
+	//QAction *actionNextScreens = new QAction(QIcon(":/images/icons/MonitorNext.svg"), "Next Desktop", this);
+	//m_mainToolbar->addAction(actionNextScreens);
+	//actionNextScreens->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::MoveToNextDesktop));
+	//actionNextScreens->setToolTip("Next Desktop|Ctrl + Shift + Right");
+	//connect(actionNextScreens, SIGNAL(triggered(bool)), this, SLOT(moveToNextDesktop()));
+
+	QMenu* menu = new QMenu("windows", this);
+	QAction* nextScreens = menu->addAction("NextScreens");
+	QMenu* menuSub = new QMenu("...", this); //创建第二个menu对象
+	nextScreens->setMenu(menuSub);
+	nextScreens->setIcon(QIcon(":/images/icons/MonitorNext.svg"));
+	nextScreens->setToolTip("Next Desktop | Ctrl + Shift + Right");
+	nextScreens->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::MoveToNextDesktop));
+	connect(nextScreens, SIGNAL(triggered(bool)), this, SLOT(moveToNextDesktop()));
+	QScreenDistribution *screen = new QScreenDistribution(this);
+	QWidgetAction* subDesk = new QWidgetAction(this);
+	subDesk->setDefaultWidget(screen);
+	menuSub->addAction(subDesk);
+	connect(screen, SIGNAL(screenClicked(int)), this, SLOT(moveToDesktop(int)));
+	m_mainToolbar->addAction(nextScreens);
+
 	//QAction *actionMPR = new QAction(QIcon(":/images/icons/MPR-2D.svg"), "MPR-2D Viewer", this);
-	//toolbar->addAction(actionMPR);
+	//m_mainToolbar->addAction(actionMPR);
 	//connect(actionMPR, &QAction::triggered, [this] { m_extensionHandler->request("MPRExtension"); });
 
 	QAction *actionPACS = new QAction(QIcon(":/images/pacsNodes"), "PACS Images", this);
-	toolbar->addAction(actionPACS);
+	m_mainToolbar->addAction(actionPACS);
 	connect(actionPACS, &QAction::triggered, [this] { m_extensionHandler->request(7); });
 
 	QAction *actionConfig = new QAction(QIcon(":/images/preferences.png"), "&Configuration...", this);
 	actionConfig->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::Preferences));
-	toolbar->addAction(actionConfig);
+	m_mainToolbar->addAction(actionConfig);
 	connect(actionConfig, SIGNAL(triggered()), SLOT(showConfigurationDialog()));
 
+	//eg.
 	//QMenu* menu = new QMenu("windows", this); //创建一个menu对象
 	//QAction* actionWelcome = menu->addAction("欢迎"); //在menu对象上添加action
 	//QMenu* menuWelcome = new QMenu("...", this); //创建第二个menu对象
@@ -198,29 +227,12 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	//menuWelcome->addAction("双屏"); //在action上添加action
 	//menuWelcome->addAction("前屏"); //在action上添加action
 	//menuWelcome->addAction("后屏"); //在action上添加action
-	//toolbar->addAction(actionWelcome); //将action对象依附于QToolBar
-
-    //QMenu* menu = new QMenu("windows", this);
-	//QAction* m_moveDesktopAction = menu->addAction("MutileScreens");
-	//QScreenDistribution *screen = new QScreenDistribution(this);
-	//((QWidgetAction*)m_moveDesktopAction)->setDefaultWidget(screen);
-	//toolbar->addAction(m_moveDesktopAction);
-	//actionMutileScreens->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::MaximizeMultipleScreens));
-	//connect(actionMutileScreens, SIGNAL(triggered(bool)), this, SLOT(maximizeMultipleScreens()));
+	//m_mainToolbar->addAction(actionWelcome); //将action对象依附于QToolBar
 	
-	//m_moveDesktopAction = new QWidgetAction(this);
-	//QScreenDistribution *screen = new QScreenDistribution(this);
-	//m_moveDesktopAction->setDefaultWidget(screen);
-	//m_moveDesktopAction->setText(tr("Move to Screen"));
-	//m_moveDesktopAction->setStatusTip(tr("Move the window to the screen..."));
-	//m_moveDesktopAction->setCheckable(false);
-	//connect(screen, SIGNAL(screenClicked(int)), this, SLOT(moveToDesktop(int)));
-	//toolbar->addAction(m_moveDesktopAction);
-
 	QAction *aboutAction = new QAction(QIcon(":/images/help.ico"), "&About", this);
 	aboutAction->setStatusTip(tr("Show the application's About box"));
 	connect(aboutAction, SIGNAL(triggered()), SLOT(about()));
-	toolbar->addAction(aboutAction);
+	m_mainToolbar->addAction(aboutAction);
 	//---------------------------------------------------------------------------------------------------
     // We read the application settings, window status, position, etc.
     readSettings();
@@ -464,8 +476,20 @@ void QApplicationMainWindow::createActions()
 
 void QApplicationMainWindow::maximizeMultipleScreens()
 {
-    ScreenManager screenManager;
-    screenManager.maximize(this);
+	static bool bflag = true;
+	if (bflag)
+	{
+		ScreenManager screenManager;
+		screenManager.maximize(this);
+		bflag = false;
+	}
+	else
+	{
+		ScreenManager screenManager;
+		screenManager.moveToNextDesktop(this);
+		bflag = true;
+	}
+
 }
 
 void QApplicationMainWindow::moveToDesktop(int screenIndex)
@@ -951,11 +975,17 @@ void QApplicationMainWindow::openReleaseNotes()
 void QApplicationMainWindow::clearImageThumbnailDockWidget()
 {
     m_DockImageThumbnail->clearThumbmailList();
+#ifdef DOCKRIGHT
+	m_DockImageThumbnailRight->clearThumbmailList();
+#endif
 }
 
 void QApplicationMainWindow::addPatientsThumbnail(QList<Patient*> patientsList)
 {
     m_DockImageThumbnail->addPatientsThumbmailList(patientsList);
+#ifdef DOCKRIGHT
+	m_DockImageThumbnailRight->addPatientsThumbmailList(patientsList);
+#endif
 }
 
 void QApplicationMainWindow::closePatient()
@@ -964,6 +994,12 @@ void QApplicationMainWindow::closePatient()
     {
         m_DockImageThumbnail->mainAppclearThumbnail();
     }
+#ifdef DOCKRIGHT
+	if (m_DockImageThumbnailRight)
+	{
+		m_DockImageThumbnailRight->mainAppclearThumbnail();
+	}
+#endif
     this->killBill();
     this->setWindowTitle("NULL");
     if (m_patient)
@@ -994,7 +1030,9 @@ void QApplicationMainWindow::closeCurrentPatient()
 	{
 		m_extensionWorkspace->closeCurrentApplication();
 		m_DockImageThumbnail->mainAppclearThumbnail();
-
+#ifdef DOCKRIGHT
+		m_DockImageThumbnailRight->mainAppclearThumbnail();
+#endif 
 		this->killBill();
         this->setWindowTitle("NULL");
         //m_patient->setID("NULL");
