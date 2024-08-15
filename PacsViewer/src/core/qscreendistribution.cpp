@@ -33,7 +33,8 @@ QScreenDistribution::QScreenDistribution(QWidget *parent)
 {
     setMouseTracking(true);
     m_mouseInScreen = -1;
-    this->setMinimumSize(QSize(300, 200));
+    //this->setMinimumSize(QSize(300, 200));
+	setMinimumSize(QSize(150, 100));
 }
 
 QScreenDistribution::~QScreenDistribution()
@@ -42,7 +43,7 @@ QScreenDistribution::~QScreenDistribution()
 
 QSize QScreenDistribution::sizeHint() const
 {
-    return QSize(400, 200);
+    return QSize(400, 100);
 }
 
 void QScreenDistribution::mouseMoveEvent(QMouseEvent *event)
@@ -134,7 +135,8 @@ void QScreenDistribution::paintEvent(QPaintEvent *event)
     QFont numberFont;
     numberFont.setPixelSize(m_screenNumberPixelSize);
 
-    for (int i = 0; i < m_screens.count(); i++)
+	int count = m_screens.count();
+    for (int i = 0; i < count; i++)
     {
         // Paint the border
         painter.setPen(Qt::NoPen);
@@ -189,7 +191,8 @@ void QScreenDistribution::computeSizesAndPositions()
     int maximumY = 0;
 
     // For each screen
-    for (int i = 0; i < desktop->screenCount(); i++)
+	int screenCount = desktop->screenCount();
+    for (int i = 0; i < screenCount; i++)
     {
         //We take their coordinates
         QPoint topLeft = desktop->screenGeometry(i).topLeft();
@@ -243,7 +246,8 @@ void QScreenDistribution::computeSizesAndPositions()
     // We adapt the positions to the scaled and centered drawing oppositions
     int minimumScreenHeight = 0;
     int minimumScreenWidth = 0;
-    for (int i = 0; i < m_screens.count(); i++)
+	int count = m_screens.count();
+    for (int i = 0; i < count; i++)
     {
         // Requadre
         QRect screen;
