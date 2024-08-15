@@ -10,6 +10,7 @@
 #include "ExtensionWorkspace.h"
 #include "extensionmediatorfactory.h"
 
+//#include <QPainter>
 #include <QSize>
 #include <QListWidget>
 #include <QListWidgetItem>
@@ -282,6 +283,17 @@ void ImageThumbnailDockWidget::paintEvent(QPaintEvent*)
 {
     QRect rect = this->rect();
     m_ImagelistWidge->setGeometry(rect.left(),rect.top(),rect.right(),rect.bottom());
+
+	//QPainter painter(this);
+	//painter.setRenderHint(QPainter::Antialiasing);
+	//QRect bottonRect(rect.right() - 15, rect.bottom() / 2 - 30, rect.right(), rect.bottom() / 2 + 30);
+	//bottonRect.setTopLeft(QPoint(rect.right() - 15, rect.bottom() / 2 - 30));
+	//bottonRect.setBottomRight(QPoint(rect.right(), rect.bottom() / 2 + 30));
+	//QColor color;
+	//color.setRed(200);
+	//QPen blackPen = QPen(color, 2, Qt::SolidLine);//QPen(QColor("#2a2c2f"), 2, Qt::SolidLine);
+	//painter.setPen(blackPen);
+	//painter.drawRect(bottonRect);
 }
 
 void ImageThumbnailDockWidget::mouseReleaseEvent(QMouseEvent *event)
