@@ -224,7 +224,8 @@ void QScreenDistribution::computeSizesAndPositions()
 
     //We calculate the proportion in which it must be divided so that the drawing is not deformed
     float widthDivisor = (float)totalWidth / ((float)width() - WidgetMargin * 2);
-    float heightDivisor = (float)totalHeight / ((float)height() - WidgetMargin * 2);
+    //float heightDivisor = (float)totalHeight / ((float)height() - WidgetMargin * 2);
+	float heightDivisor = (float)totalHeight / ((float)height());
 
     float divisor = (widthDivisor < heightDivisor) ? heightDivisor : widthDivisor;
     int offsetX = 0;
