@@ -35,8 +35,10 @@
 #include "externalapplicationsmanager.h"
 #include "queryscreen.h"
 #include "risrequestmanager.h"
+#include "qviewer.h"
 //------------------------------------
 #include "imagethumbnaildockwidget.h"
+#include "patientbrowsermenu.h"
 //------------------------------------
 // Pel LanguageLocale
 #include "coresettings.h"
@@ -282,6 +284,17 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
     m_statsWatcher->addTriggerCounter(m_helpMenu);
     m_statsWatcher->addTriggerCounter(m_languageMenu);
     m_statsWatcher->addTriggerCounter(m_windowMenu);
+
+	//20240816
+	connect(QViewer::getStaticBrowserMenu(), SIGNAL(selectedVolumes(QList<Volume*>)), this, SLOT(updateActiveFromStaticViewerMenu(QList<Volume*>)));
+	//connect(QViewer::getStaticBrowserMenu(), SIGNAL(selectedVolume(Volume*)), this, SLOT(updateActiveFromStaticViewerMenu(QList<Volume*>)));
+	connect(QViewer::getStaticBrowserMenu(), &PatientBrowserMenu::selectedVolume, [=](Volume* vl)
+																				{
+																					QList<Volume*> vols;
+																					vols << vl;
+																					updateActiveFromStaticViewerMenu(vols);
+																				}
+	);
 }
 
 QApplicationMainWindow::~QApplicationMainWindow()
@@ -1063,4 +1076,38 @@ void QApplicationMainWindow::showhideDockImage()
 	}
 }
 
+void QApplicationMainWindow::updateActiveFromStaticViewerMenu(const QList<Volume*> &volumes)
+{
+	QWidget* widget = currentWidgetOfExtensionWorkspace();
+	QString className = widget->metaObject()->className();
+	QString str = className.section("::", 1, 1);
+	ExtensionMediator *mediator = ExtensionMediatorFactory::instance()->create(str);
+	if (mediator)
+	{
+		if (widget)
+		{
+			Volume *volume = volumes.at(0);
+			ExtensionWorkspace *extensionWorkspace = getExtensionWorkspace();
+			int extensionIndex = extensionWorkspace->currentIndex();
+			if (extensionWorkspace->tabText(extensionIndex).contains("3D-Viewer"))
+			{
+				if (!volume)
+				{
+					QMessageBox::warning(0, "3D-Viewer", ("3D-Viewer: No image is selected!!"));
+					delete mediator;
+					return;
+				}
+				if (!volume->is3Dimage())
+				{
+					QMessageBox::warning(0, "3D-Viewer", ("The selected item : 3D-Viewer fail!!! images < 5 or SliceThickness = 0.0"));
+					delete mediator;
+					return;
+				}
+				extensionWorkspace->setTabText(extensionIndex, "3D-Viewer#Series:" + volume->getSeries()->getSeriesNumber());
+			}
+			mediator->executionCommand(widget, volume);
+		}
+		delete mediator;
+	}
+}
 } // end namespace udg

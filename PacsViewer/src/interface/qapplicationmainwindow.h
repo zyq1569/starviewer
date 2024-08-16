@@ -45,6 +45,8 @@ class StatsWatcher;
 class ExternalApplication;
 class ImageThumbnailDockWidget;
 class QScreenDistribution;
+class Volume;
+
 class QApplicationMainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -198,6 +200,10 @@ private slots:
 	void closeCurrentPatient();
 
 	void showhideDockImage();
+	//20240816
+public slots:
+	void updateActiveFromStaticViewerMenu(const QList<Volume*> &volumes);
+
 private:
     ///The mini-applications area
     ExtensionWorkspace *m_extensionWorkspace;
@@ -283,6 +289,7 @@ public:
 public:
     void clearImageThumbnailDockWidget();
     QWidget *currentWidgetOfExtensionWorkspace();
+
 };
 
 }; // fi namespace udg
