@@ -96,7 +96,7 @@ QViewer::QViewer(QWidget *parent)
     this->initializeWorkInProgressByViewerStatus(m_viewerStatus);
 
     this->setMouseTracking(false);
-    m_patientBrowserMenu = new PatientBrowserMenu(0);
+	m_patientBrowserMenu = getStaticBrowserMenu();// new PatientBrowserMenu(0);
     //Right now the default behavior will be that once a
     this->setContextMenuPolicy(Qt::ContextMenuPolicy::NoContextMenu);
     //volume is selected we immediately assign it as input
@@ -108,7 +108,7 @@ QViewer::~QViewer()
     // The removal of the vtkWidget must be at the end as the others
     // objects that we remove can be used during their destruction
     delete m_toolProxy;
-    m_patientBrowserMenu->deleteLater();
+    //m_patientBrowserMenu->deleteLater();
     m_windowToImageFilter->Delete();
     delete m_vtkWidget;
     m_vtkQtConnections->Delete();
@@ -895,6 +895,7 @@ PatientBrowserMenu* QViewer::getPatientBrowserMenu() const
 
 void QViewer::setAutomaticallyLoadPatientBrowserMenuSelectedInput(bool load)
 {
+	return;
     if (load)
     {
         connect(m_patientBrowserMenu, SIGNAL(selectedVolume(Volume*)), this, SLOT(setInputAndRender(Volume*)));
@@ -1045,5 +1046,12 @@ Volume* QViewer::selectVolume(Volume* volume)
 	}
 	return m_selectVolume;
 }
+
+PatientBrowserMenu * QViewer::getStaticBrowserMenu()
+{
+	static PatientBrowserMenu BrowserMenu(NULL);
+	return &BrowserMenu;
+}
+
 
 };  // End namespace udg

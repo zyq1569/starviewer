@@ -376,6 +376,7 @@ private:
 	//zyq20240408
 public:
 	static  Volume* selectVolume( Volume* volume = NULL);
+	static PatientBrowserMenu *getStaticBrowserMenu();
 };
 
 };  // End namespace udg
