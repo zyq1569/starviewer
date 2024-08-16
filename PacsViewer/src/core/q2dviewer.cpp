@@ -73,7 +73,7 @@ Q2DViewer::Q2DViewer(QWidget *parent)
 
     connect(m_volumeReaderManager, SIGNAL(readingFinished()), SLOT(volumeReaderJobFinished()));
     connect(m_volumeReaderManager, SIGNAL(progress(int)), m_workInProgressWidget, SLOT(updateProgress(int)));
-    connect(m_patientBrowserMenu, SIGNAL(selectedVolumes(QList<Volume*>)), this, SLOT(setInputAndRender(QList<Volume*>)));
+    //connect(m_patientBrowserMenu, SIGNAL(selectedVolumes(QList<Volume*>)), this, SLOT(setInputAndRender(QList<Volume*>)));
 
     // We create annotations and actors
     m_annotationsHandler = new Q2DViewerAnnotationHandler(this);
