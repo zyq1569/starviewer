@@ -180,10 +180,39 @@ int main(int argc, char *argv[])
     splash.resize(splashPixmap.size());
     splash.move(QApplication::desktop()->screenGeometry().center() - splash.rect().center());
 
+	//20240821
+	bool commandLineDicomDirflag = false;
+	QString CommDir;
+	if (2 == argc)
+	{
+		QStringList commandArgumentsList = app.arguments();
+		CommDir = commandArgumentsList[1];
+		QDir Dcmdir(CommDir);
+		if (Dcmdir.exists())
+		{
+			commandLineDicomDirflag = true;
+		}
+	}
+
     if (!app.isRunning())
     {
         splash.show();
     }
+	else
+	{
+		if (commandLineDicomDirflag)
+		{
+			if (app.sendMessage(CommDir))
+			{
+				INFO_LOG("The command line arguments were successfully sent to the main instance:" + CommDir);
+			}
+			else
+			{
+				WARN_LOG("sendMessage timeout, sent to the main instance:" + CommDir);
+			}
+			return 0;
+		}
+	}
     app.setOrganizationName(udg::OrganizationNameString);
     app.setOrganizationDomain(udg::OrganizationDomainString);
     app.setApplicationName(udg::ApplicationNameString);
@@ -232,9 +261,9 @@ int main(int argc, char *argv[])
     QString commandLineCall = commandLineArgumentsList.join(" ");
     INFO_LOG("Started new Starviewer instance with the following command line arguments " + commandLineCall);
 
-    if (commandLineArgumentsList.count() > 1 )
+    if (commandLineArgumentsList.count() > 1  && !commandLineDicomDirflag)
     {
-        if (commandLineArgumentsList[1] != "hide")
+		if (commandLineArgumentsList[1] != "hide")
         {
             // We just parse the command line arguments to see if they are correct, we'll wait until everything is loaded by
             // process them, if the arguments are not correct show QMessagebox if there is another instance of Starviewer we end here.
@@ -276,35 +305,49 @@ int main(int argc, char *argv[])
         {
             udg::QApplicationMainWindow *mainWin = new udg::QApplicationMainWindow;
             //We connect to receive arguments from other instances
-            QObject::connect(&app, SIGNAL(messageReceived(QString)), StarviewerSingleApplicationCommandLineSingleton::instance(), SLOT(parseAndRun(QString)));
+			if (commandLineDicomDirflag)
+			{
+				QObject::connect(&app, SIGNAL(messageReceived(QString)), mainWin, SLOT(openCommandDirDcm(QString)));
+			}
+			else
+			{
+				QObject::connect(&app, SIGNAL(messageReceived(QString)), StarviewerSingleApplicationCommandLineSingleton::instance(), SLOT(parseAndRun(QString)));
+			}
 
             INFO_LOG("Created main window");
 
-            if (argc > 1)///20220912
+            if (argc > 1 && !commandLineDicomDirflag)///20220912
             {
                 mainWin->hide();
                 INFO_LOG("MHealthReport.exe start!--main(int argc, char *argv[]):argc > 1  mainWin->hide()" + QString(argv[1]));
             }
             else
-            {
+            {			
+				if (commandLineDicomDirflag)
+				{
+					app.setActivationWindow(mainWin);
+				}
                 mainWin->show();
             }
             mainWin->checkNewVersionAndShowReleaseNotes();
 
-            QObject::connect(&app, SIGNAL(lastWindowClosed()),
-                             &app, SLOT(quit()));
+            QObject::connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
             splash.close();
 
             // It is expected to have everything loaded to process the arguments received by command line,
             // this way by exemoke if it throws any
             // QMessageBox, already launched showing the MainWindow.
-            if (commandLineArgumentsList.count() > 1)
+            if (commandLineArgumentsList.count() > 1 && !commandLineDicomDirflag)
             {
                 QString errorInvalidCommanLineArguments;
                 StarviewerSingleApplicationCommandLineSingleton::instance()->parseAndRun(commandLineArgumentsList, errorInvalidCommanLineArguments);
             }
-
+			if (commandLineDicomDirflag)
+			{
+				mainWin->openCommandDirDcm(CommDir);
+			}
             returnValue = app.exec();
+
         }
         // Handle special case when the database is newer than expected and the users prefers to quit.
         // In that case an int is thrown and catched here.
