@@ -791,4 +791,8 @@ void  ExtensionHandler::closeCurrentPatient()
 
 }
 
+void ExtensionHandler::processCommandInput(const QStringList &inputFiles)
+{
+	processInput(inputFiles);
+}
 }   // end namespace udg

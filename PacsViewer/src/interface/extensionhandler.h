@@ -153,6 +153,7 @@ private:
 
  public:
     void closeCurrentPatient();
+	void processCommandInput(const QStringList &inputFiles);
 };
 
 };  // end namespace udg
