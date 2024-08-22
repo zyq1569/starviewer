@@ -203,6 +203,8 @@ private slots:
 	//20240816
 public slots:
 	void updateActiveFromStaticViewerMenu(const QList<Volume*> &volumes);
+	//20240820
+	void openCommandDirDcm(QString dir);
 
 private:
     ///The mini-applications area
@@ -286,6 +288,8 @@ public:
     //----------------------------------------------------------------
     //20240715
     void closePatient();
+	//20240820
+	QStringList generateFilenames(const QString &dirPath);
 public:
     void clearImageThumbnailDockWidget();
     QWidget *currentWidgetOfExtensionWorkspace();

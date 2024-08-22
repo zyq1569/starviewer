@@ -291,8 +291,7 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	connect(QViewer::getStaticBrowserMenu(), &PatientBrowserMenu::selectedVolume, [=](Volume* vl)
 																				{
 																					QList<Volume*> vols;
-																					vols << vl;
-																					updateActiveFromStaticViewerMenu(vols);
+																					updateActiveFromStaticViewerMenu(vols<<vl);
 																				}
 	);
 }
@@ -1110,4 +1109,46 @@ void QApplicationMainWindow::updateActiveFromStaticViewerMenu(const QList<Volume
 		delete mediator;
 	}
 }
+
+void QApplicationMainWindow::openCommandDirDcm(QString rootPath)
+{
+	QStringList dirsList, filenames;
+	QDir rootDir(rootPath);
+	if (rootDir.exists())
+	{
+		// We add the current directory to the list
+		dirsList << rootPath;
+		foreach(const QString &dirName, dirsList)
+		{
+			filenames << generateFilenames(dirName);
+		}
+	}
+	if (!filenames.isEmpty())
+	{
+		m_extensionHandler->closeCurrentPatient();
+		m_extensionHandler->processCommandInput(filenames);
+	}
+}
+
+QStringList QApplicationMainWindow::generateFilenames(const QString &dirPath)
+{
+	QStringList list;
+	//We check that the directory has files
+	QDir dir(dirPath);
+	QFileInfoList fileInfoList = dir.entryInfoList(QDir::Files);
+
+	QString suffix;
+	//We add to the list each of the absolute paths of the files contained in the directory
+	foreach(const QFileInfo &fileInfo, fileInfoList)
+	{
+		suffix = fileInfo.suffix();
+		if ((suffix.length() > 0 && suffix.toLower() == "dcm") || suffix.length() == 0)
+		{
+			list << fileInfo.absoluteFilePath();
+		}
+	}
+
+	return list;
+}
+
 } // end namespace udg
