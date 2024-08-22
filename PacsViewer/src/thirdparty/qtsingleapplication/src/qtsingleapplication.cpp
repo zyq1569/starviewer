@@ -289,11 +289,11 @@ void QtSingleApplication::setActivationWindow(QWidget* aw, bool activateOnMessag
     actWin = aw;
     if (activateOnMessage)
     {
-        connect(peer, SIGNAL(messageReceived(const QString&)), this, SLOT(activateWindow()));
+        connect(peer, SIGNAL(messageReceived(const QString&)), this, SLOT(activateWindow(QString)));
     }
     else
     {
-        disconnect(peer, SIGNAL(messageReceived(const QString&)), this, SLOT(activateWindow()));
+        disconnect(peer, SIGNAL(messageReceived(const QString&)), this, SLOT(activateWindow(QString)));
     }
 }
 
@@ -324,7 +324,7 @@ QWidget* QtSingleApplication::activationWindow() const
 
   \sa setActivationWindow(), messageReceived(), initialize()
 */
-void QtSingleApplication::activateWindow()
+void QtSingleApplication::activateWindow(QString message)
 {
     if (actWin)
     {
@@ -332,6 +332,7 @@ void QtSingleApplication::activateWindow()
         actWin->raise();
         actWin->activateWindow();
     }
+	//QMessageBox::warning(NULL,"messageReceived", message);
 }
 
 
