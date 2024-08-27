@@ -729,7 +729,9 @@ QApplicationMainWindow* QApplicationMainWindow::setPatientInNewWindow(Patient *p
 {
     QApplicationMainWindow *newMainWindow = openBlankWindow();
     newMainWindow->setPatient(patient);
-
+	QList<Patient*> patientsList;
+	patientsList << patient;
+	newMainWindow->addPatientsThumbnail(patientsList);
     return newMainWindow;
 }
 
