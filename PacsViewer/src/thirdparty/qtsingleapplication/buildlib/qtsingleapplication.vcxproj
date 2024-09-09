@@ -1,13 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MTProfile|Win32">
+      <Configuration>MTProfile</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="MTProfile|x64">
       <Configuration>MTProfile</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="NewRD|Win32">
+      <Configuration>NewRD</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="NewRD|x64">
       <Configuration>NewRD</Configuration>
       <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelDeb32|Win32">
+      <Configuration>RelDeb32</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelDeb32|x64">
+      <Configuration>RelDeb32</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
@@ -36,7 +60,43 @@
     <IntermediateDirectory>release\</IntermediateDirectory>
     <PrimaryOutput>Qt5Solutions_SingleApplication-head</PrimaryOutput>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <PlatformToolset>v141</PlatformToolset>
+    <OutputDirectory>..\..\..\..\bin\</OutputDirectory>
+    <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
+    <CharacterSet>NotSet</CharacterSet>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <IntermediateDirectory>release\</IntermediateDirectory>
+    <PrimaryOutput>Qt5Solutions_SingleApplication-head</PrimaryOutput>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'" Label="Configuration">
+    <PlatformToolset>v141</PlatformToolset>
+    <OutputDirectory>..\..\..\..\bin\</OutputDirectory>
+    <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
+    <CharacterSet>NotSet</CharacterSet>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <IntermediateDirectory>release\</IntermediateDirectory>
+    <PrimaryOutput>Qt5Solutions_SingleApplication-head</PrimaryOutput>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'" Label="Configuration">
+    <PlatformToolset>v141</PlatformToolset>
+    <OutputDirectory>..\..\..\..\bin\</OutputDirectory>
+    <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
+    <CharacterSet>NotSet</CharacterSet>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <IntermediateDirectory>release\</IntermediateDirectory>
+    <PrimaryOutput>Qt5Solutions_SingleApplication-head</PrimaryOutput>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'" Label="Configuration">
+    <PlatformToolset>v141</PlatformToolset>
+    <OutputDirectory>..\..\..\..\bin\</OutputDirectory>
+    <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
+    <CharacterSet>NotSet</CharacterSet>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <IntermediateDirectory>release\</IntermediateDirectory>
+    <PrimaryOutput>Qt5Solutions_SingleApplication-head</PrimaryOutput>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'" Label="Configuration">
     <PlatformToolset>v141</PlatformToolset>
     <OutputDirectory>..\..\..\..\bin\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
@@ -54,7 +114,25 @@
     <IntermediateDirectory>release\</IntermediateDirectory>
     <PrimaryOutput>Qt5Solutions_SingleApplication-head</PrimaryOutput>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'" Label="Configuration">
+    <PlatformToolset>v141</PlatformToolset>
+    <OutputDirectory>..\..\..\..\bin\</OutputDirectory>
+    <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
+    <CharacterSet>NotSet</CharacterSet>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <IntermediateDirectory>release\</IntermediateDirectory>
+    <PrimaryOutput>Qt5Solutions_SingleApplication-head</PrimaryOutput>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <PlatformToolset>v141</PlatformToolset>
+    <OutputDirectory>..\..\..\..\bin\</OutputDirectory>
+    <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
+    <CharacterSet>NotSet</CharacterSet>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <IntermediateDirectory>debug\</IntermediateDirectory>
+    <PrimaryOutput>Qt5Solutions_SingleApplication-headd</PrimaryOutput>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <PlatformToolset>v141</PlatformToolset>
     <OutputDirectory>..\..\..\..\bin\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
@@ -68,38 +146,118 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\..\..\bin\$(Configuration)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">..\..\..\..\bin\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">..\..\..\..\bin\$(Configuration)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">..\..\..\..\bin\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\..\..\tmp\$(Configuration)\obj\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">..\..\..\..\tmp\obj\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">..\..\..\..\tmp\obj\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">..\..\..\..\tmp\obj\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectName)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectName)</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">$(ProjectName)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">$(ProjectName)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">$(ProjectName)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">$(ProjectName)</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">$(ProjectName)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">$(ProjectName)</TargetName>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IgnoreImportLibrary>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</IgnoreImportLibrary>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">true</IgnoreImportLibrary>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">true</IgnoreImportLibrary>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">true</IgnoreImportLibrary>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">true</IgnoreImportLibrary>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">true</IgnoreImportLibrary>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">true</IgnoreImportLibrary>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">false</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\..\..\bin\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\..\..\tmp\$(Configuration)\obj\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectName)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)</TargetName>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</IgnoreImportLibrary>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;..\src;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtWidgets;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtGui;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtANGLE;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtNetwork;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtCore;release;/include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>release\</AssemblerListingLocation>
+      <BrowseInformation>false</BrowseInformation>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <DisableSpecificWarnings>4577;4467;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ObjectFileName>release\</ObjectFileName>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>_WINDOWS;QT_QTSINGLEAPPLICATION_EXPORT;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
+      <ProgramDataBaseFileName>
+      </ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>"C:\Program Files (x86)\Windows Kits\10\lib\10.0.17763.0\um\x64\ws2_32.lib";opengl32.lib;glu32.lib;gdi32.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Widgets.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Gui.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Network.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreImportLibrary>true</IgnoreImportLibrary>
+      <LinkDLL>true</LinkDLL>
+      <LinkIncremental>false</LinkIncremental>
+      <OutputFile>$(OutDir)\Qt5Solutions_SingleApplication-head.dll</OutputFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;QT_QTSINGLEAPPLICATION_EXPORT;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>.;..\src;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtWidgets;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtGui;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtANGLE;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtNetwork;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtCore;release;/include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
@@ -184,7 +342,179 @@
       <PreprocessorDefinitions>_WINDOWS;QT_QTSINGLEAPPLICATION_EXPORT;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;..\src;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtWidgets;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtGui;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtANGLE;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtNetwork;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtCore;release;/include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>release\</AssemblerListingLocation>
+      <BrowseInformation>false</BrowseInformation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4577;4467;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ObjectFileName>release\</ObjectFileName>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_WINDOWS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
+      <ProgramDataBaseFileName>$(TargetDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>"C:\Program Files (x86)\Windows Kits\10\lib\10.0.17763.0\um\x64\ws2_32.lib";opengl32.lib;glu32.lib;gdi32.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Widgets.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Gui.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Network.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreImportLibrary>true</IgnoreImportLibrary>
+      <LinkDLL>true</LinkDLL>
+      <LinkIncremental>false</LinkIncremental>
+      <OutputFile>$(OutDir)\Qt5Solutions_SingleApplication-head.dll</OutputFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;QT_QTSINGLEAPPLICATION_EXPORT;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;..\src;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtWidgets;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtGui;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtANGLE;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtNetwork;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtCore;release;/include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>release\</AssemblerListingLocation>
+      <BrowseInformation>false</BrowseInformation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4577;4467;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ObjectFileName>release\</ObjectFileName>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_WINDOWS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
+      <ProgramDataBaseFileName>$(TargetDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>"C:\Program Files (x86)\Windows Kits\10\lib\10.0.17763.0\um\x64\ws2_32.lib";opengl32.lib;glu32.lib;gdi32.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Widgets.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Gui.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Network.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreImportLibrary>true</IgnoreImportLibrary>
+      <LinkDLL>true</LinkDLL>
+      <LinkIncremental>false</LinkIncremental>
+      <OutputFile>$(OutDir)\Qt5Solutions_SingleApplication-head.dll</OutputFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;QT_QTSINGLEAPPLICATION_EXPORT;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;..\src;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtWidgets;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtGui;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtANGLE;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtNetwork;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtCore;release;/include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>release\</AssemblerListingLocation>
+      <BrowseInformation>false</BrowseInformation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4577;4467;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ObjectFileName>release\</ObjectFileName>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_WINDOWS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
+      <ProgramDataBaseFileName>$(TargetDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>"C:\Program Files (x86)\Windows Kits\10\lib\10.0.17763.0\um\x64\ws2_32.lib";opengl32.lib;glu32.lib;gdi32.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Widgets.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Gui.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Network.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreImportLibrary>true</IgnoreImportLibrary>
+      <LinkDLL>true</LinkDLL>
+      <LinkIncremental>false</LinkIncremental>
+      <OutputFile>$(OutDir)\Qt5Solutions_SingleApplication-head.dll</OutputFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;QT_QTSINGLEAPPLICATION_EXPORT;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;..\src;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtWidgets;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtGui;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtANGLE;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtNetwork;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtCore;release;/include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>release\</AssemblerListingLocation>
+      <BrowseInformation>false</BrowseInformation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4577;4467;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ObjectFileName>release\</ObjectFileName>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_WINDOWS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
+      <ProgramDataBaseFileName>$(TargetDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>"C:\Program Files (x86)\Windows Kits\10\lib\10.0.17763.0\um\x64\ws2_32.lib";opengl32.lib;glu32.lib;gdi32.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Widgets.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Gui.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Network.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreImportLibrary>true</IgnoreImportLibrary>
+      <LinkDLL>true</LinkDLL>
+      <LinkIncremental>false</LinkIncremental>
+      <OutputFile>$(OutDir)\Qt5Solutions_SingleApplication-head.dll</OutputFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;QT_QTSINGLEAPPLICATION_EXPORT;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>.;..\src;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtWidgets;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtGui;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtANGLE;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtNetwork;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtCore;release;/include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
@@ -266,6 +596,46 @@
       <PreprocessorDefinitions>_CONSOLE;QT_QTSINGLEAPPLICATION_EXPORT;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;..\src;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtWidgets;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtGui;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtANGLE;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtNetwork;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtCore;debug;/include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>debug\</AssemblerListingLocation>
+      <BrowseInformation>false</BrowseInformation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4577;4467;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ObjectFileName>debug\</ObjectFileName>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CONSOLE;QT_QTSINGLEAPPLICATION_EXPORT;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>"C:\Program Files (x86)\Windows Kits\10\lib\10.0.17763.0\um\x64\ws2_32.lib";opengl32.lib;glu32.lib;gdi32.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Widgetsd.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Guid.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Networkd.lib;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\lib\Qt5Cored.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreImportLibrary>true</IgnoreImportLibrary>
+      <LinkDLL>true</LinkDLL>
+      <OutputFile>$(OutDir)\Qt5Solutions_SingleApplication-headd.dll</OutputFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Console</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_CONSOLE;QT_QTSINGLEAPPLICATION_EXPORT;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\qtlocalpeer.cpp" />
     <ClCompile Include="..\src\qtsingleapplication.cpp" />
@@ -273,83 +643,173 @@
   <ItemGroup>
     <CustomBuild Include="..\src\qtlocalpeer.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\src\qtlocalpeer.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\src\qtlocalpeer.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">..\src\qtlocalpeer.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">..\src\qtlocalpeer.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">..\src\qtlocalpeer.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">..\src\qtlocalpeer.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">..\src\qtlocalpeer.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">..\src\qtlocalpeer.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtlocalpeer.h -o release\moc_qtlocalpeer.cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtlocalpeer.h -o release\moc_qtlocalpeer.cpp</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtlocalpeer.h -o release\moc_qtlocalpeer.cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtlocalpeer.h -o release\moc_qtlocalpeer.cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtlocalpeer.h -o release\moc_qtlocalpeer.cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtlocalpeer.h -o release\moc_qtlocalpeer.cpp</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtlocalpeer.h -o release\moc_qtlocalpeer.cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtlocalpeer.h -o release\moc_qtlocalpeer.cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC ../src/qtlocalpeer.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MOC ../src/qtlocalpeer.h</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">MOC ../src/qtlocalpeer.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">MOC ../src/qtlocalpeer.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">MOC ../src/qtlocalpeer.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">MOC ../src/qtlocalpeer.h</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">MOC ../src/qtlocalpeer.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">MOC ../src/qtlocalpeer.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_qtlocalpeer.cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">release\moc_qtlocalpeer.cpp;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">release\moc_qtlocalpeer.cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">release\moc_qtlocalpeer.cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">release\moc_qtlocalpeer.cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">release\moc_qtlocalpeer.cpp;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">release\moc_qtlocalpeer.cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">release\moc_qtlocalpeer.cpp;%(Outputs)</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\src\qtlocalpeer.h;debug\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\src\qtlocalpeer.h;debug\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/debug/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtlocalpeer.h -o debug\moc_qtlocalpeer.cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/debug/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtlocalpeer.h -o debug\moc_qtlocalpeer.cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC ../src/qtlocalpeer.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MOC ../src/qtlocalpeer.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\moc_qtlocalpeer.cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">debug\moc_qtlocalpeer.cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\src\qtsingleapplication.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\src\qtsingleapplication.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\src\qtsingleapplication.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">..\src\qtsingleapplication.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">..\src\qtsingleapplication.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">..\src\qtsingleapplication.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">..\src\qtsingleapplication.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">..\src\qtsingleapplication.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">..\src\qtsingleapplication.h;release\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtsingleapplication.h -o release\moc_qtsingleapplication.cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtsingleapplication.h -o release\moc_qtsingleapplication.cpp</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtsingleapplication.h -o release\moc_qtsingleapplication.cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtsingleapplication.h -o release\moc_qtsingleapplication.cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtsingleapplication.h -o release\moc_qtsingleapplication.cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtsingleapplication.h -o release\moc_qtsingleapplication.cpp</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtsingleapplication.h -o release\moc_qtsingleapplication.cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/release/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtsingleapplication.h -o release\moc_qtsingleapplication.cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC ../src/qtsingleapplication.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MOC ../src/qtsingleapplication.h</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">MOC ../src/qtsingleapplication.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">MOC ../src/qtsingleapplication.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">MOC ../src/qtsingleapplication.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">MOC ../src/qtsingleapplication.h</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">MOC ../src/qtsingleapplication.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">MOC ../src/qtsingleapplication.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_qtsingleapplication.cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">release\moc_qtsingleapplication.cpp;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">release\moc_qtsingleapplication.cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">release\moc_qtsingleapplication.cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">release\moc_qtsingleapplication.cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">release\moc_qtsingleapplication.cpp;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">release\moc_qtsingleapplication.cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">release\moc_qtsingleapplication.cpp;%(Outputs)</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\src\qtsingleapplication.h;debug\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\src\qtsingleapplication.h;debug\moc_predefs.h;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/debug/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtsingleapplication.h -o debug\moc_qtsingleapplication.cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\bin\moc.exe  -DQT_QTSINGLEAPPLICATION_EXPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include F:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib/debug/moc_predefs.h -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/mkspecs/win32-msvc -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/buildlib -IF:/temp/starviewer/PacsViewer/src/thirdparty/qtsingleapplication/src -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtWidgets -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtGui -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtANGLE -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtNetwork -IC:/QT/QT5.12.12/5.12.12/MSVC2017_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\src\qtsingleapplication.h -o debug\moc_qtsingleapplication.cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC ../src/qtsingleapplication.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MOC ../src/qtsingleapplication.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\moc_qtsingleapplication.cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">debug\moc_qtsingleapplication.cpp;%(Outputs)</Outputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">true</ExcludedFromBuild>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus /MP -Zi -MD -E C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;debug\moc_predefs.h</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus /MP -Zi -MD -E C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;debug\moc_predefs.h</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generate moc_predefs.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generate moc_predefs.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\moc_predefs.h;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">debug\moc_predefs.h;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <FileType>Document</FileType>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus /MP -O2 -MD -E C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;release\moc_predefs.h</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus /MP -O2 -MD -E C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;release\moc_predefs.h</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus /MP -O2 -MD -E C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;release\moc_predefs.h</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus /MP -O2 -MD -E C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;release\moc_predefs.h</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus /MP -O2 -MD -E C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;release\moc_predefs.h</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus /MP -O2 -MD -E C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;release\moc_predefs.h</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus /MP -O2 -MD -E C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;release\moc_predefs.h</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus /MP -O2 -MD -E C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;release\moc_predefs.h</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generate moc_predefs.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generate moc_predefs.h</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">Generate moc_predefs.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">Generate moc_predefs.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">Generate moc_predefs.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">Generate moc_predefs.h</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">Generate moc_predefs.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">Generate moc_predefs.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_predefs.h;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">release\moc_predefs.h;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">release\moc_predefs.h;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">release\moc_predefs.h;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">release\moc_predefs.h;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">release\moc_predefs.h;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">release\moc_predefs.h;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">release\moc_predefs.h;%(Outputs)</Outputs>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </CustomBuild>
     <ClCompile Include="debug\moc_qtlocalpeer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="release\moc_qtlocalpeer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="debug\moc_qtsingleapplication.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NewRD|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelDeb32|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MTProfile|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="release\moc_qtsingleapplication.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
