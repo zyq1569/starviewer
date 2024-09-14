@@ -296,6 +296,7 @@
     <Lib>
       <OutputFile>$(OutDir)\core.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X64</AdditionalOptions>
     </Lib>
     <Midl>
       <DefaultCharType>Unsigned</DefaultCharType>
