@@ -219,6 +219,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">
     <TargetName>breakpad</TargetName>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <IntDir>$(Configuration)\win32\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MTProfile|x64'">
     <OutDir>..\..\..\bin\$(Configuration)\</OutDir>
