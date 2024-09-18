@@ -434,8 +434,8 @@ void HangingProtocolManager::thumbnailUpateImages(ViewersLayout *layout, Patient
 {
 	// Clean up viewer of the working area
 	//layout->cleanUp(geometry);
-	if (m_Identifier < 9)
-		return;
+	//if (m_Identifier < 9)
+	//	return;
 
 	QList<HangingProtocolDisplaySet*> displaySets = m_lastHangingProtocolDisplaySet;
 	for (int i = 0; i < displaySets.size(); ++i)
