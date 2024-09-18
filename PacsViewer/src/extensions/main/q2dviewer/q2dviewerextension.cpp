@@ -1191,7 +1191,7 @@ void  Q2DViewerExtension::updateQ2DViewer(Volume* volume)
 	bool bfalg = true;
 	if (m_layoutManager)
 	{
-		if (!m_layoutManager->m_layoutGrid && m_layoutManager->getLayoutIdentifier() >= 9)
+		if (!m_layoutManager->m_layoutGrid && m_layoutManager->getLayoutIdentifier() > 8)
 		{
 			if (volume)
 			{
