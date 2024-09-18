@@ -1188,14 +1188,28 @@ void Q2DViewerExtension::setFusionLayoutMprRight(const QList<Volume *> &volumes)
 //---20200919 add-----------------------------------------------------------------------
 void  Q2DViewerExtension::updateQ2DViewer(Volume* volume)
 {
-    m_lastSelectedViewer->changeInputAsynchronously(volume);
-	//20240808 for MPR Protocol
+	bool bfalg = true;
 	if (m_layoutManager)
 	{
-		m_layoutManager->thumbnailUpateImages();
+		if (!m_layoutManager->m_layoutGrid && m_layoutManager->getLayoutIdentifier() >= 9)
+		{
+			if (volume)
+			{
+				QViewer::selectVolume(volume);
+			}
+			//20240808 for MPR Protocol
+			if (m_layoutManager)
+			{
+				m_layoutManager->thumbnailUpateImages();
+			}
+			bfalg = false;
+		}
+	}
+	if (bfalg)
+	{
+		return m_lastSelectedViewer->changeInputAsynchronously(volume);
 	}
 }
-
 
 void  Q2DViewerExtension::mprSelected(int index)
 {

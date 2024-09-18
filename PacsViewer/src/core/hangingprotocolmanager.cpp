@@ -432,7 +432,6 @@ void HangingProtocolManager::setInputToViewer(Q2DViewerWidget *viewerWidget, Han
 
 void HangingProtocolManager::thumbnailUpateImages(ViewersLayout *layout, Patient *patient, const QRectF &geometry)
 {
-
 	// Clean up viewer of the working area
 	//layout->cleanUp(geometry);
 	if (m_Identifier < 9)
@@ -442,18 +441,10 @@ void HangingProtocolManager::thumbnailUpateImages(ViewersLayout *layout, Patient
 	for (int i = 0; i < displaySets.size(); ++i)
 	{
 		HangingProtocolDisplaySet *displaySet = displaySets[i];
-		HangingProtocolImageSet *hangingProtocolImageSet = displaySet->getImageSet();
-		Q2DViewerWidget *viewerWidget = layout->getViewerWidget(i);//layout->addViewer(layout->convertGeometry(displaySet->getGeometry(), geometry));
-		if (i == 0)
-		{
-			layout->setSelectedViewer(viewerWidget);
-			INFO_LOG(QString("thumbnailUpateImages: %1").arg(displaySet->getDescription()));
-		}
-
-	    setInputToViewer(viewerWidget, displaySet);
+		Q2DViewerWidget *viewerWidget = layout->getViewerWidget(i);
+		setInputToViewer(viewerWidget, displaySet);
 	}
 
-	
 }
 
 }

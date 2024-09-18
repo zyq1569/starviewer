@@ -180,7 +180,8 @@ private:
 public:
 	bool m_layoutGrid;
 	void thumbnailUpateImages();
-
+	//20240918
+	int getLayoutIdentifier();
 };
 
 } // end namespace udg
