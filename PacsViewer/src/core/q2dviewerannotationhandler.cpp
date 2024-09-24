@@ -26,6 +26,7 @@
 #include "logging.h"
 
 #include <QRegularExpression>
+#include <QCoreApplication>
 
 #include <vtkCornerAnnotation.h>
 #include <vtkTextActor.h>
@@ -501,9 +502,17 @@ void Q2DViewerAnnotationHandler::createAnnotations()
     m_cornerAnnotations->SetMaximumFontSize(ApplicationStyleHelper(true).getCornerAnnotationFontSize());
     //m_cornerAnnotations->GetTextProperty()->SetFontFamilyToArial();
     //m_cornerAnnotations->GetTextProperty()->ShadowOn();
-	m_cornerAnnotations->GetTextProperty()->SetFontFamily(VTK_FONT_FILE);
-	//m_cornerAnnotations->GetTextProperty()->SetFontFile("C:\\Windows\\Fonts\\mingliub.ttc");
-	m_cornerAnnotations->GetTextProperty()->SetFontFile("F:\\temp\\starviewer\\PacsViewer\\Fonts\\msyhbd.ttc");
+	const static QString forntFile = QCoreApplication::applicationDirPath() + "\\Fonts\\msyh.ttf";
+	QFile file(forntFile);
+	if (file.exists())
+	{
+		m_cornerAnnotations->GetTextProperty()->SetFontFamily(VTK_FONT_FILE);
+		m_cornerAnnotations->GetTextProperty()->SetFontFile(qPrintable(forntFile));
+	}
+	else
+	{
+		m_cornerAnnotations->GetTextProperty()->SetFontFamilyToArial();
+	}
 	m_cornerAnnotations->GetTextProperty()->ShadowOn();
     createOrientationAnnotations();
 }
