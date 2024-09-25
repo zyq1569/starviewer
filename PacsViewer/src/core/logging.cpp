@@ -44,7 +44,8 @@ void setLogDefault()
     //LOG(INFO) << "Log using default file";
     // To set GLOBAL configurations you may use
     defaultConf.setGlobally( el::ConfigurationType::Format, "%datetime{%Y-%M-%d %H:%m:%s:%g} %pid %thread %levshort %msg");
-    defaultConf.setGlobally(el::ConfigurationType::Filename, getLogFilePath().toStdString());
+    //defaultConf.setGlobally(el::ConfigurationType::Filename, getLogFilePath().toStdString());qPrintable
+	defaultConf.setGlobally(el::ConfigurationType::Filename, qPrintable(getLogFilePath()));
     el::Loggers::reconfigureLogger("default", defaultConf);
     INFO_LOG("--------setLogDefault()-----------");
 }
@@ -53,13 +54,14 @@ void beginLogging()
 {
     //First we check that the directory ~ / .starviewer / log / exists where we will look for the logs
     //QDir logDir = udg::UserLogsPath;
-    QDir logDir = udg::UserCurrentAppPath;//use current work path
-    if (!logDir.exists())
-    {
-        // Creem el directori
-        logDir.mkpath(udg::UserLogsPath);
-        //logDir.mkpath(udg::UserCurrentAppPath);
-    }
+    //QDir logDir = udg::UserCurrentAppPath;//use current work path
+	//QDir logDir = qApp->applicationDirPath() + "/log/";
+    //if (!logDir.exists())
+    //{
+    //    // Creem el directori
+    //    logDir.mkpath(udg::UserLogsPath);
+    //    //logDir.mkpath(udg::UserCurrentAppPath);
+    //}
     QDir logConf = getLogConfFilePath();
     if (logConf.exists())
     {
