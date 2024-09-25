@@ -237,4 +237,5 @@
         <file>images/icons/Monitor.svg</file>
         <file>images/icons/MonitorNext.svg</file>
     </qresource>
+    <qresource prefix="/fonts"/>
 </RCC>

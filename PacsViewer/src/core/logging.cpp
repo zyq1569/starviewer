@@ -38,7 +38,7 @@ void setLogDefault()
     el::Helpers::installCustomFormatSpecifier(el::CustomFormatSpecifier("%pid", getPID));
     // Values are always std::string
     //defaultConf.set(el::Level::Info, el::ConfigurationType::Format, "%datetime{%Y-%M-%d %H:%m:%s} %level %msg");
-    defaultConf.set(el::Level::Warning, el::ConfigurationType::Format, "%datetime{%Y-%M-%d %H:%m:%s:%g} %pid %thread %levshort %msg");
+    defaultConf.set(el::Level::Error, el::ConfigurationType::Format, "%datetime{%Y-%M-%d %H:%m:%s:%g} %pid %thread %levshort %msg");
     // default logger uses default configurations
     el::Loggers::reconfigureLogger("default", defaultConf);
     //LOG(INFO) << "Log using default file";
@@ -55,7 +55,6 @@ void beginLogging()
     //First we check that the directory ~ / .starviewer / log / exists where we will look for the logs
     //QDir logDir = udg::UserLogsPath;
     //QDir logDir = udg::UserCurrentAppPath;//use current work path
-	//QDir logDir = qApp->applicationDirPath() + "/log/";
     //if (!logDir.exists())
     //{
     //    // Creem el directori
@@ -66,7 +65,8 @@ void beginLogging()
     if (logConf.exists())
     {
         el::Configurations logConfig(getLogConfFilePath().toStdString());
-        logConfig.setGlobally(el::ConfigurationType::Filename, getLogFilePath().toStdString());
+        //logConfig.setGlobally(el::ConfigurationType::Filename, getLogFilePath().toStdString());
+		logConfig.setGlobally(el::ConfigurationType::Filename, qPrintable(getLogFilePath()));
         //Disable logging to the standard output when compiled on release
 #ifdef QT_NO_DEBUG
         logConfig.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
@@ -76,7 +76,6 @@ void beginLogging()
     else
     {
         setLogDefault();
-
     }
 }
 
