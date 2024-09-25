@@ -89,7 +89,7 @@ void initializeTranslations(QApplication &app)
             QString translationFilePath = ":/extensions/" + mediator->getExtensionID().getID() + "/translations_" + defaultLocale.name();
             if (!translationsLoader.loadTranslation(translationFilePath))
             {
-                ERROR_LOG("The translator could not be loaded: " + translationFilePath);
+				WARN_LOG("The translator could not be loaded: " + translationFilePath);
             }
             delete mediator;
         }
