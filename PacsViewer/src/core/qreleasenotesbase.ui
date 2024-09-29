@@ -33,21 +33,6 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QWebEngineView" name="m_viewWebView" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="url" stdset="0">
-      <url>
-       <string>about:blank</string>
-      </url>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QWidget" name="m_bottomBar" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="topMargin">
@@ -82,7 +67,7 @@
          <string>Close</string>
         </property>
         <property name="icon">
-         <iconset resource="../main/main.qrc">
+         <iconset>
           <normaloff>:/images/icons/window-close.svg</normaloff>:/images/icons/window-close.svg</iconset>
         </property>
        </widget>
@@ -92,17 +77,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QWebEngineView</class>
-   <extends>QWidget</extends>
-   <header location="global">QtWebEngineWidgets/QWebEngineView</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
- <resources>
-  <include location="../main/main.qrc"/>
-  <include location="../main/main.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
