@@ -220,20 +220,18 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	actionConfig->setShortcuts(ShortcutManager::getShortcuts(Shortcuts::Preferences));
 	m_mainToolbar->addAction(actionConfig);
 	connect(actionConfig, SIGNAL(triggered()), SLOT(showConfigurationDialog()));
-
-	//eg.
-	//QMenu* menu = new QMenu("windows", this); //创建一个menu对象
-	//QAction* actionWelcome = menu->addAction("欢迎"); //在menu对象上添加action
-	//QMenu* menuWelcome = new QMenu("...", this); //创建第二个menu对象
-	//actionWelcome->setMenu(menuWelcome); //将第二个menu对象依附于action
-	//menuWelcome->addAction("双屏"); //在action上添加action
-	//menuWelcome->addAction("前屏"); //在action上添加action
-	//menuWelcome->addAction("后屏"); //在action上添加action
-	//m_mainToolbar->addAction(actionWelcome); //将action对象依附于QToolBar
 	
-	QAction *aboutAction = new QAction(QIcon(":/images/help.ico"), "&About", this);
-	aboutAction->setStatusTip(tr("Show the application's About box"));
-	connect(aboutAction, SIGNAL(triggered()), SLOT(about()));
+	QMenu* menuhelp = new QMenu("AppHelp", this);
+	QAction* aboutAction = menuhelp->addAction("&About");
+	QMenu* menuhelpSub = new QMenu("...", this); //创建第二个menu对象
+	aboutAction->setMenu(menuhelpSub);
+	aboutAction->setIcon(QIcon(":/images/help.ico"));
+	aboutAction->setToolTip("Show the application's About box");
+	connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
+	
+	QAction *sysInfoTest = new QAction(QIcon(":/images/help.ico"), "SysTest", this);
+	menuhelpSub->addAction(sysInfoTest);
+	connect(sysInfoTest, SIGNAL(triggered()), this, SLOT(showDiagnosisTestDialog()));
 	m_mainToolbar->addAction(aboutAction);
 	//---------------------------------------------------------------------------------------------------
     // We read the application settings, window status, position, etc.
