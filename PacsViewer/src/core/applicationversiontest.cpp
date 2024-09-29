@@ -34,7 +34,8 @@ ApplicationVersionTest::~ApplicationVersionTest()
 DiagnosisTestResult ApplicationVersionTest::run()
 {
     /// Fer el check online. Després de cridar aquest mètode, les variables m_onlineCheckOk i m_newVersionAvailable prenen valor.
-    onlineCheck();
+    //20240929 
+	//onlineCheck();
 
     DiagnosisTestResult result;
 
