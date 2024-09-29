@@ -43,7 +43,7 @@ void setLogDefault()
     //el::Loggers::reconfigureLogger("default", defaultConf);
     //LOG(INFO) << "Log using default file";
     // To set GLOBAL configurations you may use
-    defaultConf.setGlobally( el::ConfigurationType::Format, "%datetime{%Y-%M-%d %H:%m:%s:%g} %pid %thread %levshort %msg");
+    defaultConf.setGlobally(el::ConfigurationType::Format, "%datetime{%Y-%M-%d %H:%m:%s:%g} %pid %thread %levshort %msg");
 	defaultConf.setGlobally(el::ConfigurationType::Filename, qPrintable(getLogFilePath()));
     el::Loggers::reconfigureLogger("default", defaultConf);
 	el::Loggers::addFlag(el::LoggingFlag::DisableApplicationAbortOnFatalLog);
