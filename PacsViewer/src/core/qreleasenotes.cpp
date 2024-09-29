@@ -34,7 +34,7 @@ QReleaseNotes::QReleaseNotes(QWidget *parent)
     // Fer que la finestra sempre quedi davant i no es pugui fer res fins que no es tanqui
     setWindowModality(Qt::ApplicationModal);
 
-    m_viewWebView->setContextMenuPolicy(Qt::NoContextMenu);
+    //m_viewWebView->setContextMenuPolicy(Qt::NoContextMenu);
 }
 
 QReleaseNotes::~QReleaseNotes()
@@ -53,8 +53,8 @@ void QReleaseNotes::setDontShowVisible(bool visible)
 
 void QReleaseNotes::showIfUrlLoadsSuccessfully(const QUrl &url)
 {
-    connect(m_viewWebView, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished(bool)));
-    m_viewWebView->setUrl(url);
+    //connect(m_viewWebView, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished(bool)));
+    //m_viewWebView->setUrl(url);
 }
 
 void QReleaseNotes::closeEvent(QCloseEvent *event)
@@ -73,9 +73,9 @@ void QReleaseNotes::closeEvent(QCloseEvent *event)
 void QReleaseNotes::loadFinished(bool ok)
 {
     // Desconectar el manager
-    disconnect(m_viewWebView, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished(bool)));
+    //disconnect(m_viewWebView, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished(bool)));
 
-    m_viewWebView->history()->clear();
+    //m_viewWebView->history()->clear();
 
     if (ok)
     {
