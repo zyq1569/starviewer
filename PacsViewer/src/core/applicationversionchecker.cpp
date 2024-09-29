@@ -24,6 +24,7 @@
 #include <QDate>
 #include <QMessageBox>
 #include <QRegularExpression>
+#include <QUrl>
 namespace udg {
 
 namespace {

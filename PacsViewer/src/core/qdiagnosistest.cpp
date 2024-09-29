@@ -50,7 +50,7 @@ QDiagnosisTest::QDiagnosisTest(QWidget *parent)
     //Treiem icona amb ? que apareix al costat del botó de tancar
     this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     
-    m_diagnosisTestsResults->setContextMenuPolicy(Qt::NoContextMenu);
+    //m_diagnosisTestsResults->setContextMenuPolicy(Qt::NoContextMenu);
 }
 
 QDiagnosisTest::~QDiagnosisTest()
@@ -84,7 +84,7 @@ void QDiagnosisTest::createConnections()
     connect(m_runDiagnosisTest, SIGNAL(runningDiagnosisTest(DiagnosisTest*)), this, SLOT(updateRunningDiagnosisTestProgress(DiagnosisTest*)));
     connect(m_runDiagnosisTest, SIGNAL(finished()), this, SLOT(finishedRunningDiagnosisTest()));
 
-    connect(m_diagnosisTestsResults, &QWebEngineView::loadFinished, [this] { m_diagnosisTestsResults->history()->clear(); });
+    //connect(m_diagnosisTestsResults, &QWebEngineView::loadFinished, [this] { m_diagnosisTestsResults->history()->clear(); });
 }
 
 void QDiagnosisTest::runDiagnosisTest()
@@ -116,7 +116,7 @@ void QDiagnosisTest::finishedRunningDiagnosisTest()
     else
     {
         m_someTestsFailedFrame->setVisible(true);
-        m_diagnosisTestsResults->setVisible(true);
+        //m_diagnosisTestsResults->setVisible(true);
     }
 
     m_progressBarFrame->setVisible(false);
@@ -127,8 +127,8 @@ void QDiagnosisTest::finishedRunningDiagnosisTest()
 
 void QDiagnosisTest::viewTestsLabelClicked()
 {
-    m_diagnosisTestsResults->page()->runJavaScript("showAllTests(); null");
-    m_diagnosisTestsResults->setVisible(true);
+    //m_diagnosisTestsResults->page()->runJavaScript("showAllTests(); null");
+    //m_diagnosisTestsResults->setVisible(true);
     m_viewTestsLabel->setVisible(false);
     this->adjustSize();
 }
@@ -136,12 +136,14 @@ void QDiagnosisTest::viewTestsLabelClicked()
 void QDiagnosisTest::fillDiagnosisTestsResultTable()
 {
     QString html = m_diagnosisTestResultWriter.getAsQString();
-    m_diagnosisTestsResults->page()->setHtml(html);
+    //m_diagnosisTestsResults->page()->setHtml(html);
+	label_5->setText(html);
+	//label_5->setTextInteractionFlags(Qt::TextSelectableByMouse);
 }
 
 void QDiagnosisTest::updateWidgetToRunDiagnosisTest()
 {
-    m_diagnosisTestsResults->setVisible(false);
+    //m_diagnosisTestsResults->setVisible(false);
     m_allTestSuccededFrame->setVisible(false);
     m_closeButtonFrame->setVisible(false);
     m_someTestsFailedFrame->setVisible(false);
