@@ -48,7 +48,7 @@ void setLogDefault()
     el::Loggers::reconfigureLogger("default", defaultConf);
 	el::Loggers::addFlag(el::LoggingFlag::DisableApplicationAbortOnFatalLog);
 	el::Loggers::addFlag(el::LoggingFlag::HierarchicalLogging);
-	el::Loggers::setLoggingLevel(el::Level::Warning);
+	el::Loggers::setLoggingLevel(el::Level::Error);
 
     INFO_LOG("--------setLogDefault()-----------");
 }
