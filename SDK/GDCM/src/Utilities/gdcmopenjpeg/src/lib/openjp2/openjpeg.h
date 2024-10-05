@@ -101,9 +101,9 @@ OPJ_API functions as being imported from a DLL, whereas this DLL sees symbols
 defined with this macro as being exported.
 */
 #   if defined(OPJ_EXPORTS) || defined(DLL_EXPORT)
-#       define OPJ_API __declspec(dllexport)
+#       define OPJ_API //__declspec(dllexport)
 #   else
-#       define OPJ_API __declspec(dllimport)
+#       define OPJ_API //__declspec(dllimport)
 #   endif /* OPJ_EXPORTS */
 #endif /* !OPJ_STATIC || !_WIN32 */
 
