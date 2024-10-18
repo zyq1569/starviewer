@@ -119,6 +119,13 @@ DiagnosisTestResult SystemRequirementsTest::run()
         problem.setSolution(tr("Update your graphics card driver"));
         result.addError(problem);
     }
+	else
+	{
+		DiagnosisTestProblem problem;
+		problem.setState(DiagnosisTestProblem::Ok);
+		problem.setDescription(tr("Current OpenGL version is %1, and the minimum required is %2").arg(openGLVersion).arg(MinimumGPUOpenGLVersion));
+		result.addWarning(problem);
+	}
 
     // Memòria RAM de la GPU
     QList<unsigned int> gpuRAM = getGPURAM(system);
