@@ -27,6 +27,13 @@ INITIALIZE_EASYLOGGINGPP
 //全局应用程序定义
 #include <djdecode.h>
 #include <dcrledrg.h>
+#include "../fmjpeg2k/fmjpeg2k/djdecode.h"
+#include "../fmjpeg2k/fmjpeg2k/djencode.h"
+#include <dcmjpls/djlsutil.h>   /* for dcmjpls typedefs */
+ /* for class DJLSEncoderRegistration */
+#include <dcmjpls/djdecode.h>
+#include <dcmjpls/djrparam.h>   /* for class DJLSRepresentationParameter */
+
 #include "applicationtranslationsloader.h"
 
 #include "coresettings.h"
@@ -57,9 +64,6 @@ INITIALIZE_EASYLOGGINGPP
 #include <vtkOutputWindow.h>
 #include <vtkOverrideInformation.h>
 #include <vtkOverrideInformationCollection.h>
-
-#include "../fmjpeg2k/fmjpeg2k/djdecode.h"
-#include "../fmjpeg2k/fmjpeg2k/djencode.h"
 
 typedef udg::SingletonPointer<udg::StarviewerApplicationCommandLine> StarviewerSingleApplicationCommandLineSingleton;
 
@@ -250,6 +254,8 @@ int main(int argc, char *argv[])
     DJDecoderRegistration::registerCodecs();
     DcmRLEDecoderRegistration::registerCodecs();
 
+	// register JPEG-LS codecs
+	DJLSDecoderRegistration::registerCodecs();
 	//jp2k
 	FMJPEG2KDecoderRegistration::registerCodecs();
 
@@ -368,6 +374,13 @@ int main(int argc, char *argv[])
 }
 
 //xcopy D:\SDK\threadweaver-5.46.0_vc17\*.h /s D:\SDK\threadweaver-5.46.0_vc17_include
+
+//---fix
+// error ：const LPWSTR WindowsSystemInformation::DesktopWindowManagerDLLName = L"Dwmapi.dll";
+//  /Zc:strictStrings- 
+//https://learn.microsoft.com/zh-cn/cpp/build/reference/zc-strictstrings-disable-string-literal-type-conversion?view=msvc-150
+//-----
+
 //InsightToolkit-5.0.1\Modules\ThirdParty\KWSys\src\KWSys
 ///EncodingCXX.cxx -->>std::wstring Encoding::ToWide(const std::string& str)
 ///std::wstring Encoding::ToWide(const std::string& str)
