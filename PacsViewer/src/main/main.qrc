@@ -236,6 +236,9 @@
         <file>images/icons/MPR/SA.svg</file>
         <file>images/icons/Monitor.svg</file>
         <file>images/icons/MonitorNext.svg</file>
+        <file>D:/code/C++/starviewer-1.0.1/starviewer/src/main/images/MPRL.svg</file>
+        <file>D:/code/C++/starviewer-1.0.1/starviewer/src/main/images/MPRR.svg</file>
+        <file>D:/code/C++/starviewer-1.0.1/starviewer/src/main/images/SA.svg</file>
     </qresource>
     <qresource prefix="/fonts"/>
 </RCC>
