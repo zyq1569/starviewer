@@ -26,6 +26,8 @@ class QAction;
 class QModelIndex;
 class QStandardItemModel;
 class ExtensionHandler;
+class vtkCornerAnnotation;
+class vtkTextActor;
 
 namespace udg {
 
@@ -125,6 +127,12 @@ private:
     vtkImageData *m_saveVtkdata;
 	//20240802
 	Volume *m_lastInput;
+	vtkCornerAnnotation *m_cornerAnnotations;
+	/// Image orientation text actors
+	vtkTextActor *m_patientOrientationTextActor[4];
+
+public:
+	void updateAnnotations();
 };
 
 } // end namespace udg
