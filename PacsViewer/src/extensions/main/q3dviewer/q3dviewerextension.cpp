@@ -724,9 +724,14 @@ void Q3DViewerExtension::updateInput(Volume *input)
 
 void  Q3DViewerExtension::updateAnnotations()
 {
+	if (!m_lastInput)
+	{
+		return;
+	}
 	VoiLut voiLut = m_3DView->getCurrentVoiLut();
 	WindowLevel windowLevel = voiLut.getWindowLevel();
-	auto printWindowLevel = [](double x) {
+	auto printWindowLevel = [](double x)
+	{
 		if (std::abs(x) >= 100)     // for |x| >= 100 -> 0 decimals
 		{
 			return QString::number(MathTools::roundToNearestInteger(x));
