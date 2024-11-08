@@ -264,7 +264,8 @@ protected:
 	vtkGenericOpenGLRenderWindow* m_renderWindow[3];
 	vtkImagePlaneWidget*          m_planeWidget[3];
 
-
+public:
+	void ResetViews();
 };
 
 };  // End namespace udg

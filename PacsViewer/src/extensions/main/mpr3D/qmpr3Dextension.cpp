@@ -614,14 +614,39 @@ void QMPR3DExtension::changeSelectedViewer()
     //}
 }
 
-void QMPR3DExtension::screenShot()
+void QMPR3DExtension::ResetViews()
 {
+	// Reset the reslice image views
 	for (int i = 0; i < 3; i++)
 	{
-		m_resliceImageViewer[i]->SetResliceMode(1);
-		m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
+		m_resliceImageViewer[i]->Reset();
 		m_resliceImageViewer[i]->Render();
 	}
+
+	// Also sync the Image plane widget on the 3D top right view with any
+	// changes to the reslice cursor.
+	//for (int i = 0; i < 3; i++)
+	//{
+	//	vtkPlaneSource *ps = static_cast<vtkPlaneSource *>(planeWidget[i]->GetPolyDataAlgorithm());
+	//	ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
+	//	ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
+	//
+	//	// If the reslice plane has modified, update it on the 3D widget
+	//	//this->planeWidget[i]->UpdatePlacement();
+	//}
+
+	// Render in response to changes.
+	//this->Render();
+}
+void QMPR3DExtension::screenShot()
+{
+	ResetViews();
+	//for (int i = 0; i < 3; i++)
+	//{
+	//	m_resliceImageViewer[i]->SetResliceMode(1);
+	//	m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
+	//	m_resliceImageViewer[i]->Render();
+	//}
     //ScreenShotTool *screenShotTool = 0;
     //if (m_axial2DView->isActive())
     //{
