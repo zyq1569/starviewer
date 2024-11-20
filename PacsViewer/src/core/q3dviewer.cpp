@@ -155,6 +155,23 @@ void  Q3DViewer::changevtkImageData(vtkImageData *data)
 
     m_isosurfaceFilter->SetInputData(data);
 }
+//#include <vtkMetaImageReader.h>
+//#include "vtkMetaImageWriter.h"
+//void saveHDMdata(vtkImageData * ImageVTKData, QString DicomDir)
+//{
+//	vtkImageData * itkImageData = ImageVTKData;
+//	std::string Input_Name = qPrintable(DicomDir);
+//	std::string path = Input_Name + "/3DMetaData.mhd";
+//
+//	vtkMetaImageWriter *vtkdatawrite = vtkMetaImageWriter::New();
+//	vtkdatawrite->SetInputData(itkImageData);
+//	vtkdatawrite->SetFileName(path.c_str());
+//	path = Input_Name + "/3DMetaData.raw";
+//	vtkdatawrite->SetRAWFileName(path.c_str());
+//	vtkdatawrite->Write();
+//	vtkdatawrite->Delete();
+//
+//}
 
 void Q3DViewer::setInput(Volume *volume)
 {
