@@ -29,7 +29,7 @@ INITIALIZE_EASYLOGGINGPP
 #include <dcrledrg.h>
 #include "../fmjpeg2k/fmjpeg2k/djdecode.h"
 #include "../fmjpeg2k/fmjpeg2k/djencode.h"
-#include <dcmjpls/djlsutil.h>   /* for dcmjpls typedefs */
+#include <dcmjpls/djlsutil.h>   /* for dcmjpls typedefs */ 
  /* for class DJLSEncoderRegistration */
 #include <dcmjpls/djdecode.h>
 #include <dcmjpls/djrparam.h>   /* for class DJLSRepresentationParameter */
