@@ -15,6 +15,7 @@
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QSplitter>
@@ -46,6 +47,7 @@ public:
     QDoubleSpinBox *m_thickSlabSpinBox;
     QToolButton *m_mipToolButton;
     QToolButton *m_horizontalLayoutToolButton;
+    QPushButton *m_Reset;
     QLabel *m_phasesAlertLabel;
     QSpacerItem *spacerItem;
     QHBoxLayout *hboxLayout1;
@@ -223,6 +225,11 @@ public:
 
         hboxLayout->addWidget(m_horizontalLayoutToolButton);
 
+        m_Reset = new QPushButton(QMPR3DExtensionBase);
+        m_Reset->setObjectName(QString::fromUtf8("m_Reset"));
+
+        hboxLayout->addWidget(m_Reset);
+
         m_phasesAlertLabel = new QLabel(QMPR3DExtensionBase);
         m_phasesAlertLabel->setObjectName(QString::fromUtf8("m_phasesAlertLabel"));
         QFont font;
@@ -334,6 +341,7 @@ public:
         m_thickSlabLabel->setText(QApplication::translate("QMPR3DExtensionBase", "Thick Slab (mm)", nullptr));
         m_mipToolButton->setText(QApplication::translate("QMPR3DExtensionBase", "...", nullptr));
         m_horizontalLayoutToolButton->setText(QApplication::translate("QMPR3DExtensionBase", "...", nullptr));
+        m_Reset->setText(QApplication::translate("QMPR3DExtensionBase", "Reset", nullptr));
         m_phasesAlertLabel->setText(QApplication::translate("QMPR3DExtensionBase", "*The current Series has multiple phases. \n"
 "Currently the MPR 2D doesn't support \n"
 "Series with multiple phases so it won't work properly.", nullptr));

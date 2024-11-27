@@ -27,7 +27,9 @@ class vtkTransform;
 class vtkResliceImageViewer;
 class vtkGenericOpenGLRenderWindow;
 class vtkImagePlaneWidget;
-
+class vtkCornerAnnotation;
+class vtkVolume;
+class vtkSmartVolumeMapper;
 namespace udg {
 
 // FWD declarations
@@ -205,6 +207,7 @@ private:
     /// El volum al que se li practica l'MPR
     Volume *m_volume;
 
+
     /// Els actors que representen els eixos que podrem modificar. Línia vermella, blava (axial), blava (sagital) respectivament i el thickSlab
     /// (línies puntejades blaves en vista axial i sagital).
     vtkAxisActor2D *m_sagitalOverAxialAxisActor, *m_axialOverSagitalIntersectionAxis, *m_coronalOverAxialIntersectionAxis,
@@ -263,6 +266,7 @@ protected:
 	vtkResliceImageViewer*        m_resliceImageViewer[3];
 	vtkGenericOpenGLRenderWindow* m_renderWindow[3];
 	vtkImagePlaneWidget*          m_planeWidget[3];
+    vtkCornerAnnotation *m_cornerAnnotations[3];
 
 public:
 	void ResetViews();
