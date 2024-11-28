@@ -288,12 +288,9 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 		m_planeWidget[i]->SetPicker(picker);
 		m_planeWidget[i]->RestrictPlaneToVolumeOn();
 		double color[3] = { 0, 0, 0 };
-		color[i] = 0;
+
 		m_planeWidget[i]->GetPlaneProperty()->SetColor(color);
-	
-		color[0] /= 4.0;
-		color[1] /= 4.0;
-		color[2] /= 4.0;
+
 		m_resliceImageViewer[i]->GetRenderer()->SetBackground(color);
 	
 		m_planeWidget[i]->SetTexturePlaneProperty(ipwProp);
@@ -305,7 +302,7 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 		m_planeWidget[i]->SetSliceIndex(imageDims[i] / 2);
 		m_planeWidget[i]->DisplayTextOn();
 		m_planeWidget[i]->SetDefaultRenderer(ren);
-		m_planeWidget[i]->SetWindowLevel(1358, -27);
+		m_planeWidget[i]->SetWindowLevel(260, 50);
 		m_planeWidget[i]->On();
 		m_planeWidget[i]->InteractionOn();
 	}
@@ -330,7 +327,13 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 	
 	}
 	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(0, PI);
-    
+	for (int i = 0; i < 3; i++)
+	{
+		int now = m_resliceImageViewer[i]->GetSlice() + 1;
+		int max = m_resliceImageViewer[i]->GetSliceMax() + 1;
+		QString sliceInfo = QObject::tr("im: %1 / %2").arg(now).arg(max);
+		m_cornerAnnotations[i]->SetText(2, sliceInfo.toLatin1().constData());
+	}
     m_axial2DView->installEventFilter(&filter);
     m_sagital2DView->installEventFilter(&filter);
     m_coronal2DView->installEventFilter(&filter);
@@ -343,7 +346,8 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 	{
 		m_resliceImageViewer[i]->SetResliceMode(1);
 		m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
-        m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(2.6);
+        m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.6);
+		//m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
 		m_resliceImageViewer[i]->Render();
 	}
 }
@@ -396,6 +400,10 @@ QMPR3DExtension::~QMPR3DExtension()
     delete m_coronal2DView;
 }
 
+void QMPR3DExtension::on_m_reset_clicked()
+{
+	ResetViews();
+}
 void QMPR3DExtension::init()
 {
     m_axialPlaneSource = vtkPlaneSource::New();
@@ -676,13 +684,18 @@ void QMPR3DExtension::changeSelectedViewer()
 
 void QMPR3DExtension::ResetViews()
 {
-	// Reset the reslice image views
 	for (int i = 0; i < 3; i++)
 	{
 		m_resliceImageViewer[i]->Reset();
+	}
+	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(0, PI);
+	for (int i = 0; i < 3; i++)
+	{
+		m_resliceImageViewer[i]->SetResliceMode(1);
+		m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
+		m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.6);
 		m_resliceImageViewer[i]->Render();
 	}
-
 	// Also sync the Image plane widget on the 3D top right view with any
 	// changes to the reslice cursor.
 	//for (int i = 0; i < 3; i++)
@@ -700,7 +713,6 @@ void QMPR3DExtension::ResetViews()
 }
 void QMPR3DExtension::screenShot()
 {
-	ResetViews();
 	//for (int i = 0; i < 3; i++)
 	//{
 	//	m_resliceImageViewer[i]->SetResliceMode(1);
@@ -1294,14 +1306,14 @@ void QMPR3DExtension::setInput(Volume *input)
     }
     // HACK End
     
-    if (input->getNumberOfPhases() > 1)
-    {
-        m_phasesAlertLabel->setVisible(true);
-    }
-    else
-    {
-        m_phasesAlertLabel->setVisible(false);
-    }
+   //if (input->getNumberOfPhases() > 1)
+   //{
+   //    m_phasesAlertLabel->setVisible(true);
+   //}
+   //else
+   //{
+   //    m_phasesAlertLabel->setVisible(false);
+   //}
 
     vtkImageChangeInformation *changeInfo = vtkImageChangeInformation::New();
     changeInfo->SetInputData(input->getVtkData());

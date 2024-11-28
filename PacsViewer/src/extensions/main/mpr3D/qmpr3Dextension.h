@@ -193,6 +193,10 @@ private slots:
     /// Actualitza l'etiqueta de la projecció que hi ha al viewer "Axial"
     void updateProjectionLabel();
 
+private slots:
+	void on_m_reset_clicked();
+
+
 private:
     /// Distància mínima en la que s'ha de trobar un punt per
     /// considerar-se prou proper per fer una operació de picking

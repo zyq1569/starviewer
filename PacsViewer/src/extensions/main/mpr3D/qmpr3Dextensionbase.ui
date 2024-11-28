@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1156</width>
-    <height>541</height>
+    <width>1110</width>
+    <height>506</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MPR</string>
+   <string>MPR3D</string>
   </property>
   <layout class="QVBoxLayout">
    <property name="spacing">
@@ -347,27 +347,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="m_Reset">
+      <widget class="QPushButton" name="m_reset">
        <property name="text">
         <string>Reset</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="m_phasesAlertLabel">
-       <property name="font">
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
-       <property name="text">
-        <string>*The current Series has multiple phases. 
-Currently the MPR 2D doesn't support 
-Series with multiple phases so it won't work properly.</string>
        </property>
       </widget>
      </item>
@@ -461,7 +443,7 @@ Series with multiple phases so it won't work properly.</string>
          </layout>
         </item>
         <item>
-         <widget class="QVTKOpenGLWidget" name="m_axial2DView" native="true">
+         <widget class="QVTKOpenGLNativeWidget" name="m_axial2DView" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -490,7 +472,7 @@ Series with multiple phases so it won't work properly.</string>
          <number>0</number>
         </property>
         <item>
-         <widget class="QVTKOpenGLWidget" name="m_sagital2DView" native="true">
+         <widget class="QVTKOpenGLNativeWidget" name="m_sagital2DView" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -502,7 +484,7 @@ Series with multiple phases so it won't work properly.</string>
        </layout>
       </widget>
      </widget>
-     <widget class="QVTKOpenGLWidget" name="m_coronal2DView" native="true">
+     <widget class="QVTKOpenGLNativeWidget" name="m_coronal2DView" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -517,9 +499,9 @@ Series with multiple phases so it won't work properly.</string>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>QVTKOpenGLWidget</class>
+   <class>QVTKOpenGLNativeWidget</class>
    <extends>QWidget</extends>
-   <header>QVTKOpenGLWidget.h</header>
+   <header>QVTKOpenGLNativeWidget.h</header>
   </customwidget>
   <customwidget>
    <class>udg::QVoiLutComboBox</class>
