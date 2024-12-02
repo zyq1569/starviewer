@@ -75,31 +75,31 @@ Q3DViewerExtension::Q3DViewerExtension(QWidget *parent)
 	m_cornerAnnotations = vtkCornerAnnotation::New();
 	m_cornerAnnotations->GetTextProperty()->SetFontFamilyToArial();
 	m_cornerAnnotations->GetTextProperty()->ShadowOn();
-	for (int i = 0; i < 4; i++)
-	{
-		m_patientOrientationTextActor[i] = vtkTextActor::New();
-		m_patientOrientationTextActor[i]->SetTextScaleModeToNone();
-		m_patientOrientationTextActor[i]->GetTextProperty()->SetFontSize(18);
-		m_patientOrientationTextActor[i]->GetTextProperty()->BoldOn();
-		m_patientOrientationTextActor[i]->GetTextProperty()->SetFontFamilyToArial();
-		m_patientOrientationTextActor[i]->GetTextProperty()->ShadowOn();
-
-		m_patientOrientationTextActor[i]->GetPositionCoordinate()->SetCoordinateSystemToNormalizedViewport();
-		m_patientOrientationTextActor[i]->GetPosition2Coordinate()->SetCoordinateSystemToNormalizedViewport();
-	}
-	// Place each actor on its corresponding place. 0-3, counter-clockwise direction, starting at 0 = left of the viewer
-	m_patientOrientationTextActor[0]->GetTextProperty()->SetJustificationToLeft();
-	m_patientOrientationTextActor[0]->SetPosition(0.01, 0.5);
-
-	m_patientOrientationTextActor[1]->GetTextProperty()->SetJustificationToCentered();
-	m_patientOrientationTextActor[1]->SetPosition(0.5, 0.01);
-
-	m_patientOrientationTextActor[2]->GetTextProperty()->SetJustificationToRight();
-	m_patientOrientationTextActor[2]->SetPosition(0.99, 0.5);
-
-	m_patientOrientationTextActor[3]->GetTextProperty()->SetJustificationToCentered();
-	m_patientOrientationTextActor[3]->GetTextProperty()->SetVerticalJustificationToTop();
-	m_patientOrientationTextActor[3]->SetPosition(0.5, 0.99);
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	m_patientOrientationTextActor[i] = vtkTextActor::New();
+	//	m_patientOrientationTextActor[i]->SetTextScaleModeToNone();
+	//	m_patientOrientationTextActor[i]->GetTextProperty()->SetFontSize(18);
+	//	m_patientOrientationTextActor[i]->GetTextProperty()->BoldOn();
+	//	m_patientOrientationTextActor[i]->GetTextProperty()->SetFontFamilyToArial();
+	//	m_patientOrientationTextActor[i]->GetTextProperty()->ShadowOn();
+    //
+	//	m_patientOrientationTextActor[i]->GetPositionCoordinate()->SetCoordinateSystemToNormalizedViewport();
+	//	m_patientOrientationTextActor[i]->GetPosition2Coordinate()->SetCoordinateSystemToNormalizedViewport();
+	//}
+	//// Place each actor on its corresponding place. 0-3, counter-clockwise direction, starting at 0 = left of the viewer
+	//m_patientOrientationTextActor[0]->GetTextProperty()->SetJustificationToLeft();
+	//m_patientOrientationTextActor[0]->SetPosition(0.01, 0.5);
+    //
+	//m_patientOrientationTextActor[1]->GetTextProperty()->SetJustificationToCentered();
+	//m_patientOrientationTextActor[1]->SetPosition(0.5, 0.01);
+    //
+	//m_patientOrientationTextActor[2]->GetTextProperty()->SetJustificationToRight();
+	//m_patientOrientationTextActor[2]->SetPosition(0.99, 0.5);
+    //
+	//m_patientOrientationTextActor[3]->GetTextProperty()->SetJustificationToCentered();
+	//m_patientOrientationTextActor[3]->GetTextProperty()->SetVerticalJustificationToTop();
+	//m_patientOrientationTextActor[3]->SetPosition(0.5, 0.99);
 
 }
 
@@ -116,10 +116,10 @@ Q3DViewerExtension::~Q3DViewerExtension()
 	if (m_cornerAnnotations)
 	{
 		m_cornerAnnotations->Delete();
-		for (int i = 0; i < 4; ++i)
-		{
-			m_patientOrientationTextActor[i]->Delete();
-		}
+		//for (int i = 0; i < 4; ++i)
+		//{
+		//	m_patientOrientationTextActor[i]->Delete();
+		//}
 	}
 }
 
@@ -414,10 +414,10 @@ void Q3DViewerExtension::setInput(Volume *input)
     m_3DView->setInput(m_input);
 
 	m_3DView->getRenderer()->AddViewProp(m_cornerAnnotations);
-	m_3DView->getRenderer()->AddViewProp(m_patientOrientationTextActor[0]);
-	m_3DView->getRenderer()->AddViewProp(m_patientOrientationTextActor[1]);
-	m_3DView->getRenderer()->AddViewProp(m_patientOrientationTextActor[2]);
-	m_3DView->getRenderer()->AddViewProp(m_patientOrientationTextActor[3]);
+	//m_3DView->getRenderer()->AddViewProp(m_patientOrientationTextActor[0]);
+	//m_3DView->getRenderer()->AddViewProp(m_patientOrientationTextActor[1]);
+	//m_3DView->getRenderer()->AddViewProp(m_patientOrientationTextActor[2]);
+	//m_3DView->getRenderer()->AddViewProp(m_patientOrientationTextActor[3]);
 
     applyClut(m_currentClut);
     this->render();

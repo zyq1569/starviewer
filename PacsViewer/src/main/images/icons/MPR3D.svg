@@ -1,0 +1,20 @@
+<svg width="130" height="130" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>Layer 1</title>
+  <g id="g616">
+   <path stroke-width="1.142" stroke="#0000ff" fill="#0000ff" d="m64.77,1.23c0.17,-0.03 14.07,6.42 30.89,14.34l30.59,14.4l0,70.87l-61.2,28.81l-61.2,-28.81l0,-70.87l30.3,-14.34c16.67,-7.89 30.44,-14.37 30.61,-14.4l0.01,0zm52.06,55.18l-0.59,-17.31l-45.9,21.54l-0.31,28.98l-0.31,28.98l23.4,-11.02l23.4,-11.02l0.45,-11.42c0.25,-6.28 0.19,-19.21 -0.14,-28.73zm-56.48,4.58l-47.07,-22.17l0,57.59l47.07,22.17l0,-57.59zm4.4,-50.89c-1.63,0.36 -45.6,21.66 -45.6,22.09c0,0.32 10.33,5.43 22.95,11.36l22.95,10.78l22.95,-10.78c12.62,-5.93 22.95,-11.04 22.95,-11.36c0,-0.32 -10.33,-5.43 -22.96,-11.37c-12.63,-5.93 -23.09,-10.76 -23.24,-10.72z" class="shp0" id="path614"/>
+   <text transform=" matrix(1,0,0,1,-204,-3)" id="0"/>
+  </g>
+  <g id="g644"/>
+  <g id="g648">
+   <path stroke="#bfbfff" fill="#bfbfff" d="m101.34,64.16l1.5,1.5l1.5,1.5l-1.5,-1.5l-1.5,-1.5z" class="shp1" id="path646"/>
+  </g>
+  <path fill="#4049c7" d="m117.25,39.09c-1.42,0 -1.42,0 -9.16,3.38c-1.12,0.49 -2.2,0.97 -3.28,1.44c-10.09,4.38 -10.09,4.38 -37.97,17.2c0,19.46 0,38.35 0,57.24c1.42,0 1.42,0 9.16,-3.38c1.66,-0.73 1.66,-0.73 3.28,-1.44c10.09,-4.38 10.09,-4.38 37.97,-17.2c0,-19.46 0,-38.35 0,-57.24z" class="shp2" id="path667"/>
+  <g id="g620"/>
+  <path id="svg_4" d="m91.57877,75.78851l-3.68464,-0.26271" opacity="NaN" fill="#4049c7"/>
+  <text font-weight="bold" transform="matrix(1.12955 0 0 1.03652 -9.56795 13.4829)" stroke="null" xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="38" id="svg_7" y="30.52566" x="47.36855" stroke-width="0" fill="#000000">M</text>
+  <text font-weight="bold" transform="matrix(3.12033 0 0 1.86529 -60.6924 -45.9849)" stroke="null" xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24" id="svg_8" y="74.47273" x="24.21081" stroke-width="0" fill="#000000">P</text>
+  <text transform="matrix(2.69518 0 0 1.58881 -167.816 -33.1679)" stroke="null" xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24" id="svg_9" y="78.42007" x="88.68405" stroke-width="0" fill="#000000">R</text>
+ </g>
+</svg>

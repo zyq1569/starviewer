@@ -290,9 +290,13 @@ bool ExtensionHandler::request(const QString &who)
 		}	
 		tableText = volume->getSeries()->getSeriesNumber();
 	}
-	else if (who == "MPRExtension")
+	else if (who == "MPR3DExtension")
 	{
 		Volume * selVolume = QViewer::selectVolume();
+		if (!selVolume)
+		{
+			QViewer::selectVolume(m_extensionContext.getDefaultVolumeNoLocalizer());
+		}
 		Volume *volume = selVolume ? selVolume : m_extensionContext.getDefaultVolumeNoLocalizer();
 		if (!volume)
 		{

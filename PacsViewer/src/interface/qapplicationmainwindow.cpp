@@ -183,6 +183,10 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	m_mainToolbar->addAction(action3D);
 	connect(action3D, &QAction::triggered, [this] { m_extensionHandler->request("Q3DViewerExtension"); });
 
+
+	QAction *actionMPR = new QAction(QIcon(":/images/icons/MPR3D.svg"), "MPR-3D Viewer", this);
+	m_mainToolbar->addAction(actionMPR);
+	connect(actionMPR, &QAction::triggered, [this] { m_extensionHandler->request("MPR3DExtension"); });
 	//QAction *actionMultScreens = new QAction(QIcon(":/images/icons/Monitor.svg"), "MultiScreens", this);
 	//m_mainToolbar->addAction(actionMultScreens);
 	//connect(actionMultScreens, SIGNAL(triggered(bool)), this, SLOT(maximizeMultipleScreens()));
@@ -207,10 +211,6 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	menuSub->addAction(subDesk);
 	connect(screen, SIGNAL(screenClicked(int)), this, SLOT(moveToDesktop(int)));
 	m_mainToolbar->addAction(nextScreens);
-
-	//QAction *actionMPR = new QAction(QIcon(":/images/icons/MPR-2D.svg"), "MPR-2D Viewer", this);
-	//m_mainToolbar->addAction(actionMPR);
-	//connect(actionMPR, &QAction::triggered, [this] { m_extensionHandler->request("MPRExtension"); });
 
 	QAction *actionPACS = new QAction(QIcon(":/images/pacsNodes"), "PACS Images", this);
 	m_mainToolbar->addAction(actionPACS);
