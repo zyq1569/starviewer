@@ -77,6 +77,80 @@ using namespace std;
 #include <QMessageBox>
 #include <QMenu>
 #include <QVector3D>
+
+class vtkResliceImageViewerScrollCallback : public vtkCommand
+{
+public:
+	static vtkResliceImageViewerScrollCallback* New()
+	{
+		return new vtkResliceImageViewerScrollCallback;
+	}
+
+	void Execute(vtkObject*, unsigned long ev, void*) override
+	{
+		if (!this->Viewer->GetSliceScrollOnMouseWheel())
+		{
+			return;
+		}
+
+		// Do not process if any modifiers are ON
+		if (this->Viewer->GetInteractor()->GetShiftKey() ||	this->Viewer->GetInteractor()->GetControlKey() || this->Viewer->GetInteractor()->GetAltKey())
+		{
+			return;
+		}
+
+		// forwards or backwards
+		//int sign = (ev == vtkCommand::MouseWheelForwardEvent) ? 1 : -1;
+		int sign = (ev == vtkCommand::MouseWheelForwardEvent) ? SliceInc : -SliceInc;
+
+		this->Viewer->IncrementSlice(sign);
+
+		//this->Viewer->SetSlice(this->Viewer->GetSlice() + static_cast<int>(std::round(sign * 1.0)));
+		// Abort further event processing for the scroll.
+		this->SetAbortFlag(1);
+	}
+
+	vtkResliceImageViewerScrollCallback(): Viewer(nullptr), SliceInc(1)
+	{
+
+	}
+	void ChangeSliceScrollOnMouseWheel(bool ChangeSliceScrollOnMouseWheel = true)
+	{
+		SliceInc = (ChangeSliceScrollOnMouseWheel) ? -1 : 1;
+	}
+	vtkResliceImageViewer* Viewer;
+	int SliceInc;
+};
+class vtkMPRResliceImageViewer :public vtkResliceImageViewer
+{
+public:
+	static vtkMPRResliceImageViewer* New();
+	vtkTypeMacro(vtkMPRResliceImageViewer, vtkResliceImageViewer);
+
+	void  setScrollCallback(vtkResliceImageViewerScrollCallback* call , vtkResliceImageViewer* viewer)
+	{
+		this->ScrollCallback = vtkResliceImageViewerScrollCallback::New();
+		this->ScrollCallback->Viewer = viewer;
+		this->ScrollCallback->ChangeSliceScrollOnMouseWheel(true);
+	}
+	void init(bool ChangeSliceScrollOnMouseWheel = false)
+	{
+		this->ScrollCallback = vtkResliceImageViewerScrollCallback::New();
+		this->ScrollCallback->Viewer = this;
+		this->ScrollCallback->ChangeSliceScrollOnMouseWheel(ChangeSliceScrollOnMouseWheel);
+	}
+protected:
+	vtkMPRResliceImageViewer()
+	{
+		init();
+	}
+	~vtkMPRResliceImageViewer() override
+	{
+
+	}
+};
+vtkStandardNewMacro(vtkMPRResliceImageViewer);
+
 namespace udg {
 
 const double PI = -3.141592653589793238462643383279502884197169399375105820974944;
@@ -196,6 +270,7 @@ private:
 
 };
 
+
 QMPR3DExtension::QMPR3DExtension(QWidget *parent)
     : QWidget(parent), m_axialZeroSliceCoordinate(.0)
 {
@@ -232,7 +307,8 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 	//---------------------------20241105-------------------------------------------------------------------------------
 	for (int i = 0; i < 3; i++)
 	{
-		m_resliceImageViewer[i] = vtkResliceImageViewer::New();
+		m_resliceImageViewer[i] = vtkMPRResliceImageViewer::New();
+		m_resliceImageViewer[i]->init( i == 1);
 		m_renderWindow[i] = vtkGenericOpenGLRenderWindow::New();
 		m_resliceImageViewer[i]->SetRenderWindow(m_renderWindow[i]);
         m_cornerAnnotations[i] = vtkCornerAnnotation::New();
@@ -327,6 +403,7 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 	
 	}
 	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(0, PI);
+
 	for (int i = 0; i < 3; i++)
 	{
 		int now = m_resliceImageViewer[i]->GetSlice() + 1;
@@ -687,12 +764,12 @@ void QMPR3DExtension::ResetViews()
 	for (int i = 0; i < 3; i++)
 	{
 		m_resliceImageViewer[i]->Reset();
+		m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
 	}
 	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(0, PI);
 	for (int i = 0; i < 3; i++)
 	{
 		m_resliceImageViewer[i]->SetResliceMode(1);
-		m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
 		m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.6);
 		m_resliceImageViewer[i]->Render();
 	}
