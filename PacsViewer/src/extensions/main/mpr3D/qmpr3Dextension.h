@@ -196,6 +196,7 @@ private slots:
 
 private slots:
 	void on_m_reset_clicked();
+	void changeSetWindowLevel();
 
 
 private:

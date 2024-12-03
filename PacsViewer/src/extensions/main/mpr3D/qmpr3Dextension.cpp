@@ -179,6 +179,21 @@ public:
 				this->RCW[i]->Render();
 			}
 			//this->IPW[0]->GetInteractor()->GetRenderWindow()->Render();
+			if (ev == vtkResliceCursorWidget::WindowLevelEvent || ev == vtkCommand::WindowLevelEvent)
+				for (int i = 0; i < 3; i++)
+				{
+					vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[i]->GetResliceCursorWidget()->GetRepresentation());
+					double m_CurrentWL[2];
+					rep->GetWindowLevel(m_CurrentWL);
+					int now = m_resliceImageViewer[i]->GetSlice() + 1;
+					int max = m_resliceImageViewer[i]->GetSliceMax() + 1;
+					QString sliceInfo = QObject::tr("im: %1 / %2").arg(now).arg(max);
+					sliceInfo += "\n";
+					int w = m_CurrentWL[0];
+					int l = m_CurrentWL[1];
+					sliceInfo += QObject::tr("WL: %1 / %2").arg(w).arg(l);
+					m_cornerAnnotations[i]->SetText(2, sliceInfo.toLatin1().constData());
+				}
 			return;
 		}
 
@@ -236,6 +251,8 @@ public:
 public:
 	vtkImagePlaneWidget* IPW[3];
 	vtkResliceCursorWidget *RCW[3];
+	vtkMPRResliceImageViewer*        m_resliceImageViewer[3];
+	vtkCornerAnnotation *m_cornerAnnotations[3];
 };
 
 class QeventMouse :public QObject
@@ -349,6 +366,9 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 		VoiLut voiLut = m_VoiLutPresetsToolData->getCurrentPreset();
 		m_CurrentWL[0] = voiLut.getWindowLevel().getWidth();
 		m_CurrentWL[1] = voiLut.getWindowLevel().getCenter();
+
+		//changeSetWindowLevel
+		connect(m_voiLutComboBox, SIGNAL(currentIndexChanged(int )), this, SLOT(changeSetWindowLevel()));
 	}
 	else
 	{
@@ -403,6 +423,8 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 	{
 		cbk->IPW[i] = m_planeWidget[i];
 		cbk->RCW[i] = m_resliceImageViewer[i]->GetResliceCursorWidget();
+		cbk->m_resliceImageViewer[i] = m_resliceImageViewer[i];
+		cbk->m_cornerAnnotations[i]  = m_cornerAnnotations[i];
         filter.m_riw[i] = m_resliceImageViewer[i];
         filter.m_cornerAnnotations[i] = m_cornerAnnotations[i];
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResliceAxesChangedEvent, cbk);
@@ -423,6 +445,8 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 		int now = m_resliceImageViewer[i]->GetSlice() + 1;
 		int max = m_resliceImageViewer[i]->GetSliceMax() + 1;
 		QString sliceInfo = QObject::tr("im: %1 / %2").arg(now).arg(max);
+		sliceInfo += "\n";
+		sliceInfo += QObject::tr("WL: %1 / %2").arg(m_CurrentWL[0]).arg(m_CurrentWL[1]);
 		m_cornerAnnotations[i]->SetText(2, sliceInfo.toLatin1().constData());
 	}
     m_axial2DView->installEventFilter(&filter);
@@ -443,6 +467,26 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 	}
 }
 
+void QMPR3DExtension::changeSetWindowLevel()
+{
+	VoiLut voiLut = m_VoiLutPresetsToolData->getCurrentPreset();
+	m_CurrentWL[0] = voiLut.getWindowLevel().getWidth();
+	m_CurrentWL[1] = voiLut.getWindowLevel().getCenter();
+	for (int i = 0; i < 3; i++)
+	{
+		int now = m_resliceImageViewer[i]->GetSlice() + 1;
+		int max = m_resliceImageViewer[i]->GetSliceMax() + 1;
+		QString sliceInfo = QObject::tr("im: %1 / %2").arg(now).arg(max);
+		sliceInfo += "\n";
+		sliceInfo += QObject::tr("WL: %1 / %2").arg(m_CurrentWL[0]).arg(m_CurrentWL[1]);
+		m_cornerAnnotations[i]->SetText(2, sliceInfo.toLatin1().constData());
+
+		// make them all share the same reslice cursor object.
+		vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[i]->GetResliceCursorWidget()->GetRepresentation());
+		rep->SetWindowLevel(m_CurrentWL[0], m_CurrentWL[1]);
+		m_resliceImageViewer[i]->Render();
+	}
+}
 QMPR3DExtension::~QMPR3DExtension()
 {
     writeSettings();
