@@ -17,6 +17,8 @@
 #include "drawer.h"
 #include "drawerpoint.h"
 #include "logging.h"
+
+#include "voiluthelper.h"
 //By intersection calculations
 #include "mathtools.h"
 #include "mpr3Dsettings.h"
@@ -335,7 +337,18 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 		ImageFlip->SetInputData(imageData);
 		ImageFlip->SetFilteredAxes(1);
 		ImageFlip->Update();
-		imageData = ImageFlip->GetOutput();		
+		imageData = ImageFlip->GetOutput();	
+		m_volume = vl;
+		//VoiLutPresetsToolData
+        //VoiLutPresetsToolData data(this);
+		m_VoiLutPresetsToolData = new VoiLutPresetsToolData(this);
+		VoiLutHelper().initializeVoiLutData(m_VoiLutPresetsToolData, vl);
+		m_voiLutComboBox->setPresetsData(m_VoiLutPresetsToolData);
+		m_voiLutComboBox->selectPreset(m_VoiLutPresetsToolData->getCurrentPresetName());
+		m_voiLutComboBox->setToolTip(tr("Choose a VOI LUT preset"));
+		VoiLut voiLut = m_VoiLutPresetsToolData->getCurrentPreset();
+		m_CurrentWL[0] = voiLut.getWindowLevel().getWidth();
+		m_CurrentWL[1] = voiLut.getWindowLevel().getCenter();
 	}
 	else
 	{
@@ -351,6 +364,7 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 		m_resliceImageViewer[i]->SetInputData(imageData);
 		m_resliceImageViewer[i]->SetSliceOrientation(i);
 		m_resliceImageViewer[i]->SetResliceModeToAxisAligned();
+		rep->SetWindowLevel(m_CurrentWL[0], m_CurrentWL[1]);
 	}
 
 	vtkSmartPointer<vtkCellPicker> picker = vtkSmartPointer<vtkCellPicker>::New();
@@ -378,7 +392,7 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 		m_planeWidget[i]->SetSliceIndex(imageDims[i] / 2);
 		m_planeWidget[i]->DisplayTextOn();
 		m_planeWidget[i]->SetDefaultRenderer(ren);
-		m_planeWidget[i]->SetWindowLevel(260, 50);
+		m_planeWidget[i]->SetWindowLevel(m_CurrentWL[0], m_CurrentWL[1]);
 		m_planeWidget[i]->On();
 		m_planeWidget[i]->InteractionOn();
 	}
@@ -475,6 +489,9 @@ QMPR3DExtension::~QMPR3DExtension()
         delete m_mipViewer;
     }
     delete m_coronal2DView;
+
+	if (m_VoiLutPresetsToolData)
+		delete m_VoiLutPresetsToolData;
 }
 
 void QMPR3DExtension::on_m_reset_clicked()
@@ -526,6 +543,26 @@ void QMPR3DExtension::init()
 
     m_extensionToolsList << "ZoomTool" << "SlicingMouseTool" << "TranslateTool" << "VoxelInformationTool" << "WindowLevelTool" << "ScreenShotTool"
                          << "DistanceTool" << "PolylineROITool" << "EllipticalROITool" << "EraserTool";
+
+	//add
+	m_slicingToolButton->hide();
+	m_zoomToolButton->hide();
+	m_ROIToolButton->hide();
+	m_distanceToolButton->hide();
+	m_angleToolButton->hide();
+	m_eraserToolButton->hide();
+	m_screenShotToolButton->hide();
+	m_screenshotsExporterToolButton->hide();
+	//m_viewerInformationToolButton
+	m_viewerInformationToolButton->hide();
+	m_voxelInformationToolButton->hide();
+	m_thickSlabLabel->hide();
+	m_thickSlabSlider->hide();
+	m_thickSlabSpinBox->hide();
+	m_mipToolButton->hide();
+	m_horizontalLayoutToolButton->hide();
+	m_screenshotsExporterToolButton->hide();
+
 }
 
 void QMPR3DExtension::createActions()

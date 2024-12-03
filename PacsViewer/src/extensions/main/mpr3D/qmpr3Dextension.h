@@ -30,6 +30,7 @@ class vtkImagePlaneWidget;
 class vtkCornerAnnotation;
 class vtkVolume;
 class vtkSmartVolumeMapper;
+class VoiLutPresetsToolData;
 namespace udg {
 
 // FWD declarations
@@ -271,6 +272,8 @@ protected:
 	vtkGenericOpenGLRenderWindow* m_renderWindow[3];
 	vtkImagePlaneWidget*          m_planeWidget[3];
     vtkCornerAnnotation *m_cornerAnnotations[3];
+	VoiLutPresetsToolData *m_VoiLutPresetsToolData;
+	double m_CurrentWL[2];
 
 public:
 	void ResetViews();
