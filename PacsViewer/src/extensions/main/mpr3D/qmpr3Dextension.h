@@ -274,7 +274,7 @@ protected:
 	vtkImagePlaneWidget*          m_planeWidget[3];
     vtkCornerAnnotation *m_cornerAnnotations[3];
 	VoiLutPresetsToolData *m_VoiLutPresetsToolData;
-	double m_CurrentWL[2];
+	double m_CurrentWL[2], m_DeaultWL[2];
 
 public:
 	void ResetViews();

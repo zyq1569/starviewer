@@ -17,7 +17,8 @@
 #include "drawer.h"
 #include "drawerpoint.h"
 #include "logging.h"
-
+#include "image.h"
+#include "series.h"
 #include "voiluthelper.h"
 //By intersection calculations
 #include "mathtools.h"
@@ -156,9 +157,52 @@ vtkStandardNewMacro(vtkMPRResliceImageViewer);
 namespace udg {
 
 const double PI = -3.141592653589793238462643383279502884197169399375105820974944;
-
+double       g_SliceThickness[3] = { 0 };
+QString      g_ser = 0;
+QString      g_time = "";
+QString      g_institutionName = "";
+QString      g_dicomKVP = "";
+QString      g_dicomXRayTubeCurrent = "";
 const double QMPR3DExtension::PickingDistanceThreshold = 7.0;
 
+double getSliceThickness(Volume * volume, int i)
+{
+	double thickness = 0.0;
+	if (volume)
+	{
+		switch (i)
+		{
+		case 0://OrthogonalPlane::XYPlane:
+		{
+			Image *image = volume->getImage(0, 0);// this->getCurrentSlice(), this->getCurrentPhase());
+
+			if (image)
+			{
+				thickness = image->getSliceThickness();
+			}
+		}
+		break;
+
+		case 1://OrthogonalPlane::YZPlane:
+			thickness = volume->getSpacing()[0];
+			break;
+
+		case 2://OrthogonalPlane::XZPlane:
+			thickness = volume->getSpacing()[1];
+			break;
+		}
+	}
+	return thickness;
+
+}
+void setCornerAnnotations(vtkCornerAnnotation* vtkCornerAnnotation, int Slice, int Window, int Level);
+void setCornerAnnotations(vtkCornerAnnotation* vtkCornerAnnotation, int Slice, int Window, int Level)
+{
+	QString sliceInfo = QObject::tr("ims: %1\n").arg(Slice);
+	sliceInfo += QObject::tr("WW: %1 WL: %2 \n").arg(Window).arg(Level);
+	sliceInfo += QObject::tr("KV: %1 mA: %2 \n").arg(g_dicomKVP).arg(g_dicomXRayTubeCurrent);
+	vtkCornerAnnotation->SetText(2, sliceInfo.toLatin1().constData());
+}
 class vtkResliceCursorCallback : public vtkCommand, public QObject
 {
 public:
@@ -168,34 +212,46 @@ public:
 	}
 	void Execute(vtkObject *caller, unsigned long ev, void *callData) override
 	{
+		//if (ev == vtkResliceCursorRepresentation::WindowLevelling)
+		//{
+		//	vtkResliceCursorWidget *rcw = dynamic_cast<vtkResliceCursorWidget *>(caller);
+		//	if (rcw)
+		//	{
+		//		vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(rcw->GetRepresentation());
+		//		double m_CurrentWL[2];
+		//		rep->GetWindowLevel(m_CurrentWL);
+		//		for (int i = 0; i < 3; i++)
+		//		{
+		//			//int now = m_resliceImageViewer[i]->GetSlice() + 1;
+		//			int max = m_resliceImageViewer[i]->GetSliceMax() + 1;
+		//			setCornerAnnotations(m_cornerAnnotations[i], max, MathTools::roundToNearestInteger(m_CurrentWL[0]), MathTools::roundToNearestInteger(m_CurrentWL[1]));
+		//		}
+		//	}
+		//}
 
-		if (ev == vtkResliceCursorWidget::WindowLevelEvent ||
-			ev == vtkCommand::WindowLevelEvent ||
-			ev == vtkResliceCursorWidget::ResliceThicknessChangedEvent)
+		if (ev == vtkResliceCursorWidget::WindowLevelEvent || ev == vtkCommand::WindowLevelEvent ||	ev == vtkResliceCursorWidget::ResliceThicknessChangedEvent)
 		{
 			// Render everything
+			vtkResliceCursorWidget *rcw = dynamic_cast<vtkResliceCursorWidget *>(caller);
+			if (rcw)
+			{
+				vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(rcw->GetRepresentation());
+				double m_CurrentWL[2];
+				rep->GetWindowLevel(m_CurrentWL);
+				for (int i = 0; i < 3; i++)
+				{
+					//int now = m_resliceImageViewer[i]->GetSlice() + 1;
+					int max = m_resliceImageViewer[i]->GetSliceMax() + 1;
+					setCornerAnnotations(m_cornerAnnotations[i], max, MathTools::roundToNearestInteger(m_CurrentWL[0]), MathTools::roundToNearestInteger(m_CurrentWL[1]));
+				}
+			}
 			for (int i = 0; i < 3; i++)
 			{
 				this->RCW[i]->Render();
 			}
-			//this->IPW[0]->GetInteractor()->GetRenderWindow()->Render();
-			if (ev == vtkResliceCursorWidget::WindowLevelEvent || ev == vtkCommand::WindowLevelEvent)
-				for (int i = 0; i < 3; i++)
-				{
-					vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[i]->GetResliceCursorWidget()->GetRepresentation());
-					double m_CurrentWL[2];
-					rep->GetWindowLevel(m_CurrentWL);
-					int now = m_resliceImageViewer[i]->GetSlice() + 1;
-					int max = m_resliceImageViewer[i]->GetSliceMax() + 1;
-					QString sliceInfo = QObject::tr("im: %1 / %2").arg(now).arg(max);
-					sliceInfo += "\n";
-					int w = m_CurrentWL[0];
-					int l = m_CurrentWL[1];
-					sliceInfo += QObject::tr("WL: %1 / %2").arg(w).arg(l);
-					m_cornerAnnotations[i]->SetText(2, sliceInfo.toLatin1().constData());
-				}
 			return;
 		}
+
 
 		vtkImagePlaneWidget* ipw =	dynamic_cast<vtkImagePlaneWidget*>(caller);
 		if (ipw)
@@ -245,14 +301,12 @@ public:
 		}
 		//this->IPW[0]->GetInteractor()->GetRenderWindow()->Render();
 	}
-
 	vtkResliceCursorCallback() {}
-
 public:
-	vtkImagePlaneWidget* IPW[3];
-	vtkResliceCursorWidget *RCW[3];
+	vtkImagePlaneWidget*             IPW[3];
+	vtkResliceCursorWidget*          RCW[3];
 	vtkMPRResliceImageViewer*        m_resliceImageViewer[3];
-	vtkCornerAnnotation *m_cornerAnnotations[3];
+	vtkCornerAnnotation*             m_cornerAnnotations[3];
 };
 
 class QeventMouse :public QObject
@@ -268,17 +322,22 @@ public:
     {
         //switch (event->type())
         {
-            if (event->type() == QEvent::Wheel)
-            {
-                //qDebug() << "delt:" << delt.y();               
-                for (int i = 0; i < 3; i++)
-                {
-                    int now = m_riw[i]->GetSlice() + 1;
-                    int max = m_riw[i]->GetSliceMax() + 1;
-                    QString sliceInfo = QObject::tr("im: %1 / %2").arg(now).arg(max);
-                    m_cornerAnnotations[i]->SetText(2, sliceInfo.toLatin1().constData());
-                }
-            }
+            //if (event->type() == QEvent::Wheel ||  event->type() == QEvent::MouseButtonPress)
+            //{
+			//	for (int i = 0; i < 3; i++)
+			//	{
+			//		vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(m_riw[i]->GetResliceCursorWidget()->GetRepresentation());
+			//		double m_CurrentWL[2];
+			//		rep->GetWindowLevel(m_CurrentWL);
+			//		int now = m_riw[i]->GetSlice() + 1;
+			//		int max = m_riw[i]->GetSliceMax() + 1;
+			//		QString sliceInfo = QObject::tr("ims: %1 \n").arg(max);
+			//		sliceInfo += QObject::tr("WW: %1 WL: %2 \n").arg(MathTools::roundToNearestInteger(m_CurrentWL[0])).arg(MathTools::roundToNearestInteger(m_CurrentWL[1]));
+			//		sliceInfo += QObject::tr("KV: %1 mA: %2 \n").arg(g_dicomKVP).arg(g_dicomXRayTubeCurrent);
+			//		//sliceInfo += QObject::tr("Thickness: %1 mm").arg(g_SliceThickness[i], 0, 'f', 2);
+			//		m_cornerAnnotations[i]->SetText(2, sliceInfo.toLatin1().constData());
+			//	}
+            //}
         }
         return 0;
     }
@@ -290,8 +349,7 @@ private:
 };
 
 
-QMPR3DExtension::QMPR3DExtension(QWidget *parent)
-    : QWidget(parent), m_axialZeroSliceCoordinate(.0)
+QMPR3DExtension::QMPR3DExtension(QWidget *parent): QWidget(parent), m_axialZeroSliceCoordinate(.0)
 {
     setupUi(this);
     MPR3DSettings().init();
@@ -366,9 +424,20 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 		VoiLut voiLut = m_VoiLutPresetsToolData->getCurrentPreset();
 		m_CurrentWL[0] = voiLut.getWindowLevel().getWidth();
 		m_CurrentWL[1] = voiLut.getWindowLevel().getCenter();
-
+		m_DeaultWL[0] = m_CurrentWL[0];
+		m_DeaultWL[1] = m_CurrentWL[1];
 		//changeSetWindowLevel
 		connect(m_voiLutComboBox, SIGNAL(currentIndexChanged(int )), this, SLOT(changeSetWindowLevel()));
+
+		///-----------------------------------------------------
+		g_SliceThickness[0] = getSliceThickness(vl, 0);
+		g_SliceThickness[1] = getSliceThickness(vl, 1);
+		g_SliceThickness[2] = getSliceThickness(vl, 2);
+		g_ser = vl->getSeries()->getSeriesNumber();
+		g_time = vl->getSeries()->getDateAsString() + vl->getSeries()->getTimeAsString();
+		g_institutionName = vl->getSeries()->getInstitutionName();
+		g_dicomKVP = vl->getImage(0)->getDICOMKVP();
+		g_dicomXRayTubeCurrent = vl->getImage(0)->getXRayTubeCurrent();
 	}
 	else
 	{
@@ -431,6 +500,9 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::WindowLevelEvent, cbk);
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResliceThicknessChangedEvent, cbk);
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResetCursorEvent, cbk);
+		///
+		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorRepresentation::WindowLevelling, cbk);
+		///
 		m_resliceImageViewer[i]->GetInteractorStyle()->AddObserver(vtkCommand::WindowLevelEvent, cbk);
 		m_resliceImageViewer[i]->AddObserver(vtkResliceImageViewer::SliceChangedEvent, cbk);
 	
@@ -442,12 +514,9 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent)
 
 	for (int i = 0; i < 3; i++)
 	{
-		int now = m_resliceImageViewer[i]->GetSlice() + 1;
+		//int now = m_resliceImageViewer[i]->GetSlice() + 1;
 		int max = m_resliceImageViewer[i]->GetSliceMax() + 1;
-		QString sliceInfo = QObject::tr("im: %1 / %2").arg(now).arg(max);
-		sliceInfo += "\n";
-		sliceInfo += QObject::tr("WL: %1 / %2").arg(m_CurrentWL[0]).arg(m_CurrentWL[1]);
-		m_cornerAnnotations[i]->SetText(2, sliceInfo.toLatin1().constData());
+		setCornerAnnotations(m_cornerAnnotations[i], max, MathTools::roundToNearestInteger(m_CurrentWL[0]), MathTools::roundToNearestInteger(m_CurrentWL[1]));
 	}
     m_axial2DView->installEventFilter(&filter);
     m_sagital2DView->installEventFilter(&filter);
@@ -474,16 +543,15 @@ void QMPR3DExtension::changeSetWindowLevel()
 	m_CurrentWL[1] = voiLut.getWindowLevel().getCenter();
 	for (int i = 0; i < 3; i++)
 	{
-		int now = m_resliceImageViewer[i]->GetSlice() + 1;
-		int max = m_resliceImageViewer[i]->GetSliceMax() + 1;
-		QString sliceInfo = QObject::tr("im: %1 / %2").arg(now).arg(max);
-		sliceInfo += "\n";
-		sliceInfo += QObject::tr("WL: %1 / %2").arg(m_CurrentWL[0]).arg(m_CurrentWL[1]);
-		m_cornerAnnotations[i]->SetText(2, sliceInfo.toLatin1().constData());
-
+		//int now = m_resliceImageViewer[i]->GetSlice() + 1;
+		int max = m_resliceImageViewer[i]->GetSliceMax() + 1;				
 		// make them all share the same reslice cursor object.
 		vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[i]->GetResliceCursorWidget()->GetRepresentation());
 		rep->SetWindowLevel(m_CurrentWL[0], m_CurrentWL[1]);
+		setCornerAnnotations(m_cornerAnnotations[i], max, MathTools::roundToNearestInteger(m_CurrentWL[0]), MathTools::roundToNearestInteger(m_CurrentWL[1]));
+	}
+	for (int i = 0; i < 3; i++)
+	{
 		m_resliceImageViewer[i]->Render();
 	}
 }
@@ -589,6 +657,7 @@ void QMPR3DExtension::init()
                          << "DistanceTool" << "PolylineROITool" << "EllipticalROITool" << "EraserTool";
 
 	//add
+    m_reset->setIcon(QIcon(":/images/icons/reset-view.svg"));
 	m_slicingToolButton->hide();
 	m_zoomToolButton->hide();
 	m_ROIToolButton->hide();
@@ -606,6 +675,8 @@ void QMPR3DExtension::init()
 	m_mipToolButton->hide();
 	m_horizontalLayoutToolButton->hide();
 	m_screenshotsExporterToolButton->hide();
+	m_voiLutComboBox2->hide();
+	labelLUT2->hide();
 
 }
 
@@ -844,16 +915,17 @@ void QMPR3DExtension::ResetViews()
 {
 	for (int i = 0; i < 3; i++)
 	{
-		m_resliceImageViewer[i]->Reset();
-		m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
-	}
-	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(0, PI);
-	for (int i = 0; i < 3; i++)
-	{
 		m_resliceImageViewer[i]->SetResliceMode(1);
 		m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.6);
+		vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[i]->GetResliceCursorWidget()->GetRepresentation())->SetWindowLevel(m_DeaultWL[0], m_DeaultWL[1]);
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		m_resliceImageViewer[i]->Reset();
+		m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
 		m_resliceImageViewer[i]->Render();
 	}
+	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(0, PI);
 	// Also sync the Image plane widget on the 3D top right view with any
 	// changes to the reslice cursor.
 	//for (int i = 0; i < 3; i++)
@@ -1463,15 +1535,6 @@ void QMPR3DExtension::setInput(Volume *input)
         return;
     }
     // HACK End
-    
-   //if (input->getNumberOfPhases() > 1)
-   //{
-   //    m_phasesAlertLabel->setVisible(true);
-   //}
-   //else
-   //{
-   //    m_phasesAlertLabel->setVisible(false);
-   //}
 
     vtkImageChangeInformation *changeInfo = vtkImageChangeInformation::New();
     changeInfo->SetInputData(input->getVtkData());
