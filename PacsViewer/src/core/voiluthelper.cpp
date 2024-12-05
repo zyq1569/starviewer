@@ -51,7 +51,7 @@ void VoiLutHelper::initializeVoiLutData(VoiLutPresetsToolData *voiLutData, Volum
     }
     else
     {
-        DEBUG_LOG(QString("Índex [%1] fora de rang. No s'ha pogut obtenir la imatge indicada del volum actual.").arg(index));
+        DEBUG_LOG(QString("Index [%1] out of range. The indicated image of the current volume could not be obtained.").arg(index));
     }
 
     if (voiLutCount > 0)

@@ -526,6 +526,18 @@ void ImageFillerStep::processImage(Image *image, const DICOMTagReader *dicomRead
     /// Fill in the information regarding the Display Shutters
     /// which can be found in CR, XA, RF, DX, MG and IO mode images
     fillDisplayShutterInformation(image, dicomReader);
+
+	//add 20141204
+	value = dicomReader->getValueAttributeAsQString(DICOMKVP);
+	if (!value.isEmpty())
+	{
+		image->setDICOMKVP(value);
+	}
+	value = dicomReader->getValueAttributeAsQString(DICOMXRayTubeCurrent);
+	if (!value.isEmpty())
+	{
+		image->setXRayTubeCurrent(value);
+	}
 }
 
 QList<Image*> ImageFillerStep::processEnhancedDICOMFile(const DICOMTagReader *dicomReader)
