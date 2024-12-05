@@ -263,6 +263,14 @@ public:
     ///Returns a list of the modes we support as Image
     static QStringList getSupportedModalities();
 
+//add:20241204
+public:
+	void setDICOMKVP(QString KVP);
+	QString getDICOMKVP();
+
+	void setXRayTubeCurrent(QString XRayTubeCurrent);
+	QString getXRayTubeCurrent();
+
 private:
     /// Read the overlays. If splitOverlays is true, save them by dividing
     /// the optimal regions in the m_overlaysSplit list
@@ -470,6 +478,10 @@ private:
 
     //Indicates the origin of DICOM images
     DICOMSource m_imageDICOMSource;
+
+	//add 20241204
+	QString m_dicomKVP;
+	QString m_dicomXRayTubeCurrent;
 };
 
 }

@@ -735,4 +735,24 @@ bool Image::readOverlays(bool splitOverlays)
     }
 }
 
+void Image::setDICOMKVP(QString KVP)
+{
+	m_dicomKVP = KVP;
+}
+QString Image::getDICOMKVP()
+{
+	return m_dicomKVP;
+}
+
+void Image::setXRayTubeCurrent(QString XRayTubeCurrent)
+{
+	m_dicomXRayTubeCurrent = XRayTubeCurrent;
+}
+
+QString Image::getXRayTubeCurrent()
+{
+	return m_dicomXRayTubeCurrent;
+}
+
+
 }
