@@ -926,6 +926,7 @@ void QMPR3DExtension::ResetViews()
 		m_resliceImageViewer[i]->Render();
 	}
 	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(0, PI);
+	m_resliceImageViewer[1]->GetRenderWindow()->Render();
 	// Also sync the Image plane widget on the 3D top right view with any
 	// changes to the reslice cursor.
 	//for (int i = 0; i < 3; i++)
