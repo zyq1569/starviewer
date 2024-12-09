@@ -393,14 +393,14 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent): QWidget(parent), m_axialZeroS
 		
 	}
 
-	m_sagital2DView->SetRenderWindow(m_resliceImageViewer[0]->GetRenderWindow());
-	m_resliceImageViewer[0]->SetupInteractor(m_sagital2DView->GetRenderWindow()->GetInteractor());
+	m_sagital2DView->setRenderWindow(m_resliceImageViewer[0]->GetRenderWindow());
+	m_resliceImageViewer[0]->SetupInteractor(m_sagital2DView->renderWindow()->GetInteractor());
 
-	m_coronal2DView->SetRenderWindow(m_resliceImageViewer[1]->GetRenderWindow());
-	m_resliceImageViewer[1]->SetupInteractor(m_coronal2DView->GetRenderWindow()->GetInteractor());
+	m_coronal2DView->setRenderWindow(m_resliceImageViewer[1]->GetRenderWindow());
+	m_resliceImageViewer[1]->SetupInteractor(m_coronal2DView->renderWindow()->GetInteractor());
 
-	m_axial2DView->SetRenderWindow(m_resliceImageViewer[2]->GetRenderWindow());
-	m_resliceImageViewer[2]->SetupInteractor(m_axial2DView->GetRenderWindow()->GetInteractor());
+	m_axial2DView->setRenderWindow(m_resliceImageViewer[2]->GetRenderWindow());
+	m_resliceImageViewer[2]->SetupInteractor(m_axial2DView->renderWindow()->GetInteractor());
 
 	Volume * vl = QViewer::selectVolume();
 	vtkSmartPointer <vtkImageData> imageData = NULL;
@@ -449,7 +449,11 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent): QWidget(parent), m_axialZeroS
 		vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[i]->GetResliceCursorWidget()->GetRepresentation());
 		m_resliceImageViewer[i]->SetResliceCursor(m_resliceImageViewer[0]->GetResliceCursor());
 		rep->GetResliceCursorActor()->GetCursorAlgorithm()->SetReslicePlaneNormal(i);
-
+		//
+		rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetRepresentationToWireframe();//代表12窗口竖线
+		rep->GetResliceCursorActor()->GetCenterlineProperty(1)->SetRepresentationToWireframe();//0竖线，2横线
+		rep->GetResliceCursorActor()->GetCenterlineProperty(2)->SetRepresentationToWireframe();//01横线
+		//
 		m_resliceImageViewer[i]->SetInputData(imageData);
 		m_resliceImageViewer[i]->SetSliceOrientation(i);
 		m_resliceImageViewer[i]->SetResliceModeToAxisAligned();
