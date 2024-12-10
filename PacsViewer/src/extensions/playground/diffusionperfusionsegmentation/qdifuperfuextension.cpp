@@ -17,6 +17,7 @@
 #include "patientbrowsermenu.h"
 #include "transferfunction.h"
 #include "voilut.h"
+#include <fstream>
 // Qt
 #include <QMessageBox>
 #include <QFileDialog>

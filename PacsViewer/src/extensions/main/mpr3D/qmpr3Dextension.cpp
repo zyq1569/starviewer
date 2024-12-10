@@ -410,7 +410,7 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent): QWidget(parent), m_axialZeroS
 		imageData = vl->getVtkData();
 		vtkSmartPointer< vtkImageFlip > ImageFlip = vtkSmartPointer< vtkImageFlip >::New();
 		ImageFlip->SetInputData(imageData);
-		ImageFlip->SetFilteredAxes(1);
+		ImageFlip->SetFilteredAxes(0);
 		ImageFlip->Update();
 		imageData = ImageFlip->GetOutput();	
 		m_volume = vl;
@@ -504,9 +504,6 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent): QWidget(parent), m_axialZeroS
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::WindowLevelEvent, cbk);
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResliceThicknessChangedEvent, cbk);
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResetCursorEvent, cbk);
-		///
-		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorRepresentation::WindowLevelling, cbk);
-		///
 		m_resliceImageViewer[i]->GetInteractorStyle()->AddObserver(vtkCommand::WindowLevelEvent, cbk);
 		m_resliceImageViewer[i]->AddObserver(vtkResliceImageViewer::SliceChangedEvent, cbk);
 	
@@ -514,8 +511,9 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent): QWidget(parent), m_axialZeroS
 		m_resliceImageViewer[i]->SetLookupTable(m_resliceImageViewer[0]->GetLookupTable());
 	
 	}
-	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(0, PI);
+	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(1, PI);
 
+	//add  cornerAnnotations
 	for (int i = 0; i < 3; i++)
 	{
 		//int now = m_resliceImageViewer[i]->GetSlice() + 1;
@@ -525,19 +523,19 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent): QWidget(parent), m_axialZeroS
     m_axial2DView->installEventFilter(&filter);
     m_sagital2DView->installEventFilter(&filter);
     m_coronal2DView->installEventFilter(&filter);
-
-	m_axial2DView->show();
-	m_sagital2DView->show();
-	m_coronal2DView->show();
-
 	for (int i = 0; i < 3; i++)
 	{
 		m_resliceImageViewer[i]->SetResliceMode(1);
 		m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
-        m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.6);
-		//m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
+		m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.6);
 		m_resliceImageViewer[i]->Render();
 	}
+	m_axial2DView->show();
+	m_sagital2DView->show();
+	m_coronal2DView->show();
+
+
+
 }
 
 void QMPR3DExtension::changeSetWindowLevel()
@@ -927,10 +925,12 @@ void QMPR3DExtension::ResetViews()
 	{
 		m_resliceImageViewer[i]->Reset();
 		m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
+	}
+	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(1, PI);
+	for (int i = 0; i < 3; i++)
+	{
 		m_resliceImageViewer[i]->Render();
 	}
-	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(0, PI);
-	m_resliceImageViewer[1]->GetRenderWindow()->Render();
 	// Also sync the Image plane widget on the 3D top right view with any
 	// changes to the reslice cursor.
 	//for (int i = 0; i < 3; i++)

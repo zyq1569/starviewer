@@ -51,7 +51,11 @@
 #include <vtkRenderWindowInteractor.h>
 #include <vtkCamera.h>
 #include <vtkPropPicker.h>
+#if VTK_90
+
+#else
 #include <QVTKWidget.h>
+#endif // VTK_Ver
 #include <vtkWindowToImageFilter.h>
 #include <vtkImageProperty.h>
 #include <vtkImageSlice.h>
