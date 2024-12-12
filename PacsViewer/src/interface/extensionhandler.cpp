@@ -181,6 +181,7 @@ bool ExtensionHandler::createExtension(const QString &who, QString tableText)
         return ok;
     }
 	bool bQ3DViewerExtension = ("Q3DViewerExtension" == who);
+	bool bQMPRViewerExtension = ("MPR3DExtension" == who);
     bool createExtension = true;
     int extensionIndex = 0;
     QString requestedExtensionLabel = mediator->getExtensionID().getLabel();
@@ -252,6 +253,20 @@ bool ExtensionHandler::createExtension(const QString &who, QString tableText)
 			if (volume && volume->is3Dimage())
 			{
 				m_mainApp->getExtensionWorkspace()->setTabText(extensionIndex, "3D-Viewer#Series:" + volume->getSeries()->getSeriesNumber());
+				QWidget* widget = m_mainApp->currentWidgetOfExtensionWorkspace();
+				if (widget)
+				{
+					mediator->executionCommand(widget, volume);
+				}
+			}
+		}
+		else if (bQMPRViewerExtension)
+		{
+			Volume * selVolume = QViewer::selectVolume();
+			Volume *volume = selVolume ? selVolume : m_extensionContext.getDefaultVolumeNoLocalizer();
+			if (volume && volume->is3Dimage())
+			{
+				m_mainApp->getExtensionWorkspace()->setTabText(extensionIndex, "MPR-3D");
 				QWidget* widget = m_mainApp->currentWidgetOfExtensionWorkspace();
 				if (widget)
 				{

@@ -62,7 +62,15 @@ bool MPR3DExtensionMediator::initializeExtension(QWidget *extension, const Exten
 
 void  MPR3DExtensionMediator::executionCommand(QWidget *extension, Volume* volume, void *data , int command )
 {
-
+	QMPR3DExtension *mpr3DExtension;
+	if (!(mpr3DExtension = qobject_cast<QMPR3DExtension*>(extension)))
+	{
+		return;
+	}
+	if (volume)
+	{
+		mpr3DExtension->updateInput(volume);
+	}
 }
 
 } // End udg namespace

@@ -53,7 +53,8 @@ public:
 
     /// Rota el pla especificat pel seu centre
     void rotateMiddle(double degrees, double rotationAxis[3], vtkPlaneSource *plane);
-
+	//20240802
+	void updateInput(Volume *input);
 public slots:
     /// Li assigna el volum amb el que s'aplica l'MPR.
     /// A cada finestra es veurà el tall corresponent per defecte. De bon principi cada visor visualitzarà la llesca central corresponent a cada vista.
@@ -278,6 +279,8 @@ protected:
 
 public:
 	void ResetViews();
+	//20240802
+	Volume *m_lastInput;
 };
 
 };  // End namespace udg

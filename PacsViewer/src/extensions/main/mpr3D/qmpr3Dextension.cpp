@@ -203,7 +203,8 @@ double getSliceThickness(Volume * volume, int i)
 void setCornerAnnotations(vtkCornerAnnotation* vtkCornerAnnotation, int Slice, int Window, int Level);
 void setCornerAnnotations(vtkCornerAnnotation* vtkCornerAnnotation, int Slice, int Window, int Level)
 {
-	QString sliceInfo = QObject::tr("ims: %1\n").arg(Slice);
+	QString sliceInfo = QObject::tr("ims: %1\n").arg(Slice); 
+	sliceInfo += QObject::tr("ser: %1 \n").arg(g_ser);
 	sliceInfo += QObject::tr("WW: %1 WL: %2 \n").arg(Window).arg(Level);
 	sliceInfo += QObject::tr("KV: %1 mA: %2 \n").arg(g_dicomKVP).arg(g_dicomXRayTubeCurrent);
 	vtkCornerAnnotation->SetText(2, sliceInfo.toLatin1().constData());
@@ -258,46 +259,46 @@ public:
 		}
 
 
-		vtkImagePlaneWidget* ipw =	dynamic_cast<vtkImagePlaneWidget*>(caller);
-		if (ipw)
-		{
-			double* wl = static_cast<double*>(callData);
+		//vtkImagePlaneWidget* ipw =	dynamic_cast<vtkImagePlaneWidget*>(caller);
+		//if (ipw)
+		//{
+		//	double* wl = static_cast<double*>(callData);
+		//
+		//	if (ipw == this->IPW[0])
+		//	{
+		//		this->IPW[1]->SetWindowLevel(wl[0], wl[1], 1);
+		//		this->IPW[2]->SetWindowLevel(wl[0], wl[1], 1);
+		//	}
+		//	else if (ipw == this->IPW[1])
+		//	{
+		//		this->IPW[0]->SetWindowLevel(wl[0], wl[1], 1);
+		//		this->IPW[2]->SetWindowLevel(wl[0], wl[1], 1);
+		//	}
+		//	else if (ipw == this->IPW[2])
+		//	{
+		//		this->IPW[0]->SetWindowLevel(wl[0], wl[1], 1);
+		//		this->IPW[1]->SetWindowLevel(wl[0], wl[1], 1);
+		//	}
+		//}
 
-			if (ipw == this->IPW[0])
-			{
-				this->IPW[1]->SetWindowLevel(wl[0], wl[1], 1);
-				this->IPW[2]->SetWindowLevel(wl[0], wl[1], 1);
-			}
-			else if (ipw == this->IPW[1])
-			{
-				this->IPW[0]->SetWindowLevel(wl[0], wl[1], 1);
-				this->IPW[2]->SetWindowLevel(wl[0], wl[1], 1);
-			}
-			else if (ipw == this->IPW[2])
-			{
-				this->IPW[0]->SetWindowLevel(wl[0], wl[1], 1);
-				this->IPW[1]->SetWindowLevel(wl[0], wl[1], 1);
-			}
-		}
-
-		vtkResliceCursorWidget *rcw = dynamic_cast<	vtkResliceCursorWidget *>(caller);
-		if (rcw)
-		{
-			vtkResliceCursorLineRepresentation *rep = dynamic_cast<	vtkResliceCursorLineRepresentation *>(rcw->GetRepresentation());
-			// Although the return value is not used, we keep the get calls
-			// in case they had side-effects
-			rep->GetResliceCursorActor()->GetCursorAlgorithm()->GetResliceCursor();
-			for (int i = 0; i < 3; i++)
-			{
-				vtkPlaneSource *ps = static_cast<vtkPlaneSource *>(	this->IPW[i]->GetPolyDataAlgorithm());
-				ps->SetOrigin(this->RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetOrigin());
-				ps->SetPoint1(this->RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetPoint1());
-				ps->SetPoint2(this->RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetPoint2());
-
-				// If the reslice plane has modified, update it on the 3D widget
-				this->IPW[i]->UpdatePlacement();
-			}
-		}
+		//vtkResliceCursorWidget *rcw = dynamic_cast<	vtkResliceCursorWidget *>(caller);
+		//if (rcw)
+		//{
+		//	vtkResliceCursorLineRepresentation *rep = dynamic_cast<	vtkResliceCursorLineRepresentation *>(rcw->GetRepresentation());
+		//	// Although the return value is not used, we keep the get calls
+		//// in case they had side-effects
+		//	rep->GetResliceCursorActor()->GetCursorAlgorithm()->GetResliceCursor();
+		//	for (int i = 0; i < 3; i++)
+		//	{
+		//		vtkPlaneSource *ps = static_cast<vtkPlaneSource *>(	this->IPW[i]->GetPolyDataAlgorithm());
+		//		ps->SetOrigin(this->RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetOrigin());
+		//		ps->SetPoint1(this->RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetPoint1());
+		//		ps->SetPoint2(this->RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetPoint2());
+		//
+		//		// If the reslice plane has modified, update it on the 3D widget
+		//		this->IPW[i]->UpdatePlacement();
+		//	}
+		//}
 
 		// Render everything
 		for (int i = 0; i < 3; i++)
@@ -383,6 +384,7 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent): QWidget(parent), m_axialZeroS
     m_viewerInformationToolButton->setToolTip(tr("Show/Hide viewer's textual information"));
     m_voiLutComboBox->setToolTip(tr("Choose a VOI LUT preset"));
 
+	return;
 	//---------------------------20241105-------------------------------------------------------------------------------
 	for (int i = 0; i < 3; i++)
 	{
@@ -1540,78 +1542,245 @@ void QMPR3DExtension::setInput(Volume *input)
     {
         return;
     }
+	///--------------------------------------
+	//---------------------------20241105-------------------------------------------------------------------------------
+	for (int i = 0; i < 3; i++)
+	{
+		m_resliceImageViewer[i] = vtkMPRResliceImageViewer::New();
+		m_resliceImageViewer[i]->init(i == 1);
+		m_renderWindow[i] = vtkGenericOpenGLRenderWindow::New();
+		m_resliceImageViewer[i]->SetRenderWindow(m_renderWindow[i]);
+		m_cornerAnnotations[i] = vtkCornerAnnotation::New();
+		m_resliceImageViewer[i]->GetRenderer()->AddViewProp(m_cornerAnnotations[i]);
+
+	}
+
+#ifdef VTK94
+	m_sagital2DView->setRenderWindow(m_resliceImageViewer[0]->GetRenderWindow());
+	m_resliceImageViewer[0]->SetupInteractor(m_sagital2DView->renderWindow()->GetInteractor());
+
+	m_coronal2DView->setRenderWindow(m_resliceImageViewer[1]->GetRenderWindow());
+	m_resliceImageViewer[1]->SetupInteractor(m_coronal2DView->renderWindow()->GetInteractor());
+
+	m_axial2DView->setRenderWindow(m_resliceImageViewer[2]->GetRenderWindow());
+	m_resliceImageViewer[2]->SetupInteractor(m_axial2DView->renderWindow()->GetInteractor());
+#else
+	m_sagital2DView->SetRenderWindow(m_resliceImageViewer[0]->GetRenderWindow());
+	m_resliceImageViewer[0]->SetupInteractor(m_sagital2DView->GetRenderWindow()->GetInteractor());
+
+	m_coronal2DView->SetRenderWindow(m_resliceImageViewer[1]->GetRenderWindow());
+	m_resliceImageViewer[1]->SetupInteractor(m_coronal2DView->GetRenderWindow()->GetInteractor());
+
+	m_axial2DView->SetRenderWindow(m_resliceImageViewer[2]->GetRenderWindow());
+	m_resliceImageViewer[2]->SetupInteractor(m_axial2DView->GetRenderWindow()->GetInteractor());
+#endif // VTK94
+
+	m_lastInput = selVolume;;
+	Volume * vl = selVolume;
+	vtkSmartPointer <vtkImageData> imageData = NULL;
+	if (vl)
+	{
+		vl->getVtkData()->Modified();
+		imageData = vl->getVtkData();
+		vtkSmartPointer< vtkImageFlip > ImageFlip = vtkSmartPointer< vtkImageFlip >::New();
+		ImageFlip->SetInputData(imageData);
+		ImageFlip->SetFilteredAxes(1);
+		ImageFlip->Update();
+		imageData = ImageFlip->GetOutput();
+		m_volume = vl;
+		//VoiLutPresetsToolData
+		//VoiLutPresetsToolData data(this);
+		m_VoiLutPresetsToolData = new VoiLutPresetsToolData(this);
+		VoiLutHelper().initializeVoiLutData(m_VoiLutPresetsToolData, vl);
+		m_voiLutComboBox->setPresetsData(m_VoiLutPresetsToolData);
+		m_voiLutComboBox->selectPreset(m_VoiLutPresetsToolData->getCurrentPresetName());
+		m_voiLutComboBox->setToolTip(tr("Choose a VOI LUT preset"));
+		VoiLut voiLut = m_VoiLutPresetsToolData->getCurrentPreset();
+		m_CurrentWL[0] = voiLut.getWindowLevel().getWidth();
+		m_CurrentWL[1] = voiLut.getWindowLevel().getCenter();
+		m_DeaultWL[0] = m_CurrentWL[0];
+		m_DeaultWL[1] = m_CurrentWL[1];
+		//changeSetWindowLevel
+		connect(m_voiLutComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changeSetWindowLevel()));
+
+		///-----------------------------------------------------
+		g_SliceThickness[0] = getSliceThickness(vl, 0);
+		g_SliceThickness[1] = getSliceThickness(vl, 1);
+		g_SliceThickness[2] = getSliceThickness(vl, 2);
+		g_ser = vl->getSeries()->getSeriesNumber();
+		g_time = vl->getSeries()->getDateAsString() + vl->getSeries()->getTimeAsString();
+		g_institutionName = vl->getSeries()->getInstitutionName();
+		g_dicomKVP = vl->getImage(0)->getDICOMKVP();
+		g_dicomXRayTubeCurrent = vl->getImage(0)->getXRayTubeCurrent();
+	}
+	else
+	{
+		return;
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		// make them all share the same reslice cursor object.
+		vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[i]->GetResliceCursorWidget()->GetRepresentation());
+		m_resliceImageViewer[i]->SetResliceCursor(m_resliceImageViewer[0]->GetResliceCursor());
+		rep->GetResliceCursorActor()->GetCursorAlgorithm()->SetReslicePlaneNormal(i);
+		//VTK94 need
+		//rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetRepresentationToWireframe();//代表12窗口竖线
+		//rep->GetResliceCursorActor()->GetCenterlineProperty(1)->SetRepresentationToWireframe();//0竖线，2横线
+		//rep->GetResliceCursorActor()->GetCenterlineProperty(2)->SetRepresentationToWireframe();//01横线
+		//
+		m_resliceImageViewer[i]->SetInputData(imageData);
+		m_resliceImageViewer[i]->SetSliceOrientation(i);
+		m_resliceImageViewer[i]->SetResliceModeToAxisAligned();
+		rep->SetWindowLevel(m_CurrentWL[0], m_CurrentWL[1]);
+	}
+
+	vtkSmartPointer<vtkCellPicker> picker = vtkSmartPointer<vtkCellPicker>::New();
+	picker->SetTolerance(0.005);
+	vtkSmartPointer<vtkProperty> ipwProp = vtkSmartPointer<vtkProperty>::New();
+	vtkSmartPointer< vtkRenderer > ren = vtkSmartPointer< vtkRenderer >::New();
+	int imageDims[3];
+	for (int i = 0; i < 3; i++)
+	{
+		m_planeWidget[i] = vtkImagePlaneWidget::New();
+		m_planeWidget[i]->SetPicker(picker);
+		m_planeWidget[i]->RestrictPlaneToVolumeOn();
+		double color[3] = { 0, 0, 0 };
+
+		m_planeWidget[i]->GetPlaneProperty()->SetColor(color);
+
+		m_resliceImageViewer[i]->GetRenderer()->SetBackground(color);
+
+		m_planeWidget[i]->SetTexturePlaneProperty(ipwProp);
+		m_planeWidget[i]->TextureInterpolateOff();
+		m_planeWidget[i]->SetResliceInterpolateToLinear();
+		//m_planeWidget[i]->SetInputConnection(reader->GetOutputPort());
+
+		m_planeWidget[i]->SetPlaneOrientation(i);
+		m_planeWidget[i]->SetSliceIndex(imageDims[i] / 2);
+		m_planeWidget[i]->DisplayTextOn();
+		m_planeWidget[i]->SetDefaultRenderer(ren);
+		m_planeWidget[i]->SetWindowLevel(m_CurrentWL[0], m_CurrentWL[1]);
+		m_planeWidget[i]->On();
+		m_planeWidget[i]->InteractionOn();
+	}
+
+	vtkSmartPointer<vtkResliceCursorCallback> cbk = vtkSmartPointer<vtkResliceCursorCallback>::New();
+	static QeventMouse filter;
+	for (int i = 0; i < 3; i++)
+	{
+		cbk->IPW[i] = m_planeWidget[i];
+		cbk->RCW[i] = m_resliceImageViewer[i]->GetResliceCursorWidget();
+		cbk->m_resliceImageViewer[i] = m_resliceImageViewer[i];
+		cbk->m_cornerAnnotations[i] = m_cornerAnnotations[i];
+		filter.m_riw[i] = m_resliceImageViewer[i];
+		filter.m_cornerAnnotations[i] = m_cornerAnnotations[i];
+		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResliceAxesChangedEvent, cbk);
+		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::WindowLevelEvent, cbk);
+		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResliceThicknessChangedEvent, cbk);
+		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResetCursorEvent, cbk);
+		m_resliceImageViewer[i]->GetInteractorStyle()->AddObserver(vtkCommand::WindowLevelEvent, cbk);
+		m_resliceImageViewer[i]->AddObserver(vtkResliceImageViewer::SliceChangedEvent, cbk);
+
+		// Make them all share the same color map.
+		m_resliceImageViewer[i]->SetLookupTable(m_resliceImageViewer[0]->GetLookupTable());
+
+	}
+	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(0, PI);
+
+	//add  cornerAnnotations
+	for (int i = 0; i < 3; i++)
+	{
+		//int now = m_resliceImageViewer[i]->GetSlice() + 1;
+		int max = m_resliceImageViewer[i]->GetSliceMax() + 1;
+		setCornerAnnotations(m_cornerAnnotations[i], max, MathTools::roundToNearestInteger(m_CurrentWL[0]), MathTools::roundToNearestInteger(m_CurrentWL[1]));
+	}
+	//m_axial2DView->installEventFilter(&filter);
+	//m_sagital2DView->installEventFilter(&filter);
+	//m_coronal2DView->installEventFilter(&filter);
+
+	for (int i = 0; i < 3; i++)
+	{
+		m_resliceImageViewer[i]->SetResliceMode(1);
+		m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
+		//m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.6);
+		m_resliceImageViewer[i]->Render();
+	}
+	m_axial2DView->show();
+	m_sagital2DView->show();
+	m_coronal2DView->show();
+	//---------------------------------------
     // HACK End
 
-    vtkImageChangeInformation *changeInfo = vtkImageChangeInformation::New();
-    changeInfo->SetInputData(input->getVtkData());
-    changeInfo->SetOutputOrigin(.0, .0, .0);
-    changeInfo->Update();
-
-    // TODO Es crea un nou volum cada cop!
-    m_volume = new Volume;
-    m_volume->setImages(input->getImages());
-    m_volume->setData(changeInfo->GetOutput());
-    m_volume->setNumberOfPhases(input->getNumberOfPhases());
-    m_volume->setNumberOfSlicesPerPhase(input->getNumberOfSlicesPerPhase());
-    // We need to tell you the identifier in the volume repository for
+   //vtkImageChangeInformation *changeInfo = vtkImageChangeInformation::New();
+   //changeInfo->SetInputData(input->getVtkData());
+   //changeInfo->SetOutputOrigin(.0, .0, .0);
+   //changeInfo->Update();
+   //
+   //// TODO Es crea un nou volum cada cop!
+   //m_volume = new Volume;
+   //m_volume->setImages(input->getImages());
+   //m_volume->setData(changeInfo->GetOutput());
+   //m_volume->setNumberOfPhases(input->getNumberOfPhases());
+   //m_volume->setNumberOfSlicesPerPhase(input->getNumberOfSlicesPerPhase());
+   //// We need to tell you the identifier in the volume repository for
     // such that when we show the patient menu we are shown in bold the current volume
     // This is still a HACK that will cease to exist when we do not transform it
     // initial source to volume when we have the new MPR module ready
-    m_volume->setIdentifier(input->getIdentifier());
-
-    m_volume->getSpacing(m_axialSpacing);
-
-    if (m_sagitalReslice)
-    {
-        m_sagitalReslice->Delete();
-    }
-    m_sagitalReslice = vtkImageReslice::New();
-    //So that the output extent is sufficient and no data is "eaten"
-    m_sagitalReslice->AutoCropOutputOn();
-    m_sagitalReslice->SetInterpolationModeToCubic();
-    m_sagitalReslice->SetInputData(m_volume->getVtkData());
-
-    if (m_coronalReslice)
-    {
-        m_coronalReslice->Delete();
-    }
-    m_coronalReslice = vtkImageReslice::New();
-    m_coronalReslice->AutoCropOutputOn();
-    m_coronalReslice->SetInterpolationModeToCubic();
-    m_coronalReslice->SetInputData(m_volume->getVtkData());
-
-    // Faltaria refrescar l'input dels 3 mpr
+   //m_volume->setIdentifier(input->getIdentifier());
+   //
+   //m_volume->getSpacing(m_axialSpacing);
+   //
+   //if (m_sagitalReslice)
+   //{
+   //    m_sagitalReslice->Delete();
+   //}
+   //m_sagitalReslice = vtkImageReslice::New();
+   ////So that the output extent is sufficient and no data is "eaten"
+   //m_sagitalReslice->AutoCropOutputOn();
+   //m_sagitalReslice->SetInterpolationModeToCubic();
+   //m_sagitalReslice->SetInputData(m_volume->getVtkData());
+   //
+   //if (m_coronalReslice)
+   //{
+   //    m_coronalReslice->Delete();
+   //}
+   //m_coronalReslice = vtkImageReslice::New();
+   //m_coronalReslice->AutoCropOutputOn();
+   //m_coronalReslice->SetInterpolationModeToCubic();
+   //m_coronalReslice->SetInputData(m_volume->getVtkData());
+   //
+   //// Faltaria refrescar l'input dels 3 mpr
     // HACK To make universal scrolling work properly. Issue #2019. We have to disconnect and reconnect the signal to avoid infinite loops
-    disconnect(m_axial2DView, SIGNAL(volumeChanged(Volume*)), this, SLOT(setInput(Volume*)));
-    //m_axial2DView->setInput(m_volume);
-    connect(m_axial2DView, SIGNAL(volumeChanged(Volume*)), SLOT(setInput(Volume*)));
-    int extent[6];
-    m_volume->getExtent(extent);
-    //m_axialSlider->setMaximum(extent[5]);
-
-    double maxThickSlab = sqrt((m_axialSpacing[0] * extent[1]) * (m_axialSpacing[0] * extent[1]) + (m_axialSpacing[1] * extent[3]) *
-            (m_axialSpacing[1] * extent[3]) + (m_axialSpacing[2] * extent[5]) * (m_axialSpacing[2] * extent[5]));
-    m_thickSlabSlider->setMaximum((int) maxThickSlab);
-    m_thickSlabSpinBox->setMaximum(maxThickSlab);
-
-    // Tuning planeSource
-    initOrientation();
-
-    Volume *sagitalResliced = new Volume;
-    // TODO This is necessary so that you have the information of the series, studies, patient ...
-    sagitalResliced->setImages(m_volume->getImages());
-    sagitalResliced->setData(m_sagitalReslice->GetOutput());
-    sagitalResliced->setNumberOfPhases(1);
-    sagitalResliced->setNumberOfSlicesPerPhase(1);
-
-    //m_sagital2DView->setInput(sagitalResliced);
-
-    Volume *coronalResliced = new Volume;
-    // TODO This is necessary so that you have the information of the series, studies, patient ...
-    coronalResliced->setImages(m_volume->getImages());
-    coronalResliced->setData(m_coronalReslice->GetOutput());
-    coronalResliced->setNumberOfPhases(1);
-    coronalResliced->setNumberOfSlicesPerPhase(1);
+   //disconnect(m_axial2DView, SIGNAL(volumeChanged(Volume*)), this, SLOT(setInput(Volume*)));
+   ////m_axial2DView->setInput(m_volume);
+   //connect(m_axial2DView, SIGNAL(volumeChanged(Volume*)), SLOT(setInput(Volume*)));
+   //int extent[6];
+   //m_volume->getExtent(extent);
+   ////m_axialSlider->setMaximum(extent[5]);
+   //
+   //double maxThickSlab = sqrt((m_axialSpacing[0] * extent[1]) * (m_axialSpacing[0] * extent[1]) + (m_axialSpacing[1] * extent[3]) *
+   //        (m_axialSpacing[1] * extent[3]) + (m_axialSpacing[2] * extent[5]) * (m_axialSpacing[2] * extent[5]));
+   //m_thickSlabSlider->setMaximum((int) maxThickSlab);
+   //m_thickSlabSpinBox->setMaximum(maxThickSlab);
+   //
+   //// Tuning planeSource
+   //initOrientation();
+   //
+   //Volume *sagitalResliced = new Volume;
+   //// TODO This is necessary so that you have the information of the series, studies, patient ...
+   //sagitalResliced->setImages(m_volume->getImages());
+   //sagitalResliced->setData(m_sagitalReslice->GetOutput());
+   //sagitalResliced->setNumberOfPhases(1);
+   //sagitalResliced->setNumberOfSlicesPerPhase(1);
+   //
+   ////m_sagital2DView->setInput(sagitalResliced);
+   //
+   //Volume *coronalResliced = new Volume;
+   //// TODO This is necessary so that you have the information of the series, studies, patient ...
+   //coronalResliced->setImages(m_volume->getImages());
+   //coronalResliced->setData(m_coronalReslice->GetOutput());
+   //coronalResliced->setNumberOfPhases(1);
+   //coronalResliced->setNumberOfSlicesPerPhase(1);
 
     //m_coronal2DView->setInput(coronalResliced);
 	//
@@ -2338,6 +2507,37 @@ vtkTransform* QMPR3DExtension::getWorldToSagitalTransform() const
     return sagitalTransform;
 }
 
+void QMPR3DExtension::updateInput(Volume *input)
+{
+	if (m_lastInput != input)
+	{
+		m_lastInput = input;
+		vtkSmartPointer <vtkImageData> imageData = NULL;
+		imageData = m_lastInput->getVtkData();
+		vtkSmartPointer< vtkImageFlip > ImageFlip = vtkSmartPointer< vtkImageFlip >::New();
+		ImageFlip->SetInputData(imageData);
+		ImageFlip->SetFilteredAxes(1);
+		ImageFlip->Update();
+		imageData = ImageFlip->GetOutput();
+
+		g_ser = m_lastInput->getSeries()->getSeriesNumber();
+		g_time = m_lastInput->getSeries()->getDateAsString() + m_lastInput->getSeries()->getTimeAsString();
+		g_institutionName = m_lastInput->getSeries()->getInstitutionName();
+		g_dicomKVP = m_lastInput->getImage(0)->getDICOMKVP();
+		g_dicomXRayTubeCurrent = m_lastInput->getImage(0)->getXRayTubeCurrent();
+
+		for (int i = 0; i < 3; i++)
+		{
+			m_resliceImageViewer[i]->SetInputData(imageData);
+		}
+		ResetViews();
+		for (int i = 0; i < 3; i++)
+		{
+			int max = m_resliceImageViewer[i]->GetSliceMax() + 1;
+			setCornerAnnotations(m_cornerAnnotations[i], max, MathTools::roundToNearestInteger(m_CurrentWL[0]), MathTools::roundToNearestInteger(m_CurrentWL[1]));
+		}
+	}
+}
 };  // End namespace udg
 
 //void TestMPR3DVTKdata(Volume *volume)
