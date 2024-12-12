@@ -159,7 +159,7 @@ public:
 protected:
   vtkVolumeRayCastFunction()
     {
-    VTK_LEGACY_BODY(vtkVolumeRayCastMapper::vtkVolumeRayCastMapper,"VTK 7.0");
+    //VTK_LEGACY_BODY(vtkVolumeRayCastMapper::vtkVolumeRayCastMapper,"VTK 7.0");
     }
   ~vtkVolumeRayCastFunction() {}
 

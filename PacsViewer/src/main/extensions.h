@@ -18,7 +18,7 @@ void initExtensionsResources()
 //Q_INIT_RESOURCE(mpr);
 //Q_INIT_RESOURCE(dicomprint);
 Q_INIT_RESOURCE(q2dviewer);
-Q_INIT_RESOURCE(mpr3D);
+//Q_INIT_RESOURCE(mpr3D);
 Q_INIT_RESOURCE(q3dviewer);
 //Q_INIT_RESOURCE(pdf);
 //Q_INIT_RESOURCE(diffusionperfusionsegmentation);
