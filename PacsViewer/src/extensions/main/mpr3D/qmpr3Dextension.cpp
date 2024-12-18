@@ -355,7 +355,7 @@ private:
 
 };
 
-
+////有人提问,VTK没有看到好的方法. https://discourse.vtk.org/t/the-picture-of-coronal-planes-left-and-right-is-reversion-in-vtk8-2-0-dicom-mpr/1754/2
 QMPR3DExtension::QMPR3DExtension(QWidget *parent): QWidget(parent), m_axialZeroSliceCoordinate(.0)
 {
     setupUi(this);
@@ -427,7 +427,7 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent): QWidget(parent), m_axialZeroS
 		imageData = vl->getVtkData();
 		vtkSmartPointer< vtkImageFlip > ImageFlip = vtkSmartPointer< vtkImageFlip >::New();
 		ImageFlip->SetInputData(imageData);
-		ImageFlip->SetFilteredAxes(1);
+		ImageFlip->SetFilteredAxes(0);
 		ImageFlip->Update();
 		imageData = ImageFlip->GetOutput();	
 		m_volume = vl;
@@ -528,7 +528,7 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent): QWidget(parent), m_axialZeroS
 		m_resliceImageViewer[i]->SetLookupTable(m_resliceImageViewer[0]->GetLookupTable());
 	
 	}
-	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(0, PI);
+	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(1, PI);
 
 	//add  cornerAnnotations
 	for (int i = 0; i < 3; i++)
@@ -942,7 +942,7 @@ void QMPR3DExtension::ResetViews()
 		m_resliceImageViewer[i]->Reset();
 		m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
 	}
-	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(0, PI);
+	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(1, PI);
 	for (int i = 0; i < 3; i++)
 	{
 		m_resliceImageViewer[i]->Render();
@@ -1584,7 +1584,7 @@ void QMPR3DExtension::setInput(Volume *input)
 		imageData = vl->getVtkData();
 		vtkSmartPointer< vtkImageFlip > ImageFlip = vtkSmartPointer< vtkImageFlip >::New();
 		ImageFlip->SetInputData(imageData);
-		ImageFlip->SetFilteredAxes(1);
+		ImageFlip->SetFilteredAxes(0);
 		ImageFlip->Update();
 		imageData = ImageFlip->GetOutput();
 		m_volume = vl;
@@ -1624,9 +1624,10 @@ void QMPR3DExtension::setInput(Volume *input)
 		m_resliceImageViewer[i]->SetResliceCursor(m_resliceImageViewer[0]->GetResliceCursor());
 		rep->GetResliceCursorActor()->GetCursorAlgorithm()->SetReslicePlaneNormal(i);
 		//VTK94 need
-		//rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetRepresentationToWireframe();//代表12窗口竖线
-		//rep->GetResliceCursorActor()->GetCenterlineProperty(1)->SetRepresentationToWireframe();//0竖线，2横线
-		//rep->GetResliceCursorActor()->GetCenterlineProperty(2)->SetRepresentationToWireframe();//01横线
+		//rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetColor(1, 0, 0);
+		rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetRepresentationToWireframe();//代表12窗口竖线
+		rep->GetResliceCursorActor()->GetCenterlineProperty(1)->SetRepresentationToWireframe();//0竖线，2横线
+		rep->GetResliceCursorActor()->GetCenterlineProperty(2)->SetRepresentationToWireframe();//01横线
 		//
 		m_resliceImageViewer[i]->SetInputData(imageData);
 		m_resliceImageViewer[i]->SetSliceOrientation(i);
@@ -1639,13 +1640,12 @@ void QMPR3DExtension::setInput(Volume *input)
 	vtkSmartPointer<vtkProperty> ipwProp = vtkSmartPointer<vtkProperty>::New();
 	vtkSmartPointer< vtkRenderer > ren = vtkSmartPointer< vtkRenderer >::New();
 	int imageDims[3];
+	double color[3] = { 0, 0, 0 };
 	for (int i = 0; i < 3; i++)
 	{
 		m_planeWidget[i] = vtkImagePlaneWidget::New();
 		m_planeWidget[i]->SetPicker(picker);
 		m_planeWidget[i]->RestrictPlaneToVolumeOn();
-		double color[3] = { 0, 0, 0 };
-
 		m_planeWidget[i]->GetPlaneProperty()->SetColor(color);
 
 		m_resliceImageViewer[i]->GetRenderer()->SetBackground(color);
@@ -1685,7 +1685,7 @@ void QMPR3DExtension::setInput(Volume *input)
 		m_resliceImageViewer[i]->SetLookupTable(m_resliceImageViewer[0]->GetLookupTable());
 
 	}
-	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(0, PI);
+	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(1, PI);
 
 	//add  cornerAnnotations
 	for (int i = 0; i < 3; i++)
@@ -2516,7 +2516,7 @@ void QMPR3DExtension::updateInput(Volume *input)
 		imageData = m_lastInput->getVtkData();
 		vtkSmartPointer< vtkImageFlip > ImageFlip = vtkSmartPointer< vtkImageFlip >::New();
 		ImageFlip->SetInputData(imageData);
-		ImageFlip->SetFilteredAxes(1);
+		ImageFlip->SetFilteredAxes(0);
 		ImageFlip->Update();
 		imageData = ImageFlip->GetOutput();
 
