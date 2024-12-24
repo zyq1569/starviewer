@@ -56,6 +56,31 @@
 
 namespace udg {
 	static Volume *m_selectVolume = NULL;
+class QeventMouse :public QObject
+{
+public:
+	QeventMouse(QViewer *Viewer) { qViewer = Viewer; };
+	~QeventMouse() { };
+	bool eventFilter(QObject *object, QEvent *event)
+	{
+		if (event->type() == QEvent::MouseButtonDblClick)
+		{
+			QMouseEvent *button = (QMouseEvent * )event;
+			if (button->buttons() & Qt::LeftButton)
+			{
+				qViewer->mouseButtonDblClick();
+			}
+		}
+		return 0;
+	}
+public:
+	QViewer *qViewer;
+private:
+};
+void QViewer::mouseButtonDblClick()
+{
+	emit doubleClicked();
+}
 QViewer::QViewer(QWidget *parent)
     :QWidget(parent),/* m_mainVolume(0),*/ m_contextMenuActive(true),
       m_mouseHasMoved(false), m_voiLutData(0),m_isRenderingEnabled(true), m_isActive(false)
@@ -101,6 +126,10 @@ QViewer::QViewer(QWidget *parent)
     this->setContextMenuPolicy(Qt::ContextMenuPolicy::NoContextMenu);
     //volume is selected we immediately assign it as input
     this->setAutomaticallyLoadPatientBrowserMenuSelectedInput(true);
+
+	//20241219
+	m_qeventMouse = new QeventMouse(this);
+	installEventFilter(m_qeventMouse);
 }
 
 QViewer::~QViewer()
@@ -113,6 +142,7 @@ QViewer::~QViewer()
     delete m_vtkWidget;
     m_vtkQtConnections->Delete();
     m_renderer->Delete();
+	delete m_qeventMouse;
 }
 
 vtkRenderWindowInteractor* QViewer::getInteractor() const
@@ -263,14 +293,14 @@ void QViewer::eventHandler(vtkObject *object, unsigned long vtkEvent, void *clie
     case vtkCommand::MouseWheelBackwardEvent:
         m_mouseHasMoved = false;
         setActive(true);
-        if (vtkEvent == vtkCommand::LeftButtonPressEvent && getInteractor()->GetRepeatCount() == 1)
-        {
-            emit doubleClicked();
-			if (getToolProxy()->isToolActive("ZoomTool"))
-			{
-				return; // avoid accidental pan when doing a double click (#2854)
-			}
-        }
+        //if (vtkEvent == vtkCommand::LeftButtonPressEvent && getInteractor()->GetRepeatCount() == 1)
+        //{
+        //    emit doubleClicked();
+		//	if (getToolProxy()->isToolActive("ZoomTool"))
+		//	{
+		//		return; // avoid accidental pan when doing a double click (#2854)
+		//	}
+        //}
         break;
 
     case vtkCommand::MouseMoveEvent:
