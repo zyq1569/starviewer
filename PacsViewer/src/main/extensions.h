@@ -15,18 +15,18 @@
 //#include "../extensions/playground/example/exampleextensionmediator.h"
 void initExtensionsResources()
 {
-//Q_INIT_RESOURCE(mpr);
-//Q_INIT_RESOURCE(dicomprint);
-Q_INIT_RESOURCE(q2dviewer);
-//Q_INIT_RESOURCE(mpr3D);
-Q_INIT_RESOURCE(q3dviewer);
-//Q_INIT_RESOURCE(pdf);
-//Q_INIT_RESOURCE(diffusionperfusionsegmentation);
-//Q_INIT_RESOURCE(edemasegmentation);
-//Q_INIT_RESOURCE(angiosubstraction);
-//Q_INIT_RESOURCE(perfusionmapreconstruction);
-//Q_INIT_RESOURCE(rectumsegmentation);
-//Q_INIT_RESOURCE(experimental3d);
-//Q_INIT_RESOURCE(example);
+	//Q_INIT_RESOURCE(mpr);
+	//Q_INIT_RESOURCE(dicomprint);
+	Q_INIT_RESOURCE(q2dviewer);
+	//Q_INIT_RESOURCE(mpr3D);
+	Q_INIT_RESOURCE(q3dviewer);
+	//Q_INIT_RESOURCE(pdf);
+	//Q_INIT_RESOURCE(diffusionperfusionsegmentation);
+	//Q_INIT_RESOURCE(edemasegmentation);
+	//Q_INIT_RESOURCE(angiosubstraction);
+	//Q_INIT_RESOURCE(perfusionmapreconstruction);
+	//Q_INIT_RESOURCE(rectumsegmentation);
+	//Q_INIT_RESOURCE(experimental3d);
+	//Q_INIT_RESOURCE(example);
 }
 #endif 
