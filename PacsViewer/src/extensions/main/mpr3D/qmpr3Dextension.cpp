@@ -1628,6 +1628,13 @@ void QMPR3DExtension::setInput(Volume *input)
 		rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetRepresentationToWireframe();//代表12窗口竖线
 		rep->GetResliceCursorActor()->GetCenterlineProperty(1)->SetRepresentationToWireframe();//0竖线，2横线
 		rep->GetResliceCursorActor()->GetCenterlineProperty(2)->SetRepresentationToWireframe();//01横线
+		//https://gitlab.kitware.com/vtk/vtk/-/merge_requests/8879
+		rep->GetResliceCursorActor()->GetCenterlineProperty(0)->RenderLinesAsTubesOn();
+		rep->GetResliceCursorActor()->GetCenterlineProperty(1)->RenderLinesAsTubesOn();
+		rep->GetResliceCursorActor()->GetCenterlineProperty(2)->RenderLinesAsTubesOn();
+		rep->GetResliceCursorActor()->GetCenterlineProperty(1)->SetLineWidth(2);
+		rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetLineWidth(2);
+		rep->GetResliceCursorActor()->GetCenterlineProperty(2)->SetLineWidth(2);
 		//
 		m_resliceImageViewer[i]->SetInputData(imageData);
 		m_resliceImageViewer[i]->SetSliceOrientation(i);
