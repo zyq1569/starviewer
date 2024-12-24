@@ -750,7 +750,7 @@ void  Q3DViewerExtension::updateAnnotations()
 		}
 	};
 	QString windowLevelPart = QObject::tr("Ser: %1 WW: %2 WL: %3").arg(m_lastInput->getSeries()->getSeriesNumber()).arg(printWindowLevel(windowLevel.getWidth())).arg(printWindowLevel(windowLevel.getCenter()));
-	m_cornerAnnotations->SetText(0, windowLevelPart.toLatin1().constData());
+	m_cornerAnnotations->SetText(2, windowLevelPart.toLatin1().constData());
 }
 
 }
