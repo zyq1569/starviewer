@@ -45,7 +45,7 @@ class VoiLutPresetsToolData;
 class PatientBrowserMenu;
 class QViewerWorkInProgressWidget;
 class VoiLut;
-
+class QeventMouse;
 /**
      Base class for all display windows
   */
@@ -377,6 +377,9 @@ private:
 public:
 	static  Volume* selectVolume( Volume* volume = NULL);
 	static PatientBrowserMenu *getStaticBrowserMenu();
+	//20241219
+	QeventMouse *m_qeventMouse;
+	void mouseButtonDblClick();
 };
 
 };  // End namespace udg
