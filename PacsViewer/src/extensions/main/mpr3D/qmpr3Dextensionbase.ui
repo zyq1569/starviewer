@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>967</width>
+    <width>1195</width>
     <height>506</height>
    </rect>
   </property>
@@ -362,6 +362,42 @@
      </item>
      <item>
       <widget class="udg::QVoiLutComboBox" name="m_voiLutComboBox"/>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="m_thickMode">
+       <property name="text">
+        <string>Thick Slab</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="m_thickModeBox">
+       <item>
+        <property name="text">
+         <string>None</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Min</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Max</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Mean</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Sum</string>
+        </property>
+       </item>
+      </widget>
      </item>
      <item>
       <widget class="QToolButton" name="m_reset">
