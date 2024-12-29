@@ -281,6 +281,10 @@ public:
 	void ResetViews();
 	//20240802
 	Volume *m_lastInput;
+
+public Q_SLOTS:
+	virtual void resliceMode(int);
+	virtual void resliceModeComBox(int);
 };
 
 };  // End namespace udg

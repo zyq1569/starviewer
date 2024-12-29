@@ -79,6 +79,10 @@ INITIALIZE_EASYLOGGINGPP
 #include <vtkVolumeProperty.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkImageFlip.h>
+#include "vtkResliceCursorThickLineRepresentation.h"
+#include "vtkImageSlabReslice.h"
+
+
 using namespace std;
 //
 // Qt
@@ -384,174 +388,6 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent): QWidget(parent), m_axialZeroS
     m_viewerInformationToolButton->setToolTip(tr("Show/Hide viewer's textual information"));
     m_voiLutComboBox->setToolTip(tr("Choose a VOI LUT preset"));
 
-	return;
-	//---------------------------20241105-------------------------------------------------------------------------------
-	for (int i = 0; i < 3; i++)
-	{
-		m_resliceImageViewer[i] = vtkMPRResliceImageViewer::New();
-		m_resliceImageViewer[i]->init( i == 1);
-		m_renderWindow[i] = vtkGenericOpenGLRenderWindow::New();
-		m_resliceImageViewer[i]->SetRenderWindow(m_renderWindow[i]);
-        m_cornerAnnotations[i] = vtkCornerAnnotation::New();
-        m_resliceImageViewer[i]->GetRenderer()->AddViewProp(m_cornerAnnotations[i]);
-		
-	}
-
-#ifdef VTK94
-	m_sagital2DView->setRenderWindow(m_resliceImageViewer[0]->GetRenderWindow());
-	m_resliceImageViewer[0]->SetupInteractor(m_sagital2DView->renderWindow()->GetInteractor());
-
-	m_coronal2DView->setRenderWindow(m_resliceImageViewer[1]->GetRenderWindow());
-	m_resliceImageViewer[1]->SetupInteractor(m_coronal2DView->renderWindow()->GetInteractor());
-
-	m_axial2DView->setRenderWindow(m_resliceImageViewer[2]->GetRenderWindow());
-	m_resliceImageViewer[2]->SetupInteractor(m_axial2DView->renderWindow()->GetInteractor());
-#else
-	m_sagital2DView->SetRenderWindow(m_resliceImageViewer[0]->GetRenderWindow());
-	m_resliceImageViewer[0]->SetupInteractor(m_sagital2DView->GetRenderWindow()->GetInteractor());
-
-	m_coronal2DView->SetRenderWindow(m_resliceImageViewer[1]->GetRenderWindow());
-	m_resliceImageViewer[1]->SetupInteractor(m_coronal2DView->GetRenderWindow()->GetInteractor());
-
-	m_axial2DView->SetRenderWindow(m_resliceImageViewer[2]->GetRenderWindow());
-	m_resliceImageViewer[2]->SetupInteractor(m_axial2DView->GetRenderWindow()->GetInteractor());
-#endif // VTK94
-
-
-
-	Volume * vl = QViewer::selectVolume();
-	vtkSmartPointer <vtkImageData> imageData = NULL;
-	if (vl)
-	{
-		vl->getVtkData()->Modified();
-		imageData = vl->getVtkData();
-		vtkSmartPointer< vtkImageFlip > ImageFlip = vtkSmartPointer< vtkImageFlip >::New();
-		ImageFlip->SetInputData(imageData);
-		ImageFlip->SetFilteredAxes(0);
-		ImageFlip->Update();
-		imageData = ImageFlip->GetOutput();	
-		m_volume = vl;
-		//VoiLutPresetsToolData
-        //VoiLutPresetsToolData data(this);
-		m_VoiLutPresetsToolData = new VoiLutPresetsToolData(this);
-		VoiLutHelper().initializeVoiLutData(m_VoiLutPresetsToolData, vl);
-		m_voiLutComboBox->setPresetsData(m_VoiLutPresetsToolData);
-		m_voiLutComboBox->selectPreset(m_VoiLutPresetsToolData->getCurrentPresetName());
-		m_voiLutComboBox->setToolTip(tr("Choose a VOI LUT preset"));
-		VoiLut voiLut = m_VoiLutPresetsToolData->getCurrentPreset();
-		m_CurrentWL[0] = voiLut.getWindowLevel().getWidth();
-		m_CurrentWL[1] = voiLut.getWindowLevel().getCenter();
-		m_DeaultWL[0] = m_CurrentWL[0];
-		m_DeaultWL[1] = m_CurrentWL[1];
-		//changeSetWindowLevel
-		connect(m_voiLutComboBox, SIGNAL(currentIndexChanged(int )), this, SLOT(changeSetWindowLevel()));
-
-		///-----------------------------------------------------
-		g_SliceThickness[0] = getSliceThickness(vl, 0);
-		g_SliceThickness[1] = getSliceThickness(vl, 1);
-		g_SliceThickness[2] = getSliceThickness(vl, 2);
-		g_ser = vl->getSeries()->getSeriesNumber();
-		g_time = vl->getSeries()->getDateAsString() + vl->getSeries()->getTimeAsString();
-		g_institutionName = vl->getSeries()->getInstitutionName();
-		g_dicomKVP = vl->getImage(0)->getDICOMKVP();
-		g_dicomXRayTubeCurrent = vl->getImage(0)->getXRayTubeCurrent();
-	}
-	else
-	{
-		return;
-	}
-	for (int i = 0; i < 3; i++)
-	{
-		// make them all share the same reslice cursor object.
-		vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[i]->GetResliceCursorWidget()->GetRepresentation());
-		m_resliceImageViewer[i]->SetResliceCursor(m_resliceImageViewer[0]->GetResliceCursor());
-		rep->GetResliceCursorActor()->GetCursorAlgorithm()->SetReslicePlaneNormal(i);
-		//VTK94 need
-		//rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetRepresentationToWireframe();//代表12窗口竖线
-		//rep->GetResliceCursorActor()->GetCenterlineProperty(1)->SetRepresentationToWireframe();//0竖线，2横线
-		//rep->GetResliceCursorActor()->GetCenterlineProperty(2)->SetRepresentationToWireframe();//01横线
-		//
-		m_resliceImageViewer[i]->SetInputData(imageData);
-		m_resliceImageViewer[i]->SetSliceOrientation(i);
-		m_resliceImageViewer[i]->SetResliceModeToAxisAligned();
-		rep->SetWindowLevel(m_CurrentWL[0], m_CurrentWL[1]);
-	}
-
-	vtkSmartPointer<vtkCellPicker> picker = vtkSmartPointer<vtkCellPicker>::New();
-	picker->SetTolerance(0.005);
-	vtkSmartPointer<vtkProperty> ipwProp  = vtkSmartPointer<vtkProperty>::New();
-	vtkSmartPointer< vtkRenderer > ren    = vtkSmartPointer< vtkRenderer >::New();
-	int imageDims[3];
-	for (int i = 0; i < 3; i++)
-	{
-		m_planeWidget[i] = vtkImagePlaneWidget::New();
-		m_planeWidget[i]->SetPicker(picker);
-		m_planeWidget[i]->RestrictPlaneToVolumeOn();
-		double color[3] = { 0, 0, 0 };
-
-		m_planeWidget[i]->GetPlaneProperty()->SetColor(color);
-
-		m_resliceImageViewer[i]->GetRenderer()->SetBackground(color);
-	
-		m_planeWidget[i]->SetTexturePlaneProperty(ipwProp);
-		m_planeWidget[i]->TextureInterpolateOff();
-		m_planeWidget[i]->SetResliceInterpolateToLinear();
-		//m_planeWidget[i]->SetInputConnection(reader->GetOutputPort());
-	
-		m_planeWidget[i]->SetPlaneOrientation(i);
-		m_planeWidget[i]->SetSliceIndex(imageDims[i] / 2);
-		m_planeWidget[i]->DisplayTextOn();
-		m_planeWidget[i]->SetDefaultRenderer(ren);
-		m_planeWidget[i]->SetWindowLevel(m_CurrentWL[0], m_CurrentWL[1]);
-		m_planeWidget[i]->On();
-		m_planeWidget[i]->InteractionOn();
-	}
-	
-	vtkSmartPointer<vtkResliceCursorCallback> cbk = vtkSmartPointer<vtkResliceCursorCallback>::New();
-    static QeventMouse filter;
-	for (int i = 0; i < 3; i++)
-	{
-		cbk->IPW[i] = m_planeWidget[i];
-		cbk->RCW[i] = m_resliceImageViewer[i]->GetResliceCursorWidget();
-		cbk->m_resliceImageViewer[i] = m_resliceImageViewer[i];
-		cbk->m_cornerAnnotations[i]  = m_cornerAnnotations[i];
-        filter.m_riw[i] = m_resliceImageViewer[i];
-        filter.m_cornerAnnotations[i] = m_cornerAnnotations[i];
-		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResliceAxesChangedEvent, cbk);
-		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::WindowLevelEvent, cbk);
-		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResliceThicknessChangedEvent, cbk);
-		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResetCursorEvent, cbk);
-		m_resliceImageViewer[i]->GetInteractorStyle()->AddObserver(vtkCommand::WindowLevelEvent, cbk);
-		m_resliceImageViewer[i]->AddObserver(vtkResliceImageViewer::SliceChangedEvent, cbk);
-	
-		// Make them all share the same color map.
-		m_resliceImageViewer[i]->SetLookupTable(m_resliceImageViewer[0]->GetLookupTable());
-	
-	}
-	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(1, PI);
-
-	//add  cornerAnnotations
-	for (int i = 0; i < 3; i++)
-	{
-		//int now = m_resliceImageViewer[i]->GetSlice() + 1;
-		int max = m_resliceImageViewer[i]->GetSliceMax() + 1;
-		setCornerAnnotations(m_cornerAnnotations[i], max, MathTools::roundToNearestInteger(m_CurrentWL[0]), MathTools::roundToNearestInteger(m_CurrentWL[1]));
-	}
-    //m_axial2DView->installEventFilter(&filter);
-    //m_sagital2DView->installEventFilter(&filter);
-    //m_coronal2DView->installEventFilter(&filter);
-
-	for (int i = 0; i < 3; i++)
-	{
-		m_resliceImageViewer[i]->SetResliceMode(1);
-		m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
-		//m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.6);
-		m_resliceImageViewer[i]->Render();
-	}
-	m_axial2DView->show();
-	m_sagital2DView->show();
-	m_coronal2DView->show();
-
 }
 
 void QMPR3DExtension::changeSetWindowLevel()
@@ -675,7 +511,12 @@ void QMPR3DExtension::init()
                          << "DistanceTool" << "PolylineROITool" << "EllipticalROITool" << "EraserTool";
 
 	//add
+	m_thickModeBox->setEnabled(false);
     m_reset->setIcon(QIcon(":/images/icons/reset-view.svg"));
+	m_reset->setToolTip("reset");
+
+	connect(m_thickMode, SIGNAL(stateChanged(int)), this, SLOT(resliceMode(int)));
+	connect(m_thickModeBox, SIGNAL(currentIndexChanged(int)), this, SLOT(resliceModeComBox(int)));
 	m_slicingToolButton->hide();
 	m_zoomToolButton->hide();
 	m_ROIToolButton->hide();
@@ -696,6 +537,46 @@ void QMPR3DExtension::init()
 	m_voiLutComboBox2->hide();
 	labelLUT2->hide();
 
+}
+
+void QMPR3DExtension::resliceMode(int mode)
+{
+    m_thickModeBox->setEnabled(mode);
+}
+void QMPR3DExtension::resliceModeComBox(int mode)
+{
+	//m_thickModeBox->setEnabled(mode);
+	if (mode > 0)
+	{
+		//SetBlendMode(VTK_IMAGE_SLAB_MAX);	
+		//SetBlendMode(VTK_IMAGE_SLAB_MIN);	
+		//SetBlendMode(VTK_IMAGE_SLAB_MEAN);
+		for (int i = 0; i < 3; i++)
+		{
+			m_resliceImageViewer[i]->SetResliceMode(1);
+			m_resliceImageViewer[i]->SetThickMode(1);
+			
+			vtkImageSlabReslice* thickSlabReslice = vtkImageSlabReslice::SafeDownCast(vtkResliceCursorThickLineRepresentation::SafeDownCast(
+				                                    m_resliceImageViewer[i]->GetResliceCursorWidget()->GetRepresentation())->GetReslice());
+			thickSlabReslice->SetBlendMode(mode - 1);
+
+			//
+			vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[i]->GetResliceCursorWidget()->GetRepresentation());
+			rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetRepresentationToWireframe();//代表12窗口竖线
+			rep->GetResliceCursorActor()->GetCenterlineProperty(1)->SetRepresentationToWireframe();//0竖线，2横线
+			rep->GetResliceCursorActor()->GetCenterlineProperty(2)->SetRepresentationToWireframe();//01横线
+			//https://gitlab.kitware.com/vtk/vtk/-/merge_requests/8879
+			rep->GetResliceCursorActor()->GetCenterlineProperty(0)->RenderLinesAsTubesOn();
+			rep->GetResliceCursorActor()->GetCenterlineProperty(1)->RenderLinesAsTubesOn();
+			rep->GetResliceCursorActor()->GetCenterlineProperty(2)->RenderLinesAsTubesOn();
+			rep->GetResliceCursorActor()->GetCenterlineProperty(1)->SetLineWidth(2);
+			rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetLineWidth(2);
+			rep->GetResliceCursorActor()->GetCenterlineProperty(2)->SetLineWidth(2);
+			//
+			//
+			m_resliceImageViewer[i]->Render();
+		}
+	}
 }
 
 void QMPR3DExtension::createActions()
@@ -906,31 +787,14 @@ void QMPR3DExtension::rearrangeDistanceToolsMenu()
 
 void QMPR3DExtension::changeSelectedViewer()
 {
-    //if (this->sender() == m_axial2DView)
-    //{
-    //    m_axial2DView->setActive(true);
-	//
-    //    m_sagital2DView->setActive(false);
-    //    m_coronal2DView->setActive(false);
-    //}
-    //else if (this->sender() == m_sagital2DView)
-    //{
-    //    m_sagital2DView->setActive(true);
-	//
-    //    m_axial2DView->setActive(false);
-    //    m_coronal2DView->setActive(false);
-    //}
-    //else if (this->sender() == m_coronal2DView)
-    //{
-    //    m_coronal2DView->setActive(true);
-	//
-    //    m_axial2DView->setActive(false);
-    //    m_sagital2DView->setActive(false);
-    //}
+
 }
 
 void QMPR3DExtension::ResetViews()
 {
+	m_thickModeBox->setEnabled(0);
+	m_thickModeBox->setCurrentText("None");
+	m_thickMode->setChecked(0);
 	for (int i = 0; i < 3; i++)
 	{
 		m_resliceImageViewer[i]->SetResliceMode(1);
@@ -945,74 +809,36 @@ void QMPR3DExtension::ResetViews()
 	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(1, PI);
 	for (int i = 0; i < 3; i++)
 	{
+		//
+		vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[i]->GetResliceCursorWidget()->GetRepresentation());
+		rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetRepresentationToWireframe();//代表12窗口竖线
+		rep->GetResliceCursorActor()->GetCenterlineProperty(1)->SetRepresentationToWireframe();//0竖线，2横线
+		rep->GetResliceCursorActor()->GetCenterlineProperty(2)->SetRepresentationToWireframe();//01横线
+		//https://gitlab.kitware.com/vtk/vtk/-/merge_requests/8879
+		rep->GetResliceCursorActor()->GetCenterlineProperty(0)->RenderLinesAsTubesOn();
+		rep->GetResliceCursorActor()->GetCenterlineProperty(1)->RenderLinesAsTubesOn();
+		rep->GetResliceCursorActor()->GetCenterlineProperty(2)->RenderLinesAsTubesOn();
+		rep->GetResliceCursorActor()->GetCenterlineProperty(1)->SetLineWidth(2);
+		rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetLineWidth(2);
+		rep->GetResliceCursorActor()->GetCenterlineProperty(2)->SetLineWidth(2);
+		//
 		m_resliceImageViewer[i]->Render();
 	}
 
 }
 void QMPR3DExtension::screenShot()
 {
-	//for (int i = 0; i < 3; i++)
-	//{
-	//	m_resliceImageViewer[i]->SetResliceMode(1);
-	//	m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
-	//	m_resliceImageViewer[i]->Render();
-	//}
-    //ScreenShotTool *screenShotTool = 0;
-    //if (m_axial2DView->isActive())
-    //{
-    //    screenShotTool = dynamic_cast<ScreenShotTool*>(m_axial2DView->getToolProxy()->getTool("ScreenShotTool"));
-    //}
-    //else if (m_sagital2DView->isActive())
-    //{
-    //    screenShotTool = dynamic_cast<ScreenShotTool*>(m_sagital2DView->getToolProxy()->getTool("ScreenShotTool"));
-    //}
-    //else if (m_coronal2DView->isActive())
-    //{
-    //    screenShotTool = dynamic_cast<ScreenShotTool*>(m_coronal2DView->getToolProxy()->getTool("ScreenShotTool"));
-    //}
-	//
-    //if (screenShotTool)
-    //{
-    //    screenShotTool->singleCapture();
-    //}
-    //else
-    //{
-    //    DEBUG_LOG("No hi ha tool d'screenshot disponible");
-    //}
+
 }
 
 void QMPR3DExtension::showScreenshotsExporterDialog()
 {
-    //Q2DViewer *viewer = 0;
-    //if (m_axial2DView->isActive())
-    //{
-    //    viewer = m_axial2DView;
-    //}
-    //else if (m_sagital2DView->isActive())
-    //{
-    //    viewer = m_sagital2DView;
-    //}
-    //else if (m_coronal2DView->isActive())
-    //{
-    //    viewer = m_coronal2DView;
-    //}
-	//
-    //if (viewer)
-    //{
-    //    QExporterTool exporter(viewer);
-    //    exporter.exec();
-    //}
-    //else
-    //{
-    //    QMessageBox::warning(this, tr("Export to DICOM"), tr("Please, select a viewer and try again."));
-    //}
+
 }
 
 void QMPR3DExtension::showViewerInformation(bool show)
 {
-    //m_axial2DView->enableAnnotation(VoiLutAnnotation | PatientOrientationAnnotation | SliceAnnotation | MainInformationAnnotation, show);
-    //m_sagital2DView->enableAnnotation(VoiLutAnnotation, show);
-    //m_coronal2DView->enableAnnotation(VoiLutAnnotation, show);
+
 }
 
 void QMPR3DExtension::updateProjectionLabel()
@@ -1067,155 +893,20 @@ void QMPR3DExtension::switchToMIPLayout(bool isMIPChecked)
 
 void QMPR3DExtension::handleAxialViewEvents(unsigned long eventID)
 {
-    //switch (eventID)
-    //{
-    //case vtkCommand::LeftButtonPressEvent:
-    //    if (detectAxialViewAxisActor())
-    //    {
-    //        if (m_axial2DView->getInteractor()->GetControlKey())
-    //        {
-    //            m_state = Pushing;
-    //        }
-    //        else
-    //        {
-    //            m_state = Rotating;
-    //        }
-    //    }
-    //    break;
-	//
-    //case vtkCommand::LeftButtonReleaseEvent:
-    //    if (m_state != None)
-    //    {
-    //        releaseAxialViewAxisActor();
-    //    }
-    //    break;
-	//
-    //case vtkCommand::MouseMoveEvent:
-    //    if (m_state == Rotating)
-    //    {
-    //        rotateAxialViewAxisActor();
-    //    }
-    //    else if (m_state == Pushing)
-    //    {
-    //        pushAxialViewAxisActor();
-    //    }
-	//
-    //    if (m_pickedActorPlaneSource == m_coronalPlaneSource && m_coronal2DView->getDrawer()->getNumberOfDrawnPrimitives() > 0)
-    //    {
-    //        m_coronal2DView->getDrawer()->removeAllPrimitives();
-    //    }
-	//
-    //    if (m_pickedActorPlaneSource == m_sagitalPlaneSource && m_sagital2DView->getDrawer()->getNumberOfDrawnPrimitives() > 0)
-    //    {
-    //        m_sagital2DView->getDrawer()->removeAllPrimitives();
-    //    }
-	//
-    //    break;
-	//
-    //default:
-    //    break;
-    //}
+
+
 }
 
 void QMPR3DExtension::handleSagitalViewEvents(unsigned long eventID)
 {
-    //switch (eventID)
-    //{
-    //case vtkCommand::LeftButtonPressEvent:
-    //    if (m_sagital2DView->getInteractor()->GetControlKey())
-    //    {
-    //        detectPushSagitalViewAxisActor();
-    //    }
-    //    else
-    //    {
-    //        detectSagitalViewAxisActor();
-    //    }
-    //    break;
-	//
-    //case vtkCommand::LeftButtonReleaseEvent:
-    //    if (m_state != None)
-    //    {
-    //        releaseSagitalViewAxisActor();
-    //    }
-    //    break;
-	//
-    //case vtkCommand::MouseMoveEvent:
-    //    if (m_state == Rotating)
-    //    {
-    //        rotateSagitalViewAxisActor();
-    //    }
-    //    else if (m_state == Pushing)
-    //    {
-    //        if (m_pickedActorPlaneSource == m_coronalPlaneSource)
-    //        {
-    //            pushSagitalViewCoronalAxisActor();
-    //        }
-    //        else
-    //        {
-    //            pushSagitalViewAxialAxisActor();
-    //        }
-    //    }
-	//
-    //    if (m_pickedActorPlaneSource == m_coronalPlaneSource && m_coronal2DView->getDrawer()->getNumberOfDrawnPrimitives() > 0)
-    //    {
-    //        m_coronal2DView->getDrawer()->removeAllPrimitives();
-    //    }
-    //    break;
-    //default:
-    //    break;
-    //}
+
+
 }
 
 bool QMPR3DExtension::detectAxialViewAxisActor()
 {
     bool picked = false;
-    //double clickedWorldPoint[3];
-    //double dummyPoint[3];
-    //m_axial2DView->getEventWorldCoordinate(clickedWorldPoint);
-	//
-    //// We detect which actor is closest, identify it, and then leave it as selected
-    //double point[3] = { clickedWorldPoint[0], clickedWorldPoint[1], 0.0 };
-    //double *r1, *r2;
-    //double distanceToCoronal, distanceToSagital;
-	//
-    //r1 = m_coronalOverAxialIntersectionAxis->GetPositionCoordinate()->GetValue();
-    //r2 = m_coronalOverAxialIntersectionAxis->GetPosition2Coordinate()->GetValue();
-    //distanceToCoronal = MathTools::getPointToFiniteLineDistance(point, r1, r2, dummyPoint);
-	//
-    //r1 = m_sagitalOverAxialAxisActor->GetPositionCoordinate()->GetValue();
-    //r2 = m_sagitalOverAxialAxisActor->GetPosition2Coordinate()->GetValue();
-    //distanceToSagital = MathTools::getPointToFiniteLineDistance(point, r1, r2, dummyPoint);
-	//
-    //// We pass distances to view coordinates to control tolerance
-    //double zeroInDisplay[3];
-    //m_axial2DView->computeWorldToDisplay(0.0, 0.0, 0.0, zeroInDisplay);
-    //double distanceToCoronalInDisplay[3];
-    //m_axial2DView->computeWorldToDisplay(distanceToCoronal, 0.0, 0.0, distanceToCoronalInDisplay);
-    //distanceToCoronal = MathTools::getDistance3D(zeroInDisplay, distanceToCoronalInDisplay);
-    //double distanceToSagitalInDisplay[3];
-    //m_axial2DView->computeWorldToDisplay(distanceToSagital, 0.0, 0.0, distanceToSagitalInDisplay);
-    //distanceToSagital = MathTools::getDistance3D(zeroInDisplay, distanceToSagitalInDisplay);
-	//
-    //// We give a minimum “tolerance”
-    //if (distanceToCoronal < PickingDistanceThreshold || distanceToSagital < PickingDistanceThreshold)
-    //{
-    //    if (distanceToCoronal < distanceToSagital)
-    //    {
-    //        m_pickedActorPlaneSource = m_coronalPlaneSource;
-    //        m_pickedActorReslice = m_coronalReslice;
-    //    }
-    //    else
-    //    {
-    //        m_pickedActorPlaneSource = m_sagitalPlaneSource;
-    //        m_pickedActorReslice = m_sagitalReslice;
-    //    }
-    //    m_pickedActorReslice->SetInterpolationModeToNearestNeighbor();
-    //    //We deactivate tools that may be active
-    //    m_toolManager->disableAllToolsTemporarily();
-    //    m_initialPickX = clickedWorldPoint[0];
-    //    m_initialPickY = clickedWorldPoint[1];
-    //    picked = true;
-    //}
+   
     return picked;
 }
 
@@ -1264,62 +955,12 @@ void QMPR3DExtension::rotateAxialViewAxisActor()
 
 void QMPR3DExtension::releaseAxialViewAxisActor()
 {
-    //if (m_pickedActorReslice)
-    //{
-    //    m_pickedActorReslice->SetInterpolationModeToCubic();
-    //    // TODO No seria millor un restoreOverrideCursor?
-    //    m_axial2DView->unsetCursor();
-    //    if (m_pickedActorPlaneSource == m_sagitalPlaneSource)
-    //    {
-    //        m_sagital2DView->render();
-    //    }
-    //    else
-    //    {
-    //        m_coronal2DView->render();
-    //    }
-    //    m_state = None;
-    //    m_pickedActorReslice = 0;
-    //    m_pickedActorPlaneSource = 0;
-    //    // Reactivem les tools
-    //    m_toolManager->undoDisableAllToolsTemporarily();
-    //}
+
 }
 
 void QMPR3DExtension::detectSagitalViewAxisActor()
 {
-    //double clickedWorldPoint[3];
-    //m_sagital2DView->getEventWorldCoordinate(clickedWorldPoint);
-	//
-    //// We detect which actor is closest, identify it, and then leave it as selected
-    //double point[3] = { clickedWorldPoint[0], clickedWorldPoint[1], 0.0 };
-    //double *r1, *r2;
-    //double distanceToCoronal;
-    //double dummyPoint[3];
-	//
-    //r1 = m_coronalOverSagitalIntersectionAxis->GetPositionCoordinate()->GetValue();
-    //r2 = m_coronalOverSagitalIntersectionAxis->GetPosition2Coordinate()->GetValue();
-    //distanceToCoronal = MathTools::getPointToFiniteLineDistance(point, r1, r2, dummyPoint);
-	//
-    ////We pass distances to view coordinates to control tolerance
-    //double zeroInDisplay[3];
-    //m_sagital2DView->computeWorldToDisplay(0.0, 0.0, 0.0, zeroInDisplay);
-    //double distanceToCoronalInDisplay[3];
-    //m_sagital2DView->computeWorldToDisplay(distanceToCoronal, 0.0, 0.0, distanceToCoronalInDisplay);
-    //distanceToCoronal = MathTools::getDistance3D(zeroInDisplay, distanceToCoronalInDisplay);
-	//
-    //// We give a minimum “tolerance”
-    //if (distanceToCoronal < PickingDistanceThreshold)
-    //{
-    //    m_pickedActorReslice = m_coronalReslice;
-    //    m_pickedActorReslice->SetInterpolationModeToNearestNeighbor();
-    //    m_pickedActorPlaneSource = m_coronalPlaneSource;
-    //    // We deactivate tools that may be active
-    //    m_toolManager->disableAllToolsTemporarily();
-	//
-    //    m_initialPickX = clickedWorldPoint[0];
-    //    m_initialPickY = clickedWorldPoint[1];
-    //    m_state = Rotating;
-    //}
+
 }
 
 void QMPR3DExtension::rotateSagitalViewAxisActor()
@@ -1383,17 +1024,7 @@ void QMPR3DExtension::rotateSagitalViewAxisActor()
 
 void QMPR3DExtension::releaseSagitalViewAxisActor()
 {
-    //if (m_pickedActorReslice)
-    //{
-    //    m_sagital2DView->unsetCursor();
-    //    m_pickedActorReslice->SetInterpolationModeToCubic();
-    //    m_coronal2DView->render();
-    //    m_state = None;
-    //    m_pickedActorReslice = 0;
-    //    m_pickedActorPlaneSource = 0;
-    //    // Reactivem the tools
-    //    m_toolManager->undoDisableAllToolsTemporarily();
-    //}
+
 }
 
 void QMPR3DExtension::getRotationAxis(vtkPlaneSource *plane, double axis[3])
@@ -1462,53 +1093,7 @@ void QMPR3DExtension::pushAxialViewAxisActor()
 
 void QMPR3DExtension::detectPushSagitalViewAxisActor()
 {
-    //double clickedWorldPoint[3];
-    //m_sagital2DView->getEventWorldCoordinate(clickedWorldPoint);
-    //// We detect which is the closest actor, identify it and then leave it as selected
-    //// We will only move the axial view. From the sagittal point of view we will not be able to move the slice of the coronal
-    //double point[3] = { clickedWorldPoint[0], clickedWorldPoint[1], 0.0 };
-    //double *r1, *r2;
-    //double distanceToAxial, distanceToCoronal;
-    //double dummyPoint[3];
-	//
-    //r1 = m_axialOverSagitalIntersectionAxis->GetPositionCoordinate()->GetValue();
-    //r2 = m_axialOverSagitalIntersectionAxis->GetPosition2Coordinate()->GetValue();
-    //distanceToAxial = MathTools::getPointToFiniteLineDistance(point, r1, r2, dummyPoint);
-	//
-    //r1 = m_coronalOverSagitalIntersectionAxis->GetPositionCoordinate()->GetValue();
-    //r2 = m_coronalOverSagitalIntersectionAxis->GetPosition2Coordinate()->GetValue();
-    //distanceToCoronal = MathTools::getPointToFiniteLineDistance(point, r1, r2, dummyPoint);
-	//
-    //// We pass distances to view coordinates to control tolerance
-    //double zeroInDisplay[3];
-    //m_sagital2DView->computeWorldToDisplay(0.0, 0.0, 0.0, zeroInDisplay);
-    //double distanceToCoronalInDisplay[3];
-    //m_sagital2DView->computeWorldToDisplay(distanceToCoronal, 0.0, 0.0, distanceToCoronalInDisplay);
-    //distanceToCoronal = MathTools::getDistance3D(zeroInDisplay, distanceToCoronalInDisplay);
-    //double distanceToAxialInDisplay[3];
-    //m_sagital2DView->computeWorldToDisplay(distanceToAxial, 0.0, 0.0, distanceToAxialInDisplay);
-    //distanceToAxial = MathTools::getDistance3D(zeroInDisplay, distanceToAxialInDisplay);
-	//
-    //// We give a minimum “tolerance”
-    //if (distanceToCoronal < PickingDistanceThreshold || distanceToAxial < PickingDistanceThreshold)
-    //{
-    //    m_sagital2DView->setCursor(Qt::OpenHandCursor);
-    //    // We disable the tools so that they do not interfere
-    //    m_toolManager->disableAllToolsTemporarily();
-    //    if (distanceToCoronal < distanceToAxial)
-    //    {
-    //        m_pickedActorPlaneSource = m_coronalPlaneSource;
-    //        m_pickedActorReslice = m_coronalReslice;
-    //    }
-    //    else
-    //    {
-    //        m_pickedActorPlaneSource = m_axialPlaneSource;
-    //        m_pickedActorReslice = m_sagitalReslice;
-    //    }
-    //    m_state = Pushing;
-    //    m_initialPickX = clickedWorldPoint[0];
-    //    m_initialPickY = clickedWorldPoint[1];
-    //}
+ 
 }
 
 void QMPR3DExtension::pushSagitalViewAxialAxisActor()
@@ -1716,83 +1301,6 @@ void QMPR3DExtension::setInput(Volume *input)
 	m_sagital2DView->show();
 	m_coronal2DView->show();
 	//---------------------------------------
-    // HACK End
-
-   //vtkImageChangeInformation *changeInfo = vtkImageChangeInformation::New();
-   //changeInfo->SetInputData(input->getVtkData());
-   //changeInfo->SetOutputOrigin(.0, .0, .0);
-   //changeInfo->Update();
-   //
-   //// TODO Es crea un nou volum cada cop!
-   //m_volume = new Volume;
-   //m_volume->setImages(input->getImages());
-   //m_volume->setData(changeInfo->GetOutput());
-   //m_volume->setNumberOfPhases(input->getNumberOfPhases());
-   //m_volume->setNumberOfSlicesPerPhase(input->getNumberOfSlicesPerPhase());
-   //// We need to tell you the identifier in the volume repository for
-    // such that when we show the patient menu we are shown in bold the current volume
-    // This is still a HACK that will cease to exist when we do not transform it
-    // initial source to volume when we have the new MPR module ready
-   //m_volume->setIdentifier(input->getIdentifier());
-   //
-   //m_volume->getSpacing(m_axialSpacing);
-   //
-   //if (m_sagitalReslice)
-   //{
-   //    m_sagitalReslice->Delete();
-   //}
-   //m_sagitalReslice = vtkImageReslice::New();
-   ////So that the output extent is sufficient and no data is "eaten"
-   //m_sagitalReslice->AutoCropOutputOn();
-   //m_sagitalReslice->SetInterpolationModeToCubic();
-   //m_sagitalReslice->SetInputData(m_volume->getVtkData());
-   //
-   //if (m_coronalReslice)
-   //{
-   //    m_coronalReslice->Delete();
-   //}
-   //m_coronalReslice = vtkImageReslice::New();
-   //m_coronalReslice->AutoCropOutputOn();
-   //m_coronalReslice->SetInterpolationModeToCubic();
-   //m_coronalReslice->SetInputData(m_volume->getVtkData());
-   //
-   //// Faltaria refrescar l'input dels 3 mpr
-    // HACK To make universal scrolling work properly. Issue #2019. We have to disconnect and reconnect the signal to avoid infinite loops
-   //disconnect(m_axial2DView, SIGNAL(volumeChanged(Volume*)), this, SLOT(setInput(Volume*)));
-   ////m_axial2DView->setInput(m_volume);
-   //connect(m_axial2DView, SIGNAL(volumeChanged(Volume*)), SLOT(setInput(Volume*)));
-   //int extent[6];
-   //m_volume->getExtent(extent);
-   ////m_axialSlider->setMaximum(extent[5]);
-   //
-   //double maxThickSlab = sqrt((m_axialSpacing[0] * extent[1]) * (m_axialSpacing[0] * extent[1]) + (m_axialSpacing[1] * extent[3]) *
-   //        (m_axialSpacing[1] * extent[3]) + (m_axialSpacing[2] * extent[5]) * (m_axialSpacing[2] * extent[5]));
-   //m_thickSlabSlider->setMaximum((int) maxThickSlab);
-   //m_thickSlabSpinBox->setMaximum(maxThickSlab);
-   //
-   //// Tuning planeSource
-   //initOrientation();
-   //
-   //Volume *sagitalResliced = new Volume;
-   //// TODO This is necessary so that you have the information of the series, studies, patient ...
-   //sagitalResliced->setImages(m_volume->getImages());
-   //sagitalResliced->setData(m_sagitalReslice->GetOutput());
-   //sagitalResliced->setNumberOfPhases(1);
-   //sagitalResliced->setNumberOfSlicesPerPhase(1);
-   //
-   ////m_sagital2DView->setInput(sagitalResliced);
-   //
-   //Volume *coronalResliced = new Volume;
-   //// TODO This is necessary so that you have the information of the series, studies, patient ...
-   //coronalResliced->setImages(m_volume->getImages());
-   //coronalResliced->setData(m_coronalReslice->GetOutput());
-   //coronalResliced->setNumberOfPhases(1);
-   //coronalResliced->setNumberOfSlicesPerPhase(1);
-
-    //m_coronal2DView->setInput(coronalResliced);
-	//
-    //m_sagital2DView->render();
-    //m_coronal2DView->render();
 }
 
 void QMPR3DExtension::initOrientation()
