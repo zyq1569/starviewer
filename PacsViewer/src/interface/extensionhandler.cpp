@@ -181,7 +181,7 @@ bool ExtensionHandler::createExtension(const QString &who, QString tableText)
         return ok;
     }
 	bool bQ3DViewerExtension = ("Q3DViewerExtension" == who);
-	bool bQMPRViewerExtension = ("MPR3DExtension" == who);
+	bool bQMPRViewerExtension = ("QMPR3DExtension" == who);
     bool createExtension = true;
     int extensionIndex = 0;
     QString requestedExtensionLabel = mediator->getExtensionID().getLabel();
@@ -305,7 +305,7 @@ bool ExtensionHandler::request(const QString &who)
 		}	
 		tableText = volume->getSeries()->getSeriesNumber();
 	}
-	else if (who == "MPR3DExtension")
+	else if (who == "QMPR3DExtension")
 	{
 		Volume * selVolume = QViewer::selectVolume();
 		if (!selVolume)
