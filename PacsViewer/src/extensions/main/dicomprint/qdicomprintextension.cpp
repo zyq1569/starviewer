@@ -407,11 +407,13 @@ QString QDicomPrintExtension::getThumbnailPreviewDescriptionOfSelectedGroupedDIC
     seriesParentImagesToPrint = getSelectedImagesToAddToPrint().at(0)->getParentSeries();
 
     QString thumbnailDescription;
-    thumbnailDescription = tr("Series ") + seriesParentImagesToPrint->getSeriesNumber() + "\n";
+    thumbnailDescription = tr("Series:") + seriesParentImagesToPrint->getSeriesNumber() + "\n";
 
     if (getSelectedImagesToAddToPrint().count() == seriesParentImagesToPrint->getImages().count())
     {
-        thumbnailDescription += tr("All images");
+        //thumbnailDescription += tr("All images");
+		thumbnailDescription += tr("%1").arg(m_2DView->getCurrentSlice() + 1);
+		thumbnailDescription += QString("/%1").arg(m_2DView->getNumberOfSlices());
     }
     else if (m_currentImageRadioButton->isChecked())
     {
