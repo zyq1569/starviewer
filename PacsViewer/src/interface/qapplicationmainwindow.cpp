@@ -188,9 +188,9 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	m_mainToolbar->addAction(actionMPR);
 	connect(actionMPR, &QAction::triggered, [this] { m_extensionHandler->request("QMPR3DExtension"); });
 
-	//QAction *actionDicomPrint = new QAction(QIcon(":/images/icons/print.svg"), "MPR-3D Viewer", this);
-	//m_mainToolbar->addAction(actionDicomPrint);
-	//connect(actionDicomPrint, &QAction::triggered, [this] { m_extensionHandler->request("DicomPrintExtension"); });
+	QAction *actionDicomPrint = new QAction(QIcon(":/images/icons/printer.svg"), "DicomPrintViewer", this);
+	m_mainToolbar->addAction(actionDicomPrint);
+	connect(actionDicomPrint, &QAction::triggered, [this] { m_extensionHandler->request("QDicomPrintExtension"); });
 	//QAction *actionMultScreens = new QAction(QIcon(":/images/icons/Monitor.svg"), "MultiScreens", this);
 	//m_mainToolbar->addAction(actionMultScreens);
 	//connect(actionMultScreens, SIGNAL(triggered(bool)), this, SLOT(maximizeMultipleScreens()));
