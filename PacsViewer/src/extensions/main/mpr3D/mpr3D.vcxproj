@@ -681,6 +681,8 @@
     <Lib>
       <OutputFile>$(OutDir)\mpr3D.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x86</AdditionalOptions>
     </Lib>
     <Midl>
       <DefaultCharType>Unsigned</DefaultCharType>
