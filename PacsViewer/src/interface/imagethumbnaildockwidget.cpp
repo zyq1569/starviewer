@@ -248,7 +248,24 @@ void ImageThumbnailDockWidget::updateActiveItemView(QListWidgetItem *item)
 				}
 
 				extensionWorkspace->setTabText(extensionIndex, "3D-Viewer#Series:" + volume->getSeries()->getSeriesNumber());
-			}		
+			}
+			else if (extensionWorkspace->tabText(extensionIndex).contains("MPR"))
+			{
+				if (!volume)
+				{
+					QMessageBox::warning(0, "MPR-3D-Viewer", ("MPR-3D-Viewer: No image is selected!!"));
+					delete mediator;
+					return;
+				}
+				if (!volume->is3Dimage())
+				{
+					QMessageBox::warning(0, "MPR-3D-Viewer", ("The selected item : MPR-3D-Viewer fail!!! images < 5 or SliceThickness = 0.0"));
+					delete mediator;
+					return;
+				}
+
+				//extensionWorkspace->setTabText(extensionIndex, "3D-Viewer#Series:" + volume->getSeries()->getSeriesNumber());
+			}
             mediator->executionCommand(widget, volume);
         }
         else
