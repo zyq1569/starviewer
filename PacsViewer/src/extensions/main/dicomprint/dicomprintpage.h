@@ -27,6 +27,7 @@ class Image;
 
 /**
     Implementació per la Interfície DicomPrintPage que defineix una pàgina amb imatges per imprimir en impressores Dicom en DCMTK.
+	Support for the DicomPrintPage interface that defines a page with images to print on Dicom printers in DCMTK.
   */
 class DicomPrintPage {
 public:
@@ -87,6 +88,14 @@ public:
     /// Si s'afegeix una anotació en una posició que ja hi havia una altra notació aquesta se sobre escriu, i si el text és buit no afegeix l'anotació
     /// La majoria d'impressores només tenen 6 posicions per les anotacions Agfa, Kodak, Sony, Codonics. Tenir en compte que totes les impressores les posicions
     /// de les anotacions són de la 1 a la 6 i Sony és de la 0 a la 5.
+	//It adds an annotation to the page in the indicated position.The text of the annotation cannot be longer than 64 characters; 
+	//if it is more than 64 characters, it is truncated.If an annotation is added in a position that already had another notation, 
+	//it is overwritten, and if the text is empty, it does not add the annotation.Most printers only have 6 positions for Agfa, 
+	//Kodak, Sony, Codonics annotations.Note that all printers' positions of the annotations are from 1 to 6 and Sony is from 0 to 5.
+	//它会向页面的指定位置添加注释。注释的文本不能超过 64 个字符，如果超过 64 个字符，则将被截断
+	//如果在已存在其他表示法的位置添加注释，则会覆盖该注释，如果文本为空，则不会添加注释
+	//大多数打印机只有 6 个位置用于 Agfa、Kodak、Sony、Codonics 注释。请注意，所有打印机位置
+	//的注释从 1 到 6，而 Sony 是从 0 到 5。
     void addAnnotation(int position, const QString &annotationText);
 
     /// Retorna les anotacions que ens han indicat que s'han d'imprimir amb la pàgina
