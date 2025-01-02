@@ -36,7 +36,7 @@ DicomPrintExtensionMediator::~DicomPrintExtensionMediator()
 
 DisplayableID DicomPrintExtensionMediator::getExtensionID() const
 {
-    return DisplayableID("DicomPrintExtension", tr("DICOM Print"));
+    return DisplayableID("QDicomPrintExtension", tr("DICOM Print"));
 }
 
 bool DicomPrintExtensionMediator::initializeExtension(QWidget *extension, const ExtensionContext &extensionContext)
@@ -62,4 +62,18 @@ bool DicomPrintExtensionMediator::initializeExtension(QWidget *extension, const 
 
     return true;
 }
+
+void  DicomPrintExtensionMediator::executionCommand(QWidget *extension, Volume* volume, void *data, int command)
+{
+	QDicomPrintExtension *DicomPrintExtension;
+	if (!(DicomPrintExtension = qobject_cast<QDicomPrintExtension*>(extension)))
+	{
+		return;
+	}
+	if (volume)
+	{
+		DicomPrintExtension->setInput(volume);
+	}
+}
+
 }
