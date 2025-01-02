@@ -33,7 +33,7 @@ MPR3DExtensionMediator::~MPR3DExtensionMediator()
 
 DisplayableID MPR3DExtensionMediator::getExtensionID() const
 {
-    return DisplayableID("MPR3DExtension", tr("MPR-3D"));
+    return DisplayableID("QMPR3DExtension", tr("MPR-3D"));
 }
 
 bool MPR3DExtensionMediator::initializeExtension(QWidget *extension, const ExtensionContext &extensionContext)
