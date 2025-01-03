@@ -164,6 +164,13 @@ private:
     QTimer *m_qTimer;
 
     QDicomPrinterConfigurationWidget *m_qDicomPrinterConfigurationWidgetProof;
+
+public:
+
+	//20250103
+	QeventMouse *m_QeventMouse;
+public slots:
+	void addImagePrint();
 };
 
 } // end namespace udg.

@@ -64,6 +64,10 @@ QDicomPrintExtension::QDicomPrintExtension(QWidget *parent)
     m_thumbnailsPreviewWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     m_voiLutComboBox->setToolTip(tr("Choose a VOI LUT preset"));
+
+	//m_2DView
+	connect(m_2DView, SIGNAL(doubleClicked()), SLOT(addImagePrint()));
+	connect(m_2DView, SIGNAL(keyEventPress(int)), SLOT(addImagePrint()));
 }
 
 void QDicomPrintExtension::createConnections()
@@ -220,6 +224,11 @@ void QDicomPrintExtension::print()
 void QDicomPrintExtension::timeoutTimer()
 {
     m_sentToPrintSuccessfullyFrame->setVisible(false);
+}
+
+void QDicomPrintExtension::addImagePrint()
+{
+	addSelectedImagesToGroupedDICOMImagesToPrint();
 }
 
 void QDicomPrintExtension::addSelectedImagesToGroupedDICOMImagesToPrint()
