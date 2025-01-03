@@ -177,6 +177,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='NewMPR|Win32'">
     <TargetName>inputoutput</TargetName>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <OutDir>$(SolutionDir)$(Configuration)\X86\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='NewRD|x64'">
     <OutDir>..\..\bin\</OutDir>

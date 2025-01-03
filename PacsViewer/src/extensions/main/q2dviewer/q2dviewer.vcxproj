@@ -187,6 +187,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='NewMPR|Win32'">
     <TargetName>q2dviewer</TargetName>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <OutDir>$(SolutionDir)$(Configuration)\X86\</OutDir>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <QtInstall>msvc2017_64</QtInstall>

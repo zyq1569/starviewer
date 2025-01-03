@@ -289,6 +289,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='NewMPR|Win32'">
     <TargetName>breakpad</TargetName>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <OutDir>$(SolutionDir)$(Configuration)\X86\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='NewVTK|Win32'">
     <TargetName>breakpad</TargetName>

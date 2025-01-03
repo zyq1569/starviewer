@@ -297,6 +297,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelDeb32|Win32'">
     <IntDir>$(Configuration)\win32\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='NewMPR|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\X86\</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>.;..\src;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtWidgets;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtGui;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtANGLE;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtNetwork;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\include\QtCore;release;/include;C:\QT\QT5.12.12\5.12.12\MSVC2017_64\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
