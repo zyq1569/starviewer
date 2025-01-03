@@ -250,6 +250,9 @@ signals:
     /// Emitted when this viewer receives a double click event.
     void doubleClicked();
 
+	///keypress
+	void keyEventPress(int key);
+
 protected:
     /// Gets the bounds of the rendered item
     virtual void getCurrentRenderedItemBounds(double bounds[6]) = 0;
@@ -380,6 +383,7 @@ public:
 	//20241219
 	QeventMouse *m_qeventMouse;
 	void mouseButtonDblClick();
+	void keyPress(int key);
 };
 
 };  // End namespace udg

@@ -71,15 +71,29 @@ public:
 				qViewer->mouseButtonDblClick();
 			}
 		}
+		else if (event->type() == QEvent::KeyPress)
+		{
+			QKeyEvent *key = (QKeyEvent *)event;
+			if (key->key() == Qt::Key_P)
+			{
+				qViewer->keyPress(key->key());
+			}
+		}
 		return 0;
 	}
 public:
 	QViewer *qViewer;
 private:
 };
+
 void QViewer::mouseButtonDblClick()
 {
 	emit doubleClicked();
+}
+
+void QViewer::keyPress(int key)
+{
+	emit keyEventPress(key);
 }
 QViewer::QViewer(QWidget *parent)
     :QWidget(parent),/* m_mainVolume(0),*/ m_contextMenuActive(true),
