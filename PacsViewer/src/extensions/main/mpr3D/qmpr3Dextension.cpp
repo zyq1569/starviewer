@@ -2050,6 +2050,7 @@ void QMPR3DExtension::updateInput(Volume *input)
 		{
 			int max = m_resliceImageViewer[i]->GetSliceMax() + 1;
 			setCornerAnnotations(m_cornerAnnotations[i], max, MathTools::roundToNearestInteger(m_CurrentWL[0]), MathTools::roundToNearestInteger(m_CurrentWL[1]));
+			m_resliceImageViewer[i]->Render();
 		}
 	}
 }

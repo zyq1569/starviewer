@@ -348,8 +348,11 @@
      </item>
      <item>
       <widget class="QLabel" name="label">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="text">
-        <string>Ctrl</string>
+        <string>Ctrl/Alt+Left Mouse</string>
        </property>
       </widget>
      </item>
