@@ -236,7 +236,7 @@ public:
 
 		if (ev == vtkResliceCursorWidget::WindowLevelEvent || ev == vtkCommand::WindowLevelEvent ||	ev == vtkResliceCursorWidget::ResliceThicknessChangedEvent)
 		{
-			// Render everything
+			//setCornerAnnotations
 			vtkResliceCursorWidget *rcw = dynamic_cast<vtkResliceCursorWidget *>(caller);
 			if (rcw)
 			{
@@ -250,61 +250,63 @@ public:
 					setCornerAnnotations(m_cornerAnnotations[i], max, MathTools::roundToNearestInteger(m_CurrentWL[0]), MathTools::roundToNearestInteger(m_CurrentWL[1]));
 				}
 			}
+			// Render everything
 			for (int i = 0; i < 3; i++)
 			{
 				this->RCW[i]->Render();
 			}
+			this->IPW[0]->GetInteractor()->GetRenderWindow()->Render();
 			return;
 		}
 
 
-		//vtkImagePlaneWidget* ipw =	dynamic_cast<vtkImagePlaneWidget*>(caller);
-		//if (ipw)
-		//{
-		//	double* wl = static_cast<double*>(callData);
-		//
-		//	if (ipw == this->IPW[0])
-		//	{
-		//		this->IPW[1]->SetWindowLevel(wl[0], wl[1], 1);
-		//		this->IPW[2]->SetWindowLevel(wl[0], wl[1], 1);
-		//	}
-		//	else if (ipw == this->IPW[1])
-		//	{
-		//		this->IPW[0]->SetWindowLevel(wl[0], wl[1], 1);
-		//		this->IPW[2]->SetWindowLevel(wl[0], wl[1], 1);
-		//	}
-		//	else if (ipw == this->IPW[2])
-		//	{
-		//		this->IPW[0]->SetWindowLevel(wl[0], wl[1], 1);
-		//		this->IPW[1]->SetWindowLevel(wl[0], wl[1], 1);
-		//	}
-		//}
+		vtkImagePlaneWidget* ipw =	dynamic_cast<vtkImagePlaneWidget*>(caller);
+		if (ipw)
+		{
+			double* wl = static_cast<double*>(callData);
+		
+			if (ipw == this->IPW[0])
+			{
+				this->IPW[1]->SetWindowLevel(wl[0], wl[1], 1);
+				this->IPW[2]->SetWindowLevel(wl[0], wl[1], 1);
+			}
+			else if (ipw == this->IPW[1])
+			{
+				this->IPW[0]->SetWindowLevel(wl[0], wl[1], 1);
+				this->IPW[2]->SetWindowLevel(wl[0], wl[1], 1);
+			}
+			else if (ipw == this->IPW[2])
+			{
+				this->IPW[0]->SetWindowLevel(wl[0], wl[1], 1);
+				this->IPW[1]->SetWindowLevel(wl[0], wl[1], 1);
+			}
+		}
 
-		//vtkResliceCursorWidget *rcw = dynamic_cast<	vtkResliceCursorWidget *>(caller);
-		//if (rcw)
-		//{
-		//	vtkResliceCursorLineRepresentation *rep = dynamic_cast<	vtkResliceCursorLineRepresentation *>(rcw->GetRepresentation());
-		//	// Although the return value is not used, we keep the get calls
-		//// in case they had side-effects
-		//	rep->GetResliceCursorActor()->GetCursorAlgorithm()->GetResliceCursor();
-		//	for (int i = 0; i < 3; i++)
-		//	{
-		//		vtkPlaneSource *ps = static_cast<vtkPlaneSource *>(	this->IPW[i]->GetPolyDataAlgorithm());
-		//		ps->SetOrigin(this->RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetOrigin());
-		//		ps->SetPoint1(this->RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetPoint1());
-		//		ps->SetPoint2(this->RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetPoint2());
-		//
-		//		// If the reslice plane has modified, update it on the 3D widget
-		//		this->IPW[i]->UpdatePlacement();
-		//	}
-		//}
+		vtkResliceCursorWidget *rcw = dynamic_cast<	vtkResliceCursorWidget *>(caller);
+		if (rcw)
+		{
+			vtkResliceCursorLineRepresentation *rep = dynamic_cast<	vtkResliceCursorLineRepresentation *>(rcw->GetRepresentation());
+			// Although the return value is not used, we keep the get calls
+		    // in case they had side-effects
+			rep->GetResliceCursorActor()->GetCursorAlgorithm()->GetResliceCursor();
+			for (int i = 0; i < 3; i++)
+			{
+				vtkPlaneSource *ps = static_cast<vtkPlaneSource *>(	this->IPW[i]->GetPolyDataAlgorithm());
+				ps->SetOrigin(this->RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetOrigin());
+				ps->SetPoint1(this->RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetPoint1());
+				ps->SetPoint2(this->RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetPoint2());
+		
+				// If the reslice plane has modified, update it on the 3D widget
+				this->IPW[i]->UpdatePlacement();
+			}
+		}
 
 		// Render everything
 		for (int i = 0; i < 3; i++)
 		{
 			this->RCW[i]->Render();
 		}
-		//this->IPW[0]->GetInteractor()->GetRenderWindow()->Render();
+		this->IPW[0]->GetInteractor()->GetRenderWindow()->Render();
 	}
 	vtkResliceCursorCallback() {}
 public:
@@ -805,6 +807,7 @@ void QMPR3DExtension::ResetViews()
 	{
 		m_resliceImageViewer[i]->Reset();
 		m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
+		m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.2);
 	}
 	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(1, PI);
 	for (int i = 0; i < 3; i++)
@@ -978,7 +981,7 @@ void QMPR3DExtension::setInput(Volume *input)
 	m_resliceImageViewer[2]->SetupInteractor(m_axial2DView->GetRenderWindow()->GetInteractor());
 #endif // VTK94
 
-	m_lastInput = selVolume;;
+	m_lastInput = selVolume;
 	Volume * vl = selVolume;
 	vtkSmartPointer <vtkImageData> imageData = NULL;
 	if (vl)
@@ -1025,7 +1028,7 @@ void QMPR3DExtension::setInput(Volume *input)
 		vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[i]->GetResliceCursorWidget()->GetRepresentation());
 		m_resliceImageViewer[i]->SetResliceCursor(m_resliceImageViewer[0]->GetResliceCursor());
 		rep->GetResliceCursorActor()->GetCursorAlgorithm()->SetReslicePlaneNormal(i);
-		//
+		//-----------------------------------------------------------------------------------------------------
 		rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetRepresentationToWireframe();//代表12窗口竖线
 		rep->GetResliceCursorActor()->GetCenterlineProperty(1)->SetRepresentationToWireframe();//0竖线，2横线
 		rep->GetResliceCursorActor()->GetCenterlineProperty(2)->SetRepresentationToWireframe();//01横线
@@ -1036,7 +1039,7 @@ void QMPR3DExtension::setInput(Volume *input)
 		rep->GetResliceCursorActor()->GetCenterlineProperty(1)->SetLineWidth(2);
 		rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetLineWidth(2);
 		rep->GetResliceCursorActor()->GetCenterlineProperty(2)->SetLineWidth(2);
-		//
+		//-------------------------------------------------------------------------------------------------------
 		m_resliceImageViewer[i]->SetInputData(imageData);
 		m_resliceImageViewer[i]->SetSliceOrientation(i);
 		m_resliceImageViewer[i]->SetResliceModeToAxisAligned();
@@ -1047,11 +1050,18 @@ void QMPR3DExtension::setInput(Volume *input)
 	picker->SetTolerance(0.005);
 	vtkSmartPointer<vtkProperty> ipwProp = vtkSmartPointer<vtkProperty>::New();
 	vtkSmartPointer< vtkRenderer > ren = vtkSmartPointer< vtkRenderer >::New();
+	//---
+	vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
+	m_mpr2DView->setRenderWindow(renderWindow);
+	m_mpr2DView->renderWindow()->AddRenderer(ren);
+	vtkRenderWindowInteractor* iren = m_mpr2DView->interactor();
+	//---
 	int imageDims[3];
 	double color[3] = { 0, 0, 0 };
 	for (int i = 0; i < 3; i++)
 	{
 		m_planeWidget[i] = vtkImagePlaneWidget::New();
+		m_planeWidget[i]->SetInteractor(iren);
 		m_planeWidget[i]->SetPicker(picker);
 		m_planeWidget[i]->RestrictPlaneToVolumeOn();
 		m_planeWidget[i]->GetPlaneProperty()->SetColor(color);
@@ -1078,7 +1088,8 @@ void QMPR3DExtension::setInput(Volume *input)
 		cbk->IPW[i] = m_planeWidget[i];
 		cbk->RCW[i] = m_resliceImageViewer[i]->GetResliceCursorWidget();
 		cbk->m_resliceImageViewer[i] = m_resliceImageViewer[i];
-		cbk->m_cornerAnnotations[i] = m_cornerAnnotations[i];
+		cbk->m_cornerAnnotations[i]  = m_cornerAnnotations[i];
+
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResliceAxesChangedEvent, cbk);
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::WindowLevelEvent, cbk);
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResliceThicknessChangedEvent, cbk);
@@ -1088,7 +1099,8 @@ void QMPR3DExtension::setInput(Volume *input)
 
 		// Make them all share the same color map.
 		m_resliceImageViewer[i]->SetLookupTable(m_resliceImageViewer[0]->GetLookupTable());
-
+		//m_planeWidget[i]->GetColorMap()->SetLookupTable(m_resliceImageViewer[0]->GetLookupTable());
+		m_planeWidget[i]->SetColorMap(m_resliceImageViewer[i]->GetResliceCursorWidget()->GetResliceCursorRepresentation()->GetColorMap());
 	}
 	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(1, PI);
 
@@ -1103,12 +1115,13 @@ void QMPR3DExtension::setInput(Volume *input)
 	{
 		m_resliceImageViewer[i]->SetResliceMode(1);
 		m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
-		//m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.6);
+		m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.2);
 		m_resliceImageViewer[i]->Render();
 	}
 	m_axial2DView->show();
 	m_sagital2DView->show();
 	m_coronal2DView->show();
+	m_mpr2DView->hide();
 	//---------------------------------------
 }
 
