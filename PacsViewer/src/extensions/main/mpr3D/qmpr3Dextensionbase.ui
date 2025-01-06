@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1195</width>
+    <width>1352</width>
     <height>506</height>
    </rect>
   </property>
@@ -328,6 +328,16 @@
       </widget>
      </item>
      <item>
+      <widget class="QLabel" name="label">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Ctrl/Alt+Left Mouse</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QToolButton" name="m_horizontalLayoutToolButton">
        <property name="text">
         <string>...</string>
@@ -343,16 +353,6 @@
        </property>
        <property name="autoRaise">
         <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="text">
-        <string>Ctrl/Alt+Left Mouse</string>
        </property>
       </widget>
      </item>
