@@ -33,11 +33,6 @@
 #include "voilutpresetstooldata.h"
 #include "imageplane.h"
 
-#ifdef VTK94
-#include "easylogging++.h"
-INITIALIZE_EASYLOGGINGPP
-#endif // VTK94
-
 // VTK
 #include <vtkAxisActor2D.h>
 // For events
@@ -319,46 +314,6 @@ public:
 	vtkCornerAnnotation*             m_cornerAnnotations[3];
 };
 
-class QeventMouse :public QObject
-{
-public:
-    QeventMouse()
-    {
-    };
-    ~QeventMouse()
-    {
-    };
-    bool eventFilter(QObject *object, QEvent *event)
-    {
-        switch (event->type())
-        {
-            if (event->type() == QEvent::Wheel ||  event->type() == QEvent::MouseButtonPress)
-            {
-				for (int i = 0; i < 3; i++)
-				{
-					//vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(m_riw[i]->GetResliceCursorWidget()->GetRepresentation());
-					//double m_CurrentWL[2];
-					//rep->GetWindowLevel(m_CurrentWL);
-					//int now = m_riw[i]->GetSlice() + 1;
-					//int max = m_riw[i]->GetSliceMax() + 1;
-					//QString sliceInfo = QObject::tr("ims: %1 \n").arg(max);
-					//sliceInfo += QObject::tr("WW: %1 WL: %2 \n").arg(MathTools::roundToNearestInteger(m_CurrentWL[0])).arg(MathTools::roundToNearestInteger(m_CurrentWL[1]));
-					//sliceInfo += QObject::tr("KV: %1 mA: %2 \n").arg(g_dicomKVP).arg(g_dicomXRayTubeCurrent);
-					////sliceInfo += QObject::tr("Thickness: %1 mm").arg(g_SliceThickness[i], 0, 'f', 2);
-					//m_cornerAnnotations[i]->SetText(2, sliceInfo.toLatin1().constData());
-					m_riw[i]->Render();
-				}
-            }
-        }
-        return 0;
-    }
-public:
-    vtkCornerAnnotation *m_cornerAnnotations[3];
-    vtkResliceImageViewer *m_riw[3];
-private:
-
-};
-
 ////有人提问,VTK没有看到好的方法. https://discourse.vtk.org/t/the-picture-of-coronal-planes-left-and-right-is-reversion-in-vtk8-2-0-dicom-mpr/1754/2
 QMPR3DExtension::QMPR3DExtension(QWidget *parent): QWidget(parent), m_axialZeroSliceCoordinate(.0)
 {
@@ -422,28 +377,65 @@ QMPR3DExtension::~QMPR3DExtension()
         m_coronalReslice->Delete();
     }
 
-    m_transform->Delete();
+	if (m_transform)
+       m_transform->Delete();
 
-    m_sagitalOverAxialAxisActor->Delete();
-    m_axialOverSagitalIntersectionAxis->Delete();
-    m_coronalOverAxialIntersectionAxis->Delete();
-    m_coronalOverSagitalIntersectionAxis->Delete();
-    m_thickSlabOverAxialActor->Delete();
-    m_thickSlabOverSagitalActor->Delete();
+	if (m_sagitalOverAxialAxisActor)
+		m_sagitalOverAxialAxisActor->Delete();
 
-    m_axialViewSagitalCenterDrawerPoint->decreaseReferenceCount();
-    delete m_axialViewSagitalCenterDrawerPoint;
-    m_axialViewCoronalCenterDrawerPoint->decreaseReferenceCount();
-    delete m_axialViewCoronalCenterDrawerPoint;
-    m_sagitalViewAxialCenterDrawerPoint->decreaseReferenceCount();
-    delete m_sagitalViewAxialCenterDrawerPoint;
-    m_sagitalViewCoronalCenterDrawerPoint->decreaseReferenceCount();
-    delete m_sagitalViewCoronalCenterDrawerPoint;
+	if (m_axialOverSagitalIntersectionAxis)
+		m_axialOverSagitalIntersectionAxis->Delete();
 
-    m_axialPlaneSource->Delete();
-    m_sagitalPlaneSource->Delete();
-    m_coronalPlaneSource->Delete();
-    m_thickSlabPlaneSource->Delete();
+	if (m_coronalOverAxialIntersectionAxis)
+		m_coronalOverAxialIntersectionAxis->Delete();
+
+	if (m_coronalOverSagitalIntersectionAxis)
+		m_coronalOverSagitalIntersectionAxis->Delete();
+
+	if (m_thickSlabOverAxialActor)
+		m_thickSlabOverAxialActor->Delete();
+
+	if (m_thickSlabOverSagitalActor)
+		m_thickSlabOverSagitalActor->Delete();
+
+	if (m_axialViewSagitalCenterDrawerPoint)
+	{
+		m_axialViewSagitalCenterDrawerPoint->decreaseReferenceCount();
+		delete m_axialViewSagitalCenterDrawerPoint;
+	}
+
+
+	if (m_axialViewCoronalCenterDrawerPoint)
+	{
+		m_axialViewCoronalCenterDrawerPoint->decreaseReferenceCount();
+		delete m_axialViewCoronalCenterDrawerPoint;
+	}
+
+
+	if (m_sagitalViewAxialCenterDrawerPoint)
+	{
+		m_sagitalViewAxialCenterDrawerPoint->decreaseReferenceCount();
+		delete m_sagitalViewAxialCenterDrawerPoint;
+	}
+
+
+	if (m_sagitalViewCoronalCenterDrawerPoint)
+	{
+		m_sagitalViewCoronalCenterDrawerPoint->decreaseReferenceCount();
+		delete m_sagitalViewCoronalCenterDrawerPoint;
+	}
+
+	if (m_sagitalViewCoronalCenterDrawerPoint)
+		m_axialPlaneSource->Delete();
+
+	if (m_sagitalViewCoronalCenterDrawerPoint)
+		m_sagitalPlaneSource->Delete();
+
+	if (m_sagitalViewCoronalCenterDrawerPoint)
+		m_coronalPlaneSource->Delete();
+
+	if (m_sagitalViewCoronalCenterDrawerPoint)
+		m_thickSlabPlaneSource->Delete();
 
     if (m_pickedActorReslice)
     {
@@ -454,10 +446,18 @@ QMPR3DExtension::~QMPR3DExtension()
     {
         delete m_mipViewer;
     }
-    delete m_coronal2DView;
+
+	if (m_mipViewer)
+	{
+		delete m_coronal2DView;
+	}
+
 
 	if (m_VoiLutPresetsToolData)
+	{
 		delete m_VoiLutPresetsToolData;
+	}
+
 }
 
 void QMPR3DExtension::on_m_reset_clicked()
@@ -532,7 +532,7 @@ void QMPR3DExtension::init()
 	m_thickSlabSlider->hide();
 	m_thickSlabSpinBox->hide();
 	m_mipToolButton->hide();
-	m_horizontalLayoutToolButton->hide();
+	//m_horizontalLayoutToolButton->hide();
 	m_screenshotsExporterToolButton->hide();
 	m_voiLutComboBox2->hide();
 	labelLUT2->hide();
@@ -598,64 +598,64 @@ void QMPR3DExtension::createActions()
 
 void QMPR3DExtension::initializeZoomTools()
 {
-    Q_ASSERT(m_toolManager);
-    
-    m_zoomToolButton->setDefaultAction(m_toolManager->registerTool("ZoomTool"));
-    // We add a menu to the zoom button to incorporate the focused zoom tool
-    m_zoomToolButton->setPopupMode(QToolButton::MenuButtonPopup);
-    QMenu *zoomToolMenu = new QMenu(this);
-    m_zoomToolButton->setMenu(zoomToolMenu);
-    zoomToolMenu->addAction(m_toolManager->registerTool("MagnifyingGlassTool"));
-
-    connect(m_toolManager->getRegisteredToolAction("ZoomTool"), SIGNAL(triggered()), SLOT(rearrangeZoomToolsMenu()));
-    connect(m_toolManager->getRegisteredToolAction("MagnifyingGlassTool"), SIGNAL(triggered()), SLOT(rearrangeZoomToolsMenu()));
+   //Q_ASSERT(m_toolManager);
+   //
+   //m_zoomToolButton->setDefaultAction(m_toolManager->registerTool("ZoomTool"));
+   //// We add a menu to the zoom button to incorporate the focused zoom tool
+   //m_zoomToolButton->setPopupMode(QToolButton::MenuButtonPopup);
+   //QMenu *zoomToolMenu = new QMenu(this);
+   //m_zoomToolButton->setMenu(zoomToolMenu);
+   //zoomToolMenu->addAction(m_toolManager->registerTool("MagnifyingGlassTool"));
+   //
+   //connect(m_toolManager->getRegisteredToolAction("ZoomTool"), SIGNAL(triggered()), SLOT(rearrangeZoomToolsMenu()));
+   //connect(m_toolManager->getRegisteredToolAction("MagnifyingGlassTool"), SIGNAL(triggered()), SLOT(rearrangeZoomToolsMenu()));
 }
 
 void QMPR3DExtension::initializeROITools()
 {
-    Q_ASSERT(m_toolManager);
-    
-    m_ROIToolButton->setDefaultAction(m_toolManager->registerTool("EllipticalROITool"));
-    // We add a menu to the PolylineROI button to incorporate the elliptical ROI tool
-    m_ROIToolButton->setPopupMode(QToolButton::MenuButtonPopup);
-    QMenu *roiToolMenu = new QMenu(this);
-    m_ROIToolButton->setMenu(roiToolMenu);
-    roiToolMenu->addAction(m_toolManager->registerTool("MagicROITool"));
-    roiToolMenu->addAction(m_toolManager->registerTool("PolylineROITool"));
-    roiToolMenu->addAction(m_toolManager->registerTool("CircleTool"));
-    
-    connect(m_toolManager->getRegisteredToolAction("EllipticalROITool"), SIGNAL(triggered()), SLOT(rearrangeROIToolsMenu()));
-    connect(m_toolManager->getRegisteredToolAction("MagicROITool"), SIGNAL(triggered()), SLOT(rearrangeROIToolsMenu()));
-    connect(m_toolManager->getRegisteredToolAction("PolylineROITool"), SIGNAL(triggered()), SLOT(rearrangeROIToolsMenu()));
-    connect(m_toolManager->getRegisteredToolAction("CircleTool"), SIGNAL(triggered()), SLOT(rearrangeROIToolsMenu()));
+    //Q_ASSERT(m_toolManager);
+    //
+    //m_ROIToolButton->setDefaultAction(m_toolManager->registerTool("EllipticalROITool"));
+    //// We add a menu to the PolylineROI button to incorporate the elliptical ROI tool
+    //m_ROIToolButton->setPopupMode(QToolButton::MenuButtonPopup);
+    //QMenu *roiToolMenu = new QMenu(this);
+    //m_ROIToolButton->setMenu(roiToolMenu);
+    //roiToolMenu->addAction(m_toolManager->registerTool("MagicROITool"));
+    //roiToolMenu->addAction(m_toolManager->registerTool("PolylineROITool"));
+    //roiToolMenu->addAction(m_toolManager->registerTool("CircleTool"));
+    //
+    //connect(m_toolManager->getRegisteredToolAction("EllipticalROITool"), SIGNAL(triggered()), SLOT(rearrangeROIToolsMenu()));
+    //connect(m_toolManager->getRegisteredToolAction("MagicROITool"), SIGNAL(triggered()), SLOT(rearrangeROIToolsMenu()));
+    //connect(m_toolManager->getRegisteredToolAction("PolylineROITool"), SIGNAL(triggered()), SLOT(rearrangeROIToolsMenu()));
+    //connect(m_toolManager->getRegisteredToolAction("CircleTool"), SIGNAL(triggered()), SLOT(rearrangeROIToolsMenu()));
 }
 
 void QMPR3DExtension::initializeDistanceTools()
 {
-    Q_ASSERT(m_toolManager);
-
-    m_distanceToolButton->setDefaultAction(m_toolManager->registerTool("DistanceTool"));
-    //We add a menu to the distance button to incorporate the perpendicular distance tool
-    m_distanceToolButton->setPopupMode(QToolButton::MenuButtonPopup);
-    QMenu *distanceToolMenu = new QMenu(this);
-    m_distanceToolButton->setMenu(distanceToolMenu);
-    distanceToolMenu->addAction(m_toolManager->registerTool("PerpendicularDistanceTool"));
-    connect(m_toolManager->getRegisteredToolAction("DistanceTool"), SIGNAL(triggered()), SLOT(rearrangeDistanceToolsMenu()));
-    connect(m_toolManager->getRegisteredToolAction("PerpendicularDistanceTool"), SIGNAL(triggered()), SLOT(rearrangeDistanceToolsMenu()));
+   //Q_ASSERT(m_toolManager);
+   //
+   //m_distanceToolButton->setDefaultAction(m_toolManager->registerTool("DistanceTool"));
+   ////We add a menu to the distance button to incorporate the perpendicular distance tool
+   //m_distanceToolButton->setPopupMode(QToolButton::MenuButtonPopup);
+   //QMenu *distanceToolMenu = new QMenu(this);
+   //m_distanceToolButton->setMenu(distanceToolMenu);
+   //distanceToolMenu->addAction(m_toolManager->registerTool("PerpendicularDistanceTool"));
+   //connect(m_toolManager->getRegisteredToolAction("DistanceTool"), SIGNAL(triggered()), SLOT(rearrangeDistanceToolsMenu()));
+   //connect(m_toolManager->getRegisteredToolAction("PerpendicularDistanceTool"), SIGNAL(triggered()), SLOT(rearrangeDistanceToolsMenu()));
 }
 
 void QMPR3DExtension::initializeAngleTools()
 {
-    Q_ASSERT(m_toolManager);
-
-    m_angleToolButton->setDefaultAction(m_toolManager->registerTool("AngleTool"));
-    // We add a menu to the angle button to incorporate the open angle tool
-    m_angleToolButton->setPopupMode(QToolButton::MenuButtonPopup);
-    QMenu *angleToolMenu = new QMenu(this);
-    m_angleToolButton->setMenu(angleToolMenu);
-    angleToolMenu->addAction(m_toolManager->registerTool("NonClosedAngleTool"));
-    connect(m_toolManager->getRegisteredToolAction("AngleTool"), SIGNAL(triggered()), SLOT(rearrangeAngleToolsMenu()));
-    connect(m_toolManager->getRegisteredToolAction("NonClosedAngleTool"), SIGNAL(triggered()), SLOT(rearrangeAngleToolsMenu()));
+   // Q_ASSERT(m_toolManager);
+   //
+   // m_angleToolButton->setDefaultAction(m_toolManager->registerTool("AngleTool"));
+   // // We add a menu to the angle button to incorporate the open angle tool
+   // m_angleToolButton->setPopupMode(QToolButton::MenuButtonPopup);
+   // QMenu *angleToolMenu = new QMenu(this);
+   // m_angleToolButton->setMenu(angleToolMenu);
+   // angleToolMenu->addAction(m_toolManager->registerTool("NonClosedAngleTool"));
+   // connect(m_toolManager->getRegisteredToolAction("AngleTool"), SIGNAL(triggered()), SLOT(rearrangeAngleToolsMenu()));
+   // connect(m_toolManager->getRegisteredToolAction("NonClosedAngleTool"), SIGNAL(triggered()), SLOT(rearrangeAngleToolsMenu()));
 }
 
 void QMPR3DExtension::initializeTools()
@@ -858,37 +858,7 @@ void QMPR3DExtension::switchHorizontalLayout()
 
 void QMPR3DExtension::switchToMIPLayout(bool isMIPChecked)
 {
-    //We save the size before changing the widgets
-    QList<int> splitterSize = m_horizontalSplitter->sizes();
-    if (isMIPChecked)
-    {
-        if (!m_mipViewer)
-        {
-            m_mipViewer = new Q3DViewer;
-            m_mipViewer->orientationMarkerOff();
-            m_mipViewer->setBlendMode(Q3DViewer::BlendMode::MaximumIntensity);
-        }
-        Volume *mipInput = new Volume;
-        // TODO This is necessary so that you have the information of the series, studies, patient ...
-        mipInput->setImages(m_volume->getImages());
-        mipInput->setData(m_coronalReslice->GetOutput());
-        m_mipViewer->setInput(mipInput);
-        m_mipViewer->render();
-        m_mipViewer->show();
-        //We have widget distribution
-        m_horizontalSplitter->insertWidget(m_horizontalSplitter->indexOf(m_verticalSplitter), m_mipViewer);
-        m_verticalSplitter->hide();
-        m_horizontalSplitter->insertWidget(2, m_verticalSplitter);
-    }
-    else
-    {
-        m_horizontalSplitter->insertWidget(m_horizontalSplitter->indexOf(m_mipViewer), m_verticalSplitter);
-        m_verticalSplitter->show();
-        m_mipViewer->hide();
-        m_horizontalSplitter->insertWidget(2, m_mipViewer);
-    }
-    // We recover the sizes
-    m_horizontalSplitter->setSizes(splitterSize);
+
 }
 
 void QMPR3DExtension::handleAxialViewEvents(unsigned long eventID)
@@ -905,52 +875,13 @@ void QMPR3DExtension::handleSagitalViewEvents(unsigned long eventID)
 
 bool QMPR3DExtension::detectAxialViewAxisActor()
 {
-    bool picked = false;
-   
-    return picked;
+
+	return true;
 }
 
 void QMPR3DExtension::rotateAxialViewAxisActor()
 {
-    double clickedWorldPoint[3];
-    //m_axial2DView->getEventWorldCoordinate(clickedWorldPoint);
-
-    // Vectors des del centre del picked plane a m_initialPick i clickedWorldPoint
-    double vec1[3], vec2[3];
-
-    vec1[0] = m_initialPickX - m_pickedActorPlaneSource->GetCenter()[0];
-    vec1[1] = m_initialPickY - m_pickedActorPlaneSource->GetCenter()[1];
-    vec1[2] = 0.0;
-
-    vec2[0] = clickedWorldPoint[0] - m_pickedActorPlaneSource->GetCenter()[0];
-    vec2[1] = clickedWorldPoint[1] - m_pickedActorPlaneSource->GetCenter()[1];
-    vec2[2] = 0.0;
-
-    m_initialPickX = clickedWorldPoint[0];
-    m_initialPickY = clickedWorldPoint[1];
-
-    //Angle of rotation in degrees
-    double angle = MathTools::angleInDegrees(QVector3D(vec1[0], vec1[1], vec1[2]), QVector3D(vec2[0], vec2[1], vec2[2]));
-
-    // Direction of the axis of rotation
-    double direction[3];
-    MathTools::crossProduct(vec1, vec2, direction);
-
-    // Axis of rotation in world coordinates
-    double axis[3];
-    m_axialPlaneSource->GetNormal(axis);
-
-    //We calculate the scalar product to know the direction of the axis (and therefore of the turn)
-    double dot = MathTools::dotProduct(direction, axis);
-    axis[0] *= dot;
-    axis[1] *= dot;
-    axis[2] *= dot;
-    MathTools::normalize(axis);
-
-    rotateMiddle(angle, axis, m_pickedActorPlaneSource);
-
-    updatePlanes();
-    updateControls();
+   
 }
 
 void QMPR3DExtension::releaseAxialViewAxisActor()
@@ -965,61 +896,7 @@ void QMPR3DExtension::detectSagitalViewAxisActor()
 
 void QMPR3DExtension::rotateSagitalViewAxisActor()
 {
-    //Sagittal coordinates
-    double clickedWorldPoint[3];
-    //m_sagital2DView->getEventWorldCoordinate(clickedWorldPoint);
-
-    //  Transformation of world coordinates to sagittal coordinates
-    vtkTransform *transform = getWorldToSagitalTransform();
-
-    //Center of the picked plane (sagittal coordinates)
-    double pickedPlaneCenter[3];
-    transform->TransformPoint(m_pickedActorPlaneSource->GetCenter(), pickedPlaneCenter);
-
-    ///  Vectors from the center of the picked plane (always the coronal)
-    ///  to m_initialPick and clickedWorldPoint (sagittal coordinates)
-    double vec1[3], vec2[3];
-
-    vec1[0] = m_initialPickX - pickedPlaneCenter[0];
-    vec1[1] = m_initialPickY - pickedPlaneCenter[1];
-    vec1[2] = 0.0;
-
-    vec2[0] = clickedWorldPoint[0] - pickedPlaneCenter[0];
-    vec2[1] = clickedWorldPoint[1] - pickedPlaneCenter[1];
-    vec2[2] = 0.0;
-
-    m_initialPickX = clickedWorldPoint[0];
-    m_initialPickY = clickedWorldPoint[1];
-
-    // Angle of rotation in degrees
-    double angle = MathTools::angleInDegrees(QVector3D(vec1[0], vec1[1], vec1[2]), QVector3D(vec2[0], vec2[1], vec2[2]));
-
-    //  Direction of the axis of rotation (sagittal coordinates)
-    double direction[3];
-    MathTools::crossProduct(vec1, vec2, direction);
-    // Transformation of sagittal coordinates to world coordinates
-    transform->Inverse();
-    transform->TransformVector(direction, direction);
-    /// Now direction is the direction of the axis of rotation in world coordinates
-
-    // We no longer have to make further transformations; we destroy transform
-    transform->Delete();
-
-    // Axis of rotation in world coordinates
-    double axis[3];
-    m_sagitalPlaneSource->GetNormal(axis);
-
-    //We calculate the scalar product to know the direction of the axis (and therefore of the turn)
-    double dot = MathTools::dotProduct(direction, axis);
-    axis[0] *= dot;
-    axis[1] *= dot;
-    axis[2] *= dot;
-    MathTools::normalize(axis);
-
-    rotateMiddle(angle, axis, m_pickedActorPlaneSource);
-
-    updatePlanes();
-    updateControls();
+   
 }
 
 void QMPR3DExtension::releaseSagitalViewAxisActor()
@@ -1029,66 +906,17 @@ void QMPR3DExtension::releaseSagitalViewAxisActor()
 
 void QMPR3DExtension::getRotationAxis(vtkPlaneSource *plane, double axis[3])
 {
-    if (!plane)
-    {
-        return;
-    }
 
-    axis[0] = plane->GetPoint2()[0] - plane->GetOrigin()[0];
-    axis[1] = plane->GetPoint2()[1] - plane->GetOrigin()[1];
-    axis[2] = plane->GetPoint2()[2] - plane->GetOrigin()[2];
 }
 
 void QMPR3DExtension::pushSagitalViewCoronalAxisActor()
 {
-    m_sagital2DView->setCursor(Qt::ClosedHandCursor);
 
-    // Sagittal coordinates
-    double clickedWorldPoint[3];
-    //m_sagital2DView->getEventWorldCoordinate(clickedWorldPoint);
-
-    // Translation of the coronal plane (sagittal coordinates)
-    double translation[3];
-    translation[0] = clickedWorldPoint[0] - m_initialPickX;
-    translation[1] = clickedWorldPoint[1] - m_initialPickY;
-    translation[2] = 0.0;
-
-    // Transformation of sagittal coordinates to world coordinates
-    vtkTransform *sagitalToWorldTransform = getWorldToSagitalTransform();
-    sagitalToWorldTransform->Inverse();
-
-    sagitalToWorldTransform->TransformVector(translation, translation);
-    // Now translation is the translation of the coronal plane into world coordinates
-
-    // We no longer have to make further transformations; we destroy sagittalToWorldTransform
-    sagitalToWorldTransform->Delete();
-
-    m_pickedActorPlaneSource->Push(MathTools::dotProduct(translation, m_pickedActorPlaneSource->GetNormal()));
-
-    updatePlanes();
-    updateControls();
-
-    m_initialPickX = clickedWorldPoint[0];
-    m_initialPickY = clickedWorldPoint[1];
 }
 
 void QMPR3DExtension::pushAxialViewAxisActor()
 {
-    m_axial2DView->setCursor(Qt::ClosedHandCursor);
-    double clickedWorldPoint[3];
-    //m_axial2DView->getEventWorldCoordinate(clickedWorldPoint);
-    // Get the motion vector
-    double v[3];
-    v[0] = clickedWorldPoint[0] - m_initialPickX;
-    v[1] = clickedWorldPoint[1] - m_initialPickY;
-    v[2] = 0.0;
 
-    m_pickedActorPlaneSource->Push(MathTools::dotProduct(v, m_pickedActorPlaneSource->GetNormal()));
-    updatePlanes();
-    updateControls();
-
-    m_initialPickX = clickedWorldPoint[0];
-    m_initialPickY = clickedWorldPoint[1];
 }
 
 void QMPR3DExtension::detectPushSagitalViewAxisActor()
@@ -1098,17 +926,7 @@ void QMPR3DExtension::detectPushSagitalViewAxisActor()
 
 void QMPR3DExtension::pushSagitalViewAxialAxisActor()
 {
-    m_sagital2DView->setCursor(Qt::ClosedHandCursor);
 
-    double clickedWorldPoint[3];
-    //m_sagital2DView->getEventWorldCoordinate(clickedWorldPoint);
-
-    //m_axial2DView->setSlice(m_axial2DView->getMaximumSlice() - static_cast<int>(clickedWorldPoint[1] / m_axialSpacing[2]));
-    updatePlanes();
-    updateControls();
-
-    m_initialPickX = clickedWorldPoint[0];
-    m_initialPickY = clickedWorldPoint[1];
 }
 
 void QMPR3DExtension::setInput(Volume *input)
@@ -1173,8 +991,7 @@ void QMPR3DExtension::setInput(Volume *input)
 		ImageFlip->Update();
 		imageData = ImageFlip->GetOutput();
 		m_volume = vl;
-		//VoiLutPresetsToolData
-		//VoiLutPresetsToolData data(this);
+
 		m_VoiLutPresetsToolData = new VoiLutPresetsToolData(this);
 		VoiLutHelper().initializeVoiLutData(m_VoiLutPresetsToolData, vl);
 		m_voiLutComboBox->setPresetsData(m_VoiLutPresetsToolData);
@@ -1208,8 +1025,7 @@ void QMPR3DExtension::setInput(Volume *input)
 		vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[i]->GetResliceCursorWidget()->GetRepresentation());
 		m_resliceImageViewer[i]->SetResliceCursor(m_resliceImageViewer[0]->GetResliceCursor());
 		rep->GetResliceCursorActor()->GetCursorAlgorithm()->SetReslicePlaneNormal(i);
-		//VTK94 need
-		//rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetColor(1, 0, 0);
+		//
 		rep->GetResliceCursorActor()->GetCenterlineProperty(0)->SetRepresentationToWireframe();//代表12窗口竖线
 		rep->GetResliceCursorActor()->GetCenterlineProperty(1)->SetRepresentationToWireframe();//0竖线，2横线
 		rep->GetResliceCursorActor()->GetCenterlineProperty(2)->SetRepresentationToWireframe();//01横线
@@ -1257,15 +1073,12 @@ void QMPR3DExtension::setInput(Volume *input)
 	}
 
 	vtkSmartPointer<vtkResliceCursorCallback> cbk = vtkSmartPointer<vtkResliceCursorCallback>::New();
-	static QeventMouse filter;
 	for (int i = 0; i < 3; i++)
 	{
 		cbk->IPW[i] = m_planeWidget[i];
 		cbk->RCW[i] = m_resliceImageViewer[i]->GetResliceCursorWidget();
 		cbk->m_resliceImageViewer[i] = m_resliceImageViewer[i];
 		cbk->m_cornerAnnotations[i] = m_cornerAnnotations[i];
-		filter.m_riw[i] = m_resliceImageViewer[i];
-		filter.m_cornerAnnotations[i] = m_cornerAnnotations[i];
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResliceAxesChangedEvent, cbk);
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::WindowLevelEvent, cbk);
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResliceThicknessChangedEvent, cbk);
@@ -1286,10 +1099,6 @@ void QMPR3DExtension::setInput(Volume *input)
 		int max = m_resliceImageViewer[i]->GetSliceMax() + 1;
 		setCornerAnnotations(m_cornerAnnotations[i], max, MathTools::roundToNearestInteger(m_CurrentWL[0]), MathTools::roundToNearestInteger(m_CurrentWL[1]));
 	}
-	//m_axial2DView->installEventFilter(&filter);
-	//m_sagital2DView->installEventFilter(&filter);
-	//m_coronal2DView->installEventFilter(&filter);
-
 	for (int i = 0; i < 3; i++)
 	{
 		m_resliceImageViewer[i]->SetResliceMode(1);
@@ -1305,132 +1114,20 @@ void QMPR3DExtension::setInput(Volume *input)
 
 void QMPR3DExtension::initOrientation()
 {
-    // IMPORTANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    // Now we give each plane some dimensions, extent, spacing, etc. according as if these planes should be orthogonal, but according to the cutting plane
-    // it will be one way or another
-    // The axial view will keep the original spaced and extended
-    // The sagittal view, as it can only be rotated on the Y axis, will keep the extent of its X the same as the original Y extent. The others
-    // must be adapted to the distances corresponding to the diagonals zmax-xmax
-    // In the coronal view, as it can have any orientation you will have to adapt its extensions to the maximums
-
-    int extent[6];
-    m_volume->getExtent(extent);
-    int extentLength[3] = { extent[1] - extent[0] + 1, extent[3] - extent[2] + 1, extent[5] - extent[4] + 1 };
-    double origin[3];
-    m_volume->getOrigin(origin);
-    double spacing[3];
-    m_volume->getSpacing(spacing);
-
-    //Prevent obscuring voxels by offsetting the plane geometry
-    double xbounds[] = { origin[0] + spacing[0] * (extent[0] - 0.5),
-                         origin[0] + spacing[0] * (extent[1] + 0.5) };
-    double ybounds[] = { origin[1] + spacing[1] * (extent[2] - 0.5),
-                         origin[1] + spacing[1] * (extent[3] + 0.5) };
-    double zbounds[] = { origin[2] + spacing[2] * (extent[4] - 0.5),
-                         origin[2] + spacing[2] * (extent[5] + 0.5) };
-
-    if (spacing[0] < 0.0)
-    {
-        double t = xbounds[0];
-        xbounds[0] = xbounds[1];
-        xbounds[1] = t;
-    }
-    if (spacing[1] < 0.0)
-    {
-        double t = ybounds[0];
-        ybounds[0] = ybounds[1];
-        ybounds[1] = t;
-    }
-    if (spacing[2] < 0.0)
-    {
-        double t = zbounds[0];
-        zbounds[0] = zbounds[1];
-        zbounds[1] = t;
-    }
-
-    double volumeSize[3] = { xbounds[1] - xbounds[0], ybounds[1] - ybounds[0], zbounds[1] - zbounds[0] };
-
-    // XY, z-normal : vista axial, en principi d'aquesta vista nomès canviarem la llesca
-    m_axialPlaneSource->SetOrigin(xbounds[0], ybounds[0], zbounds[0]);
-    m_axialPlaneSource->SetPoint1(xbounds[1], ybounds[0], zbounds[0]);
-    m_axialPlaneSource->SetPoint2(xbounds[0], ybounds[1], zbounds[0]);
-    m_axialZeroSliceCoordinate = zbounds[0];
-
-    // YZ, x-normal: sagittal sight
-    // We are adjusting the size of the plane to the dimensions of this orientation
-    // The size of the initial Y, which will be a combination of X and Y during execution, must be the diagonal of the XY plane. We will enlarge half on each side
-    // about the size of Y.
-    // Warning: we are assuming that xbounds [0] = 0. The correct form would be (xbounds [1] - xbounds [0] (+1?)). The same for y.
-    double xyDiagonal = sqrt(volumeSize[0] * volumeSize[0] + volumeSize[1] * volumeSize[1]);
-    double halfDeltaY = (xyDiagonal - volumeSize[1]) * 0.5;
-    m_sagitalPlaneSource->SetOrigin(xbounds[0], ybounds[0] - halfDeltaY, zbounds[1]);
-    m_sagitalPlaneSource->SetPoint1(xbounds[0], ybounds[1] + halfDeltaY, zbounds[1]);
-    m_sagitalPlaneSource->SetPoint2(xbounds[0], ybounds[0] - halfDeltaY, zbounds[0]);
-    m_sagitalPlaneSource->Push(-0.5 * volumeSize[0]);
-    //We calculate the translation required to draw the intersections of the planes in the sagittal view
-    m_sagitalTranslation[0] = m_sagitalPlaneSource->GetCenter()[1] + halfDeltaY;
-    m_sagitalTranslation[1] = m_sagitalPlaneSource->GetCenter()[2];
-    m_sagitalTranslation[2] = 0.0;
-    //We calculate the extent of the sagittal
-    double sagitalExtentLengthX = sqrt(static_cast<double>(extentLength[0] * extentLength[0] + extentLength[1] * extentLength[1]));
-    ///sagitalExtentLengthX * = 2.0; //
-    ///  maybe we should double the extent to ensure that no detail is lost (Nyquist)
-    m_sagitalExtentLength[0] = MathTools::roundUpToPowerOf2(MathTools::roundToNearestInteger(sagitalExtentLengthX));
-    m_sagitalExtentLength[1] = extentLength[2];
-
-    /// ZX, y-normal: coronal view
-    /// same as above
-    /// The size of the initial X and Z, which will be a combination of
-    /// X, Y, and Z during execution, must be the diagonal of the volume. We will expand half a
-    /// each band about the size of the X and Z axes.
-    /// Warning: we are assuming that xbounds [0] = 0.
-    /// The correct form would be (xbounds [1] - xbounds [0] (+1?)). The same for y and z.
-    double diagonal = sqrt(volumeSize[0] * volumeSize[0] + volumeSize[1] * volumeSize[1] + volumeSize[2] * volumeSize[2]);
-    double halfDeltaX = (diagonal - volumeSize[0]) * 0.5;
-    double halfDeltaZ = (diagonal - volumeSize[2]) * 0.5;
-    m_coronalPlaneSource->SetOrigin(xbounds[0] - halfDeltaX, ybounds[0], zbounds[1] + halfDeltaZ);
-    m_coronalPlaneSource->SetPoint1(xbounds[1] + halfDeltaX, ybounds[0], zbounds[1] + halfDeltaZ);
-    m_coronalPlaneSource->SetPoint2(xbounds[0] - halfDeltaX, ybounds[0], zbounds[0] - halfDeltaZ);
-    m_coronalPlaneSource->Push(0.5 * volumeSize[1]);
-    // We calculate the extent of the coronal
-    double coronalExtentLength = sqrt(static_cast<double>(extentLength[0] * extentLength[0] + extentLength[1] * extentLength[1] + extentLength[2] *
-            extentLength[2]));
-    ///coronalExtentLength * = 2.0; //
-    ///  maybe we should double the extent to ensure that no detail is lost (Nyquist)
-    m_coronalExtentLength[0] = MathTools::roundUpToPowerOf2(MathTools::roundToNearestInteger(coronalExtentLength));
-    m_coronalExtentLength[1] = m_coronalExtentLength[0];
-
-    // We put the sizes of the drawer points
-    const double RadiusFactor = 0.01;
-    double o[3], p1[3], p2[3];
-    double width, height;
-    double radius;
-    // Axials
-    m_axialPlaneSource->GetOrigin(o);
-    m_axialPlaneSource->GetPoint1(p1);
-    m_axialPlaneSource->GetPoint2(p2);
-    width = MathTools::getDistance3D(o, p1);
-    height = MathTools::getDistance3D(o, p2);
-    radius = RadiusFactor * qMax(width, height);
-    m_axialViewSagitalCenterDrawerPoint->setRadius(radius);
-    m_axialViewCoronalCenterDrawerPoint->setRadius(radius);
-    // Sagitals
-    m_sagitalPlaneSource->GetOrigin(o);
-    m_sagitalPlaneSource->GetPoint1(p1);
-    m_sagitalPlaneSource->GetPoint2(p2);
-    width = MathTools::getDistance3D(o, p1);
-    height = MathTools::getDistance3D(o, p2);
-    radius = RadiusFactor * qMax(width, height);
-    m_sagitalViewAxialCenterDrawerPoint->setRadius(radius);
-    m_sagitalViewCoronalCenterDrawerPoint->setRadius(radius);
-
-    updatePlanes();
-    updateControls();
+  
 }
 
 void QMPR3DExtension::createActors()
 {
+	m_sagitalOverAxialAxisActor          = nullptr;
+	m_coronalOverAxialIntersectionAxis   = nullptr;
+	m_coronalOverSagitalIntersectionAxis = nullptr;
+	m_axialOverSagitalIntersectionAxis   = nullptr;
+	m_thickSlabOverAxialActor            = nullptr;
+	m_thickSlabOverSagitalActor          = nullptr;
+
+	return;
+
     QColor axialColor = QColor::fromRgbF(1.0, 1.0, 0.0);
     QColor sagitalColor = QColor::fromRgbF(1.0, 0.6, 0.0);
     QColor coronalColor = QColor::fromRgbF(0.0, 1.0, 1.0);
@@ -1482,13 +1179,6 @@ void QMPR3DExtension::createActors()
     m_thickSlabOverSagitalActor->GetProperty()->SetColor(coronalColor.redF(), coronalColor.greenF(), coronalColor.blueF());
     m_thickSlabOverSagitalActor->GetProperty()->SetLineStipplePattern(65280);
 
-    //m_axial2DView->getRenderer()->AddViewProp(m_sagitalOverAxialAxisActor);
-    //m_axial2DView->getRenderer()->AddViewProp(m_coronalOverAxialIntersectionAxis);
-    //m_axial2DView->getRenderer()->AddViewProp(m_thickSlabOverAxialActor);
-    //m_sagital2DView->getRenderer()->AddViewProp(m_coronalOverSagitalIntersectionAxis);
-    //m_sagital2DView->getRenderer()->AddViewProp(m_axialOverSagitalIntersectionAxis);
-    //m_sagital2DView->getRenderer()->AddViewProp(m_thickSlabOverSagitalActor);
-
     // We create the drawer points
 
     m_axialViewSagitalCenterDrawerPoint = new DrawerPoint();
@@ -1510,445 +1200,73 @@ void QMPR3DExtension::createActors()
 
 void QMPR3DExtension::axialSliceUpdated(int slice)
 {
-    // Relative push we have to do = relocate to the start and place the slice
-    m_axialPlaneSource->Push(m_axialZeroSliceCoordinate - m_axialPlaneSource->GetOrigin()[2] + slice * m_axialSpacing[2]);
-    m_axialPlaneSource->Update();
-    updateControls();
+
 }
 
 void QMPR3DExtension::updateControls()
 {
-    // Let's move on to the world coordinate system
-    m_sagitalOverAxialAxisActor->GetPositionCoordinate()->SetCoordinateSystemToWorld();
-    m_sagitalOverAxialAxisActor->GetPosition2Coordinate()->SetCoordinateSystemToWorld();
+ 
 
-    m_coronalOverSagitalIntersectionAxis->GetPositionCoordinate()->SetCoordinateSystemToWorld();
-    m_coronalOverSagitalIntersectionAxis->GetPosition2Coordinate()->SetCoordinateSystemToWorld();
-
-    m_coronalOverAxialIntersectionAxis->GetPositionCoordinate()->SetCoordinateSystemToWorld();
-    m_coronalOverAxialIntersectionAxis->GetPosition2Coordinate()->SetCoordinateSystemToWorld();
-
-    m_axialOverSagitalIntersectionAxis->GetPositionCoordinate()->SetCoordinateSystemToWorld();
-    m_axialOverSagitalIntersectionAxis->GetPosition2Coordinate()->SetCoordinateSystemToWorld();
-
-    m_thickSlabOverAxialActor->GetPositionCoordinate()->SetCoordinateSystemToWorld();
-    m_thickSlabOverAxialActor->GetPosition2Coordinate()->SetCoordinateSystemToWorld();
-
-    m_thickSlabOverSagitalActor->GetPositionCoordinate()->SetCoordinateSystemToWorld();
-    m_thickSlabOverSagitalActor->GetPosition2Coordinate()->SetCoordinateSystemToWorld();
-
-    m_thickSlabPlaneSource->SetOrigin(m_coronalPlaneSource->GetOrigin());
-    m_thickSlabPlaneSource->SetPoint1(m_coronalPlaneSource->GetPoint1());
-    m_thickSlabPlaneSource->SetPoint2(m_coronalPlaneSource->GetPoint2());
-    m_thickSlabPlaneSource->Push(m_thickSlab);
-
-    //We obtain the transformation to pass from mona coordinates to sagittal coordinates
-    vtkTransform *worldToSagitalTransform = getWorldToSagitalTransform();
-
-    //We calculate the intersections
-
-    double r[3], t[3], position1[3], position2[3];
-    const double Length = 2000.0;
-
-    //Sagittal projection on axial and vice versa
-    MathTools::planeIntersection(m_axialPlaneSource->GetOrigin(), m_axialPlaneSource->GetNormal(), m_sagitalPlaneSource->GetOrigin(),
-                                 m_sagitalPlaneSource->GetNormal(), r, t);
-    // We normalize t so that we always have the same length (1)
-    MathTools::normalize(t);
-
-    position1[0] = r[0] - t[0] * Length;
-    position1[1] = r[1] - t[1] * Length;
-    position1[2] = r[2] - t[2] * Length;
-
-    position2[0] = r[0] + t[0] * Length;
-    position2[1] = r[1] + t[1] * Length;
-    position2[2] = r[2] + t[2] * Length;
-
-    m_sagitalOverAxialAxisActor->SetPosition(position1[0], position1[1]);
-    m_sagitalOverAxialAxisActor->SetPosition2(position2[0], position2[1]);
-
-    worldToSagitalTransform->TransformPoint(position1, position1);
-    worldToSagitalTransform->TransformPoint(position2, position2);
-    m_axialOverSagitalIntersectionAxis->SetPosition(position1[0], position1[1]);
-    m_axialOverSagitalIntersectionAxis->SetPosition2(position2[0], position2[1]);
-
-    // Coronal projection on sagittal
-
-    MathTools::planeIntersection(m_coronalPlaneSource->GetOrigin(), m_coronalPlaneSource->GetNormal(), m_sagitalPlaneSource->GetOrigin(),
-                                 m_sagitalPlaneSource->GetNormal(), r, t);
-    //We normalize t so that we always have the same length (1)
-    MathTools::normalize(t);
-
-    position1[0] = r[0] - t[0] * Length;
-    position1[1] = r[1] - t[1] * Length;
-    position1[2] = r[2] - t[2] * Length;
-
-    position2[0] = r[0] + t[0] * Length;
-    position2[1] = r[1] + t[1] * Length;
-    position2[2] = r[2] + t[2] * Length;
-
-    worldToSagitalTransform->TransformPoint(position1, position1);
-    worldToSagitalTransform->TransformPoint(position2, position2);
-    m_coronalOverSagitalIntersectionAxis->SetPosition(position1[0], position1[1]);
-    m_coronalOverSagitalIntersectionAxis->SetPosition2(position2[0], position2[1]);
-
-    // Thick slab projection on sagittal
-    MathTools::planeIntersection(m_thickSlabPlaneSource->GetOrigin(), m_thickSlabPlaneSource->GetNormal(), m_sagitalPlaneSource->GetOrigin(),
-                                 m_sagitalPlaneSource->GetNormal(), r, t);
-    //We normalize t so that we always have the same length (1)
-    MathTools::normalize(t);
-
-    position1[0] = r[0] - t[0] * Length;
-    position1[1] = r[1] - t[1] * Length;
-    position1[2] = r[2] - t[2] * Length;
-
-    position2[0] = r[0] + t[0] * Length;
-    position2[1] = r[1] + t[1] * Length;
-    position2[2] = r[2] + t[2] * Length;
-
-    worldToSagitalTransform->TransformPoint(position1, position1);
-    worldToSagitalTransform->TransformPoint(position2, position2);
-    m_thickSlabOverSagitalActor->SetPosition(position1[0], position1[1]);
-    m_thickSlabOverSagitalActor->SetPosition2(position2[0], position2[1]);
-
-    // Coronal projection on axial
-    MathTools::planeIntersection(m_coronalPlaneSource->GetOrigin(), m_coronalPlaneSource->GetNormal(), m_axialPlaneSource->GetOrigin(),
-                                 m_axialPlaneSource->GetNormal(), r, t);
-    // We normalize t so that we always have the same length (1)
-    MathTools::normalize(t);
-
-    position1[0] = r[0] - t[0] * Length;
-    position1[1] = r[1] - t[1] * Length;
-    position1[2] = r[2] - t[2] * Length;
-
-    position2[0] = r[0] + t[0] * Length;
-    position2[1] = r[1] + t[1] * Length;
-    position2[2] = r[2] + t[2] * Length;
-
-    m_coronalOverAxialIntersectionAxis->SetPosition(position1[0], position1[1]);
-    m_coronalOverAxialIntersectionAxis->SetPosition2(position2[0], position2[1]);
-
-    //Thick slab projection on axial
-    MathTools::planeIntersection(m_thickSlabPlaneSource->GetOrigin(), m_thickSlabPlaneSource->GetNormal(), m_axialPlaneSource->GetOrigin(),
-                                 m_axialPlaneSource->GetNormal(), r, t);
-    // We normalize t so that we always have the same length (1)
-    MathTools::normalize(t);
-
-    position1[0] = r[0] - t[0] * Length;
-    position1[1] = r[1] - t[1] * Length;
-    position1[2] = r[2] - t[2] * Length;
-
-    position2[0] = r[0] + t[0] * Length;
-    position2[1] = r[1] + t[1] * Length;
-    position2[2] = r[2] + t[2] * Length;
-
-    m_thickSlabOverAxialActor->SetPosition(position1[0], position1[1]);
-    m_thickSlabOverAxialActor->SetPosition2(position2[0], position2[1]);
-
-    //We place the drawer points
-
-    double center[3];
-
-    m_sagitalPlaneSource->GetCenter(center);
-    center[2] = 0.0;
-    m_axialViewSagitalCenterDrawerPoint->setPosition(center);
-    m_axialViewSagitalCenterDrawerPoint->update();
-    //m_axial2DView->getDrawer()->draw(m_axialViewSagitalCenterDrawerPoint);
-
-    m_coronalPlaneSource->GetCenter(center);
-    center[2] = 0.0;
-    m_axialViewCoronalCenterDrawerPoint->setPosition(center);
-    m_axialViewCoronalCenterDrawerPoint->update();
-    //m_axial2DView->getDrawer()->draw(m_axialViewCoronalCenterDrawerPoint);
-
-    worldToSagitalTransform->TransformPoint(m_axialPlaneSource->GetCenter(), center);
-    center[2] = 0.0;
-    m_sagitalViewAxialCenterDrawerPoint->setPosition(center);
-    m_sagitalViewAxialCenterDrawerPoint->update();
-    //m_sagital2DView->getDrawer()->draw(m_sagitalViewAxialCenterDrawerPoint);
-
-    worldToSagitalTransform->TransformPoint(m_coronalPlaneSource->GetCenter(), center);
-    center[2] = 0.0;
-    m_sagitalViewCoronalCenterDrawerPoint->setPosition(center);
-    m_sagitalViewCoronalCenterDrawerPoint->update();
-    //m_sagital2DView->getDrawer()->draw(m_sagitalViewCoronalCenterDrawerPoint);
-
-    worldToSagitalTransform->Delete();
-
-    // Let's repaint the scene
-    //m_axial2DView->render();
-    //m_sagital2DView->render();
-    //m_coronal2DView->render();
 }
 
 void QMPR3DExtension::updatePlanes()
 {
-    updatePlane(m_sagitalPlaneSource, m_sagitalReslice, m_sagitalExtentLength);
-    updatePlane(m_coronalPlaneSource, m_coronalReslice, m_coronalExtentLength);
+
 }
 
 void QMPR3DExtension::updatePlane(vtkPlaneSource *planeSource, vtkImageReslice *reslice, int extentLength[2])
 {
-    if (!reslice || !(vtkImageData::SafeDownCast(reslice->GetInput())))
-    {
-        return;
-    }
-
-    //Calculate appropriate pixel spacing for the reslicing
-    double spacing[3];
-    m_volume->getSpacing(spacing);
-
-    int i;
-
-    //     if (this->RestrictPlaneToVolume)
-    //     {
-    double origin[3];
-    m_volume->getOrigin(origin);
-
-    int extent[6];
-    m_volume->getExtent(extent);
-
-    // The order of the data is xmin, xmax, ymin, ymax, zmin and zmax
-    double bounds[] = { origin[0] + spacing[0] * extent[0],
-                        origin[0] + spacing[0] * extent[1],
-                        origin[1] + spacing[1] * extent[2],
-                        origin[1] + spacing[1] * extent[3],
-                        origin[2] + spacing[2] * extent[4],
-                        origin[2] + spacing[2] * extent[5] };
-
-    // Reverse bounds if necessary
-    for (i = 0; i <= 4; i += 2)
-    {
-        if (bounds[i] > bounds[i + 1])
-        {
-            double t = bounds[i + 1];
-            bounds[i + 1] = bounds[i];
-            bounds[i] = t;
-        }
-    }
-
-    double abs_normal[3];
-    planeSource->GetNormal(abs_normal);
-
-    double planeCenter[3];
-    planeSource->GetCenter(planeCenter);
-
-    double nmax = 0.0;
-    int k = 0;
-    for (i = 0; i < 3; i++)
-    {
-        abs_normal[i] = fabs(abs_normal[i]);
-        if (abs_normal[i]>nmax)
-        {
-            nmax = abs_normal[i];
-            k = i;
-        }
-    }
-    // Force the plane to lie within the true image bounds along its normal
-    if (planeCenter[k] > bounds[2 * k + 1])
-    {
-        planeCenter[k] = bounds[2 * k + 1];
-    }
-    else if (planeCenter[k] < bounds[2 * k])
-    {
-        planeCenter[k] = bounds[2 * k];
-    }
-    planeSource->SetCenter(planeCenter);
-    //     }
-
-    double planeAxis1[3];
-    double planeAxis2[3];
-    // We get the vectors
-    planeAxis1[0] = planeSource->GetPoint1()[0] - planeSource->GetOrigin()[0];
-    planeAxis1[1] = planeSource->GetPoint1()[1] - planeSource->GetOrigin()[1];
-    planeAxis1[2] = planeSource->GetPoint1()[2] - planeSource->GetOrigin()[2];
-
-    planeAxis2[0] = planeSource->GetPoint2()[0] - planeSource->GetOrigin()[0];
-    planeAxis2[1] = planeSource->GetPoint2()[1] - planeSource->GetOrigin()[1];
-    planeAxis2[2] = planeSource->GetPoint2()[2] - planeSource->GetOrigin()[2];
-
-    //The x,y dimensions of the plane
-    double planeSizeX = MathTools::normalize(planeAxis1);
-    double planeSizeY = MathTools::normalize(planeAxis2);
-
-    double normal[3];
-    planeSource->GetNormal(normal);
-
-    //Generate the slicing matrix
-    //
-    // It could be a class member, as it was originally, or pass as a parameter
-    vtkMatrix4x4 *resliceAxes = vtkMatrix4x4::New();
-    resliceAxes->Identity();
-    for (i = 0; i < 3; i++)
-    {
-        resliceAxes->SetElement(0, i, planeAxis1[i]);
-        resliceAxes->SetElement(1, i, planeAxis2[i]);
-        resliceAxes->SetElement(2, i, normal[i]);
-    }
-
-    double planeOrigin[4];
-    planeSource->GetOrigin(planeOrigin);
-    planeOrigin[3] = 1.0;
-    double originXYZW[4];
-    resliceAxes->MultiplyPoint(planeOrigin, originXYZW);
-
-    resliceAxes->Transpose();
-    double neworiginXYZW[4];
-    double point[] = { originXYZW[0], originXYZW[1], originXYZW[2], originXYZW[3] };
-    resliceAxes->MultiplyPoint(point, neworiginXYZW);
-
-    resliceAxes->SetElement(0, 3, neworiginXYZW[0]);
-    resliceAxes->SetElement(1, 3, neworiginXYZW[1]);
-    resliceAxes->SetElement(2, 3, neworiginXYZW[2]);
-
-    reslice->SetResliceAxes(resliceAxes);
-
-    resliceAxes->Delete();
-
-    reslice->SetOutputSpacing(planeSizeX / extentLength[0], planeSizeY / extentLength[1], 1.0);
-    reslice->SetOutputOrigin(0.0, 0.0, 0.0);
-    // TODO We pass it thickSlab which is double but this only accepts int's! Find out if this is the right way. Maybe if we want to use doubles
-    // we should combine it with outputSpacing
-    // We get a single slice
-    reslice->SetOutputExtent(0, extentLength[0] - 1, 0, extentLength[1] - 1, 0, static_cast<int>(m_thickSlab));
-    reslice->Update();
+ 
 }
 
 void QMPR3DExtension::getSagitalXVector(double x[3])
 {
-    double *p1 = m_sagitalPlaneSource->GetPoint1();
-    double *o = m_sagitalPlaneSource->GetOrigin();
-    x[0] = p1[0] - o[0];
-    x[1] = p1[1] - o[1];
-    x[2] = p1[2] - o[2];
+   
 }
 
 void QMPR3DExtension::getSagitalYVector(double y[3])
 {
-    double *p1 = m_sagitalPlaneSource->GetPoint2();
-    double *o = m_sagitalPlaneSource->GetOrigin();
-    y[0] = p1[0] - o[0];
-    y[1] = p1[1] - o[1];
-    y[2] = p1[2] - o[2];
+
 }
 
 void QMPR3DExtension::getCoronalXVector(double x[3])
 {
-    double *p1 = m_coronalPlaneSource->GetPoint1();
-    double *o = m_coronalPlaneSource->GetOrigin();
-    x[0] = p1[0] - o[0];
-    x[1] = p1[1] - o[1];
-    x[2] = p1[2] - o[2];
+
 }
 
 void QMPR3DExtension::getAxialXVector(double x[3])
 {
-    double *p1 = m_axialPlaneSource->GetPoint1();
-    double *o = m_axialPlaneSource->GetOrigin();
-    x[0] = p1[0] - o[0];
-    x[1] = p1[1] - o[1];
-    x[2] = p1[2] - o[2];
+
 }
 
 void QMPR3DExtension::getAxialYVector(double y[3])
 {
-    double *p2 = m_axialPlaneSource->GetPoint2();
-    double *o = m_axialPlaneSource->GetOrigin();
-    y[0] = p2[0] - o[0];
-    y[1] = p2[1] - o[1];
-    y[2] = p2[2] - o[2];
+
 }
 void QMPR3DExtension::getCoronalYVector(double y[3])
 {
-    double *p1 = m_coronalPlaneSource->GetPoint2();
-    double *o = m_coronalPlaneSource->GetOrigin();
-    y[0] = p1[0] - o[0];
-    y[1] = p1[1] - o[1];
-    y[2] = p1[2] - o[2];
+
 }
 
 bool QMPR3DExtension::isParallel(double axis[3])
 {
-    QVector3D xyzAxis(1, 0, 0);
-    QVector3D axis3D(axis[0], axis[1], axis[2]);
-    // TODO We should have a MathTools :: areParallel method (vector1, vector2)
-    if (MathTools::angleInDegrees(xyzAxis, axis3D) == 0.0)
-    {
-        return true;
-    }
-    xyzAxis.setX(-1);
-    xyzAxis.setY(0);
-    xyzAxis.setZ(0);
-    if (MathTools::angleInDegrees(xyzAxis, axis3D) == 0.0)
-    {
-        return true;
-    }
-
-    xyzAxis.setX(0);
-    xyzAxis.setY(0);
-    xyzAxis.setZ(1);
-    if (MathTools::angleInDegrees(xyzAxis, axis3D) == 0.0)
-    {
-        return true;
-    }
-    xyzAxis.setX(0);
-    xyzAxis.setY(0);
-    xyzAxis.setZ(-1);
-    if (MathTools::angleInDegrees(xyzAxis, axis3D) == 0.0)
-    {
-        return true;
-    }
-
-    xyzAxis.setX(0);
-    xyzAxis.setY(1);
-    xyzAxis.setZ(0);
-    if (MathTools::angleInDegrees(xyzAxis, axis3D) == 0.0)
-    {
-        return true;
-    }
-    xyzAxis.setX(0);
-    xyzAxis.setY(-1);
-    xyzAxis.setZ(0);
-    if (MathTools::angleInDegrees(xyzAxis, axis3D) == 0.0)
-    {
-        return true;
-    }
-
+  
     return false;
 }
 
 void QMPR3DExtension::rotateMiddle(double degrees, double rotationAxis[3], vtkPlaneSource *plane)
 {
-    //     MathTools::normalize(rotationAxis);
-    m_transform->Identity();
-    m_transform->Translate(plane->GetCenter()[0], plane->GetCenter()[1], plane->GetCenter()[2]);
-    m_transform->RotateWXYZ(degrees, rotationAxis);
-    m_transform->Translate(-plane->GetCenter()[0], -plane->GetCenter()[1], -plane->GetCenter()[2]);
-    //Now that we have the transformation, we apply it to the points of the plane (origin, point1, point2)
-    double newPoint[3];
-    m_transform->TransformPoint(plane->GetPoint1(), newPoint);
-    plane->SetPoint1(newPoint);
-    m_transform->TransformPoint(plane->GetPoint2(), newPoint);
-    plane->SetPoint2(newPoint);
-    m_transform->TransformPoint(plane->GetOrigin(), newPoint);
-    plane->SetOrigin(newPoint);
-    plane->Update();
+
 }
 
 void QMPR3DExtension::updateThickSlab(double value)
 {
-    m_thickSlab = value;
-    m_thickSlabSlider->setValue((int) value);
-    updatePlane(m_coronalPlaneSource, m_coronalReslice, m_coronalExtentLength);
-    updateControls();
+
 }
 
 void QMPR3DExtension::updateThickSlab(int value)
 {
-    m_thickSlab = (double) value;
-    m_thickSlabSpinBox->setValue(m_thickSlab);
-    updatePlane(m_coronalPlaneSource, m_coronalReslice, m_coronalExtentLength);
-    updateControls();
+
 }
 
 void QMPR3DExtension::readSettings()
@@ -1986,41 +1304,10 @@ void QMPR3DExtension::writeSettings()
     settings.saveGeometry(MPR3DSettings::VerticalSplitterGeometry, m_verticalSplitter);
 }
 
-vtkTransform* QMPR3DExtension::getWorldToSagitalTransform() const
-{
-    double sagitalPlaneAxis1[3];
-    double sagitalPlaneAxis2[3];
-    double sagitalPlaneNormal[3];
-    double sagitalPlaneCenter[3];
-    sagitalPlaneAxis1[0] = m_sagitalPlaneSource->GetPoint1()[0] - m_sagitalPlaneSource->GetOrigin()[0];
-    sagitalPlaneAxis1[1] = m_sagitalPlaneSource->GetPoint1()[1] - m_sagitalPlaneSource->GetOrigin()[1];
-    sagitalPlaneAxis1[2] = m_sagitalPlaneSource->GetPoint1()[2] - m_sagitalPlaneSource->GetOrigin()[2];
-    MathTools::normalize(sagitalPlaneAxis1);
-    sagitalPlaneAxis2[0] = m_sagitalPlaneSource->GetPoint2()[0] - m_sagitalPlaneSource->GetOrigin()[0];
-    sagitalPlaneAxis2[1] = m_sagitalPlaneSource->GetPoint2()[1] - m_sagitalPlaneSource->GetOrigin()[1];
-    sagitalPlaneAxis2[2] = m_sagitalPlaneSource->GetPoint2()[2] - m_sagitalPlaneSource->GetOrigin()[2];
-    MathTools::normalize(sagitalPlaneAxis2);
-    m_sagitalPlaneSource->GetNormal(sagitalPlaneNormal);
-    m_sagitalPlaneSource->GetCenter(sagitalPlaneCenter);
-
-    vtkMatrix4x4 *sagitalRotationMatrix = vtkMatrix4x4::New();
-
-    for (int i = 0; i < 3; i++)
-    {
-        sagitalRotationMatrix->SetElement(0, i, sagitalPlaneAxis1[i]);
-        sagitalRotationMatrix->SetElement(1, i, sagitalPlaneAxis2[i]);
-        sagitalRotationMatrix->SetElement(2, i, sagitalPlaneNormal[i]);
-    }
-
-    vtkTransform *sagitalTransform = vtkTransform::New();
-    sagitalTransform->Translate(m_sagitalTranslation);
-    sagitalTransform->Concatenate(sagitalRotationMatrix);
-    sagitalTransform->Translate(-sagitalPlaneCenter[0], -sagitalPlaneCenter[1], -sagitalPlaneCenter[2]);
-
-    sagitalRotationMatrix->Delete();
-
-    return sagitalTransform;
-}
+//vtkTransform* QMPR3DExtension::getWorldToSagitalTransform() const
+//{
+// 
+//}
 
 void QMPR3DExtension::updateInput(Volume *input)
 {
@@ -2056,87 +1343,3 @@ void QMPR3DExtension::updateInput(Volume *input)
 }
 };  // End namespace udg
 
-//void TestMPR3DVTKdata(Volume *volume)
-//{
-//	vtkSmartPointer<vtkImageData> itkImageData = volume->getVtkData();
-//
-//	//定义绘制器；
-//	vtkSmartPointer<vtkRenderer> m_rendererViewer = vtkRenderer::New();//指向指针；
-//	vtkSmartPointer <vtkRenderWindow> m_renderWindow = vtkRenderWindow::New();
-//	m_renderWindow->AddRenderer(m_rendererViewer);
-//
-//	//体数据属性；
-//	vtkSmartPointer <vtkVolumeProperty> m_volumeProperty = vtkVolumeProperty::New();
-//	//m_volumeProperty->SetScalarOpacity(m_transferFunction.vtkOpacityTransferFunction());
-//	//m_volumeProperty->SetColor(m_transferFunction.vtkColorTransferFunction());
-//	//m_volumeProperty->SetGradientOpacity(m_gradientTransform);
-//	m_volumeProperty->SetIndependentComponents(true);
-//	m_volumeProperty->ShadeOn();//应用
-//	m_volumeProperty->SetInterpolationTypeToLinear();//直线间样条插值；
-//	m_volumeProperty->SetAmbient(0.4);//环境光系数；
-//	m_volumeProperty->SetDiffuse(0.69996);//漫反射；
-//	m_volumeProperty->SetSpecular(0.2);
-//	m_volumeProperty->SetSpecularPower(10);//高光强度；
-//	/**/
-//	//光纤映射类型定义：
-//	//Mapper定义,
-//	vtkSmartPointer <vtkSmartVolumeMapper> m_volumeMapper = vtkSmartVolumeMapper::New();
-//	m_volumeMapper->SetInputData(itkImageData);//;cast_file->GetOutput());
-//	m_volumeMapper->SetBlendModeToComposite();
-//	m_volumeMapper->SetRequestedRenderModeToDefault();
-//	vtkSmartPointer <vtkLODProp3D> m_lodProp3D = vtkLODProp3D::New();
-//	m_lodProp3D->AddLOD(m_volumeMapper, m_volumeProperty, 0.0);
-//
-//	vtkSmartPointer <vtkVolume> m_volume = vtkVolume::New();
-//	m_volume->SetMapper(m_volumeMapper);
-//	m_volume->SetProperty(m_volumeProperty);//设置体属性；
-//
-//	//
-//	vtkMatrix4x4 *projectionMatrix = vtkMatrix4x4::New();
-//	projectionMatrix->Identity();
-//	int x[3] = { 1,0,0 };
-//	int y[3] = { 0,1,0 };
-//	int z[3] = { 0,0, 1 };
-//	for (int row = 0; row < 3; row++)
-//	{
-//		projectionMatrix->SetElement(row, 0, x[row]);
-//		projectionMatrix->SetElement(row, 1, y[row]);
-//		projectionMatrix->SetElement(row, 2, z[row]);
-//	}
-//	m_volume->SetUserMatrix(projectionMatrix);
-//	//
-//
-//	vtkSmartPointer <vtkOutlineFilter> m_outlineData = vtkOutlineFilter::New();//线框；
-//	m_outlineData->SetInputData(itkImageData);
-//	vtkSmartPointer <vtkPolyDataMapper> m_mapOutline = vtkPolyDataMapper::New();
-//	m_mapOutline->SetInputConnection(m_outlineData->GetOutputPort());
-//	vtkSmartPointer <vtkActor> m_outline = vtkActor::New();
-//	m_outline->SetMapper(m_mapOutline);
-//	m_outline->GetProperty()->SetColor(0, 0, 0);//背景纯黑色；
-//
-//	m_rendererViewer->AddVolume(m_volume);
-//	m_rendererViewer->AddActor(m_outline);
-//	m_rendererViewer->SetBackground(1, 1, 1);
-//	m_rendererViewer->ResetCamera();
-//	//重设相机的剪切范围；
-//	m_rendererViewer->ResetCameraClippingRange();
-//	m_renderWindow->SetSize(600, 600);
-//
-//	vtkSmartPointer <vtkRenderWindowInteractor> m_renderWindowInteractor = vtkRenderWindowInteractor::New();
-//	m_renderWindowInteractor->SetRenderWindow(m_renderWindow);
-//
-//	//设置相机跟踪模式
-//	vtkSmartPointer <vtkInteractorStyleTrackballCamera> m_interactorstyle = vtkInteractorStyleTrackballCamera::New();
-//	//m_interactorstyle->init();
-//	//m_interactorstyle->setWindowLeve(true);
-//	////m_interactorstyle->setMainwindowsVTKParms(m_volumeProperty, m_renderWindow, m_transferFunction, itkImageData);
-//	//m_interactorstyle->setSaveTransferFunction(m_transferFunction);
-//
-//	m_renderWindowInteractor->SetInteractorStyle(m_interactorstyle);
-//
-//	m_interactorstyle->SetCurrentRenderer(m_rendererViewer);
-//
-//	m_renderWindow->Render();
-//	m_renderWindow->SetWindowName("鼠标左键旋转 右键:WW/WL(ESC还原）|(鼠标中间单击切换)Zoom 鼠标中键移动图像");
-//}
-//

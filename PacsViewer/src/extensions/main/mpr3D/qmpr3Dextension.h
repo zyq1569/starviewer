@@ -138,7 +138,7 @@ private:
     void init();
 
     /// Retorna la tranformació necessària per passar de coordenades de món a coordenades de la vista sagital.
-    vtkTransform* getWorldToSagitalTransform() const;
+    //vtkTransform* getWorldToSagitalTransform() const;
 
 private slots:
     /// Col·loca i ordena les icones i el menú de les eines de ROI segons l'última tool de ROI seleccionada
