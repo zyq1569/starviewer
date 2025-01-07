@@ -208,6 +208,7 @@ void setCornerAnnotations(vtkCornerAnnotation* vtkCornerAnnotation, int Slice, i
 	sliceInfo += QObject::tr("KV: %1 mA: %2 \n").arg(g_dicomKVP).arg(g_dicomXRayTubeCurrent);
 	vtkCornerAnnotation->SetText(2, sliceInfo.toLatin1().constData());
 }
+
 class vtkResliceCursorCallback : public vtkCommand, public QObject
 {
 public:
@@ -1058,6 +1059,7 @@ void QMPR3DExtension::setInput(Volume *input)
 	//---
 	int imageDims[3];
 	double color[3] = { 0, 0, 0 };
+
 	for (int i = 0; i < 3; i++)
 	{
 		m_planeWidget[i] = vtkImagePlaneWidget::New();
@@ -1071,7 +1073,7 @@ void QMPR3DExtension::setInput(Volume *input)
 		m_planeWidget[i]->SetTexturePlaneProperty(ipwProp);
 		m_planeWidget[i]->TextureInterpolateOff();
 		m_planeWidget[i]->SetResliceInterpolateToLinear();
-		//m_planeWidget[i]->SetInputConnection(reader->GetOutputPort());
+		m_planeWidget[i]->SetInputData(imageData);
 
 		m_planeWidget[i]->SetPlaneOrientation(i);
 		m_planeWidget[i]->SetSliceIndex(imageDims[i] / 2);
@@ -1121,7 +1123,7 @@ void QMPR3DExtension::setInput(Volume *input)
 	m_axial2DView->show();
 	m_sagital2DView->show();
 	m_coronal2DView->show();
-	m_mpr2DView->hide();
+
 	//---------------------------------------
 }
 
