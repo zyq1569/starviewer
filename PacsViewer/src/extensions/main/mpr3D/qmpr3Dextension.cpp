@@ -218,23 +218,6 @@ public:
 	}
 	void Execute(vtkObject *caller, unsigned long ev, void *callData) override
 	{
-		//if (ev == vtkResliceCursorRepresentation::WindowLevelling)
-		//{
-		//	vtkResliceCursorWidget *rcw = dynamic_cast<vtkResliceCursorWidget *>(caller);
-		//	if (rcw)
-		//	{
-		//		vtkResliceCursorLineRepresentation *rep = vtkResliceCursorLineRepresentation::SafeDownCast(rcw->GetRepresentation());
-		//		double m_CurrentWL[2];
-		//		rep->GetWindowLevel(m_CurrentWL);
-		//		for (int i = 0; i < 3; i++)
-		//		{
-		//			//int now = m_resliceImageViewer[i]->GetSlice() + 1;
-		//			int max = m_resliceImageViewer[i]->GetSliceMax() + 1;
-		//			setCornerAnnotations(m_cornerAnnotations[i], max, MathTools::roundToNearestInteger(m_CurrentWL[0]), MathTools::roundToNearestInteger(m_CurrentWL[1]));
-		//		}
-		//	}
-		//}
-
 		if (ev == vtkResliceCursorWidget::WindowLevelEvent || ev == vtkCommand::WindowLevelEvent ||	ev == vtkResliceCursorWidget::ResliceThicknessChangedEvent)
 		{
 			//setCornerAnnotations
@@ -370,6 +353,22 @@ void QMPR3DExtension::changeSetWindowLevel()
 QMPR3DExtension::~QMPR3DExtension()
 {
     writeSettings();
+	//-------------
+	for (int i = 0; i < 3; i++)
+	{
+		if (m_resliceImageViewer[i])
+		{
+			m_resliceImageViewer[i]->Delete();
+			m_renderWindow[i]->Delete();
+			m_cornerAnnotations[i]->Delete();
+			m_planeWidget[i]->Delete();
+		}
+	}
+	delete m_VoiLutPresetsToolData;
+	
+	//-------------
+	/*
+
     //Doing this or not seems to free up the same memory thanks to smart pointers
     if (m_sagitalReslice)
     {
@@ -460,7 +459,8 @@ QMPR3DExtension::~QMPR3DExtension()
 	{
 		delete m_VoiLutPresetsToolData;
 	}
-
+	
+	*/
 }
 
 void QMPR3DExtension::on_m_reset_clicked()
@@ -539,6 +539,16 @@ void QMPR3DExtension::init()
 	m_screenshotsExporterToolButton->hide();
 	m_voiLutComboBox2->hide();
 	labelLUT2->hide();
+
+	//-----
+	for (int i = 0; i < 3; i++)
+	{
+		m_resliceImageViewer[i] = nullptr;
+		m_renderWindow[i]       = nullptr;
+		m_cornerAnnotations[i]  = nullptr;
+		m_planeWidget[i]        = nullptr;
+	}
+	m_VoiLutPresetsToolData = nullptr;
 
 }
 
@@ -1134,83 +1144,83 @@ void QMPR3DExtension::initOrientation()
 
 void QMPR3DExtension::createActors()
 {
-	m_sagitalOverAxialAxisActor          = nullptr;
-	m_coronalOverAxialIntersectionAxis   = nullptr;
-	m_coronalOverSagitalIntersectionAxis = nullptr;
-	m_axialOverSagitalIntersectionAxis   = nullptr;
-	m_thickSlabOverAxialActor            = nullptr;
-	m_thickSlabOverSagitalActor          = nullptr;
-
-	return;
-
-    QColor axialColor = QColor::fromRgbF(1.0, 1.0, 0.0);
-    QColor sagitalColor = QColor::fromRgbF(1.0, 0.6, 0.0);
-    QColor coronalColor = QColor::fromRgbF(0.0, 1.0, 1.0);
-
-    // We create the axis actors
-    m_sagitalOverAxialAxisActor = vtkAxisActor2D::New();
-    m_coronalOverAxialIntersectionAxis = vtkAxisActor2D::New();
-    m_coronalOverSagitalIntersectionAxis = vtkAxisActor2D::New();
-    m_axialOverSagitalIntersectionAxis = vtkAxisActor2D::New();
-    m_thickSlabOverAxialActor = vtkAxisActor2D::New();
-    m_thickSlabOverSagitalActor = vtkAxisActor2D::New();
-
-    m_sagitalOverAxialAxisActor->AxisVisibilityOn();
-    m_sagitalOverAxialAxisActor->TickVisibilityOff();
-    m_sagitalOverAxialAxisActor->LabelVisibilityOff();
-    m_sagitalOverAxialAxisActor->TitleVisibilityOff();
-    m_sagitalOverAxialAxisActor->GetProperty()->SetColor(sagitalColor.redF(), sagitalColor.greenF(), sagitalColor.blueF());
-
-    m_coronalOverAxialIntersectionAxis->TickVisibilityOff();
-    m_coronalOverAxialIntersectionAxis->LabelVisibilityOff();
-    m_coronalOverAxialIntersectionAxis->TitleVisibilityOff();
-    m_coronalOverAxialIntersectionAxis->GetProperty()->SetColor(coronalColor.redF(), coronalColor.greenF(), coronalColor.blueF());
-
-    m_coronalOverSagitalIntersectionAxis->AxisVisibilityOn();
-    m_coronalOverSagitalIntersectionAxis->TickVisibilityOff();
-    m_coronalOverSagitalIntersectionAxis->LabelVisibilityOff();
-    m_coronalOverSagitalIntersectionAxis->TitleVisibilityOff();
-    m_coronalOverSagitalIntersectionAxis->GetProperty()->SetColor(coronalColor.redF(), coronalColor.greenF(), coronalColor.blueF());
-
-    m_axialOverSagitalIntersectionAxis->AxisVisibilityOn();
-    m_axialOverSagitalIntersectionAxis->TickVisibilityOff();
-    m_axialOverSagitalIntersectionAxis->LabelVisibilityOff();
-    m_axialOverSagitalIntersectionAxis->TitleVisibilityOff();
-    m_axialOverSagitalIntersectionAxis->GetProperty()->SetColor(axialColor.redF(), axialColor.greenF(), axialColor.blueF());
-
-    ///For now the thickslab lines will be invisible as we cannot do MIPs
-    /// and being superimposed on the lines of the planes have a bad effect
-    m_thickSlabOverAxialActor->AxisVisibilityOff();
-    m_thickSlabOverAxialActor->TickVisibilityOff();
-    m_thickSlabOverAxialActor->LabelVisibilityOff();
-    m_thickSlabOverAxialActor->TitleVisibilityOff();
-    m_thickSlabOverAxialActor->GetProperty()->SetColor(coronalColor.redF(), coronalColor.greenF(), coronalColor.blueF());
-    m_thickSlabOverAxialActor->GetProperty()->SetLineStipplePattern(65280);
-
-    m_thickSlabOverSagitalActor->AxisVisibilityOff();
-    m_thickSlabOverSagitalActor->TickVisibilityOff();
-    m_thickSlabOverSagitalActor->LabelVisibilityOff();
-    m_thickSlabOverSagitalActor->TitleVisibilityOff();
-    m_thickSlabOverSagitalActor->GetProperty()->SetColor(coronalColor.redF(), coronalColor.greenF(), coronalColor.blueF());
-    m_thickSlabOverSagitalActor->GetProperty()->SetLineStipplePattern(65280);
-
-    // We create the drawer points
-
-    m_axialViewSagitalCenterDrawerPoint = new DrawerPoint();
-    m_axialViewSagitalCenterDrawerPoint->increaseReferenceCount();
-    m_axialViewSagitalCenterDrawerPoint->setColor(sagitalColor);
-
-    m_axialViewCoronalCenterDrawerPoint = new DrawerPoint();
-    m_axialViewCoronalCenterDrawerPoint->increaseReferenceCount();
-    m_axialViewCoronalCenterDrawerPoint->setColor(coronalColor);
-
-    m_sagitalViewAxialCenterDrawerPoint = new DrawerPoint();
-    m_sagitalViewAxialCenterDrawerPoint->increaseReferenceCount();
-    m_sagitalViewAxialCenterDrawerPoint->setColor(axialColor);
-
-    m_sagitalViewCoronalCenterDrawerPoint = new DrawerPoint();
-    m_sagitalViewCoronalCenterDrawerPoint->increaseReferenceCount();
-    m_sagitalViewCoronalCenterDrawerPoint->setColor(coronalColor);
+	//m_sagitalOverAxialAxisActor          = nullptr;
+	//m_coronalOverAxialIntersectionAxis   = nullptr;
+	//m_coronalOverSagitalIntersectionAxis = nullptr;
+	//m_axialOverSagitalIntersectionAxis   = nullptr;
+	//m_thickSlabOverAxialActor            = nullptr;
+	//m_thickSlabOverSagitalActor          = nullptr;
+	//
+	//return;
+	//
+    //QColor axialColor = QColor::fromRgbF(1.0, 1.0, 0.0);
+    //QColor sagitalColor = QColor::fromRgbF(1.0, 0.6, 0.0);
+    //QColor coronalColor = QColor::fromRgbF(0.0, 1.0, 1.0);
+	//
+    //// We create the axis actors
+    //m_sagitalOverAxialAxisActor = vtkAxisActor2D::New();
+    //m_coronalOverAxialIntersectionAxis = vtkAxisActor2D::New();
+    //m_coronalOverSagitalIntersectionAxis = vtkAxisActor2D::New();
+    //m_axialOverSagitalIntersectionAxis = vtkAxisActor2D::New();
+    //m_thickSlabOverAxialActor = vtkAxisActor2D::New();
+    //m_thickSlabOverSagitalActor = vtkAxisActor2D::New();
+	//
+    //m_sagitalOverAxialAxisActor->AxisVisibilityOn();
+    //m_sagitalOverAxialAxisActor->TickVisibilityOff();
+    //m_sagitalOverAxialAxisActor->LabelVisibilityOff();
+    //m_sagitalOverAxialAxisActor->TitleVisibilityOff();
+    //m_sagitalOverAxialAxisActor->GetProperty()->SetColor(sagitalColor.redF(), sagitalColor.greenF(), sagitalColor.blueF());
+	//
+    //m_coronalOverAxialIntersectionAxis->TickVisibilityOff();
+    //m_coronalOverAxialIntersectionAxis->LabelVisibilityOff();
+    //m_coronalOverAxialIntersectionAxis->TitleVisibilityOff();
+    //m_coronalOverAxialIntersectionAxis->GetProperty()->SetColor(coronalColor.redF(), coronalColor.greenF(), coronalColor.blueF());
+	//
+    //m_coronalOverSagitalIntersectionAxis->AxisVisibilityOn();
+    //m_coronalOverSagitalIntersectionAxis->TickVisibilityOff();
+    //m_coronalOverSagitalIntersectionAxis->LabelVisibilityOff();
+    //m_coronalOverSagitalIntersectionAxis->TitleVisibilityOff();
+    //m_coronalOverSagitalIntersectionAxis->GetProperty()->SetColor(coronalColor.redF(), coronalColor.greenF(), coronalColor.blueF());
+	//
+    //m_axialOverSagitalIntersectionAxis->AxisVisibilityOn();
+    //m_axialOverSagitalIntersectionAxis->TickVisibilityOff();
+    //m_axialOverSagitalIntersectionAxis->LabelVisibilityOff();
+    //m_axialOverSagitalIntersectionAxis->TitleVisibilityOff();
+    //m_axialOverSagitalIntersectionAxis->GetProperty()->SetColor(axialColor.redF(), axialColor.greenF(), axialColor.blueF());
+	//
+    /////For now the thickslab lines will be invisible as we cannot do MIPs
+    ///// and being superimposed on the lines of the planes have a bad effect
+    //m_thickSlabOverAxialActor->AxisVisibilityOff();
+    //m_thickSlabOverAxialActor->TickVisibilityOff();
+    //m_thickSlabOverAxialActor->LabelVisibilityOff();
+    //m_thickSlabOverAxialActor->TitleVisibilityOff();
+    //m_thickSlabOverAxialActor->GetProperty()->SetColor(coronalColor.redF(), coronalColor.greenF(), coronalColor.blueF());
+    //m_thickSlabOverAxialActor->GetProperty()->SetLineStipplePattern(65280);
+	//
+    //m_thickSlabOverSagitalActor->AxisVisibilityOff();
+    //m_thickSlabOverSagitalActor->TickVisibilityOff();
+    //m_thickSlabOverSagitalActor->LabelVisibilityOff();
+    //m_thickSlabOverSagitalActor->TitleVisibilityOff();
+    //m_thickSlabOverSagitalActor->GetProperty()->SetColor(coronalColor.redF(), coronalColor.greenF(), coronalColor.blueF());
+    //m_thickSlabOverSagitalActor->GetProperty()->SetLineStipplePattern(65280);
+	//
+    //// We create the drawer points
+	//
+    //m_axialViewSagitalCenterDrawerPoint = new DrawerPoint();
+    //m_axialViewSagitalCenterDrawerPoint->increaseReferenceCount();
+    //m_axialViewSagitalCenterDrawerPoint->setColor(sagitalColor);
+	//
+    //m_axialViewCoronalCenterDrawerPoint = new DrawerPoint();
+    //m_axialViewCoronalCenterDrawerPoint->increaseReferenceCount();
+    //m_axialViewCoronalCenterDrawerPoint->setColor(coronalColor);
+	//
+    //m_sagitalViewAxialCenterDrawerPoint = new DrawerPoint();
+    //m_sagitalViewAxialCenterDrawerPoint->increaseReferenceCount();
+    //m_sagitalViewAxialCenterDrawerPoint->setColor(axialColor);
+	//
+    //m_sagitalViewCoronalCenterDrawerPoint = new DrawerPoint();
+    //m_sagitalViewCoronalCenterDrawerPoint->increaseReferenceCount();
+    //m_sagitalViewCoronalCenterDrawerPoint->setColor(coronalColor);
 }
 
 void QMPR3DExtension::axialSliceUpdated(int slice)
