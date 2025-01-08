@@ -1338,6 +1338,17 @@ void QMPR3DExtension::updateInput(Volume *input)
 {
 	if (m_lastInput != input)
 	{
+		///----
+		VoiLutHelper().initializeVoiLutData(m_VoiLutPresetsToolData, input);
+		m_voiLutComboBox->setPresetsData(m_VoiLutPresetsToolData);
+		m_voiLutComboBox->selectPreset(m_VoiLutPresetsToolData->getCurrentPresetName());
+		m_voiLutComboBox->setToolTip(tr("Choose a VOI LUT preset"));
+		VoiLut voiLut = m_VoiLutPresetsToolData->getCurrentPreset();
+		m_CurrentWL[0] = voiLut.getWindowLevel().getWidth();
+		m_CurrentWL[1] = voiLut.getWindowLevel().getCenter();
+		m_DeaultWL[0] = m_CurrentWL[0];
+		m_DeaultWL[1] = m_CurrentWL[1];
+		///----
 		m_lastInput = input;
 		vtkSmartPointer <vtkImageData> imageData = NULL;
 		imageData = m_lastInput->getVtkData();
