@@ -35,7 +35,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A1AE0933-F5F8-3FF0-8F8F-FA57568474AB}</ProjectGuid>
+    <ProjectGuid>{20B1CA86-9BD0-3D9D-9B89-F5E31D0A6CE6}</ProjectGuid>
     <RootNamespace>dicomprint</RootNamespace>
     <Keyword>QtVS_v304</Keyword>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
