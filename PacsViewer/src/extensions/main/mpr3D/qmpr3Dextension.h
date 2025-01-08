@@ -276,7 +276,7 @@ protected:
     vtkCornerAnnotation *m_cornerAnnotations[3];
 	VoiLutPresetsToolData *m_VoiLutPresetsToolData;
 	double m_CurrentWL[2], m_DeaultWL[2];
-
+	vtkSmartPointer< vtkRenderer > m_MPR3DvtkRenderer;
 public:
 	void ResetViews();
 	//20240802

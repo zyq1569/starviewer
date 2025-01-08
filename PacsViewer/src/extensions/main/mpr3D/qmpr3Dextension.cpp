@@ -1060,11 +1060,12 @@ void QMPR3DExtension::setInput(Volume *input)
 	vtkSmartPointer<vtkCellPicker> picker = vtkSmartPointer<vtkCellPicker>::New();
 	picker->SetTolerance(0.005);
 	vtkSmartPointer<vtkProperty> ipwProp = vtkSmartPointer<vtkProperty>::New();
-	vtkSmartPointer< vtkRenderer > ren = vtkSmartPointer< vtkRenderer >::New();
+	//vtkSmartPointer< vtkRenderer > ren = vtkSmartPointer< vtkRenderer >::New();
+	m_MPR3DvtkRenderer = vtkSmartPointer< vtkRenderer >::New();
 	//---
 	vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
 	m_mpr2DView->setRenderWindow(renderWindow);
-	m_mpr2DView->renderWindow()->AddRenderer(ren);
+	m_mpr2DView->renderWindow()->AddRenderer(m_MPR3DvtkRenderer);
 	vtkRenderWindowInteractor* iren = m_mpr2DView->interactor();
 	//---
 	int imageDims[3];
@@ -1088,7 +1089,7 @@ void QMPR3DExtension::setInput(Volume *input)
 		m_planeWidget[i]->SetPlaneOrientation(i);
 		m_planeWidget[i]->SetSliceIndex(imageDims[i] / 2);
 		m_planeWidget[i]->DisplayTextOn();
-		m_planeWidget[i]->SetDefaultRenderer(ren);
+		m_planeWidget[i]->SetDefaultRenderer(m_MPR3DvtkRenderer);
 		m_planeWidget[i]->SetWindowLevel(m_CurrentWL[0], m_CurrentWL[1]);
 		m_planeWidget[i]->On();
 		m_planeWidget[i]->InteractionOn();
@@ -1367,6 +1368,7 @@ void QMPR3DExtension::updateInput(Volume *input)
 		for (int i = 0; i < 3; i++)
 		{
 			m_resliceImageViewer[i]->SetInputData(imageData);
+			m_planeWidget[i]->SetInputData(imageData);
 		}
 		ResetViews();
 		for (int i = 0; i < 3; i++)
@@ -1375,6 +1377,8 @@ void QMPR3DExtension::updateInput(Volume *input)
 			setCornerAnnotations(m_cornerAnnotations[i], max, MathTools::roundToNearestInteger(m_CurrentWL[0]), MathTools::roundToNearestInteger(m_CurrentWL[1]));
 			m_resliceImageViewer[i]->Render();
 		}
+		m_MPR3DvtkRenderer->ResetCamera();
+		m_mpr2DView->renderWindow()->Render();
 	}
 }
 };  // End namespace udg
