@@ -1070,15 +1070,23 @@ void QMPR3DExtension::setInput(Volume *input)
 	//---
 	int imageDims[3];
 	double color[3] = { 0, 0, 0 };
+	double planeColor[3] = { 0, 0, 0 };
 
+	color[0] /= 4.0;
+	color[1] /= 4.0;
+	color[2] /= 4.0;
 	for (int i = 0; i < 3; i++)
 	{
 		m_planeWidget[i] = vtkImagePlaneWidget::New();
 		m_planeWidget[i]->SetInteractor(iren);
 		m_planeWidget[i]->SetPicker(picker);
 		m_planeWidget[i]->RestrictPlaneToVolumeOn();
-		m_planeWidget[i]->GetPlaneProperty()->SetColor(color);
 
+		planeColor[i] = 1;
+		planeColor[0] /= 4.0;
+		planeColor[1] /= 4.0;
+		planeColor[2] /= 4.0;
+		m_planeWidget[i]->GetPlaneProperty()->SetColor(planeColor/*color*/);
 		m_resliceImageViewer[i]->GetRenderer()->SetBackground(color);
 
 		m_planeWidget[i]->SetTexturePlaneProperty(ipwProp);
@@ -1131,9 +1139,19 @@ void QMPR3DExtension::setInput(Volume *input)
 		m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.2);
 		m_resliceImageViewer[i]->Render();
 	}
+	
 	m_axial2DView->show();
 	m_sagital2DView->show();
+
+	QList<int> hlist;
+	//hlist << -1 << m_coronal2DView->height()
+	hlist << m_coronal2DView->height() << 0;
+	m_verticalSplitter1->setSizes(hlist);
 	m_coronal2DView->show();
+	//m_mpr2DView->setWindowFlags(Qt::FramelessWindowHint);
+	//m_mpr2DView->show();
+	//QSize size = m_verticalSplitter1->size();
+	
 
 	//---------------------------------------
 }
@@ -1377,7 +1395,7 @@ void QMPR3DExtension::updateInput(Volume *input)
 			setCornerAnnotations(m_cornerAnnotations[i], max, MathTools::roundToNearestInteger(m_CurrentWL[0]), MathTools::roundToNearestInteger(m_CurrentWL[1]));
 			m_resliceImageViewer[i]->Render();
 		}
-		m_MPR3DvtkRenderer->ResetCamera();
+		//m_MPR3DvtkRenderer->ResetCamera();
 		m_mpr2DView->renderWindow()->Render();
 	}
 }
