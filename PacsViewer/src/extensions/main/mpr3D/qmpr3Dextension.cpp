@@ -518,8 +518,13 @@ void QMPR3DExtension::init()
     m_reset->setIcon(QIcon(":/images/icons/reset-view.svg"));
 	m_reset->setToolTip("reset");
 
+	m_mprLayout->setIcon(QIcon(":/images/icons/MPR/MPRP.svg"));
+	m_mprLayout->setToolTip("mpr3D layout");
+	connect(m_mprLayout, SIGNAL(clicked()), this, SLOT(mprLayout()));
+
 	connect(m_thickMode, SIGNAL(stateChanged(int)), this, SLOT(resliceMode(int)));
 	connect(m_thickModeBox, SIGNAL(currentIndexChanged(int)), this, SLOT(resliceModeComBox(int)));
+	//m_mprLayout
 	m_slicingToolButton->hide();
 	m_zoomToolButton->hide();
 	m_ROIToolButton->hide();
@@ -552,6 +557,20 @@ void QMPR3DExtension::init()
 
 }
 
+void QMPR3DExtension::mprLayout()
+{
+	bool flag = m_verticalSplitter1->widget(1)->isVisible();
+	m_verticalSplitter1->widget(1)->setVisible(!flag);
+	if (!flag)
+	{
+		m_mprLayout->setIcon(QIcon(":/images/icons/MPR/MPR3.svg"));
+		m_mpr2DView->show();
+	}
+	else
+	{
+		m_mprLayout->setIcon(QIcon(":/images/icons/MPR/MPRP.svg"));
+	}
+}
 void QMPR3DExtension::resliceMode(int mode)
 {
     m_thickModeBox->setEnabled(mode);
@@ -1139,21 +1158,14 @@ void QMPR3DExtension::setInput(Volume *input)
 		m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.2);
 		m_resliceImageViewer[i]->Render();
 	}
-	
-	m_axial2DView->show();
-	m_sagital2DView->show();
-
-	QList<int> hlist;
-	//hlist << -1 << m_coronal2DView->height()
-	hlist << m_coronal2DView->height() << 0;
-	m_verticalSplitter1->setSizes(hlist);
-	m_coronal2DView->show();
-	//m_mpr2DView->setWindowFlags(Qt::FramelessWindowHint);
-	//m_mpr2DView->show();
-	//QSize size = m_verticalSplitter1->size();
-	
 
 	//---------------------------------------
+	m_verticalSplitter1->widget(1)->hide();
+	//---------------------------------------
+	m_axial2DView->show();
+	m_sagital2DView->show();
+	m_coronal2DView->show();
+
 }
 
 void QMPR3DExtension::initOrientation()
@@ -1348,11 +1360,6 @@ void QMPR3DExtension::writeSettings()
     settings.saveGeometry(MPR3DSettings::VerticalSplitterGeometry, m_verticalSplitter);
 }
 
-//vtkTransform* QMPR3DExtension::getWorldToSagitalTransform() const
-//{
-// 
-//}
-
 void QMPR3DExtension::updateInput(Volume *input)
 {
 	if (m_lastInput != input)
@@ -1395,7 +1402,8 @@ void QMPR3DExtension::updateInput(Volume *input)
 			setCornerAnnotations(m_cornerAnnotations[i], max, MathTools::roundToNearestInteger(m_CurrentWL[0]), MathTools::roundToNearestInteger(m_CurrentWL[1]));
 			m_resliceImageViewer[i]->Render();
 		}
-		//m_MPR3DvtkRenderer->ResetCamera();
+		//m_verticalSplitter1->widget(1)->setVisible(true);
+		//m_mpr2DView->show();
 		m_mpr2DView->renderWindow()->Render();
 	}
 }

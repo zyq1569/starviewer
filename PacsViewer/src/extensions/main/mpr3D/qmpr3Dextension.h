@@ -285,6 +285,7 @@ public:
 public Q_SLOTS:
 	virtual void resliceMode(int);
 	virtual void resliceModeComBox(int);
+	void mprLayout();
 };
 
 };  // End namespace udg
