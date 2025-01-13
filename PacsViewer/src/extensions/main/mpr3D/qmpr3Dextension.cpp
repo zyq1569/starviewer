@@ -1082,11 +1082,19 @@ void QMPR3DExtension::setInput(Volume *input)
 	//vtkSmartPointer< vtkRenderer > ren = vtkSmartPointer< vtkRenderer >::New();
 	m_MPR3DvtkRenderer = vtkSmartPointer< vtkRenderer >::New();
 	//---
+#ifdef Q2DViewer_mpr2DView
+	//Q2DViewer *m_mpr2DView;
+	m_mpr2DView->getRenderWindow()->AddRenderer(m_MPR3DvtkRenderer);
+	vtkRenderWindowInteractor* iren = m_mpr2DView->getInteractor();
+#else
 	vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
 	m_mpr2DView->setRenderWindow(renderWindow);
 	m_mpr2DView->renderWindow()->AddRenderer(m_MPR3DvtkRenderer);
 	vtkRenderWindowInteractor* iren = m_mpr2DView->interactor();
 	//---
+#endif // Q2DViewer_mpr2DView
+
+
 	int imageDims[3];
 	double color[3] = { 0, 0, 0 };
 	double planeColor[3] = { 0, 0, 0 };
@@ -1404,7 +1412,11 @@ void QMPR3DExtension::updateInput(Volume *input)
 		}
 		//m_verticalSplitter1->widget(1)->setVisible(true);
 		//m_mpr2DView->show();
+#ifdef Q2DViewer_mpr2DView
+		m_mpr2DView->getRenderer()->Render();
+#else
 		m_mpr2DView->renderWindow()->Render();
+#endif
 	}
 }
 };  // End namespace udg
