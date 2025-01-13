@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1352</width>
+    <width>1328</width>
     <height>506</height>
    </rect>
   </property>
@@ -403,6 +403,22 @@
       </widget>
      </item>
      <item>
+      <widget class="QToolButton" name="m_mprLayout">
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="icon">
+        <iconset theme="MPRP.svg"/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QToolButton" name="m_reset">
        <property name="text">
         <string>...</string>
@@ -485,7 +501,7 @@
       <widget class="QWidget" name="layout4">
        <layout class="QVBoxLayout">
         <property name="spacing">
-         <number>6</number>
+         <number>0</number>
         </property>
         <property name="leftMargin">
          <number>0</number>
@@ -502,7 +518,7 @@
         <item>
          <layout class="QHBoxLayout">
           <property name="spacing">
-           <number>6</number>
+           <number>0</number>
           </property>
           <property name="leftMargin">
            <number>0</number>
@@ -533,7 +549,7 @@
       <widget class="QWidget" name="layout9">
        <layout class="QVBoxLayout">
         <property name="spacing">
-         <number>6</number>
+         <number>0</number>
         </property>
         <property name="leftMargin">
          <number>0</number>
@@ -564,10 +580,13 @@
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
+      <property name="childrenCollapsible">
+       <bool>false</bool>
+      </property>
       <widget class="QWidget" name="layout41">
        <layout class="QVBoxLayout">
         <property name="spacing">
-         <number>6</number>
+         <number>0</number>
         </property>
         <property name="leftMargin">
          <number>0</number>
@@ -603,7 +622,7 @@
         <item>
          <widget class="QVTKOpenGLNativeWidget" name="m_coronal2DView" native="true">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -615,7 +634,7 @@
       <widget class="QWidget" name="layout91">
        <layout class="QVBoxLayout">
         <property name="spacing">
-         <number>6</number>
+         <number>0</number>
         </property>
         <property name="leftMargin">
          <number>0</number>
@@ -637,11 +656,17 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
          </widget>
         </item>
        </layout>
       </widget>
-     </widget>	 
+     </widget>
     </widget>
    </item>
   </layout>
