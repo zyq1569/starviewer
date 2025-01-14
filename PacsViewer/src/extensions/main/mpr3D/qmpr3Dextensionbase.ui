@@ -536,7 +536,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QVTKOpenGLNativeWidget" name="m_axial2DView" native="true">
+         <widget class="QVTKRenderWidget" name="m_axial2DView" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -565,7 +565,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QVTKOpenGLNativeWidget" name="m_sagital2DView" native="true">
+         <widget class="QVTKRenderWidget" name="m_sagital2DView" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -621,7 +621,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QVTKOpenGLNativeWidget" name="m_coronal2DView" native="true">
+         <widget class="QVTKRenderWidget" name="m_coronal2DView" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -650,7 +650,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QVTKOpenGLNativeWidget" name="m_mpr2DView" native="true">
+         <widget class="QVTKRenderWidget" name="m_mpr2DView" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -675,9 +675,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>QVTKOpenGLNativeWidget</class>
+   <class>QVTKRenderWidget</class>
    <extends>QWidget</extends>
-   <header>QVTKOpenGLNativeWidget.h</header>
+   <header>QVTKRenderWidget.h</header>
   </customwidget>
   <customwidget>
    <class>udg::QVoiLutComboBox</class>
