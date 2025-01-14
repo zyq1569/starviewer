@@ -32,6 +32,7 @@
 #include "volume.h"
 #include "voilutpresetstooldata.h"
 #include "imageplane.h"
+#include "q3dorientationmarker.h"
 
 // VTK
 #include <vtkAxisActor2D.h>
@@ -329,6 +330,8 @@ QMPR3DExtension::QMPR3DExtension(QWidget *parent): QWidget(parent), m_axialZeroS
     m_viewerInformationToolButton->setToolTip(tr("Show/Hide viewer's textual information"));
     m_voiLutComboBox->setToolTip(tr("Choose a VOI LUT preset"));
 
+	m_orientationMarker = nullptr;
+
 }
 
 void QMPR3DExtension::changeSetWindowLevel()
@@ -366,6 +369,10 @@ QMPR3DExtension::~QMPR3DExtension()
 	}
 	delete m_VoiLutPresetsToolData;
 	
+	if (m_orientationMarker)
+	{
+		delete m_orientationMarker;
+	}
 	//-------------
 	/*
 
@@ -565,6 +572,12 @@ void QMPR3DExtension::mprLayout()
 	{
 		m_mprLayout->setIcon(QIcon(":/images/icons/MPR/MPR3.svg"));
 		m_mpr2DView->show();
+		///why?  .....m_orientationMarker 目前放其它位置 显示不对
+		if (!m_orientationMarker)
+		{
+			m_orientationMarker = new Q3DOrientationMarker(m_mpr2DView->GetInteractor());
+			//m_orientationMarker->setEnabled(true);
+		}
 	}
 	else
 	{

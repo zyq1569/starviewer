@@ -38,6 +38,7 @@ class DrawerPoint;
 class ToolManager;
 class Q3DViewer;
 class Volume;
+class Q3DOrientationMarker;
 
 /**
     Extensió encarregada de fer l'MPR 3D
@@ -281,6 +282,8 @@ public:
 	void ResetViews();
 	//20240802
 	Volume *m_lastInput;
+	/// Widget to see the orientation in MPR3D
+	Q3DOrientationMarker *m_orientationMarker;
 
 public Q_SLOTS:
 	virtual void resliceMode(int);
