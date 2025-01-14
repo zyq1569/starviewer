@@ -1079,7 +1079,6 @@ void QMPR3DExtension::setInput(Volume *input)
 	vtkSmartPointer<vtkCellPicker> picker = vtkSmartPointer<vtkCellPicker>::New();
 	picker->SetTolerance(0.005);
 	vtkSmartPointer<vtkProperty> ipwProp = vtkSmartPointer<vtkProperty>::New();
-	//vtkSmartPointer< vtkRenderer > ren = vtkSmartPointer< vtkRenderer >::New();
 	m_MPR3DvtkRenderer = vtkSmartPointer< vtkRenderer >::New();
 	//---
 #ifdef Q2DViewer_mpr2DView
