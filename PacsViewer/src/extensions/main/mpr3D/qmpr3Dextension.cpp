@@ -1429,6 +1429,11 @@ void QMPR3DExtension::updateInput(Volume *input)
 #else
 		m_mpr2DView->renderWindow()->Render();
 #endif
+		if (!m_verticalSplitter1->widget(1)->isVisible())
+		{
+			m_orientationMarker->SetInteractor(m_mpr2DView->GetInteractor());
+		}
+		
 	}
 }
 };  // End namespace udg
