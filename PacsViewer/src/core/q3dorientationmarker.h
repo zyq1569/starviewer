@@ -37,6 +37,8 @@ public:
     /// Li posem les etiquetes de texte que han d'anar per cada cara del cub
     void setOrientationText(QString right, QString left, QString posterior, QString anterior, QString superior, QString inferior);
 
+	//add 20250115
+	void SetInteractor(vtkRenderWindowInteractor *interactor);
 public slots:
     /// Mètodes per controlar si s'habilita el widget o no
     void setEnabled(bool enable);

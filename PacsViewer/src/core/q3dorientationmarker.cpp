@@ -142,6 +142,51 @@ Q3DOrientationMarker::Q3DOrientationMarker(vtkRenderWindowInteractor *interactor
     assembly->Delete();
 }
 
+void Q3DOrientationMarker::SetInteractor(vtkRenderWindowInteractor *interactor)
+{
+	vtkAxesActor *axes = vtkAxesActor::New();
+	axes->SetShaftTypeToCylinder();
+	// \TODO podríem aplicar una rotació als eixos perquè les anotacions es veiessin en un sistema de mà-esquerra (raf) en comptes de mà-dreta (lph)
+	axes->SetXAxisLabelText("L");
+	axes->SetYAxisLabelText("P");
+	axes->SetZAxisLabelText("H");
+	m_cubeActor->SetZPlusFaceText("S");
+    m_cubeActor->SetZMinusFaceText("I");
+	axes->SetTotalLength(1.5, 1.5, 1.5);
+
+	vtkTextProperty *textProp = vtkTextProperty::New();
+	textProp->ItalicOn();
+	textProp->ShadowOn();
+	textProp->SetFontFamilyToArial();
+	axes->GetXAxisCaptionActor2D()->SetCaptionTextProperty(textProp);
+
+	vtkTextProperty *textProp2 = vtkTextProperty::New();
+	textProp2->ShallowCopy(textProp);
+	axes->GetYAxisCaptionActor2D()->SetCaptionTextProperty(textProp2);
+
+	vtkTextProperty *textProp3 = vtkTextProperty::New();
+	textProp3->ShallowCopy(textProp);
+	axes->GetZAxisCaptionActor2D()->SetCaptionTextProperty(textProp3);
+
+	// Combine the two actors into one with vtkPropAssembly ...
+	//
+	vtkPropAssembly *assembly = vtkPropAssembly::New();
+	assembly->AddPart(m_cubeActor);
+	assembly->AddPart(axes);
+
+
+	m_markerWidget->SetInteractor(interactor);
+	m_markerWidget->SetOutlineColor(0.93, 0.57, 0.13);
+	m_markerWidget->SetOrientationMarker(assembly);
+	m_markerWidget->SetViewport(0.0, 0.0, 0.15, 0.3);
+	m_markerWidget->InteractiveOn();
+
+	axes->Delete();
+	textProp->Delete();
+	textProp2->Delete();
+	textProp3->Delete();
+	assembly->Delete();
+}
 Q3DOrientationMarker::~Q3DOrientationMarker()
 {
     m_cubeActor->Delete();
