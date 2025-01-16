@@ -150,8 +150,6 @@ void Q3DOrientationMarker::SetInteractor(vtkRenderWindowInteractor *interactor)
 	axes->SetXAxisLabelText("L");
 	axes->SetYAxisLabelText("P");
 	axes->SetZAxisLabelText("H");
-	m_cubeActor->SetZPlusFaceText("S");
-    m_cubeActor->SetZMinusFaceText("I");
 	axes->SetTotalLength(1.5, 1.5, 1.5);
 
 	vtkTextProperty *textProp = vtkTextProperty::New();
