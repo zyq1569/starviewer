@@ -28,8 +28,10 @@ const QString PatientOrientation::LeftLabel("L");
 const QString PatientOrientation::RightLabel("R");
 const QString PatientOrientation::PosteriorLabel("P");
 const QString PatientOrientation::AnteriorLabel("A");
-const QString PatientOrientation::HeadLabel("H");
-const QString PatientOrientation::FeetLabel("F");
+//const QString PatientOrientation::HeadLabel("H");
+//const QString PatientOrientation::FeetLabel("F");
+const QString PatientOrientation::HeadLabel("S");
+const QString PatientOrientation::FeetLabel("I");
 
 bool PatientOrientation::setLabels(const QString &rowDirectionLabel, const QString &columnDirectionLabel, const QString &normalDirectionLabel)
 {
