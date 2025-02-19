@@ -179,6 +179,11 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	connect(actionFile, &QAction::triggered, [this] { m_extensionHandler->request(6); });//Open an existing DICOM folder
 	m_mainToolbar->insertSeparator(actionFile);	
 
+	QAction *actionFileMHD = new QAction(QIcon(":/images/file_MHD.png"), "MetaIO Image (*.mhd)", this);
+	m_mainToolbar->addAction(actionFileMHD);
+	connect(actionFileMHD, &QAction::triggered, [this] { m_extensionHandler->request(1); });//Open an existing MetaIO Image(*.mhd)"
+	m_mainToolbar->insertSeparator(actionFileMHD);
+
 	QAction *action3D = new QAction(QIcon(":/images/icons/3D.svg"), "3D Viewer", this);
 	m_mainToolbar->addAction(action3D);
 	connect(action3D, &QAction::triggered, [this] { m_extensionHandler->request("Q3DViewerExtension"); });

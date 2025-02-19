@@ -242,6 +242,7 @@
         <file>images/icons/print.svg</file>
         <file>images/icons/MPR/MPRP.svg</file>
         <file>images/icons/MPR/MPR3.svg</file>
+        <file>images/file_MHD.png</file>
     </qresource>
     <qresource prefix="/fonts"/>
 </RCC>
