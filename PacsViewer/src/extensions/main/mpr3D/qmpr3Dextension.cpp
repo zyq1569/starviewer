@@ -86,6 +86,9 @@ using namespace std;
 #include <QMenu>
 #include <QVector3D>
 
+//
+#define VTKRCP vtkResliceCursorLineRepresentation
+//
 class vtkResliceImageViewerScrollCallback : public vtkCommand
 {
 public:
@@ -210,6 +213,7 @@ void setCornerAnnotations(vtkCornerAnnotation* vtkCornerAnnotation, int Slice, i
 	vtkCornerAnnotation->SetText(2, sliceInfo.toLatin1().constData());
 }
 
+
 class vtkResliceCursorCallback : public vtkCommand, public QObject
 {
 public:
@@ -243,8 +247,139 @@ public:
 			this->IPW[0]->GetInteractor()->GetRenderWindow()->Render();
 			return;
 		}
+        else 
+        if (ev == vtkCommand::MouseMoveEvent && ev != vtkCommand::LeftButtonPressEvent &&
+                ev != vtkCommand::RightButtonPressEvent && ev != vtkCommand::LeftButtonReleaseEvent &&
+                ev != vtkCommand::RightButtonReleaseEvent)
+        {
+            auto interactor = vtkRenderWindowInteractor::SafeDownCast(caller);
+            if (interactor)
+            {
+                // 获取当前交互的窗口和视图
+                vtkRenderWindow* renderWindow        = interactor->GetRenderWindow();
+                vtkResliceImageViewer* currentViewer = nullptr;
 
+                // 遍历你的 vtkResliceImageViewer，找到对应的 Viewer
+                int currentViewerIndex = 0;
+                for (int i = 0; i < 3; ++i)
+                {
+                    if (renderWindow == m_resliceImageViewer[i]->GetRenderWindow())
+                    {
+                        currentViewer = m_resliceImageViewer[i];
+                        currentViewerIndex = i;
+                        break;
+                    }
+                }
 
+                if (currentViewer)
+                {
+                    int x, y;
+                    interactor->GetEventPosition(x, y);
+                    vtkImageData* thickImage = nullptr;
+                    VTKRCP* rep;
+                    vtkImageReslice* reslice;
+                    if (rep = VTKRCP::SafeDownCast(currentViewer->GetResliceCursorWidget()->GetRepresentation()))
+                    {
+                        if (reslice = vtkImageReslice::SafeDownCast(rep->GetReslice()))
+                        {
+                            // default background color is the min value of the image scalar range
+                            reslice->Update();
+                            thickImage = reslice->GetOutput();
+                        }
+                    }
+
+                    if (thickImage)
+                    {
+                        // 屏幕坐标 → 世界坐标
+                        vtkSmartPointer<vtkCoordinate> coord = vtkSmartPointer<vtkCoordinate>::New();
+                        coord->SetCoordinateSystemToDisplay();
+                        coord->SetValue(x, y, 0);
+                        double* worldPos = coord->GetComputedWorldValue(currentViewer->GetRenderer());
+                        //世界坐标 → IJK 图像索引（需要方向矩阵逆变换）
+                        double spacing[3], origin[3];
+                        thickImage->GetSpacing(spacing);
+                        thickImage->GetOrigin(origin);
+                        // 获取方向矩阵（ResliceAxes）并反转
+                        vtkMatrix4x4* axesMatrix = reslice->GetResliceAxes();
+                        vtkSmartPointer<vtkMatrix4x4> inverseAxes = vtkSmartPointer<vtkMatrix4x4>::New();
+                        vtkMatrix4x4::Invert(axesMatrix, inverseAxes);
+                        // 将 world 坐标转为 reslice 坐标（方向反变换）
+                        double reslicePos[4] = { worldPos[0], worldPos[1], worldPos[2], 1.0 };
+                        double localPos[4];
+                        inverseAxes->MultiplyPoint(reslicePos, localPos);
+
+                        // localPos 就是原始体数据坐标系中的位置，转为 IJK
+                        int ijk[3];
+                        for (int i = 0; i < 3; ++i)
+                        {
+                            ijk[i] = static_cast<int>((localPos[i] - origin[i]) / spacing[i] + 0.5);
+                        }
+
+                        // 限定 z = 0，因为是厚切 2D 图像
+                        ijk[2] = 0;
+
+                        if (thickImage->GetScalarPointer(ijk))
+                        {
+                            void* ptr = thickImage->GetScalarPointer(ijk);
+                            // 根据数据类型解析图像值
+                            int scalarType = thickImage->GetScalarType();
+                            float value    = 0.0f;
+                            switch (scalarType)
+                            {
+                                case VTK_CHAR:
+                                {
+                                    value = *(char*)ptr;
+                                    break;
+                                }
+                                case VTK_UNSIGNED_CHAR:
+                                {
+                                    value = *(unsigned char*)ptr;
+                                    break;
+                                }
+                                case VTK_SHORT:
+                                {
+                                    value = *(short*)ptr;
+                                    break;
+                                }
+                                case VTK_UNSIGNED_SHORT:
+                                {
+                                    value = *(unsigned short*)ptr;
+                                    break;
+                                }
+                                case VTK_INT:
+                                {
+                                    value = *(int*)ptr;
+                                    break;
+                                }
+                                case VTK_UNSIGNED_INT:
+                                {
+                                    value = *(unsigned int*)ptr;
+                                    break;
+                                }
+                                case VTK_FLOAT:
+                                {
+                                    value = *(float*)ptr; break;
+                                }
+                                case VTK_DOUBLE:
+                                {
+                                    value = static_cast<float>(*(double*)ptr); break;
+                                }
+
+                                default:
+                                std::cerr << "Error: Unsupported scalar type!" << std::endl;
+                            }
+                            QString grayValue = QObject::tr("HU(%1,%2)%3").arg(x).arg(y).arg(value);
+                            m_cornerAnnotationsGrayValue[currentViewerIndex]->SetText(1, grayValue.toLatin1().constData());
+                        } 
+                        else
+                        {
+                            QString grayValue = "HU(,)";
+                            m_cornerAnnotationsGrayValue[currentViewerIndex]->SetText(1, grayValue.toLatin1().constData());
+                        }
+                    }
+                } 
+            }
+        }
 		vtkImagePlaneWidget* ipw =	dynamic_cast<vtkImagePlaneWidget*>(caller);
 		if (ipw)
 		{
@@ -299,6 +434,7 @@ public:
 	vtkResliceCursorWidget*          RCW[3];
 	vtkMPRResliceImageViewer*        m_resliceImageViewer[3];
 	vtkCornerAnnotation*             m_cornerAnnotations[3];
+    vtkCornerAnnotation*             m_cornerAnnotationsGrayValue[3];
 };
 
 ////有人提问,VTK没有看到好的方法. https://discourse.vtk.org/t/the-picture-of-coronal-planes-left-and-right-is-reversion-in-vtk8-2-0-dicom-mpr/1754/2
@@ -364,6 +500,7 @@ QMPR3DExtension::~QMPR3DExtension()
 			m_resliceImageViewer[i]->Delete();
 			m_renderWindow[i]->Delete();
 			m_cornerAnnotations[i]->Delete();
+            m_cornerAnnotationsGrayValue[i]->Delete();
 			m_planeWidget[i]->Delete();
 		}
 	}
@@ -999,8 +1136,10 @@ void QMPR3DExtension::setInput(Volume *input)
 		m_resliceImageViewer[i]->init(i == 1);
 		m_renderWindow[i] = vtkGenericOpenGLRenderWindow::New();
 		m_resliceImageViewer[i]->SetRenderWindow(m_renderWindow[i]);
-		m_cornerAnnotations[i] = vtkCornerAnnotation::New();
+		m_cornerAnnotations[i]          = vtkCornerAnnotation::New();
+        m_cornerAnnotationsGrayValue[i] = vtkCornerAnnotation::New();
 		m_resliceImageViewer[i]->GetRenderer()->AddViewProp(m_cornerAnnotations[i]);
+        m_resliceImageViewer[i]->GetRenderer()->AddViewProp(m_cornerAnnotationsGrayValue[i]);
 
 	}
 
@@ -1147,8 +1286,9 @@ void QMPR3DExtension::setInput(Volume *input)
 	{
 		cbk->IPW[i] = m_planeWidget[i];
 		cbk->RCW[i] = m_resliceImageViewer[i]->GetResliceCursorWidget();
-		cbk->m_resliceImageViewer[i] = m_resliceImageViewer[i];
-		cbk->m_cornerAnnotations[i]  = m_cornerAnnotations[i];
+		cbk->m_resliceImageViewer[i]         = m_resliceImageViewer[i];
+		cbk->m_cornerAnnotations[i]          = m_cornerAnnotations[i];
+        cbk->m_cornerAnnotationsGrayValue[i] = m_cornerAnnotationsGrayValue[i];
 
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResliceAxesChangedEvent, cbk);
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::WindowLevelEvent, cbk);
@@ -1156,6 +1296,17 @@ void QMPR3DExtension::setInput(Volume *input)
 		m_resliceImageViewer[i]->GetResliceCursorWidget()->AddObserver(vtkResliceCursorWidget::ResetCursorEvent, cbk);
 		m_resliceImageViewer[i]->GetInteractorStyle()->AddObserver(vtkCommand::WindowLevelEvent, cbk);
 		m_resliceImageViewer[i]->AddObserver(vtkResliceImageViewer::SliceChangedEvent, cbk);
+
+        ////+++++++++++++
+        //(ev == vtkCommand::MouseMoveEvent && ev != vtkCommand::LeftButtonPressEvent &&
+        //ev != vtkCommand::RightButtonPressEvent && ev != vtkCommand::LeftButtonReleaseEvent &&
+        //ev != vtkCommand::RightButtonReleaseEvent)
+        m_resliceImageViewer[i]->GetInteractor()->AddObserver(vtkCommand::MouseMoveEvent, cbk);
+        m_resliceImageViewer[i]->GetInteractor()->AddObserver(vtkCommand::LeftButtonPressEvent, cbk);
+        m_resliceImageViewer[i]->GetInteractor()->AddObserver(vtkCommand::RightButtonPressEvent, cbk);
+        m_resliceImageViewer[i]->GetInteractor()->AddObserver(vtkCommand::LeftButtonReleaseEvent, cbk);
+        m_resliceImageViewer[i]->GetInteractor()->AddObserver(vtkCommand::RightButtonReleaseEvent, cbk);
+
 
 		// Make them all share the same color map.
 		m_resliceImageViewer[i]->SetLookupTable(m_resliceImageViewer[0]->GetLookupTable());
