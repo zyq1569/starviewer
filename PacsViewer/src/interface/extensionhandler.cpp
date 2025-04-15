@@ -313,17 +313,19 @@ bool ExtensionHandler::request(const QString &who)
 			QViewer::selectVolume(m_extensionContext.getDefaultVolumeNoLocalizer());
 		}
 		Volume *volume = selVolume ? selVolume : m_extensionContext.getDefaultVolumeNoLocalizer();
-		if (!volume)
-		{
-			QMessageBox::warning(0, "MPR-2DViewer", ("MPR-2D fail: No image is selected!!"));
-			return true;
-		}
-		if (volume->getNumberOfSlicesPerPhase() < 5)
-		{
-			QMessageBox::warning(0, "MPR-2DViewer", ("The selected item :MPR-2D fail!!! images < 5!!"));
-			return true;
-		}
-
+        if (!volume->isMHDImage())
+        {
+		    if (!volume)
+		    {
+			    QMessageBox::warning(0, "MPR-2DViewer", ("MPR-2D fail: No image is selected!!"));
+			    return true;
+		    }
+		    if (volume->getNumberOfSlicesPerPhase() < 5)
+		    {
+			    QMessageBox::warning(0, "MPR-2DViewer", ("The selected item :MPR-2D fail!!! images < 5!!"));
+			    return true;
+		    }
+        }
 	}
     QList<Patient*> Patients;
     Patients<<m_mainApp->getCurrentPatient();

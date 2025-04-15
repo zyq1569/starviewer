@@ -373,7 +373,7 @@ public:
                         } 
                         else
                         {
-                            QString grayValue = "HU(,)";
+                            QString grayValue = QObject::tr("HU(%1,%2)NULL").arg(x).arg(y);
                             m_cornerAnnotationsGrayValue[currentViewerIndex]->SetText(1, grayValue.toLatin1().constData());
                         }
                     }
@@ -1555,7 +1555,7 @@ void QMPR3DExtension::updateInput(Volume *input)
 		ImageFlip->Update();
 		imageData = ImageFlip->GetOutput();
 
-		g_ser = m_lastInput->getSeries()->getSeriesNumber();
+		g_ser  = m_lastInput->getSeries()->getSeriesNumber();
 		g_time = m_lastInput->getSeries()->getDateAsString() + m_lastInput->getSeries()->getTimeAsString();
 		g_institutionName = m_lastInput->getSeries()->getInstitutionName();
 		g_dicomKVP = m_lastInput->getImage(0)->getDICOMKVP();
