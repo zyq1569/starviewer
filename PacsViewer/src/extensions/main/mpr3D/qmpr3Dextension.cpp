@@ -322,7 +322,11 @@ public:
                         {
                             void* ptr = thickImage->GetScalarPointer(ijk);
                             // 根据数据类型解析图像值
-                            int scalarType = thickImage->GetScalarType();
+                            int scalarType = m_scalarType;
+                            if (m_scalarType < 0)
+                            {
+                                m_scalarType = thickImage->GetScalarType();
+                            }
                             float value    = 0.0f;
                             switch (scalarType)
                             {
@@ -428,13 +432,17 @@ public:
 		}
 		this->IPW[0]->GetInteractor()->GetRenderWindow()->Render();
 	}
-	vtkResliceCursorCallback() {}
+    vtkResliceCursorCallback()
+    { 
+        m_scalarType = -1; 
+    }
 public:
 	vtkImagePlaneWidget*             IPW[3];
 	vtkResliceCursorWidget*          RCW[3];
 	vtkMPRResliceImageViewer*        m_resliceImageViewer[3];
 	vtkCornerAnnotation*             m_cornerAnnotations[3];
     vtkCornerAnnotation*             m_cornerAnnotationsGrayValue[3];
+    int                              m_scalarType;
 };
 
 ////有人提问,VTK没有看到好的方法. https://discourse.vtk.org/t/the-picture-of-coronal-planes-left-and-right-is-reversion-in-vtk8-2-0-dicom-mpr/1754/2
