@@ -44,7 +44,7 @@ private:
     /// Inicialitza les opcions de captura segons el tipus de d'estudi. També inicialitza la llista de PACS.
     void initialize();
     /// Captura l'estat actual del visor passat al constructor @sa QExporterTool.
-    vtkSmartPointer<vtkImageData> captureCurrentView();
+    vtkImageData* captureCurrentView();
 
     /// Mètodes utilitzats per la generació de previsualitzacions
     void generateCurrentPreview();

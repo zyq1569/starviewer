@@ -275,17 +275,17 @@ void QExporterTool::generateAndStoreNewSeries()
     this->close();
 }
 
-vtkSmartPointer<vtkImageData> QExporterTool::captureCurrentView()
+vtkImageData* QExporterTool::captureCurrentView()
 {
     vtkSmartPointer<vtkWindowToImageFilter> windowToImageFilter = vtkSmartPointer<vtkWindowToImageFilter>::New();
     windowToImageFilter->SetInput(m_viewer->getRenderWindow());
     windowToImageFilter->Update();
     windowToImageFilter->Modified();
 
-    vtkSmartPointer<vtkImageData> image = vtkSmartPointer<vtkImageData>::New();
-    image->ShallowCopy(windowToImageFilter->GetOutput());
+    //vtkSmartPointer<vtkImageData> image = vtkSmartPointer<vtkImageData>::New();
+    //image->ShallowCopy(windowToImageFilter->GetOutput());
 
-    return image;
+    return windowToImageFilter->GetOutput();
 }
 
 void QExporterTool::currentImageRadioButtonClicked()
@@ -368,14 +368,17 @@ void QExporterTool::generateCurrentPreview()
 void QExporterTool::generatePreview()
 {
     QString path = QString("%1/preview.png").arg(QDir::tempPath());
-    vtkImageWriter *writer = vtkPNGWriter::New();
+    //vtkImageWriter *writer = vtkPNGWriter::New();
+    vtkSmartPointer<vtkPNGWriter> writer = vtkSmartPointer<vtkPNGWriter>::New();
     writer->SetInputData(captureCurrentView());
-    writer->SetFileName(qPrintable(path));
+    std::string str = qPrintable(path);
+    writer->SetFileName(str.c_str());
+    writer->Update();
     writer->Write();
     QPixmap pixmap(path);
     m_previewSliceLabel->setPixmap(pixmap.scaledToWidth(150));
 
-    writer->Delete();
+    //writer->Delete();
 }
 bool QExporterTool::canAllocateEnoughMemory()
 {
