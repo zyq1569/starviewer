@@ -99,6 +99,31 @@ public:
 
 	void Execute(vtkObject*, unsigned long ev, void*) override
 	{
+        if (ev == vtkCommand::KeyPressEvent)
+        {
+            int sign = 0;
+            std::string key = this->Viewer->GetInteractor()->GetKeySym();
+            if (key == "Up")
+            {
+                sign = 1;
+            }
+            else if (key == "Down")
+            {
+                sign = -1;
+            }
+            if (sign != 0)
+            {
+                this->Viewer->IncrementSlice(sign);
+
+                //this->Viewer->SetSlice(this->Viewer->GetSlice() + static_cast<int>(std::round(sign * 1.0)));
+                // Abort further event processing for the scroll.
+                this->SetAbortFlag(1);
+
+            }
+
+        }
+
+
 		if (!this->Viewer->GetSliceScrollOnMouseWheel())
 		{
 			return;
