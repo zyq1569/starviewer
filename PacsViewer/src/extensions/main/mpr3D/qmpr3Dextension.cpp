@@ -99,31 +99,6 @@ public:
 
 	void Execute(vtkObject*, unsigned long ev, void*) override
 	{
-        if (ev == vtkCommand::KeyPressEvent)
-        {
-            int sign = 0;
-            std::string key = this->Viewer->GetInteractor()->GetKeySym();
-            if (key == "Up")
-            {
-                sign = 1;
-            }
-            else if (key == "Down")
-            {
-                sign = -1;
-            }
-            if (sign != 0)
-            {
-                this->Viewer->IncrementSlice(sign);
-
-                //this->Viewer->SetSlice(this->Viewer->GetSlice() + static_cast<int>(std::round(sign * 1.0)));
-                // Abort further event processing for the scroll.
-                this->SetAbortFlag(1);
-
-            }
-
-        }
-
-
 		if (!this->Viewer->GetSliceScrollOnMouseWheel())
 		{
 			return;
@@ -267,9 +242,9 @@ public:
 			// Render everything
 			for (int i = 0; i < 3; i++)
 			{
-				this->RCW[i]->Render();
+				this->m_RCW[i]->Render();
 			}
-			this->IPW[0]->GetInteractor()->GetRenderWindow()->Render();
+			this->m_IPW[0]->GetInteractor()->GetRenderWindow()->Render();
 			return;
 		}
         else 
@@ -430,33 +405,41 @@ public:
             if (key == "Up")
             {
                 currentViewer->IncrementSlice(1);
-                currentViewer->Render();
             }
             else if (key == "Down")
             {
                 currentViewer->IncrementSlice(-1);
-                currentViewer->Render();
             }
         }
+        //else
+        //if (ev == vtkCommand::MouseWheelBackwardEvent)
+        //{
+        //
+        //}
+        //else
+        //if (ev == vtkCommand::MouseWheelForwardEvent)
+        //{
+        //
+        //}
 		vtkImagePlaneWidget* ipw =	dynamic_cast<vtkImagePlaneWidget*>(caller);
 		if (ipw)
 		{
 			double* wl = static_cast<double*>(callData);
 		
-			if (ipw == this->IPW[0])
+			if (ipw == this->m_IPW[0])
 			{
-				this->IPW[1]->SetWindowLevel(wl[0], wl[1], 1);
-				this->IPW[2]->SetWindowLevel(wl[0], wl[1], 1);
+				this->m_IPW[1]->SetWindowLevel(wl[0], wl[1], 1);
+				this->m_IPW[2]->SetWindowLevel(wl[0], wl[1], 1);
 			}
-			else if (ipw == this->IPW[1])
+			else if (ipw == this->m_IPW[1])
 			{
-				this->IPW[0]->SetWindowLevel(wl[0], wl[1], 1);
-				this->IPW[2]->SetWindowLevel(wl[0], wl[1], 1);
+				this->m_IPW[0]->SetWindowLevel(wl[0], wl[1], 1);
+				this->m_IPW[2]->SetWindowLevel(wl[0], wl[1], 1);
 			}
-			else if (ipw == this->IPW[2])
+			else if (ipw == this->m_IPW[2])
 			{
-				this->IPW[0]->SetWindowLevel(wl[0], wl[1], 1);
-				this->IPW[1]->SetWindowLevel(wl[0], wl[1], 1);
+				this->m_IPW[0]->SetWindowLevel(wl[0], wl[1], 1);
+				this->m_IPW[1]->SetWindowLevel(wl[0], wl[1], 1);
 			}
 		}
 
@@ -469,30 +452,30 @@ public:
 			rep->GetResliceCursorActor()->GetCursorAlgorithm()->GetResliceCursor();
 			for (int i = 0; i < 3; i++)
 			{
-				vtkPlaneSource *ps = static_cast<vtkPlaneSource *>(	this->IPW[i]->GetPolyDataAlgorithm());
-				ps->SetOrigin(this->RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetOrigin());
-				ps->SetPoint1(this->RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetPoint1());
-				ps->SetPoint2(this->RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetPoint2());
+				vtkPlaneSource *ps = static_cast<vtkPlaneSource *>(	this->m_IPW[i]->GetPolyDataAlgorithm());
+				ps->SetOrigin(this->m_RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetOrigin());
+				ps->SetPoint1(this->m_RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetPoint1());
+				ps->SetPoint2(this->m_RCW[i]->GetResliceCursorRepresentation()->GetPlaneSource()->GetPoint2());
 		
 				// If the reslice plane has modified, update it on the 3D widget
-				this->IPW[i]->UpdatePlacement();
+				this->m_IPW[i]->UpdatePlacement();
 			}
 		}
 
 		// Render everything
 		for (int i = 0; i < 3; i++)
 		{
-			this->RCW[i]->Render();
+			this->m_RCW[i]->Render();
 		}
-		this->IPW[0]->GetInteractor()->GetRenderWindow()->Render();
+		this->m_IPW[0]->GetInteractor()->GetRenderWindow()->Render();
 	}
     vtkResliceCursorCallback()
     { 
         m_scalarType = -1; 
     }
 public:
-	vtkImagePlaneWidget*             IPW[3];
-	vtkResliceCursorWidget*          RCW[3];
+	vtkImagePlaneWidget*             m_IPW[3];
+	vtkResliceCursorWidget*          m_RCW[3];
 	vtkMPRResliceImageViewer*        m_resliceImageViewer[3];
 	vtkCornerAnnotation*             m_cornerAnnotations[3];
     vtkCornerAnnotation*             m_cornerAnnotationsGrayValue[3];
@@ -1346,8 +1329,8 @@ void QMPR3DExtension::setInput(Volume *input)
 	vtkSmartPointer<vtkResliceCursorCallback> cbk = vtkSmartPointer<vtkResliceCursorCallback>::New();
 	for (int i = 0; i < 3; i++)
 	{
-		cbk->IPW[i] = m_planeWidget[i];
-		cbk->RCW[i] = m_resliceImageViewer[i]->GetResliceCursorWidget();
+		cbk->m_IPW[i] = m_planeWidget[i];
+		cbk->m_RCW[i] = m_resliceImageViewer[i]->GetResliceCursorWidget();
 		cbk->m_resliceImageViewer[i]         = m_resliceImageViewer[i];
 		cbk->m_cornerAnnotations[i]          = m_cornerAnnotations[i];
         cbk->m_cornerAnnotationsGrayValue[i] = m_cornerAnnotationsGrayValue[i];
@@ -1368,8 +1351,10 @@ void QMPR3DExtension::setInput(Volume *input)
         m_resliceImageViewer[i]->GetInteractor()->AddObserver(vtkCommand::RightButtonPressEvent, cbk);
         m_resliceImageViewer[i]->GetInteractor()->AddObserver(vtkCommand::LeftButtonReleaseEvent, cbk);
         m_resliceImageViewer[i]->GetInteractor()->AddObserver(vtkCommand::RightButtonReleaseEvent, cbk);
+        //add ResliceImageViewerScroll
         m_resliceImageViewer[i]->GetInteractor()->AddObserver(vtkCommand::KeyPressEvent, cbk);
-
+        m_resliceImageViewer[i]->GetInteractor()->AddObserver(vtkCommand::MouseWheelBackwardEvent, cbk);
+        m_resliceImageViewer[i]->GetInteractor()->AddObserver(vtkCommand::MouseWheelForwardEvent, cbk);
 
 		// Make them all share the same color map.
 		m_resliceImageViewer[i]->SetLookupTable(m_resliceImageViewer[0]->GetLookupTable());
