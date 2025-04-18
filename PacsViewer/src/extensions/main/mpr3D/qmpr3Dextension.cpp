@@ -409,6 +409,35 @@ public:
                 } 
             }
         }
+        else
+        if (ev == vtkCommand::KeyPressEvent)
+        {
+            auto interactor = vtkRenderWindowInteractor::SafeDownCast(caller);
+            vtkRenderWindow* renderWindow = interactor->GetRenderWindow();
+            vtkResliceImageViewer* currentViewer = nullptr;
+            //找到对应的 Viewer
+            int currentViewerIndex = 0;
+            for (int i = 0; i < 3; ++i)
+            {
+                if (renderWindow == m_resliceImageViewer[i]->GetRenderWindow())
+                {
+                    currentViewer = m_resliceImageViewer[i];
+                    currentViewerIndex = i;
+                    break;
+                }
+            }
+            QString key = currentViewer->GetInteractor()->GetKeySym();
+            if (key == "Up")
+            {
+                currentViewer->IncrementSlice(1);
+                currentViewer->Render();
+            }
+            else if (key == "Down")
+            {
+                currentViewer->IncrementSlice(-1);
+                currentViewer->Render();
+            }
+        }
 		vtkImagePlaneWidget* ipw =	dynamic_cast<vtkImagePlaneWidget*>(caller);
 		if (ipw)
 		{
@@ -1339,6 +1368,7 @@ void QMPR3DExtension::setInput(Volume *input)
         m_resliceImageViewer[i]->GetInteractor()->AddObserver(vtkCommand::RightButtonPressEvent, cbk);
         m_resliceImageViewer[i]->GetInteractor()->AddObserver(vtkCommand::LeftButtonReleaseEvent, cbk);
         m_resliceImageViewer[i]->GetInteractor()->AddObserver(vtkCommand::RightButtonReleaseEvent, cbk);
+        m_resliceImageViewer[i]->GetInteractor()->AddObserver(vtkCommand::KeyPressEvent, cbk);
 
 
 		// Make them all share the same color map.
