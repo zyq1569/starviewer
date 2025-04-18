@@ -25,6 +25,7 @@ class vtkImageReslice;
 class vtkPlaneSource;
 class vtkTransform;
 class vtkMPRResliceImageViewer;
+class vtkResliceImageViewer;
 class vtkGenericOpenGLRenderWindow;
 class vtkImagePlaneWidget;
 class vtkCornerAnnotation;
@@ -271,7 +272,7 @@ private:
     ToolManager *m_toolManager;
 
 protected:
-	vtkMPRResliceImageViewer*        m_resliceImageViewer[3];
+	vtkMPRResliceImageViewer*        m_resliceImageViewer[3];//vtkResliceImageViewer* m_resliceImageViewer[3]; //
 	vtkGenericOpenGLRenderWindow* m_renderWindow[3];
 	vtkImagePlaneWidget*          m_planeWidget[3];
     vtkCornerAnnotation *m_cornerAnnotations[3], *m_cornerAnnotationsGrayValue[3];

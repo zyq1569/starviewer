@@ -146,7 +146,7 @@ public:
 	}
 	void init(bool ChangeSliceScrollOnMouseWheel = false)
 	{
-		this->ScrollCallback = vtkResliceImageViewerScrollCallback::New();
+        this->ScrollCallback = vtkResliceImageViewerScrollCallback::New();
 		this->ScrollCallback->Viewer = this;
 		this->ScrollCallback->ChangeSliceScrollOnMouseWheel(ChangeSliceScrollOnMouseWheel);
 	}
@@ -385,7 +385,7 @@ public:
             }
         }
         else
-        if (ev == vtkCommand::KeyPressEvent)
+        if (ev == vtkCommand::KeyPressEvent || ev == vtkCommand::MouseWheelBackwardEvent || ev == vtkCommand::MouseWheelForwardEvent)
         {
             auto interactor = vtkRenderWindowInteractor::SafeDownCast(caller);
             vtkRenderWindow* renderWindow = interactor->GetRenderWindow();
@@ -402,25 +402,17 @@ public:
                 }
             }
             QString key = currentViewer->GetInteractor()->GetKeySym();
-            if (key == "Up")
-            {
-                currentViewer->IncrementSlice(1);
-            }
-            else if (key == "Down")
+            if     (ev == vtkCommand::MouseWheelBackwardEvent || key == "Down")
             {
                 currentViewer->IncrementSlice(-1);
             }
+            else if(ev == vtkCommand::MouseWheelForwardEvent || key == "Up")
+            {
+                currentViewer->IncrementSlice(1);
+            }
         }
-        //else
-        //if (ev == vtkCommand::MouseWheelBackwardEvent)
-        //{
-        //
-        //}
-        //else
-        //if (ev == vtkCommand::MouseWheelForwardEvent)
-        //{
-        //
-        //}
+        
+        
 		vtkImagePlaneWidget* ipw =	dynamic_cast<vtkImagePlaneWidget*>(caller);
 		if (ipw)
 		{
@@ -476,7 +468,7 @@ public:
 public:
 	vtkImagePlaneWidget*             m_IPW[3];
 	vtkResliceCursorWidget*          m_RCW[3];
-	vtkMPRResliceImageViewer*        m_resliceImageViewer[3];
+	vtkMPRResliceImageViewer*        m_resliceImageViewer[3];//vtkResliceImageViewer*           m_resliceImageViewer[3];
 	vtkCornerAnnotation*             m_cornerAnnotations[3];
     vtkCornerAnnotation*             m_cornerAnnotationsGrayValue[3];
     int                              m_scalarType;
@@ -1177,7 +1169,7 @@ void QMPR3DExtension::setInput(Volume *input)
 	//---------------------------20241105-------------------------------------------------------------------------------
 	for (int i = 0; i < 3; i++)
 	{
-		m_resliceImageViewer[i] = vtkMPRResliceImageViewer::New();
+		m_resliceImageViewer[i] = vtkMPRResliceImageViewer::New();//m_resliceImageViewer[i] = vtkResliceImageViewer::New();
 		m_resliceImageViewer[i]->init(i == 1);
 		m_renderWindow[i] = vtkGenericOpenGLRenderWindow::New();
 		m_resliceImageViewer[i]->SetRenderWindow(m_renderWindow[i]);
