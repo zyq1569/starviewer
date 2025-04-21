@@ -43,13 +43,14 @@
 
 namespace udg {
 
-QExporterTool::QExporterTool(QViewer *viewer, QWidget *parent)
+QExporterTool::QExporterTool(QViewer *viewer, QWidget *parent, QPixmap *pixmap)
 : QDialog(parent)
 {
     Q_ASSERT(viewer);
 
     setupUi(this);
     m_viewer = viewer;
+    m_pixmap = pixmap;
     createConnections();
     initialize();
 }
@@ -277,15 +278,20 @@ void QExporterTool::generateAndStoreNewSeries()
 
 vtkImageData* QExporterTool::captureCurrentView()
 {
+    vtkRenderWindow* vtkwindow = m_viewer->getRenderWindow();
     vtkSmartPointer<vtkWindowToImageFilter> windowToImageFilter = vtkSmartPointer<vtkWindowToImageFilter>::New();
-    windowToImageFilter->SetInput(m_viewer->getRenderWindow());
+    windowToImageFilter->SetInput(vtkwindow);
     windowToImageFilter->Update();
     windowToImageFilter->Modified();
 
-    //vtkSmartPointer<vtkImageData> image = vtkSmartPointer<vtkImageData>::New();
-    //image->ShallowCopy(windowToImageFilter->GetOutput());
-
-    return windowToImageFilter->GetOutput();
+    vtkImageData* imageData = windowToImageFilter->GetOutput();
+    int dim[3] = { 0 };
+    imageData->GetDimensions(dim);
+    if (dim[0] < 1 || dim[1] < 1)
+    {
+        return nullptr;
+    }
+    return imageData;
 }
 
 void QExporterTool::currentImageRadioButtonClicked()
@@ -367,18 +373,24 @@ void QExporterTool::generateCurrentPreview()
 
 void QExporterTool::generatePreview()
 {
-    QString path = QString("%1/preview.png").arg(QDir::tempPath());
-    //vtkImageWriter *writer = vtkPNGWriter::New();
-    vtkSmartPointer<vtkPNGWriter> writer = vtkSmartPointer<vtkPNGWriter>::New();
-    writer->SetInputData(captureCurrentView());
-    std::string str = qPrintable(path);
-    writer->SetFileName(str.c_str());
-    writer->Update();
-    writer->Write();
-    QPixmap pixmap(path);
-    m_previewSliceLabel->setPixmap(pixmap.scaledToWidth(150));
-
-    //writer->Delete();
+    vtkImageData* imageData = captureCurrentView();
+    if (imageData)
+    {
+        QString path = QString("%1/preview.png").arg(QDir::tempPath());
+        vtkImageWriter *writer = vtkPNGWriter::New();
+        writer->SetInputData(imageData);
+        std::string str = qPrintable(path);
+        writer->SetFileName(str.c_str());
+        writer->Update();
+        writer->Write();
+        QPixmap pixmap(path);
+        m_previewSliceLabel->setPixmap(pixmap.scaledToWidth(150));
+        writer->Delete();
+    }
+    else if(m_pixmap)
+    {
+        m_previewSliceLabel->setPixmap(m_pixmap->scaledToWidth(150));
+    }
 }
 bool QExporterTool::canAllocateEnoughMemory()
 {

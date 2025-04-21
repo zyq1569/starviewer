@@ -40,6 +40,9 @@
 #include <vtkCornerAnnotation.h>
 #include <vtkTextActor.h>
 #include <vtkTextProperty.h>
+
+#include<vtkWindowToImageFilter.h>
+#include<vtkPNGWriter.h>
 namespace udg {
 
 Q3DViewerExtension::Q3DViewerExtension(QWidget *parent)
@@ -381,7 +384,7 @@ void Q3DViewerExtension::removeBed()
 void Q3DViewerExtension::setInput(Volume *input)
 {
 	m_lastInput = input;
-    m_input = input;
+    m_input     = input;
     m_3DView->setInput(m_input);
 
 	m_3DView->getRenderer()->AddViewProp(m_cornerAnnotations);
@@ -413,7 +416,7 @@ void Q3DViewerExtension::applyPresetClut(const QString &clutName)
 {
     DEBUG_LOG("applyPresetClut()");
 
-    const QString &fileName = m_clutNameToFileName[clutName];
+    const QString &fileName            = m_clutNameToFileName[clutName];
     TransferFunction *transferFunction = TransferFunctionIO::fromFile(m_clutsDir.absoluteFilePath(QDir::toNativeSeparators(fileName)));
     if (transferFunction)
     {
@@ -586,7 +589,28 @@ void Q3DViewerExtension::applyRenderingStyle(const QModelIndex &index)
 
 void Q3DViewerExtension::showScreenshotsExporterDialog()
 {
-    QExporterTool exporter(m_3DView);
+    vtkSmartPointer<vtkWindowToImageFilter> windowToImageFilter = vtkSmartPointer<vtkWindowToImageFilter>::New();
+    windowToImageFilter->SetInput(m_3DView->getRenderWindow());
+    windowToImageFilter->Update();
+    windowToImageFilter->Modified();
+    
+    vtkImageData* imageData = windowToImageFilter->GetOutput();
+    int dim[3] = { 0 };
+    imageData->GetDimensions(dim);
+    if (dim[0] < 1 || dim[1] < 1)
+    {
+        return ;
+    }
+    
+    QString path = QString("%1/preview.png").arg(QDir::tempPath());
+    vtkSmartPointer<vtkPNGWriter> writer = vtkSmartPointer<vtkPNGWriter>::New();
+    writer->SetInputData(imageData);
+    std::string str = qPrintable(path);
+    writer->SetFileName(str.c_str());
+    writer->Update();
+    writer->Write();
+    QPixmap pixmap(path);
+    QExporterTool exporter(m_3DView,nullptr,&pixmap);
     exporter.exec();
 }
 

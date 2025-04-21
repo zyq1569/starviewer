@@ -33,8 +33,8 @@ class QViewer;
 class QExporterTool : public QDialog, private Ui::QExporterBase {
 Q_OBJECT
 public:
-    /// @pre el viewer no pot ser null
-    QExporterTool(QViewer *viewer, QWidget *parent = 0);
+    /// @the viewer cannot be null. 20250421 QViewer 目前不知传后为何无法获取vtkImageData,估临时增加QPixmap
+    QExporterTool(QViewer *viewer, QWidget *parent = 0, QPixmap *pixmap = nullptr);
 
     ~QExporterTool();
 
@@ -68,6 +68,7 @@ private slots:
 private:
     /// Visor passat en el constructor.
     QViewer *m_viewer;
+    QPixmap *m_pixmap;
 
 };
 
