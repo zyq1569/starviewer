@@ -1069,12 +1069,12 @@ void FitResliceImageToViewer(vtkResliceImageViewer* viewer)
     if (imageAspect > windowAspect)
     {
         double scale = (width / windowAspect) / 2.0;
-        camera->SetParallelScale(scale*1.1);
+        camera->SetParallelScale(scale*1.02);
     }
     else
     {
         double scale = height / 2.0;
-        camera->SetParallelScale(scale*1.1);
+        camera->SetParallelScale(scale*1.02);
     }
     viewer->Render();
 
@@ -1450,7 +1450,6 @@ void QMPR3DExtension::setInput(Volume *input)
 	m_axial2DView->show();
 	m_sagital2DView->show();
 	m_coronal2DView->show();
-
 }
 
 void QMPR3DExtension::initOrientation()
