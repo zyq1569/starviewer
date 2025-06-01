@@ -88,6 +88,7 @@ using namespace std;
 
 //
 #define VTKRCP vtkResliceCursorLineRepresentation
+//20250425:CPR:https://github.com/djelouze/vtkKinship  https://blog.csdn.net/a15005784320/article/details/117248736
 //
 class vtkResliceImageViewerScrollCallback : public vtkCommand
 {
@@ -212,7 +213,6 @@ void setCornerAnnotations(vtkCornerAnnotation* vtkCornerAnnotation, int Slice, i
 	sliceInfo += QObject::tr("KV: %1 mA: %2 \n").arg(g_dicomKVP).arg(g_dicomXRayTubeCurrent);
 	vtkCornerAnnotation->SetText(2, sliceInfo.toLatin1().constData());
 }
-
 
 class vtkResliceCursorCallback : public vtkCommand, public QObject
 {
@@ -1009,6 +1009,76 @@ void QMPR3DExtension::changeSelectedViewer()
 
 }
 
+void FitResliceImageToViewer(vtkResliceImageViewer* viewer);
+void FitResliceImageToViewer(vtkResliceImageViewer* viewer)
+{
+    if (!viewer || !viewer->GetImageActor() || !viewer->GetRenderer())
+        return;
+
+    vtkRenderer*    renderer = viewer->GetRenderer();
+    vtkCamera*      camera   = renderer->GetActiveCamera();
+    vtkImageData*   image    = viewer->GetInput();
+
+    if (!camera || !image)
+    {
+        return;
+    }
+
+    renderer->ResetCamera();
+
+    if (0 == viewer->GetSliceOrientation())
+    {
+        camera->SetViewUp(0, 0, 1); // Z 轴朝上，视角从下看，要反转头朝上
+    }
+    // Step 2: Get window aspect ratio
+    int* winSize = viewer->GetRenderWindow()->GetSize();
+    if (winSize[0] <= 0 || winSize[1] <= 0)
+    {
+        return;
+    }
+    double windowAspect = static_cast<double>(winSize[0]) / static_cast<double>(winSize[1]);
+
+    // Step 3: Get image spacing and extent
+    int extent[6];
+    double spacing[3];
+    image->GetExtent(extent);
+    image->GetSpacing(spacing);
+
+    // Step 4: Compute width and height depending on orientation
+    double width = 1.0, height = 1.0;
+    switch (viewer->GetSliceOrientation())
+    {
+    case vtkResliceImageViewer::SLICE_ORIENTATION_XY:
+        width  = (extent[1] - extent[0] + 1) * spacing[0]; // X
+        height = (extent[3] - extent[2] + 1) * spacing[1]; // Y
+        break;
+    case vtkResliceImageViewer::SLICE_ORIENTATION_XZ:
+        width  = (extent[1] - extent[0] + 1) * spacing[0]; // X
+        height = (extent[5] - extent[4] + 1) * spacing[2]; // Z
+        break;
+    case vtkResliceImageViewer::SLICE_ORIENTATION_YZ:
+        width  = (extent[3] - extent[2] + 1) * spacing[1]; // Y
+        height = (extent[5] - extent[4] + 1) * spacing[2]; // Z
+        break;
+    default:
+        return; // unsupported or oblique orientation
+    }
+
+    // Step 5: Fit parallel scale
+    double imageAspect = width / height;
+    if (imageAspect > windowAspect)
+    {
+        double scale = (width / windowAspect) / 2.0;
+        camera->SetParallelScale(scale*1.1);
+    }
+    else
+    {
+        double scale = height / 2.0;
+        camera->SetParallelScale(scale*1.1);
+    }
+    viewer->Render();
+
+}
 void QMPR3DExtension::ResetViews()
 {
 	m_thickModeBox->setEnabled(0);
@@ -1020,13 +1090,17 @@ void QMPR3DExtension::ResetViews()
 		//m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.6);
 		vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[i]->GetResliceCursorWidget()->GetRepresentation())->SetWindowLevel(m_DeaultWL[0], m_DeaultWL[1]);
 	}
-	for (int i = 0; i < 3; i++)
-	{
-		m_resliceImageViewer[i]->Reset();
-		m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
-		m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.2);
-	}
-	vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(1, PI);
+	//for (int i = 0; i < 3; i++)
+	//{
+	//	m_resliceImageViewer[i]->Reset();
+	//	m_resliceImageViewer[i]->GetRenderer()->ResetCamera();
+	//	m_resliceImageViewer[i]->GetRenderer()->GetActiveCamera()->Zoom(1.2);
+	//}
+    for (int i = 0; i < 3; i++)
+    {
+        FitResliceImageToViewer(m_resliceImageViewer[i]);
+    }
+	//vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(1, PI);
 	for (int i = 0; i < 3; i++)
 	{
 		//
@@ -1171,7 +1245,7 @@ void QMPR3DExtension::setInput(Volume *input)
 	{
 		m_resliceImageViewer[i] = vtkMPRResliceImageViewer::New();//m_resliceImageViewer[i] = vtkResliceImageViewer::New();
 		m_resliceImageViewer[i]->init(i == 1);
-		m_renderWindow[i] = vtkGenericOpenGLRenderWindow::New();
+		m_renderWindow[i]      = vtkGenericOpenGLRenderWindow::New();
 		m_resliceImageViewer[i]->SetRenderWindow(m_renderWindow[i]);
 		m_cornerAnnotations[i]          = vtkCornerAnnotation::New();
         m_cornerAnnotationsGrayValue[i] = vtkCornerAnnotation::New();
