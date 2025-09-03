@@ -31,7 +31,8 @@
 #include <vtkSmartVolumeMapper.h>
 #include <vtkVolume.h>
 #include <vtkVolumeProperty.h>
-
+//#include <vtkMetaImageWriter.h>
+//#include <QCoreApplication>
 #include <QMessageBox>
 namespace udg {
 
@@ -155,10 +156,10 @@ void  Q3DViewer::changevtkImageData(vtkImageData *data)
 
     m_isosurfaceFilter->SetInputData(data);
 }
-//#include <vtkMetaImageReader.h>
-//#include "vtkMetaImageWriter.h"
-//void saveHDMdata(vtkImageData * ImageVTKData, QString DicomDir)
+
+//void saveHDMdata(vtkImageData * ImageVTKData)
 //{
+//    QString DicomDir =  QCoreApplication::applicationDirPath();//"C:/code/VTK91/starviewer/PacsViewer/bin/NewMPR";
 //	vtkImageData * itkImageData = ImageVTKData;
 //	std::string Input_Name = qPrintable(DicomDir);
 //	std::string path = Input_Name + "/3DMetaData.mhd";
@@ -187,7 +188,7 @@ void Q3DViewer::setInput(Volume *volume)
     }
 
     m_mainVolume = volume;
-
+    //saveHDMdata(m_mainVolume->getVtkData());
     // Workaround for vtkSmartVolumeMapper bug (https://gitlab.kitware.com/vtk/vtk/issues/17328)
     m_mainVolume->getVtkData()->Modified();
     m_volumeMapper->SetInputData(m_mainVolume->getVtkData());
@@ -211,6 +212,7 @@ void Q3DViewer::setInput(Volume *volume)
     emit volumeChanged(getMainInput());
 
     unsetCursor();
+    
 }
 
 void Q3DViewer::setBlendMode(const BlendMode &mode)
