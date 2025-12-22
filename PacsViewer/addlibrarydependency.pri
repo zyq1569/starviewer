@@ -6,7 +6,7 @@ defineTest(addLibraryDependency) {
     libraryName = $$3
 
     exists($$directoryName/$$libraryName) {
-        unix:PRE_TARGETDEPS += $$outputDirectoryName/$$libraryName/lib$${libraryName}.a
+        unix:PRE_TARGETDEPS += $$outputDirectoryName/lib$${libraryName}.a
 #        win32:PRE_TARGETDEPS += $$outputDirectoryName/$$libraryName/$${libraryName}.lib
         win32:PRE_TARGETDEPS += $$outputDirectoryName/$${libraryName}.lib
 #        LIBS += -L$$outputDirectoryName/$$libraryName -l$${libraryName}
@@ -21,3 +21,27 @@ defineTest(addLibraryDependency) {
 
     return(true)
 }
+#
+#defineTest(addLibraryDependency) {
+#    libDir = $$2
+#    libName = $$3
+#
+#    unix: {
+#        LIB_FILE = $$libDir/lib$${libName}.a
+#    }
+#    win32: {
+#        LIB_FILE = $$libDir/$${libName}.lib
+#    }
+#
+#    # 如果库文件存在，则加入依赖
+#    exists($$LIB_FILE) {
+#        PRE_TARGETDEPS += $$LIB_FILE
+#        LIBS += -L$${libDir} -l$${libName}
+#        INCLUDEPATH += $$1/$$3
+#    }
+#
+#    export(PRE_TARGETDEPS)
+#    export(LIBS)
+#    export(INCLUDEPATH)
+#    return(true)
+#}
