@@ -2,17 +2,43 @@ include(defaultdirectories.pri)
 
 INCLUDEPATH +=  $${DCMTKINCLUDEDIR} \
                 $${DCMTKINCLUDEDIR}/../ \
-                $${DCMTKINCLUDEDIR}/dcmdata/ \
-                $${DCMTKINCLUDEDIR}/dcmimgle/ \
-                $${DCMTKINCLUDEDIR}/dcmnet/ \
-                $${DCMTKINCLUDEDIR}/dcmsign/ \
-                $${DCMTKINCLUDEDIR}/ofstd/ \
-                $${DCMTKINCLUDEDIR}/oflog/ \
-                $${DCMTKINCLUDEDIR}/dcmimage/ \
-                $${DCMTKINCLUDEDIR}/config \
-                $${DCMTKINCLUDEDIR}/dcmpstat \
-                $${DCMTKINCLUDEDIR}/dcmsr \
-                $${DCMTKINCLUDEDIR}/dcmjpeg
+                $${DCMTKINCLUDEDIR}/dcmdata/include/ \
+                $${DCMTKINCLUDEDIR}/dcmimgle/include/ \
+                $${DCMTKINCLUDEDIR}/dcmnet/include/ \
+                $${DCMTKINCLUDEDIR}/dcmsign/include/ \
+                $${DCMTKINCLUDEDIR}/ofstd/include/ \
+                $${DCMTKINCLUDEDIR}/oflog/include/ \
+                $${DCMTKINCLUDEDIR}/dcmimage/include/ \
+                $${DCMTKINCLUDEDIR}/config/include/  \
+                $${DCMTKINCLUDEDIR}/dcmpstat/include/ \
+                $${DCMTKINCLUDEDIR}/dcmsr/include/ \
+                $${DCMTKINCLUDEDIR}/dcmjpeg/include/ \
+                $${DCMTKINCLUDEDIR}/dcmjpls/include/ \
+                $${DCMTKINCLUDEDIR}/dcmqrdb/include/ \
+                $${DCMTKINCLUDEDIR}/dcmdata/include/dcmtk/dcmdata/ \
+                $${DCMTKINCLUDEDIR}/dcmimgle/include/dcmtk/dcmimgle/ \
+                $${DCMTKINCLUDEDIR}/dcmnet/include/dcmtk/dcmnet/ \
+                $${DCMTKINCLUDEDIR}/dcmsign/include/dcmtk/dcmsign/ \
+                $${DCMTKINCLUDEDIR}/ofstd/include/dcmtk/ofstd \
+                $${DCMTKINCLUDEDIR}/oflog/include/dcmtk/oflog/ \
+                $${DCMTKINCLUDEDIR}/dcmimage/include/dcmtk/dcmimage/ \
+                $${DCMTKINCLUDEDIR}/config/include/dcmtk/config/ \
+                $${DCMTKINCLUDEDIR}/dcmpstat/include/dcmtk/dcmpstat/ \
+                $${DCMTKINCLUDEDIR}/dcmsr/include/dcmtk/dcmsr/ \
+                $${DCMTKINCLUDEDIR}/dcmjpeg/include/dcmtk/dcmjpeg/ \
+                $${DCMTKINCLUDEDIR}/dcmdata/include/dcmtk/ \
+                $${DCMTKINCLUDEDIR}/dcmimgle/include/dcmtk/ \
+                $${DCMTKINCLUDEDIR}/dcmnet/include/dcmtk/ \
+                $${DCMTKINCLUDEDIR}/dcmsign/include/dcmtk/ \
+                $${DCMTKINCLUDEDIR}/ofstd/include/dcmtk/\
+                $${DCMTKINCLUDEDIR}/oflog/include/dcmtk/ \
+                $${DCMTKINCLUDEDIR}/dcmimage/include/dcmtk/ \
+                $${DCMTKINCLUDEDIR}/config/include/dcmtk/ \
+                $${DCMTKINCLUDEDIR}/dcmpstat/include/dcmtk/ \
+                $${DCMTKINCLUDEDIR}/dcmsr/include/dcmtk/ \
+                $${DCMTKINCLUDEDIR}/dcmjpeg/include/dcmtk/ \
+                $${DCMTKINCLUDEDIR}/dcmjpls/include/dcmtk/
+
 
 LIBS += -L$${DCMTKLIBDIR} \
         -ldcmpstat \
@@ -34,7 +60,7 @@ LIBS += -L$${DCMTKLIBDIR} \
 
 unix {
         DEFINES += HAVE_CONFIG_H
-        LIBS += -lz
+        LIBS += -lz   -liconv
 }
 
 unix:!macx {

@@ -32,6 +32,7 @@ INCLUDEPATH +=  $${GDCMINCLUDEDIR} \
 LIBS += -L$${GDCMLIBDIR} \
         -lgdcmcharls \
 #        -lgdcmCommon \
+        -lgdcmuuid \
         -lgdcmDICT \
         -lgdcmDSED \
         -lgdcmexpat \
@@ -40,8 +41,9 @@ LIBS += -L$${GDCMLIBDIR} \
         -lgdcmjpeg12 \
         -lgdcmjpeg16 \
         -lgdcmMSFF \
-        -lgdcmopenjp2 \
-        -lvtkgdcm
+        -lgdcmopenjp2
+#        \
+#        -lvtkgdcm
 
 win32 {
     LIBS += -lgdcmgetopt -lgdcmzlib

@@ -101,10 +101,12 @@ INCLUDEPATH +=  $${VTKINCLUDEDIR} \
                 $${VTKINCLUDEDIR}/Rendering/Qt/ \
                 $${VTKINCLUDEDIR}/Rendering/SceneGraph/ \
                 $${VTKINCLUDEDIR}/Rendering/Tk/ \
+                $${VTKINCLUDEDIR}/Rendering/UI/ \
                 $${VTKINCLUDEDIR}/Rendering/Volume/ \
                 $${VTKINCLUDEDIR}/Rendering/VolumeAMR/ \
                 $${VTKINCLUDEDIR}/Rendering/VolumeOpenGL/ \
                 $${VTKINCLUDEDIR}/Rendering/VolumeOpenGL2/ \
+                $${VTKINCLUDEDIR}/Rendering/HyperTreeGrid/ \
                 $${VTKINCLUDEDIR}/Filters/Core/ \
                 $${VTKINCLUDEDIR}/Filters/Extraction/ \
                 $${VTKINCLUDEDIR}/Filters/FlowPaths/ \
@@ -140,7 +142,9 @@ INCLUDEPATH +=  $${VTKINCLUDEDIR} \
                 $${VTKINCLUDEDIR}/Interaction/Widgets/ \
                 $${VTKINCLUDEDIR}/Interaction/Style/ \
                 $${VTKINCLUDEDIR}/Interaction/Image/ \
-                $${VTKINCLUDEDIR}/Filters/Verdict/
+                $${VTKINCLUDEDIR}/Filters/Verdict/ \
+                $${VTKINCLUDEDIR}/ThirdParty/nlohmannjson/ \
+                $${VTKINCLUDEDIR}/Utilities/KWSys/
  #               $${VTKINCLUDEDIR}/Filters/Verdict/ \\
                 #$${VTKINCLUDEDIR_VC}/more/ \
                 #$${VTKINCLUDEDIR_VC}/Common/Core/ \
@@ -280,47 +284,141 @@ INCLUDEPATH +=  $${VTKINCLUDEDIR} \
                 #$${VTKINCLUDEDIR_VC}/Interaction/Image/ \
                 #$${VTKINCLUDEDIR_VC}/Filters/Verdict
 
-VTKLIBSUFFIX = -8.2
+VTKLIBSUFFIX = -9.4.a
 VTKLIBS = \
-            vtkCommonCore                 \
-            vtkCommonDataModel            \
+#            vtkCommonCore                 \
+#            vtkCommonDataModel            \
+#            vtkCommonExecutionModel       \
+#            vtkCommonMath                 \
+#            vtkCommonMisc                 \
+#            vtkCommonSystem               \
+#            vtkCommonTransforms           \
+#            vtkFiltersCore                \
+#            vtkFiltersGeneral             \
+#            vtkFiltersSources             \
+#            vtkGUISupportQt               \
+#            vtkImagingCore                \
+#            vtkImagingGeneral             \
+#            vtkImagingHybrid              \
+#            vtkImagingMath                \
+#            vtkInteractionStyle           \
+#            vtkInteractionWidgets         \
+#            vtkIOImage                    \
+#            vtkRenderingAnnotation        \
+#            vtkRenderingCore              \
+#            vtkRenderingFreeType          \
+#            vtkRenderingImage             \
+#            vtkRenderingOpenGL2           \
+#            vtkRenderingVolume            \
+#            vtkRenderingVolumeOpenGL2     \
+#            vtksys                        \
+#            vtktiff                       \
+#            vtkjpeg                       \
+#            vtkpng                        \
+#            vtkmetaio                     \
+#            #vtkglew                       \
+#            vtkfreetype                   \
+#            vtkFiltersGeometry            \
+#            vtkCommonColor                \
+#            vtkzlib                       \
+#            vtkglad                 \
+#            vtkChartsCore
+#
+#
+            vtkCommonCore                                  \
+            vtkCommonDataModel                        \
             vtkCommonExecutionModel       \
-            vtkCommonMath                 \
-            vtkCommonMisc                 \
-            vtkCommonSystem               \
             vtkCommonTransforms           \
-            vtkFiltersCore                \
-            vtkFiltersGeneral             \
-            vtkFiltersSources             \
-            vtkGUISupportQt               \
-            vtkImagingCore                \
-            vtkImagingGeneral             \
-            vtkImagingHybrid              \
-            vtkImagingMath                \
-            vtkInteractionStyle           \
-            vtkInteractionWidgets         \
-            vtkIOImage                    \
-            vtkRenderingAnnotation        \
+            vtkCommonComputationalGeometry   \
+            vtkFiltersCore                          \
+            vtkFiltersModeling          \
             vtkRenderingCore              \
             vtkRenderingFreeType          \
-            vtkRenderingImage             \
             vtkRenderingOpenGL2           \
+            vtkRenderingUI                         \
+            vtkInteractionStyle           \
+            vtkInteractionWidgets            \
+            vtkCommonMath                 \
+            vtkCommonMisc                 \
+            vtkCommonColor   \
+            vtkCommonSystem               \
+            vtkFiltersGeneral             \
+            vtkFiltersSources             \
+            vtkFiltersExtraction           \
+            vtkFiltersStatistics              \
+            vtkVerdict             \
+            vtkFiltersGeometry              \
+            vtkFiltersTexture                 \
+            vtkFiltersCellGrid                    \
+            vtkGUISupportQt               \
+            vtkDICOMParser                  \
+            vtkImagingCore                \
+            vtkImagingGeneral             \
+            vtkglad                           \
+            vtkImagingHybrid              \
+            vtkParallelDIY                  \
+            vtkImagingMath                \
+            vtkInteractionImage        \
+            vtkImagingGeneral        \
+            vtkIOImage                    \
+            vtkIOCore                    \
+            vtkIOXML                                \
+            vtkIOXMLParser                     \
+            vtkRenderingAnnotation        \
+            vtkRenderingImage             \
             vtkRenderingVolume            \
             vtkRenderingVolumeOpenGL2     \
-            vtksys                        \
+            vtkRenderingContext2D  \
+            vtkRenderingHyperTreeGrid        \
+            vtkpugixml                \
+            vtksys          \
             vtktiff                       \
             vtkjpeg                       \
             vtkpng                        \
             vtkmetaio                     \
-            vtkglew                       \
+            vtkIOLegacy                  \
+            vtkIOCellGrid                  \
+            #vtkglew                       \
+            vtkImagingColor             \
             vtkfreetype                   \
             vtkFiltersGeometry            \
+            vtkFiltersReduction            \
+            vtkFiltersHyperTree               \
+            vtkFiltersVerdict                      \
             vtkCommonColor                \
             vtkzlib                       \
-            vtkChartsCore
+            vtktoken                   \
+            vtkChartsCore   \
+            vtkIOCore  \
+            vtkpugixml  \
+            vtkdoubleconversion  \
+            vtkFiltersGeneral  \
+            vtkFiltersModeling  \
+            vtkFiltersHybrid  \
+            vtkImagingSources  \
+            vtkParallelCore  \
+            vtkParallelDIY  \
+            vtkImagingGeneral  \
+            vtkFiltersExtraction           \
+            vtkpugixml   \
+            vtkdoubleconversion  \
+            vtkInfovisCore             \
+            vtkloguru  \           # 解决所有 vtkloguru::xxx
+            vtkfmt  \              # 解决 vtkfmt::vformat
+            vtkkissfft  \          # 解决 _vtkkissfft_fft 等
+            vtklz4  \              # 解决 _vtklz4_LZ4_xxx
+            vtklzma  \             # 解决 _vtklzma_xxx
+            vtkexpat  \            # vtkXMLParser 依赖 expat（最关键！）
+            vtkzlib               # zlib 压缩
+
+#LIBS += -L$${VTKLIBDIR}
+#
+#for(lib, VTKLIBS) {
+#    LIBS += -l$${lib}$${VTKLIBSUFFIX}
+#}
 
 LIBS += -L$${VTKLIBDIR}
 
 for(lib, VTKLIBS) {
-    LIBS += -l$${lib}$${VTKLIBSUFFIX}
+    LIBS += -Wl,-force_load,$${VTKLIBDIR}$${lib}$${VTKLIBSUFFIX}
 }
