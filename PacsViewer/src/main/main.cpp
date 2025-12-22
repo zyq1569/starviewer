@@ -132,10 +132,10 @@ void sendToFirstStarviewerInstanceCommandLineOptions(QtSingleApplication &app)
 /// 20220907 影像服务端考虑将存储以时间段为目录存储,这样出现查询studyuid时间，后台需要先查找时间值
 /// 20220909 增加参数判断，如果MHealthReport 启动，第一次窗体隐藏
 ///
-///
+#ifdef Q_OS_MAC
 #include <QSurfaceFormat>
 #include <QVTKOpenGLNativeWidget.h>
-
+#endif
 int main(int argc, char *argv[])
 {
 #ifdef Q_OS_MAC
