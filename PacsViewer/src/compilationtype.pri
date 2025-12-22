@@ -1,4 +1,4 @@
-CONFIG += debug_and_release c++11
+CONFIG += debug_and_release c++14
 
 # Use gold linker
 linux:QMAKE_LFLAGS += -fuse-ld=gold

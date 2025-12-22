@@ -32,7 +32,7 @@
 #include "dcmtk/ofstd/offile.h"      /* for class OFFile */
 #include "dcmtk/ofstd/ofbmanip.h"
 
-#define INCLUDE_CMATH
+//#define INCLUDE_CMATH
 #include "dcmtk/ofstd/ofstdinc.h"
 
 // dcmdata includes
@@ -113,7 +113,7 @@ OFCondition DJPEG2KEncoderBase::decode(
 	DcmPixelSequence * /* pixSeq */,
 	DcmPolymorphOBOW& /* uncompressedPixelData */,
 	const DcmCodecParameter * /* cp */,
-	const DcmStack& /* objStack */) const
+    const DcmStack& /* objStack */) const
 {
 	// we are an encoder only
 	return EC_IllegalCall;

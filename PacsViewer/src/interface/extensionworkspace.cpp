@@ -57,13 +57,14 @@ void ExtensionWorkspace::setDarkBackgroundColorEnabled(bool enabled)
         //    this->setStyleSheet(textStream.readAll());
         //    file.close();
         //}
-		this->setStyleSheet("background-color:rgb(30,30,30)}");
+        this->setStyleSheet("background-color:rgb(30,30,30)}");
 		//this->setStyleSheet("QTabWidget::pane{border:none;}");
 		//this->setStyleSheet("background-color:lightgray}");
     }
     else
     {
-        this->setStyleSheet("");
+        this->setStyleSheet("background-color:lightgray}");
+        //this->setStyleSheet("");
     }
 }
 

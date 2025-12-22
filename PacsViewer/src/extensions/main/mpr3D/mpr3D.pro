@@ -13,7 +13,8 @@ SOURCES += qmpr3Dextension.cpp \
            mpr3Dsettings.cpp \
            mpr3Dextensionmediator.cpp
 
-RESOURCES += mpr3D.qrc
+RESOURCES += \
+    ../mpr3D/mpr3d.qrc
 
 EXTENSION_DIR = $$PWD
 include(../../basicconfextensions.pri)

@@ -88,6 +88,9 @@ void ObscuranceMainThread::stop()
 
 void ObscuranceMainThread::run()
 {
+#ifdef Q_OS_MAC
+
+#else
     Q_ASSERT(m_volume);
 
     m_stopped = false;
@@ -253,7 +256,7 @@ void ObscuranceMainThread::run()
     }
 
     m_obscurance->normalize();
-
+#endif
     emit computed();
 }
 
