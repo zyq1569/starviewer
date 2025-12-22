@@ -749,7 +749,7 @@ void QMPR3DExtension::mprLayout()
 		///why?  .....m_orientationMarker 目前放其它位置 显示不对
 		if (!m_orientationMarker)
 		{
-            m_orientationMarker = new Q3DOrientationMarker(m_mpr2DView->interactor());
+			m_orientationMarker = new Q3DOrientationMarker(m_mpr2DView->GetInteractor());
 			//m_orientationMarker->setEnabled(true);
 		}
 	}
@@ -1100,7 +1100,7 @@ void QMPR3DExtension::ResetViews()
     {
         FitResliceImageToViewer(m_resliceImageViewer[i]);
     }
-    //vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(1, PI);
+	//vtkResliceCursorLineRepresentation::SafeDownCast(m_resliceImageViewer[2]->GetResliceCursorWidget()->GetRepresentation())->UserRotateAxis(1, PI);
 	for (int i = 0; i < 3; i++)
 	{
 		//
@@ -1254,7 +1254,7 @@ void QMPR3DExtension::setInput(Volume *input)
 
 	}
 
-//#ifdef VTK94
+#ifdef VTK94
 	m_sagital2DView->setRenderWindow(m_resliceImageViewer[0]->GetRenderWindow());
 	m_resliceImageViewer[0]->SetupInteractor(m_sagital2DView->renderWindow()->GetInteractor());
 
@@ -1263,16 +1263,16 @@ void QMPR3DExtension::setInput(Volume *input)
 
 	m_axial2DView->setRenderWindow(m_resliceImageViewer[2]->GetRenderWindow());
 	m_resliceImageViewer[2]->SetupInteractor(m_axial2DView->renderWindow()->GetInteractor());
-//#else
-//	m_sagital2DView->SetRenderWindow(m_resliceImageViewer[0]->GetRenderWindow());
-//	m_resliceImageViewer[0]->SetupInteractor(m_sagital2DView->GetRenderWindow()->GetInteractor());
-//
-//	m_coronal2DView->SetRenderWindow(m_resliceImageViewer[1]->GetRenderWindow());
-//	m_resliceImageViewer[1]->SetupInteractor(m_coronal2DView->GetRenderWindow()->GetInteractor());
-//
-//	m_axial2DView->SetRenderWindow(m_resliceImageViewer[2]->GetRenderWindow());
-//	m_resliceImageViewer[2]->SetupInteractor(m_axial2DView->GetRenderWindow()->GetInteractor());
-//#endif // VTK94
+#else
+	m_sagital2DView->SetRenderWindow(m_resliceImageViewer[0]->GetRenderWindow());
+	m_resliceImageViewer[0]->SetupInteractor(m_sagital2DView->GetRenderWindow()->GetInteractor());
+
+	m_coronal2DView->SetRenderWindow(m_resliceImageViewer[1]->GetRenderWindow());
+	m_resliceImageViewer[1]->SetupInteractor(m_coronal2DView->GetRenderWindow()->GetInteractor());
+
+	m_axial2DView->SetRenderWindow(m_resliceImageViewer[2]->GetRenderWindow());
+	m_resliceImageViewer[2]->SetupInteractor(m_axial2DView->GetRenderWindow()->GetInteractor());
+#endif // VTK94
 
 	m_lastInput = selVolume;
 	Volume * vl = selVolume;
@@ -1695,7 +1695,7 @@ void QMPR3DExtension::updateInput(Volume *input)
 #endif
 		if (!m_verticalSplitter1->widget(1)->isVisible())
 		{
-            m_orientationMarker->SetInteractor(m_mpr2DView->interactor());
+			m_orientationMarker->SetInteractor(m_mpr2DView->GetInteractor());
 		}
 		
 	}

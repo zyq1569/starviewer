@@ -54,7 +54,7 @@
 #if VTK_90
 
 #else
-//#include <QVTKWidget.h>
+#include <QVTKWidget.h>
 #endif // VTK_Ver
 #include <vtkWindowToImageFilter.h>
 #include <vtkImageProperty.h>

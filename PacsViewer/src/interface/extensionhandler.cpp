@@ -81,7 +81,6 @@ ExtensionHandler::ExtensionHandler(QApplicationMainWindow *mainApp, QObject *par
 
 
     ///-----------20201207---------
-#ifndef Q_OS_MAC
     m_httpclient = NULL;
     m_localserver =  new QLocalServer(this);
     connect(m_localserver, SIGNAL(newConnection()), this, SLOT(newClientConnection()));
@@ -94,7 +93,6 @@ ExtensionHandler::ExtensionHandler(QApplicationMainWindow *mainApp, QObject *par
     {
         ERROR_LOG("---Listen failed!!----");
     }
-#endif
     ///---------------------
 }
 
@@ -224,8 +222,6 @@ bool ExtensionHandler::createExtension(const QString &who, QString tableText)
         QWidget *extension = ExtensionFactory::instance()->create(who);
         if (extension)
         {
-            extension->setAttribute(Qt::WA_DontCreateNativeAncestors);
-            extension->setAttribute(Qt::WA_NativeWindow, false);
             INFO_LOG("Activate extension: " + who);
             if ("Q2DViewerExtension" == who)
             {
@@ -772,12 +768,8 @@ void ExtensionHandler::fromClientNotify()
         m_httpclient->setHttpServerHost(HttpServerHost/*"http://127.0.0.1:8080"*/);
         m_httpclient->getStudyImageFile(QUrl(HttpServerHost/*m_httpclient->getHttpServerHost()*/), Studyuid/*msg*/, "", "");
         ///---HWND_TOPMOST--->HWND_NOTOPMOST
-#ifdef Q_OS_MAC
-
-#else
         ::SetWindowPos(HWND(m_mainApp->winId()), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
         ::SetWindowPos(HWND(m_mainApp->winId()), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-#endif
         m_mainApp->show();
         m_mainApp->activateWindow();
         //------------------------------------------------------------------------------

@@ -1118,9 +1118,6 @@ void QDifuPerfuSegmentationExtension::saveRegisteredPerfusionVolume()
 
 void QDifuPerfuSegmentationExtension::saveTransform()
 {
-#ifdef Q_OS_MAC
-
-#else
     if(m_registerTransform)
     {
         QString fileName = QFileDialog::getSaveFileName(this, tr("Save Transform file") , m_savingMaskDirectory, tr("Transform Files (*.tf)"));
@@ -1157,7 +1154,6 @@ void QDifuPerfuSegmentationExtension::saveTransform()
             fout.close();
         }
     }
-#endif
 }
 
 double QDifuPerfuSegmentationExtension::calculateDiffusionMaskVolume()

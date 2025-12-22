@@ -2,25 +2,19 @@
 #
 
 # Exclude playground extensions from official releases
-#!official_release {
-#    PLAYGROUND_EXTENSIONS = diffusionperfusionsegmentation \
-#                            edemasegmentation \
-#                            angiosubstraction \
-#                            perfusionmapreconstruction \
-#                            rectumsegmentation \
-#                            #experimental3d \
-#                            example
-#}
 !official_release {
-    PLAYGROUND_EXTENSIONS =  edemasegmentation \
+    PLAYGROUND_EXTENSIONS = diffusionperfusionsegmentation \
+                            edemasegmentation \
+                            angiosubstraction \
                             perfusionmapreconstruction \
-                            rectumsegmentation
+                            rectumsegmentation \
+                            experimental3d \
+                            example
 }
-
 
 #CONTRIB_EXTENSIONS =
 
-MAIN_EXTENSIONS = mpr3d \
+MAIN_EXTENSIONS = mpr \
                   dicomprint \
                   q2dviewer \
                   q3dviewer \
@@ -36,7 +30,5 @@ lite_version {
 
 #Extension is not included because it fails to duplicate symbols when linking
 macx {
-        PLAYGROUND_EXTENSIONS -=   edemasegmentation \
-                                                                    perfusionmapreconstruction \
-                                                                    rectumsegmentation
+        PLAYGROUND_EXTENSIONS -= perfusionmapreconstruction \
 }

@@ -1,7 +1,7 @@
 
 # Cal afegir el directori de l'extensió a la variable SUBDIRS tant si es compila com si no.
 
-SUBDIRS = mpr3d \
+SUBDIRS = mpr \
           dicomprint \
           q2dviewer \
           q3dviewer \

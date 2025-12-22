@@ -310,7 +310,7 @@ ITKLIBS = \
             itksys                 \
             itkdouble-conversion   \
             ITKTransform           \
-#            itkzlib                \
+            itkzlib                \
             ITKEXPAT               \
             itkgdcmcharls          \
             itkgdcmCommon          \

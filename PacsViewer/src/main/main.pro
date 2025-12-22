@@ -3,9 +3,7 @@
 include(../applicationstargetnames.pri)
 
 TARGET = $${TARGET_STARVIEWER}
-
 DESTDIR = ../../bin
-
 TEMPLATE = app
 
 # CrashHandler
