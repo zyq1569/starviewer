@@ -29,7 +29,7 @@ INITIALIZE_EASYLOGGINGPP
 #include <dcrledrg.h>
 #include "../fmjpeg2k/fmjpeg2k/djdecode.h"
 #include "../fmjpeg2k/fmjpeg2k/djencode.h"
-#include <dcmjpls/djlsutil.h>   /* for dcmjpls typedefs */ 
+#include <dcmjpls/djlsutil.h>   /* for dcmjpls typedefs */
  /* for class DJLSEncoderRegistration */
 #include <dcmjpls/djdecode.h>
 #include <dcmjpls/djrparam.h>   /* for class DJLSRepresentationParameter */
@@ -132,6 +132,10 @@ void sendToFirstStarviewerInstanceCommandLineOptions(QtSingleApplication &app)
 /// 20220907 影像服务端考虑将存储以时间段为目录存储,这样出现查询studyuid时间，后台需要先查找时间值
 /// 20220909 增加参数判断，如果MHealthReport 启动，第一次窗体隐藏
 ///
+///
+#include <QSurfaceFormat>
+#include <QVTKOpenGLNativeWidget.h>
+
 int main(int argc, char *argv[])
 {
 #ifdef Q_OS_MAC
@@ -224,11 +228,13 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain(udg::OrganizationDomainString);
     app.setApplicationName(udg::ApplicationNameString);
 
+#ifndef Q_OS_MAC
 #ifndef NO_CRASH_REPORTER
-    // We initialize the crash handler in case we support it.
-    // Just create the object so that it automatically auto-registers, so we mark it as unused to avoid a warning.
-    CrashHandler *crashHandler = new CrashHandler();
-    Q_UNUSED(crashHandler);
+   // We initialize the crash handler in case we support it.
+   // Just create the object so that it automatically auto-registers, so we mark it as unused to avoid a warning.
+   CrashHandler *crashHandler = new CrashHandler();
+   Q_UNUSED(crashHandler);
+#endif
 #endif
 
 
