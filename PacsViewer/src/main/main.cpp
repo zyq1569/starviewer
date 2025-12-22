@@ -134,6 +134,9 @@ void sendToFirstStarviewerInstanceCommandLineOptions(QtSingleApplication &app)
 ///
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_MAC
+    QSurfaceFormat::setDefaultFormat(QVTKOpenGLNativeWidget::defaultFormat());
+#endif
     // Applying scale factor
     QVariant cfgValue = udg::Settings().getValue(udg::CoreSettings::ScaleFactor);
     bool exists;
