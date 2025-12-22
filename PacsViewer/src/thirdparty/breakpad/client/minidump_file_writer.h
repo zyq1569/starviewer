@@ -111,7 +111,7 @@ public:
 
   // Copies |size| bytes from |src| to |position|
   // Return true on success, or false on failure
-  bool Copy(MDRVA position, const void *src, size_t size);
+  bool Copy(MDRVA position, const void *src, ssize_t size);
 
   // Return the current position for writing to the minidump
   inline MDRVA position() const { return position_; }

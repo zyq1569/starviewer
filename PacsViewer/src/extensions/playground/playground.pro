@@ -3,12 +3,18 @@
 # Subdirectori relatiu al directori principal del projecte: ./src/extensions/playground
 # L'objectiu �s un subdirectori del projecte
 
-SUBDIRS += diffusionperfusionsegmentation \
-           edemasegmentation \
+#SUBDIRS += diffusionperfusionsegmentation \
+#           edemasegmentation \
+#           angiosubstraction \
+#           perfusionmapreconstruction \
+#           rectumsegmentation \
+#           experimental3d \
+#           example
+
+SUBDIRS +=   edemasegmentation \
            angiosubstraction \
            perfusionmapreconstruction \
            rectumsegmentation \
-           experimental3d \
            example
 include(../../extensions.pri)
 TEMPLATE = subdirs
