@@ -768,8 +768,14 @@ void ExtensionHandler::fromClientNotify()
         m_httpclient->setHttpServerHost(HttpServerHost/*"http://127.0.0.1:8080"*/);
         m_httpclient->getStudyImageFile(QUrl(HttpServerHost/*m_httpclient->getHttpServerHost()*/), Studyuid/*msg*/, "", "");
         ///---HWND_TOPMOST--->HWND_NOTOPMOST
+        /// #ifdef Q_OS_MAC
+#ifdef Q_OS_MAC
+
+#else
+
         ::SetWindowPos(HWND(m_mainApp->winId()), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
         ::SetWindowPos(HWND(m_mainApp->winId()), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+#endif
         m_mainApp->show();
         m_mainApp->activateWindow();
         //------------------------------------------------------------------------------
