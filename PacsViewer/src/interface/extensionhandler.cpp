@@ -82,6 +82,7 @@ ExtensionHandler::ExtensionHandler(QApplicationMainWindow *mainApp, QObject *par
 
     ///-----------20201207---------
     m_httpclient = NULL;
+#ifndef Q_OS_MAC
     m_localserver =  new QLocalServer(this);
     connect(m_localserver, SIGNAL(newConnection()), this, SLOT(newClientConnection()));
     QLocalServer::removeServer(ImageAppName);
@@ -93,6 +94,7 @@ ExtensionHandler::ExtensionHandler(QApplicationMainWindow *mainApp, QObject *par
     {
         ERROR_LOG("---Listen failed!!----");
     }
+#endif
     ///---------------------
 }
 
@@ -222,6 +224,8 @@ bool ExtensionHandler::createExtension(const QString &who, QString tableText)
         QWidget *extension = ExtensionFactory::instance()->create(who);
         if (extension)
         {
+            //macos no~~extension->setAttribute(Qt::WA_DontCreateNativeAncestors);
+            //macos no~~extension->setAttribute(Qt::WA_NativeWindow, false);
             INFO_LOG("Activate extension: " + who);
             if ("Q2DViewerExtension" == who)
             {

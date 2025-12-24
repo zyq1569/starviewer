@@ -23,8 +23,7 @@
 MAIN_EXTENSIONS = mpr3d \
                   dicomprint \
                   q2dviewer \
-                  q3dviewer \
-                  pdf
+                  q3dviewer
 
 #
 # In case we do a build of the "lite" version we will only have the 2D extension and that's it

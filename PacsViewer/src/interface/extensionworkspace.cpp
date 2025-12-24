@@ -63,7 +63,11 @@ void ExtensionWorkspace::setDarkBackgroundColorEnabled(bool enabled)
     }
     else
     {
+#ifdef Q_OS_MAC
+        this->setStyleSheet("background-color:rgb(188,188,188)}");
+#else
         this->setStyleSheet("");
+#endif
     }
 }
 

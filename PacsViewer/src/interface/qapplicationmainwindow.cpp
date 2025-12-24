@@ -167,8 +167,9 @@ QApplicationMainWindow::QApplicationMainWindow(QWidget *parent)
 	//m_mainToolbar->setStyleSheet("background-color:rgb(150,150,150)}");
 	//m_mainToolbar->setStyleSheet("background-color:lightgray;");
 	//m_mainToolbar->setStyleSheet("background-color:rgb(128,128,128);");
-	//m_mainToolbar->setStyleSheet("QToolButton:!hover {background-color:lightgray} QToolBar {background: rgb(150,150,150)}");
-	m_mainToolbar->setStyleSheet("QToolButton:!hover {background-color:lightgray} QToolBar {background:lightgray}");
+    //m_mainToolbar->setStyleSheet("QToolButton:!hover {background-color:lightgray} QToolBar {background: rgb(188,188,188)}");
+    m_mainToolbar->setStyleSheet("background-color:rgb(188,188,188)}");
+    //m_mainToolbar->setStyleSheet("QToolButton:!hover {background-color:lightgray} QToolBar {background:lightgray}");
 	//this->setStyleSheet("background-color:lightgray}");
 	//QAction *actionHide = new QAction(QIcon(":/images/showhide.png"), "show or hide Thumbnail ...", this);
 	//m_mainToolbar->addAction(actionHide);
