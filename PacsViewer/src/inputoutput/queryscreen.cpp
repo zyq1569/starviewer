@@ -46,8 +46,7 @@ QueryScreen::QueryScreen(QWidget *parent)
     : QDialog(parent)
 {
     setupUi(this);
-    setWindowFlags(Qt::Widget);
-
+    //setWindowFlags(Qt::Widget);
     // Inicialitzem les variables necessàries
     initialize();
     // Connectem signals i slots
