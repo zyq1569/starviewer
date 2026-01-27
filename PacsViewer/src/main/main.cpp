@@ -80,7 +80,7 @@ void initializeTranslations(QApplication &app)
     translationsLoader.loadTranslation(":/inputoutput/inputoutput_" + defaultLocale.name());
     translationsLoader.loadTranslation(":/main_" + defaultLocale.name());
 
-    initExtensionsResources();//extensions.pri定义加载内容
+    initExtensionsResources();//extensions.pri定义加载内容 自动生成extensions.h 
     INFO_LOG("Locales = " + defaultLocale.name());
 
     QStringList extensionsMediatorNames = udg::ExtensionMediatorFactory::instance()->getFactoryIdentifiersList();
