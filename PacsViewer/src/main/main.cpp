@@ -80,7 +80,7 @@ void initializeTranslations(QApplication &app)
     translationsLoader.loadTranslation(":/inputoutput/inputoutput_" + defaultLocale.name());
     translationsLoader.loadTranslation(":/main_" + defaultLocale.name());
 
-    initExtensionsResources();
+    initExtensionsResources();//extensions.pri定义加载内容
     INFO_LOG("Locales = " + defaultLocale.name());
 
     QStringList extensionsMediatorNames = udg::ExtensionMediatorFactory::instance()->getFactoryIdentifiersList();
@@ -440,3 +440,55 @@ int main(int argc, char *argv[])
 ///#  endif
 ///	return wstr;
 ///}
+//ubuntu18.04 后期的版本已经修改类似windows避免顺序
+//LINUX :在静态链接（.a 文件）时通常会导致问题——链接器（ld）从左到右扫描库，只会把当前需要的符号拉进来，后续依赖的符号如果在前面已经扫描过的库里没找到，就会报 undefined reference。
+
+//    LIBS +=  -Wl,--start-group
+//for (lib, ITKLIBS) {
+//    LIBS += $${ ITKLIBDIR } / lib$${ lib }$${ ITKLIBSUFFIX }.a
+//}
+//LIBS += -Wl, --end - group
+//Linux（使用 GCC / binutils ld）和 Windows（使用 MSVC linker）在静态库链接行为上的核心区别，导致了“链接顺序重要性”的差异。
+//为什么 Linux 上顺序这么重要（传统行为）GNU linker（ld，通常是 binutils 的）在处理**静态库（.a 文件）**时的规则是：链接器从左到右单向扫描命令行上列出的.o 和.a 文件。
+//遇到主程序的.o（或前面的.o）时，会把里面未解析的符号（undefined symbols）记录到一个“待解析列表”。
+//遇到一个静态库（.a）时，只会拉取当前待解析列表里需要的符号对应的.o 文件进最终可执行文件。
+//如果某个.a 里的符号目前没人要，它就被完全忽略（不拉任何东西进来）。
+//扫描完这个.a 后，不会回头再看它，即使后面又出现了需要它符号的地方。
+//
+//→ 结果：如果依赖关系是“后面的库需要前面的库的符号”，但前面的库已经被扫描过且当时没人要它 → 符号缺失 → undefined reference。
+//这也是为什么 ITK 这种模块化严重、互相依赖的库特别容易中招：ITKIOJPEG.a 需要 ITKCommon.a 的符号，但如果 ITKCommon 排在前面，链接器早早就扫描它、
+//发现当时没人要，就扔掉了。为什么 Windows（MSVC）上顺序不那么重要（甚至经常感觉“没影响”）Microsoft 的链接器（link.exe）在处理静态库（.lib 文件）时，采用更宽松、更智能的策略：它不严格要求单向扫描。
+//链接器会多次扫描所有静态库（或至少记住所有.lib 里有哪些符号可用）。
+//即使某个.lib 排在前面，它里面的符号不会因为当时没人引用就被永久丢弃。
+//链接器会等到所有输入都处理完，再根据最终的未解析符号需求，从所有.lib 里拉取需要的部分。
+//很多情况下，它甚至自动处理循环依赖或顺序问题（虽然不是 100 % 可靠，但比 GNU ld 宽容得多）。
+//
+//→ 所以在 MSVC 下，你经常可以把库随便乱排顺序（甚至反着排），仍然能链接成功，而不会报 unresolved external symbol（相当于 Linux 的 undefined reference）。总结对比表方面
+//Linux(GNU ld / gold / bfd)
+//Windows(MSVC link.exe)
+//静态库扫描方式
+//单向、从左到右，一次扫描
+//多遍扫描，或记住所有符号可用性
+//库里未立即需要的符号
+//被忽略，不会拉入最终 exe
+//通常保留可用，直到最终需求确认
+//链接顺序重要性
+//非常重要（经典坑）
+//不那么重要（经常能容忍乱序）
+//常见错误表现
+//undefined reference
+//unresolved external symbol（但较少因顺序引起）
+//解决乱序的常用手段
+//--start - group / --end - group 或手动精确排序
+//基本不用管顺序，偶尔加 / FORCE:MULTIPLE 等
+//ITK / VTK 等大库体验
+//经常报错，必须调顺序或用 group
+//通常直接成功（尤其 CMake + Visual Studio）
+//
+//额外说明：现代 linker 的变化LLVM 的 lld（Clang 默认 linker）已经部分打破传统，它对静态库的处理更接近 MSVC 的宽松风格（会记住符号，不严格单向丢弃）。
+//mold（超快 linker）也类似。
+//所以如果你在 Linux 上用 Clang + lld，顺序问题也会变少。
+//
+//但在 Ubuntu 18.04 + g++（默认用 binutils ld）这种经典环境里，还是严格遵守“被依赖的库要尽量放后面”或用 --start - group。
+//简单说：Linux 的链接器更“抠门”、更“传统”、更“性能导向”（只拉真正需要的东西，避免膨胀），而 Windows 的链接器更“宽容”、更“用户友好”（自动帮你处理更多情况）。
+
