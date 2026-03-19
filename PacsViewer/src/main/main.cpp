@@ -138,6 +138,19 @@ void sendToFirstStarviewerInstanceCommandLineOptions(QtSingleApplication &app)
 #endif
 int main(int argc, char *argv[])
 {
+	// 环境变量（最关键）
+	//qputenv("QT_OPENGL", "desktop");
+
+	// 强制桌面 OpenGL
+	QCoreApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
+
+	// 指定 OpenGL 版本
+	//QSurfaceFormat fmt;
+	//fmt.setRenderableType(QSurfaceFormat::OpenGL);
+	//fmt.setVersion(3, 2);
+	//fmt.setProfile(QSurfaceFormat::CoreProfile);
+	//QSurfaceFormat::setDefaultFormat(fmt);
+
 #ifdef Q_OS_MAC
     QSurfaceFormat::setDefaultFormat(QVTKOpenGLNativeWidget::defaultFormat());
 #endif
@@ -153,6 +166,11 @@ int main(int argc, char *argv[])
         QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     }
 
+    // 设置 OpenGL 版本
+    QSurfaceFormat format;
+    format.setVersion(3, 2);  // 设置为 OpenGL 4.5
+    format.setProfile(QSurfaceFormat::CoreProfile);  // 设置为核心配置
+    QSurfaceFormat::setDefaultFormat(format);
     // We use QtSingleApplication instead of QtApplication, as it allows us
     // to always have a single instance of Starviewer running, if the user runs
     // a new instance of Starviewer detects this and sends the command
@@ -492,3 +510,13 @@ int main(int argc, char *argv[])
 //但在 Ubuntu 18.04 + g++（默认用 binutils ld）这种经典环境里，还是严格遵守“被依赖的库要尽量放后面”或用 --start - group。
 //简单说：Linux 的链接器更“抠门”、更“传统”、更“性能导向”（只拉真正需要的东西，避免膨胀），而 Windows 的链接器更“宽容”、更“用户友好”（自动帮你处理更多情况）。
 
+//ubuntu18.04  20.04
+//最推荐：强制程序使用 core profile 3.3 + （如果程序支持）大多数现代 OpenGL 程序可以用 core profile 运行得更好（性能更高、bug 更少）。临时测试（替换 your_program 为实际命令）：bash
+////MESA_GL_VERSION_OVERRIDE = 3.3 MESA_GLSL_VERSION_OVERRIDE = 330 your_program
+//
+//或更高：bash
+////MESA_GL_VERSION_OVERRIDE = 4.5 MESA_GLSL_VERSION_OVERRIDE = 450 your_program
+//
+//如果成功，说明程序能用 core profile——永久加到启动脚本或 desktop 文件中。Steam 游戏可在启动选项加：
+////MESA_GL_VERSION_OVERRIDE = 4.5 %command%
+
