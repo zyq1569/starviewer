@@ -18,6 +18,10 @@
 
 #ifdef WIN32
 #include "windowssysteminformation.h"
+#else
+#include <QOffscreenSurface>
+#include<QOpenGLContext>
+#include<QOpenGLFunctions>
 #endif
 
 // Qt
@@ -126,7 +130,29 @@ QStringList SystemInformation::getGPUOpenGLCompatibilities()
 
 QString SystemInformation::getGPUOpenGLVersion()
 {
+#ifdef WIN32
     return "0.0";
+#else
+    static bool init = true;
+    static QString  version = "";
+    if (init)
+    {
+        init = false;
+        QOffscreenSurface surf;
+        surf.create();
+
+        QOpenGLContext ctx;
+        ctx.create();
+        ctx.makeCurrent(&surf);
+
+        //GLint major, minor;
+        //ctx.functions()->glGetIntegerv(GL_MAJOR_VERSION,&major);//gl  大版本
+        //ctx.functions()->glGetIntegerv(GL_MINOR_VERSION,&minor);//gl  大版本
+        version = (const char *)ctx.functions()->glGetString(GL_VERSION);
+    }
+    return  version;
+#endif
+
 }
 
 QStringList SystemInformation::getGPUDriverVersion()
