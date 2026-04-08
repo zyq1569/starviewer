@@ -167,10 +167,10 @@ int main(int argc, char *argv[])
     }
 
     // 设置 OpenGL 版本
-    QSurfaceFormat format;
-    format.setVersion(3, 2);  // 设置为 OpenGL 4.5
-    format.setProfile(QSurfaceFormat::CoreProfile);  // 设置为核心配置
-    QSurfaceFormat::setDefaultFormat(format);
+    //QSurfaceFormat format;
+    //format.setVersion(3, 2);  // 设置为 OpenGL 4.5
+    //format.setProfile(QSurfaceFormat::CoreProfile);  // 设置为核心配置
+    //QSurfaceFormat::setDefaultFormat(format);
     // We use QtSingleApplication instead of QtApplication, as it allows us
     // to always have a single instance of Starviewer running, if the user runs
     // a new instance of Starviewer detects this and sends the command
@@ -512,11 +512,388 @@ int main(int argc, char *argv[])
 
 //ubuntu18.04  20.04
 //最推荐：强制程序使用 core profile 3.3 + （如果程序支持）大多数现代 OpenGL 程序可以用 core profile 运行得更好（性能更高、bug 更少）。临时测试（替换 your_program 为实际命令）：bash
-////MESA_GL_VERSION_OVERRIDE = 3.3 MESA_GLSL_VERSION_OVERRIDE = 330 your_program
+////MESA_GL_VERSION_OVERRIDE=3.3 MESA_GLSL_VERSION_OVERRIDE=330 your_program
 //
 //或更高：bash
-////MESA_GL_VERSION_OVERRIDE = 4.5 MESA_GLSL_VERSION_OVERRIDE = 450 your_program
+////MESA_GL_VERSION_OVERRIDE=4.5 MESA_GLSL_VERSION_OVERRIDE=450 your_program
 //
 //如果成功，说明程序能用 core profile——永久加到启动脚本或 desktop 文件中。Steam 游戏可在启动选项加：
-////MESA_GL_VERSION_OVERRIDE = 4.5 %command%
+////MESA_GL_VERSION_OVERRIDE=4.5 %command%
+
+
+
+//IN_CT
+/*
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <algorithm>
+// ====================== 纯字符串版本：提取 Z 方向指定层数 ======================
+bool ExtractZLayersRaw(const std::string& inputMHDPath, const std::string& outputMHDPath, int zStart = -1, int numLayers = 3)   // -1 表示中心层
+{
+    // 1. 读取 .mhd 文件头
+    std::ifstream mhdIn(inputMHDPath);
+    if (!mhdIn.is_open())
+    {
+        std::cerr << "Cannot open .mhd file: " << inputMHDPath << std::endl;
+        return false;
+    }
+
+    int dims[3] = { 0 };
+    double spacing[3] = { 0.0 };
+    std::string rawFileName;
+    std::string line;
+
+    while (std::getline(mhdIn, line))
+    {
+        if (line.find("DimSize") != std::string::npos)
+        {
+            sscanf(line.c_str(), "DimSize = %d %d %d", &dims[0], &dims[1], &dims[2]);
+        }
+        else if (line.find("ElementSpacing") != std::string::npos)
+        {
+            sscanf(line.c_str(), "ElementSpacing = %lf %lf %lf", &spacing[0], &spacing[1], &spacing[2]);
+        }
+        else if (line.find("ElementDataFile") != std::string::npos)
+        {
+            size_t pos = line.find('=') + 1;
+            rawFileName = line.substr(pos);
+            // 去除前后空格和换行
+            rawFileName.erase(0, rawFileName.find_first_not_of(" \t"));
+            rawFileName.erase(rawFileName.find_last_not_of(" \t\r\n") + 1);
+        }
+    }
+    mhdIn.close();
+
+    if (dims[0] == 0 || dims[1] == 0 || dims[2] == 0 || rawFileName.empty())
+    {
+        std::cerr << "Failed to parse .mhd header!" << std::endl;
+        return false;
+    }
+
+    // 2. 构造 .raw 文件的完整路径（关键修改部分）
+    std::string rawFullPath;
+
+    // 找到 .mhd 文件的最后一个路径分隔符
+    size_t lastSep = inputMHDPath.find_last_of("\\/");
+    if (lastSep != std::string::npos)
+    {
+        // 取 .mhd 所在目录 + rawFileName
+        rawFullPath = inputMHDPath.substr(0, lastSep + 1) + rawFileName;
+    }
+    else
+    {
+        // .mhd 在当前目录
+        rawFullPath = rawFileName;
+    }
+
+    std::cout << "Raw file full path: " << rawFullPath << std::endl;
+
+    // 3. 计算层范围和偏移
+    if (zStart < 0) zStart = dims[2] / 2;
+    zStart = std::max(0, std::min(zStart, dims[2] - numLayers));
+
+    size_t bytesPerSlice = static_cast<size_t>(dims[0]) * dims[1] * 2ULL;  // unsigned short
+    size_t readOffset = static_cast<size_t>(zStart) * bytesPerSlice;
+    size_t bytesToRead = bytesPerSlice * numLayers;
+
+    std::cout << "Extracting Z layers " << zStart << " to " << (zStart + numLayers - 1) << " (" << numLayers << " layers)" << std::endl;
+
+    // 4. 读取 .raw 文件
+    std::ifstream rawIn(rawFullPath, std::ios::binary);
+    if (!rawIn.is_open())
+    {
+        std::cerr << "Cannot open raw file: " << rawFullPath << std::endl;
+        return false;
+    }
+
+    rawIn.seekg(readOffset, std::ios::beg);
+    if (!rawIn)
+    {
+        std::cerr << "Seek failed at offset " << readOffset << " (file too large?)" << std::endl;
+        return false;
+    }
+
+    std::vector<unsigned char> buffer(bytesToRead);
+    rawIn.read(reinterpret_cast<char*>(buffer.data()), bytesToRead);
+
+    if (rawIn.gcount() != static_cast<std::streamsize>(bytesToRead))
+    {
+        std::cerr << "Read incomplete! Expected " << bytesToRead << ", actually read " << rawIn.gcount() << std::endl;
+        return false;
+    }
+    rawIn.close();
+
+    // 5. 写入新的 .raw 文件
+    std::string outRawPath = outputMHDPath;
+    if (outRawPath.size() > 4 && (outRawPath.substr(outRawPath.size() - 4) == ".mhd" || outRawPath.substr(outRawPath.size() - 4) == ".MHD"))
+    {
+        outRawPath = outRawPath.substr(0, outRawPath.size() - 4) + ".raw";
+    }
+
+    std::ofstream rawOut(outRawPath, std::ios::binary);
+    rawOut.write(reinterpret_cast<const char*>(buffer.data()), buffer.size());
+    rawOut.close();
+
+    // 6. 写入新的 .mhd 文件
+    std::ofstream mhdOut(outputMHDPath);
+    mhdOut << "ObjectType = Image\n";
+    mhdOut << "NDims = 3\n";
+    mhdOut << "DimSize = " << dims[0] << " " << dims[1] << " " << numLayers << "\n";
+    mhdOut << "ElementSpacing = " << spacing[0] << " " << spacing[1] << " " << spacing[2] << "\n";
+    mhdOut << "ElementType = MET_USHORT\n";
+    mhdOut << "ElementByteOrderMSB = False\n";
+    mhdOut << "ElementDataFile = " << rawFileName << "\n";   // 只写文件名，更兼容
+    mhdOut.close();
+
+    std::cout << "Success! Extracted " << numLayers << " layers from Z=" << zStart << ".\nSaved to: " << outputMHDPath << std::endl;
+
+    return true;
+}
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+// ====================== 最终正确版本：new.mhd 对应 new.raw ======================
+bool ExtractZLayersNewRaw(const std::string& inputMHDPath, const std::string& outputMHDPath, int zStart = -1, int numLayers = 3)
+{
+    // 1. 读取原始 .mhd 头文件
+    std::ifstream mhdIn(inputMHDPath);
+    if (!mhdIn.is_open()) {
+        std::cerr << "Cannot open input .mhd: " << inputMHDPath << std::endl;
+        return false;
+    }
+
+    int dims[3] = { 0 };
+    double spacing[3] = { 0.0 };
+    std::string line;
+
+    while (std::getline(mhdIn, line)) {
+        if (line.find("DimSize") != std::string::npos) {
+            sscanf(line.c_str(), "DimSize = %d %d %d", &dims[0], &dims[1], &dims[2]);
+        }
+        else if (line.find("ElementSpacing") != std::string::npos) {
+            sscanf(line.c_str(), "ElementSpacing = %lf %lf %lf", &spacing[0], &spacing[1], &spacing[2]);
+        }
+    }
+    mhdIn.close();
+
+    if (dims[0] == 0 || dims[1] == 0 || dims[2] == 0) {
+        std::cerr << "Failed to parse .mhd header!" << std::endl;
+        return false;
+    }
+
+    // 2. 构造原始 .raw 文件完整路径
+    std::string rawFullPath;
+    size_t lastSep = inputMHDPath.find_last_of("\\/");
+    if (lastSep != std::string::npos) {
+        rawFullPath = inputMHDPath.substr(0, lastSep + 1) + "abc.raw";   // 临时写死，实际应解析
+        // 正确写法：从 inputMHDPath 替换扩展名为 .raw
+        rawFullPath = inputMHDPath;
+        if (rawFullPath.size() > 4) {
+            rawFullPath.replace(rawFullPath.size() - 4, 4, ".raw");
+        }
+    }
+    else {
+        rawFullPath = "abc.raw";   // 兜底
+    }
+
+    std::cout << "Reading from: " << rawFullPath << std::endl;
+
+    // 3. 计算提取范围
+    if (zStart < 0) zStart = dims[2] / 2;
+    zStart = std::max(0, std::min(zStart, dims[2] - numLayers));
+
+    size_t bytesPerSlice = static_cast<size_t>(dims[0]) * dims[1] * 2ULL;
+    size_t readOffset = static_cast<size_t>(zStart) * bytesPerSlice;
+    size_t bytesToRead = bytesPerSlice * numLayers;
+
+    // 4. 读取数据
+    std::ifstream rawIn(rawFullPath, std::ios::binary);
+    if (!rawIn.is_open()) {
+        std::cerr << "Cannot open raw file: " << rawFullPath << std::endl;
+        return false;
+    }
+
+    rawIn.seekg(readOffset, std::ios::beg);
+    std::vector<unsigned char> buffer(bytesToRead);
+    rawIn.read(reinterpret_cast<char*>(buffer.data()), bytesToRead);
+    rawIn.close();
+
+    if (rawIn.gcount() != static_cast<std::streamsize>(bytesToRead)) {
+        std::cerr << "Read incomplete!" << std::endl;
+        return false;
+    }
+
+    // 5. 写入新的 .raw 文件（文件名与 new.mhd 对应）
+    std::string outRawPath = outputMHDPath;
+    if (outRawPath.size() > 4 &&
+        (outRawPath.substr(outRawPath.size() - 4) == ".mhd" ||
+            outRawPath.substr(outRawPath.size() - 4) == ".MHD")) {
+        outRawPath.replace(outRawPath.size() - 4, 4, ".raw");
+    }
+    else {
+        outRawPath += ".raw";
+    }
+
+    std::ofstream rawOut(outRawPath, std::ios::binary);
+    rawOut.write(reinterpret_cast<const char*>(buffer.data()), buffer.size());
+    rawOut.close();
+
+    // 6. 写入新的 .mhd 文件 —— ElementDataFile 使用 new.raw
+    std::ofstream mhdOut(outputMHDPath);
+    mhdOut << "ObjectType = Image\n";
+    mhdOut << "NDims = 3\n";
+    mhdOut << "DimSize = " << dims[0] << " " << dims[1] << " " << numLayers << "\n";
+    mhdOut << "ElementSpacing = " << spacing[0] << " " << spacing[1] << " " << spacing[2] << "\n";
+    mhdOut << "ElementType = MET_USHORT\n";
+    mhdOut << "ElementByteOrderMSB = False\n";
+    mhdOut << "ElementDataFile = " << (outRawPath.find_last_of("\\/") != std::string::npos ?
+        outRawPath.substr(outRawPath.find_last_of("\\/") + 1) : outRawPath)
+        << "\n";
+    mhdOut.close();
+
+    std::cout << "Success!\n";
+    std::cout << "Saved: " << outputMHDPath << " + " << outRawPath << std::endl;
+
+    return true;
+}
+
+// ====================== 支持 X/Y/Z 方向提取 ======================
+// orientation: 0=X, 1=Y, 2=Z（默认）
+// numLayers: 要提取的层数（默认3）
+bool ExtractLayersRaw(const std::string& inputMHDPath, const std::string& outputMHDPath, int orientation = 2, int startIndex = -1, int numLayers = 3)
+{
+    // 1. 读取 .mhd 头文件
+    std::ifstream mhdIn(inputMHDPath);
+    if (!mhdIn.is_open())
+    {
+        std::cerr << "Cannot open .mhd file: " << inputMHDPath << std::endl;
+        return false;
+    }
+
+    int dims[3] = { 0 };           // X, Y, Z
+    double spacing[3] = { 0.0 };
+    std::string line;
+
+    while (std::getline(mhdIn, line))
+    {
+        if (line.find("DimSize") != std::string::npos)
+        {
+            sscanf(line.c_str(), "DimSize = %d %d %d", &dims[0], &dims[1], &dims[2]);
+        }
+        else if (line.find("ElementSpacing") != std::string::npos)
+        {
+            sscanf(line.c_str(), "ElementSpacing = %lf %lf %lf", &spacing[0], &spacing[1], &spacing[2]);
+        }
+    }
+    mhdIn.close();
+
+    if (dims[0] == 0 || dims[1] == 0 || dims[2] == 0)
+    {
+        std::cerr << "Failed to parse .mhd header!" << std::endl;
+        return false;
+    }
+
+    // 2. 构造原始 .raw 文件完整路径
+    std::string rawFullPath = inputMHDPath;
+    if (rawFullPath.size() > 4)
+    {
+        rawFullPath.replace(rawFullPath.size() - 4, 4, ".raw");
+    }
+
+    std::cout << "Reading raw file: " << rawFullPath << std::endl;
+
+    // 3. 计算提取范围
+    if (startIndex < 0)
+    {
+        startIndex = dims[orientation] / 2;
+    }
+    startIndex = std::max(0, std::min(startIndex, dims[orientation] - numLayers));
+
+    // 计算每层字节数（一层 = 当前方向固定，其他两个方向全尺寸）
+    size_t bytesPerSlice = 2ULL;  // unsigned short
+    for (int i = 0; i < 3; ++i)
+    {
+        if (i != orientation)
+        {
+            bytesPerSlice *= dims[i];
+        }
+    }
+
+    size_t readOffset = static_cast<size_t>(startIndex) * bytesPerSlice;
+    size_t bytesToRead = bytesPerSlice * numLayers;
+
+    std::cout << "Direction: "
+        << (orientation == 0 ? "X (Sagittal)" : orientation == 1 ? "Y (Coronal)" : "Z (Axial)")
+        << " | Extracting from index " << startIndex << " to " << (startIndex + numLayers - 1) << " (" << numLayers << " layers)" << std::endl;
+
+    // 4. 读取数据
+    std::ifstream rawIn(rawFullPath, std::ios::binary);
+    if (!rawIn.is_open())
+    {
+        std::cerr << "Cannot open raw file: " << rawFullPath << std::endl;
+        return false;
+    }
+
+    rawIn.seekg(readOffset, std::ios::beg);
+    if (!rawIn)
+    {
+        std::cerr << "Seek failed at offset " << readOffset << std::endl;
+        return false;
+    }
+
+    std::vector<unsigned char> buffer(bytesToRead);
+    rawIn.read(reinterpret_cast<char*>(buffer.data()), bytesToRead);
+
+    if (rawIn.gcount() != static_cast<std::streamsize>(bytesToRead))
+    {
+        std::cerr << "Read incomplete! Expected " << bytesToRead << ", got " << rawIn.gcount() << std::endl;
+        return false;
+    }
+    rawIn.close();
+
+    // 5. 写入新的 .raw 文件（与 outputMHD 同名）
+    std::string outRawPath = outputMHDPath;
+    if (outRawPath.size() > 4 &&
+        (outRawPath.substr(outRawPath.size() - 4) == ".mhd" || outRawPath.substr(outRawPath.size() - 4) == ".MHD"))
+    {
+        outRawPath.replace(outRawPath.size() - 4, 4, ".raw");
+    }
+    else
+    {
+        outRawPath += ".raw";
+    }
+
+    std::ofstream rawOut(outRawPath, std::ios::binary);
+    rawOut.write(reinterpret_cast<const char*>(buffer.data()), buffer.size());
+    rawOut.close();
+
+    // 6. 写入新的 .mhd 文件
+    std::ofstream mhdOut(outputMHDPath);
+    mhdOut << "ObjectType = Image\n";
+    mhdOut << "NDims = 3\n";
+    mhdOut << "DimSize = ";
+    for (int i = 0; i < 3; ++i)
+    {
+        mhdOut << (i == orientation ? numLayers : dims[i]);
+        if (i < 2)
+            mhdOut << " ";
+    }
+    mhdOut << "\n";
+    mhdOut << "ElementSpacing = " << spacing[0] << " " << spacing[1] << " " << spacing[2] << "\n";
+    mhdOut << "ElementType = MET_USHORT\n";
+    mhdOut << "ElementByteOrderMSB = False\n";
+    mhdOut << "ElementDataFile = " << (outRawPath.find_last_of("\\/") != std::string::npos ?
+        outRawPath.substr(outRawPath.find_last_of("\\/") + 1) : outRawPath) << "\n";
+    mhdOut.close();
+
+    std::cout << "Success! Saved to:\n" << outputMHDPath << "\n" << outRawPath << std::endl;
+    return true;
+}
+*/
 
