@@ -138,18 +138,11 @@ void sendToFirstStarviewerInstanceCommandLineOptions(QtSingleApplication &app)
 #endif
 int main(int argc, char *argv[])
 {
-	// 环境变量（最关键）
+	// 环境变量
 	//qputenv("QT_OPENGL", "desktop");
 
 	// 强制桌面 OpenGL
 	QCoreApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
-
-	// 指定 OpenGL 版本
-	//QSurfaceFormat fmt;
-	//fmt.setRenderableType(QSurfaceFormat::OpenGL);
-	//fmt.setVersion(3, 2);
-	//fmt.setProfile(QSurfaceFormat::CoreProfile);
-	//QSurfaceFormat::setDefaultFormat(fmt);
 
 #ifdef Q_OS_MAC
     QSurfaceFormat::setDefaultFormat(QVTKOpenGLNativeWidget::defaultFormat());
