@@ -383,7 +383,7 @@ int main(int argc, char *argv[])
 }
 
 //xcopy D:\SDK\threadweaver-5.46.0_vc17\*.h /s D:\SDK\threadweaver-5.46.0_vc17_include
-
+//xcopy D:\SDK\VTK-9.4.0\*.h /s D:\SDK\VTK-9.4.0VC17_include
 //---fix
 // error ：const LPWSTR WindowsSystemInformation::DesktopWindowManagerDLLName = L"Dwmapi.dll";
 //  /Zc:strictStrings- 
